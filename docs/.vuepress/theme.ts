@@ -219,7 +219,7 @@ export default hopeTheme({
       repo: "justdb/justdb-docs",
       repoId: "R_kgDORGhTog",
       category: "Announcements",
-      categoryId: "DIC_kwDORGhTos4C1wGH",
+      categoryId: "DIC_kwDORGhTos4C1wGF",
     },
     // 组件插件
     components: {
