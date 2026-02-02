@@ -214,12 +214,11 @@ export default hopeTheme({
     // 评论插件
     comment: {
       provider: "Giscus",
-      repo: "vuepress-theme-hope/giscus-discussions",
-      repoId: "R_kgDOG_Pt2A",
-      category: "Announcements",
-      categoryId: "DIC_kwDOG_Pt2M4COD69",
+      repo: "justdb/justdb-docs",
+      repoId: "R_kgDORGhTog",
+      category: "Q&A",
+      categoryId: "DIC_kwDORGhTos4C1wGH",
     },
-
     // 组件插件
     components: {
       components: ["Badge", "VPCard"],
