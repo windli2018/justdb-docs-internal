@@ -1,0 +1,26 @@
+/* 调整首页元素顺序：Hero → 快速安装 → Features → Footer */
+/* 在首页的 main 容器上启用 flexbox */
+.home main {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hero 区域保持在顶部 */
+.home main .vp-hero {
+  order: 1;
+}
+
+/* 快速安装区域放在第二位（Features 之前） */
+.home main .theme-default-content {
+  order: 2;
+}
+
+/* Features 区域放在第三位 */
+.home main .vp-features {
+  order: 3;
+}
+
+/* Footer 保持在底部 */
+.home main .vp-footer {
+  order: 4;
+}
