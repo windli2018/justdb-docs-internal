@@ -21,12 +21,12 @@ tag:
 | `id` | String | 否 | 唯一标识符，用于引用 |
 | `name` | String | 是 | 表名 |
 | `referenceId` | String | 否 | 引用其他表的 id |
-| `formerNames` | List<String> | 否 | 曾用名列表，用于追踪重命名 |
+| `formerNames` | List&lt;String&gt; | 否 | 曾用名列表，用于追踪重命名 |
 | `comment` | String | 否 | 数据库注释（会写入数据库） |
 | `remark` | String | 否 | JustDB 备注（不写入数据库） |
 | `author` | String | 否 | 作者信息 |
 | `version` | String | 否 | 版本信息 |
-| `dbms` | List<String> | 否 | 适用数据库列表 |
+| `dbms` | List&lt;String&gt; | 否 | 适用数据库列表 |
 
 ## 基本示例
 
@@ -94,7 +94,7 @@ Table:
 
 ### Index（索引）
 
-定义表的索引。详见 [索引定义](./index.md)。
+定义表的索引。详见 [索引定义](./index-def.md)。
 
 ```yaml
 Table:
@@ -552,7 +552,7 @@ Table:
 ## 相关文档
 
 - [列定义](./column.md)
-- [索引定义](./index.md)
+- [索引定义](./index-def.md)
 - [约束定义](./constraint.md)
 - [生命周期钩子](./lifecycle-hooks.md)
 - [格式支持 - YAML](../formats/yaml.md)

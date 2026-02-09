@@ -57,12 +57,12 @@ Justdb (根节点)
 | `id` | String | 唯一标识符，用于引用 |
 | `name` | String | 对象名称 |
 | `referenceId` | String | 引用其他对象的 id |
-| `formerNames` | List<String> | 曾用名列表，用于追踪重命名 |
+| `formerNames` | List&lt;String&gt; | 曾用名列表，用于追踪重命名 |
 | `comment` | String | 数据库注释（会写入数据库） |
 | `remark` | String | JustDB 备注（不写入数据库） |
 | `author` | String | 作者信息 |
 | `version` | String | 版本信息 |
-| `dbms` | List<String> | 适用数据库列表 |
+| `dbms` | List&lt;String&gt; | 适用数据库列表 |
 
 ## 核心特性
 
@@ -194,7 +194,7 @@ Column:
 
 ### Index（索引）
 
-索引用于提高查询性能。详见 [索引定义](./index.md)。
+索引用于提高查询性能。详见 [索引定义](./index-def.md)。
 
 ```yaml
 Index:
@@ -388,7 +388,7 @@ View:
 
 - [表定义](./table.md)
 - [列定义](./column.md)
-- [索引定义](./index.md)
+- [索引定义](./index-def.md)
 - [约束定义](./constraint.md)
 - [视图定义](./view.md)
 - [序列定义](./sequence.md)

@@ -229,9 +229,6 @@ export default hopeTheme({
       components: ["Badge", "VPCard"],
     },
 
-    // 搜索插件 - 临时禁用以修复 duplicate ID 问题
-    // TODO: 需要找出并修复重复的文档标题
-    /*
     slimsearch: {
       indexContent: true,
       suggestion: true,
@@ -280,7 +277,6 @@ export default hopeTheme({
         },
       },
     },
-    */
 
     // SEO插件
     seo: {

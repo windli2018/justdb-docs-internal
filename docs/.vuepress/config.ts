@@ -1,6 +1,7 @@
 import { defineUserConfig } from 'vuepress';
 import { viteBundler } from '@vuepress/bundler-vite';
 import theme from './theme.ts';
+import { debugSlimSearchPlugin } from './plugins/debug-slimsearch';
 
 export default defineUserConfig({
   base: '/',
@@ -19,7 +20,8 @@ export default defineUserConfig({
   }),
   theme,
   plugins: [
-    // 移除与主题冲突的插件
+    // Debug SlimSearch duplicate ID issue
+    debugSlimSearchPlugin(),
   ],
   locales: {
     // The key is the path for the locale to be nested under.
