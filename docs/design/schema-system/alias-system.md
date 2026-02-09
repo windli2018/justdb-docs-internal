@@ -63,14 +63,14 @@ protected String referenceId;
 **使用示例**：
 
 ```xml
-<!-- 定义全局列模板 -->
-<Column id="global_id" name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+&lt;!-- 定义全局列模板 --&gt;
+&lt;Column id="global_id" name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
 
-<!-- 在表中引用 -->
-<Table name="users">
-    <!-- 可以使用任意别名格式 -->
-    <Column id="col_users_id" refId="global_id" name="id"/>
-</Table>
+&lt;!-- 在表中引用 --&gt;
+&lt;Table name="users"&gt;
+    &lt;!-- 可以使用任意别名格式 --&gt;
+    &lt;Column id="col_users_id" refId="global_id" name="id"/&gt;
+&lt;/Table&gt;
 ```
 
 ### formerNames 别名
@@ -81,7 +81,7 @@ protected String referenceId;
 @JsonProperty("formerNames")
 @JsonAlias({"oldNames", "oldName", "formerName", "former_names", "old_names",
               "previousNames", "previousName", "previous_names", "old-names"})
-protected List<String> formerNames;
+protected List&lt;String&gt; formerNames;
 ```
 
 **支持的输入格式**：
@@ -96,12 +96,12 @@ protected List<String> formerNames;
 **使用示例**：
 
 ```xml
-<!-- 记录表名变更历史 -->
-<Table name="users">
-    <formerNames>
-        <oldName>user</oldName>
-    </formerNames>
-</Table>
+&lt;!-- 记录表名变更历史 --&gt;
+&lt;Table name="users"&gt;
+    &lt;formerNames&gt;
+        &lt;oldName&gt;user&lt;/oldName&gt;
+    &lt;/formerNames&gt;
+&lt;/Table&gt;
 ```
 
 生成的迁移 SQL：
@@ -150,7 +150,7 @@ tableScopes:
               "beforeRemoves", "beforeRemove", "before-drop", "before-drops",
               "Before-Drop", "Before-Drops", "before_drops", "Before-Remove",
               "onBeforeDrop", "onDrop"})
-protected List<ConditionalSqlScript> beforeDrops;
+protected List&lt;ConditionalSqlScript&gt; beforeDrops;
 ```
 
 **生命周期钩子命名**：

@@ -46,5 +46,7 @@ This section contains historical planning documents that have been completed or 
 
 ## Related Documentation
 
-- [Future Roadmap](../future-plans.md) - Current and future plans *(Coming soon)*
-- [Design Documentation](../../design/) - Architecture and design documents
+- [Product Roadmap](/plans/roadmap.md) - Complete product roadmap
+- [Design Documentation](/design/) - Architecture and design documents
+
+> **Note**: Detailed documentation is being written. Please refer to the Chinese documentation for complete information.

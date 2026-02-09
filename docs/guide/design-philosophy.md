@@ -184,16 +184,16 @@ public class MyDatabaseAdapter extends DatabaseAdapter {
 **模板系统**
 
 ```xml
-<!-- 自定义 SQL 模板 -->
-<template id="create-table" type="SQL" category="db">
-  <content>
+&lt;!-- 自定义 SQL 模板 --&gt;
+&lt;template id="create-table" type="SQL" category="db"&gt;
+  &lt;content&gt;
     CREATE TABLE {{name}} (
       {{#each columns}}
       {{name}} {{type}}{{#unless @last}},{{/unless}}
       {{/each}}
     );
-  </content>
-</template>
+  &lt;/content&gt;
+&lt;/template&gt;
 ```
 
 **扩展点系统**
@@ -312,14 +312,14 @@ SchemaDiff diff = SchemaDiff.calculate(current, target);
 **对扩展开放，对修改关闭**
 
 ```xml
-<!-- 无需修改核心代码，通过插件扩展 -->
-<plugin id="mysql">
-  <templates>
-    <template id="create-table" ...>
-      <!-- MySQL 特定的 CREATE TABLE 模板 -->
-    </template>
-  </templates>
-</plugin>
+&lt;!-- 无需修改核心代码，通过插件扩展 --&gt;
+&lt;plugin id="mysql"&gt;
+  &lt;templates&gt;
+    &lt;template id="create-table" ...&gt;
+      &lt;!-- MySQL 特定的 CREATE TABLE 模板 --&gt;
+    &lt;/template&gt;
+  &lt;/templates&gt;
+&lt;/plugin&gt;
 ```
 
 ## 用户体验设计
@@ -429,37 +429,37 @@ $ justdb migrate --dry-run
 JustDB 核心模块保持最小依赖：
 
 ```xml
-<!-- 核心模块依赖最小 -->
-<dependencies>
-    <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>com.github.jknack</groupId>
-        <artifactId>handlebars</artifactId>
-    </dependency>
-    <!-- 少量核心依赖 -->
-</dependencies>
+&lt;!-- 核心模块依赖最小 --&gt;
+&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;
+        &lt;artifactId&gt;jackson-databind&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.github.jknack&lt;/groupId&gt;
+        &lt;artifactId&gt;handlebars&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;!-- 少量核心依赖 --&gt;
+&lt;/dependencies&gt;
 ```
 
 ### 可选模块化
 
 ```xml
-<!-- 核心功能 -->
-<dependency>
-    <artifactId>justdb-core</artifactId>
-</dependency>
+&lt;!-- 核心功能 --&gt;
+&lt;dependency&gt;
+    &lt;artifactId&gt;justdb-core&lt;/artifactId&gt;
+&lt;/dependency&gt;
 
-<!-- 可选：AI 集成 -->
-<dependency>
-    <artifactId>justdb-ai</artifactId>
-</dependency>
+&lt;!-- 可选：AI 集成 --&gt;
+&lt;dependency&gt;
+    &lt;artifactId&gt;justdb-ai&lt;/artifactId&gt;
+&lt;/dependency&gt;
 
-<!-- 可选：Excel 支持 -->
-<dependency>
-    <artifactId>justdb-excel</artifactId>
-</dependency>
+&lt;!-- 可选：Excel 支持 --&gt;
+&lt;dependency&gt;
+    &lt;artifactId&gt;justdb-excel&lt;/artifactId&gt;
+&lt;/dependency&gt;
 ```
 
 ## 测试哲学

@@ -25,8 +25,8 @@ JustDB 是一个创新的**所见即所得（WYSIWYG）数据库开发套件**�
 flowchart LR
     A[设计表结构] --> B[手写 CREATE TABLE]
     B --> C[执行 SQL 创建表]
-    C --> D[需要修改时<br/>手写 ALTER TABLE]
-    D --> E[担心脚本执行顺序<br/>和错误处理]
+    C --> D[需要修改时&lt;br/&gt;手写 ALTER TABLE]
+    D --> E[担心脚本执行顺序&lt;br/&gt;和错误处理]
 ```
 
 这种方式存在以下问题：
@@ -43,8 +43,8 @@ JustDB 将数据库开发简化为：
 
 ```mermaid
 flowchart LR
-    A[声明期望的<br/>数据库状态] --> B[工具自动<br/>计算差异]
-    B --> C[工具自动<br/>执行变更]
+    A[声明期望的&lt;br/&gt;数据库状态] --> B[工具自动&lt;br/&gt;计算差异]
+    B --> C[工具自动&lt;br/&gt;执行变更]
 ```
 
 **只需关注"要什么"，无需关心"怎么做"**
@@ -113,8 +113,8 @@ ALTER TABLE users ADD COLUMN avatar VARCHAR(500);
 
 JustDB 支持几乎所有常见的数据格式，你可以选择最适合团队的格式：
 
-<CodeGroup>
-<CodeGroupItem title="YAML">
+&lt;CodeGroup&gt;
+&lt;CodeGroupItem title="YAML"&gt;
 ```yaml
 Table:
   - name: users
@@ -123,9 +123,9 @@ Table:
         type: BIGINT
         primaryKey: true
 ```
-</CodeGroupItem>
+&lt;/CodeGroupItem&gt;
 
-<CodeGroupItem title="JSON">
+&lt;CodeGroupItem title="JSON"&gt;
 ```json
 {
   "Table": [
@@ -142,18 +142,18 @@ Table:
   ]
 }
 ```
-</CodeGroupItem>
+&lt;/CodeGroupItem&gt;
 
-<CodeGroupItem title="XML">
+&lt;CodeGroupItem title="XML"&gt;
 ```xml
-<Justdb>
-  <Table name="users">
-    <Column name="id" type="BIGINT" primaryKey="true"/>
-  </Table>
-</Justdb>
+&lt;Justdb&gt;
+  &lt;Table name="users"&gt;
+    &lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
+  &lt;/Table&gt;
+&lt;/Justdb&gt;
 ```
-</CodeGroupItem>
-</CodeGroup>
+&lt;/CodeGroupItem&gt;
+&lt;/CodeGroup&gt;
 
 ### 4. AI 集成
 

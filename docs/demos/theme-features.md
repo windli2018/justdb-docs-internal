@@ -176,21 +176,21 @@ graph LR
 @file App.vue
 
 ```vue
-<template>
-  <div class="demo">
-    <h1>{{ message }}</h1>
-    <button @click="count++">点击次数: {{ count }}</button>
-  </div>
-</template>
+&lt;template&gt;
+  &lt;div class="demo"&gt;
+    &lt;h1&gt;{{ message }}&lt;/h1&gt;
+    &lt;button @click="count++"&gt;点击次数: {{ count }}&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
 
-<script setup>
+&lt;script setup&gt;
 import { ref } from 'vue'
 
 const message = ref('Hello VuePress!')
 const count = ref(0)
-</script>
+&lt;/script&gt;
 
-<style>
+&lt;style&gt;
 .demo {
   text-align: center;
   padding: 20px;
@@ -201,7 +201,7 @@ button {
   font-size: 16px;
   cursor: pointer;
 }
-</style>
+&lt;/style&gt;
 ```
 
 :::
@@ -210,7 +210,7 @@ button {
 
 查看更多演示页面：
 
-<div class="vp-card-group">
+&lt;div class="vp-card-group"&gt;
   <VPCard
     title="搜索演示"
     desc="搜索功能展示"
@@ -229,7 +229,7 @@ button {
     logo="💻"
     link="/demos/code-demo.html"
   />
-</div>
+&lt;/div&gt;
 
 ## 🎉 总结
 

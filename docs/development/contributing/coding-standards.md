@@ -148,7 +148,7 @@ public class CommandFactory {
 ```java
 // DON'T: 在服务方法中使用 getInstance()
 public class SchemaMigrationService {
-    public List<String> generateSql(CanonicalSchemaDiff diff) {
+    public List&lt;String&gt; generateSql(CanonicalSchemaDiff diff) {
         DBGenerator dbGenerator = new DBGenerator(
             JustdbManager.getInstance().getPluginManager(),  // Wrong!
             dialect
@@ -252,7 +252,7 @@ git stash push -m "temporary save"
 ```java
 // DON'T: 为方便而使用 ThreadLocal
 public class MyService {
-    private static final ThreadLocal<UserContext> CONTEXT = new ThreadLocal<>();
+    private static final ThreadLocal&lt;UserContext&gt; CONTEXT = new ThreadLocal&lt;&gt;();
 
     public void setUser(User user) {
         CONTEXT.set(user);
@@ -303,7 +303,7 @@ public class MyService {
 /**
  * Schema loader implementation supporting multiple formats.
  *
- * <p>Supports XML, JSON, YAML, and TOML formats with automatic
+ * &lt;p&gt;Supports XML, JSON, YAML, and TOML formats with automatic
  * format detection based on file extension.
  *
  * @author JustDB Team
@@ -332,7 +332,7 @@ public class SchemaLoader {
 @Setter
 public class Table extends QueryAble {
     private String name;
-    private List<Column> columns;
+    private List&lt;Column&gt; columns;
 }
 
 // 等价于手写 getter/setter

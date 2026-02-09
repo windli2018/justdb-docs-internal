@@ -31,7 +31,7 @@ JustDB 自动识别以下文件类型：
 当未指定文件类型时，JustDB 按以下顺序查找：
 
 1. **当前目录** - `./justdb.*`
-2. **项目目录** - `<project>/justdb.*`
+2. **项目目录** - `&lt;project&gt;/justdb.*`
 3. **标准位置** - `src/main/resources/justdb.*`
 4. **类路径** - 从 JAR 资源加载
 
@@ -53,22 +53,22 @@ justdb migrate schema1.yaml schema2.yaml
 在 XML Schema 中使用 include 包含其他文件：
 
 ```xml
-<!-- main.xml -->
-<Justdb id="main" name="Main Schema">
-    <!-- 包含公共列定义 -->
-    <include file="common-columns.xml" />
+&lt;!-- main.xml --&gt;
+&lt;Justdb id="main" name="Main Schema"&gt;
+    &lt;!-- 包含公共列定义 --&gt;
+    &lt;include file="common-columns.xml" /&gt;
 
-    <!-- 包含表定义 -->
-    <include file="tables/users.xml" />
-    <include file="tables/orders.xml" />
+    &lt;!-- 包含表定义 --&gt;
+    &lt;include file="tables/users.xml" /&gt;
+    &lt;include file="tables/orders.xml" /&gt;
 
-    <!-- 包含远程文件 -->
-    <include url="https://example.com/schemas/common.xml" />
+    &lt;!-- 包含远程文件 --&gt;
+    &lt;include url="https://example.com/schemas/common.xml" /&gt;
 
-    <Tables>
-        <!-- 本地表定义 -->
-    </Tables>
-</Justdb>
+    &lt;Tables&gt;
+        &lt;!-- 本地表定义 --&gt;
+    &lt;/Tables&gt;
+&lt;/Justdb&gt;
 ```
 
 ### Import 指令
@@ -76,20 +76,20 @@ justdb migrate schema1.yaml schema2.yaml
 使用指令导入文件：
 
 ```xml
-<!-- main.xml -->
-<Justdb id="main" name="Main Schema">
-    <!-- 导入指令 -->
-    <import file="common-columns.xml" />
-    <import file="tables/" />
+&lt;!-- main.xml --&gt;
+&lt;Justdb id="main" name="Main Schema"&gt;
+    &lt;!-- 导入指令 --&gt;
+    &lt;import file="common-columns.xml" /&gt;
+    &lt;import file="tables/" /&gt;
 
-    <Tables>
-        <!-- 使用导入的列 -->
-        <Table name="users">
-            <Column referenceId="global_id" name="id" />
-            <Column referenceId="global_created_at" name="created_at" />
-        </Table>
-    </Tables>
-</Justdb>
+    &lt;Tables&gt;
+        &lt;!-- 使用导入的列 --&gt;
+        &lt;Table name="users"&gt;
+            &lt;Column referenceId="global_id" name="id" /&gt;
+            &lt;Column referenceId="global_created_at" name="created_at" /&gt;
+        &lt;/Table&gt;
+    &lt;/Tables&gt;
+&lt;/Justdb&gt;
 ```
 
 ### YAML Include
@@ -116,14 +116,14 @@ data:
 定义可重用的列：
 
 ```xml
-<!-- common-columns.xml -->
-<Justdb id="common">
-    <Columns>
-        <!-- 全局 ID 列 -->
+&lt;!-- common-columns.xml --&gt;
+&lt;Justdb id="common"&gt;
+    &lt;Columns&gt;
+        &lt;!-- 全局 ID 列 --&gt;
         <Column id="global_id" name="id" type="BIGINT"
                 primaryKey="true" autoIncrement="true" />
 
-        <!-- 全局时间戳列 -->
+        &lt;!-- 全局时间戳列 --&gt;
         <Column id="global_created_at" name="created_at"
                 type="TIMESTAMP" nullable="false"
                 defaultValue="CURRENT_TIMESTAMP" />
@@ -131,8 +131,8 @@ data:
         <Column id="global_updated_at" name="updated_at"
                 type="TIMESTAMP" nullable="false"
                 defaultValue="CURRENT_TIMESTAMP" />
-    </Columns>
-</Justdb>
+    &lt;/Columns&gt;
+&lt;/Justdb&gt;
 ```
 
 ### 引用全局列
@@ -140,19 +140,19 @@ data:
 使用 `referenceId` 引用全局列：
 
 ```xml
-<!-- users.xml -->
-<Table name="users">
-    <!-- 引用全局 ID 列 -->
-    <Column referenceId="global_id" name="id" />
+&lt;!-- users.xml --&gt;
+&lt;Table name="users"&gt;
+    &lt;!-- 引用全局 ID 列 --&gt;
+    &lt;Column referenceId="global_id" name="id" /&gt;
 
-    <!-- 本地列 -->
-    <Column name="username" type="VARCHAR(50)" nullable="false" />
-    <Column name="email" type="VARCHAR(100)" nullable="false" />
+    &lt;!-- 本地列 --&gt;
+    &lt;Column name="username" type="VARCHAR(50)" nullable="false" /&gt;
+    &lt;Column name="email" type="VARCHAR(100)" nullable="false" /&gt;
 
-    <!-- 引用全局时间戳列 -->
-    <Column referenceId="global_created_at" name="created_at" />
-    <Column referenceId="global_updated_at" name="updated_at" />
-</Table>
+    &lt;!-- 引用全局时间戳列 --&gt;
+    &lt;Column referenceId="global_created_at" name="created_at" /&gt;
+    &lt;Column referenceId="global_updated_at" name="updated_at" /&gt;
+&lt;/Table&gt;
 ```
 
 ### 全局表继承
@@ -160,17 +160,17 @@ data:
 使用 `extends` 继承表定义：
 
 ```xml
-<!-- base-table.xml -->
-<Table id="base_table" name="base">
-    <Column referenceId="global_id" name="id" />
-    <Column referenceId="global_created_at" name="created_at" />
-</Table>
+&lt;!-- base-table.xml --&gt;
+&lt;Table id="base_table" name="base"&gt;
+    &lt;Column referenceId="global_id" name="id" /&gt;
+    &lt;Column referenceId="global_created_at" name="created_at" /&gt;
+&lt;/Table&gt;
 
-<!-- users.xml -->
-<Table name="users" extends="base_table">
-    <Column name="username" type="VARCHAR(50)" />
-    <Column name="email" type="VARCHAR(100)" />
-</Table>
+&lt;!-- users.xml --&gt;
+&lt;Table name="users" extends="base_table"&gt;
+    &lt;Column name="username" type="VARCHAR(50)" /&gt;
+    &lt;Column name="email" type="VARCHAR(100)" /&gt;
+&lt;/Table&gt;
 ```
 
 ## 多文件加载
@@ -213,45 +213,45 @@ justdb migrate schemas/ --recursive
 5. **ID 冲突** - 后加载的覆盖先加载的
 
 ```xml
-<!-- file1.xml -->
-<Justdb id="app">
-    <Columns>
-        <Column id="col1" name="field1" type="INT" />
-    </Columns>
-    <Tables>
-        <Table name="table1">
-            <Column name="col1" type="VARCHAR(50)" />
-        </Table>
-    </Tables>
-</Justdb>
+&lt;!-- file1.xml --&gt;
+&lt;Justdb id="app"&gt;
+    &lt;Columns&gt;
+        &lt;Column id="col1" name="field1" type="INT" /&gt;
+    &lt;/Columns&gt;
+    &lt;Tables&gt;
+        &lt;Table name="table1"&gt;
+            &lt;Column name="col1" type="VARCHAR(50)" /&gt;
+        &lt;/Table&gt;
+    &lt;/Tables&gt;
+&lt;/Justdb&gt;
 
-<!-- file2.xml -->
-<Justdb id="app">
-    <Columns>
-        <Column id="col2" name="field2" type="INT" />
-    </Columns>
-    <Tables>
-        <Table name="table2">
-            <Column name="col1" type="INT" />
-        </Table>
-    </Tables>
-</Justdb>
+&lt;!-- file2.xml --&gt;
+&lt;Justdb id="app"&gt;
+    &lt;Columns&gt;
+        &lt;Column id="col2" name="field2" type="INT" /&gt;
+    &lt;/Columns&gt;
+    &lt;Tables&gt;
+        &lt;Table name="table2"&gt;
+            &lt;Column name="col1" type="INT" /&gt;
+        &lt;/Table&gt;
+    &lt;/Tables&gt;
+&lt;/Justdb&gt;
 
-<!-- 合并结果 -->
-<Justdb id="app">
-    <Columns>
-        <Column id="col1" name="field1" type="INT" />
-        <Column id="col2" name="field2" type="INT" />
-    </Columns>
-    <Tables>
-        <Table name="table1">
-            <Column name="col1" type="VARCHAR(50)" />
-        </Table>
-        <Table name="table2">
-            <Column name="col1" type="INT" />
-        </Table>
-    </Tables>
-</Justdb>
+&lt;!-- 合并结果 --&gt;
+&lt;Justdb id="app"&gt;
+    &lt;Columns&gt;
+        &lt;Column id="col1" name="field1" type="INT" /&gt;
+        &lt;Column id="col2" name="field2" type="INT" /&gt;
+    &lt;/Columns&gt;
+    &lt;Tables&gt;
+        &lt;Table name="table1"&gt;
+            &lt;Column name="col1" type="VARCHAR(50)" /&gt;
+        &lt;/Table&gt;
+        &lt;Table name="table2"&gt;
+            &lt;Column name="col1" type="INT" /&gt;
+        &lt;/Table&gt;
+    &lt;/Tables&gt;
+&lt;/Justdb&gt;
 ```
 
 ## 远程加载
@@ -261,15 +261,15 @@ justdb migrate schemas/ --recursive
 从 URL 加载 Schema：
 
 ```xml
-<Justdb id="main">
-    <!-- 远程 Schema -->
-    <include url="https://example.com/schemas/common.xml" />
-    <include url="https://raw.githubusercontent.com/user/repo/main/schema.yaml" />
+&lt;Justdb id="main"&gt;
+    &lt;!-- 远程 Schema --&gt;
+    &lt;include url="https://example.com/schemas/common.xml" /&gt;
+    &lt;include url="https://raw.githubusercontent.com/user/repo/main/schema.yaml" /&gt;
 
-    <Tables>
-        <!-- 本地表 -->
-    </Tables>
-</Justdb>
+    &lt;Tables&gt;
+        &lt;!-- 本地表 --&gt;
+    &lt;/Tables&gt;
+&lt;/Justdb&gt;
 ```
 
 ### Git 仓库加载
@@ -292,11 +292,11 @@ justdb migrate "git://gitee.com/user/repo:schema.yaml"
 从类路径加载资源：
 
 ```xml
-<Justdb id="main">
-    <!-- 类路径资源 -->
-    <include resource="schemas/common.xml" />
-    <include resource="classpath:/schemas/base-tables.xml" />
-</Justdb>
+&lt;Justdb id="main"&gt;
+    &lt;!-- 类路径资源 --&gt;
+    &lt;include resource="schemas/common.xml" /&gt;
+    &lt;include resource="classpath:/schemas/base-tables.xml" /&gt;
+&lt;/Justdb&gt;
 ```
 
 ## 文件解析选项

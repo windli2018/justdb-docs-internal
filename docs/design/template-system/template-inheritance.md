@@ -34,41 +34,41 @@ custom-plugin (扩展层)
 ### 继承示例
 
 ```xml
-<!-- 1. sql-standard-root 定义血统模板 -->
-<plugin id="sql-standard-root">
-    <templates>
-        <template id="create-table-mysql-lineage" type="SQL" category="db">
-            <content>
+&lt;!-- 1. sql-standard-root 定义血统模板 --&gt;
+&lt;plugin id="sql-standard-root"&gt;
+    &lt;templates&gt;
+        &lt;template id="create-table-mysql-lineage" type="SQL" category="db"&gt;
+            &lt;content&gt;
                 CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
                     {{> columns}}
                 );
-            </content>
-        </template>
-    </templates>
-</plugin>
+            &lt;/content&gt;
+        &lt;/template&gt;
+    &lt;/templates&gt;
+&lt;/plugin&gt;
 
-<!-- 2. mysql plugin 引用血统模板 -->
-<plugin id="mysql" dialect="mysql" ref-id="sql-standard-root">
-    <templates>
-        <template id="create-table" type="SQL" category="db">
-            <content>{{> create-table-mysql-lineage}}</content>
-        </template>
-    </templates>
-</plugin>
+&lt;!-- 2. mysql plugin 引用血统模板 --&gt;
+&lt;plugin id="mysql" dialect="mysql" ref-id="sql-standard-root"&gt;
+    &lt;templates&gt;
+        &lt;template id="create-table" type="SQL" category="db"&gt;
+            &lt;content&gt;{{> create-table-mysql-lineage}}&lt;/content&gt;
+        &lt;/template&gt;
+    &lt;/templates&gt;
+&lt;/plugin&gt;
 
-<!-- 3. custom-plugin 覆盖 mysql 模板 -->
-<plugin id="custom-mysql" dialect="mysql" ref-id="mysql">
-    <templates>
-        <template id="create-table" type="SQL" category="db">
-            <content>
+&lt;!-- 3. custom-plugin 覆盖 mysql 模板 --&gt;
+&lt;plugin id="custom-mysql" dialect="mysql" ref-id="mysql"&gt;
+    &lt;templates&gt;
+        &lt;template id="create-table" type="SQL" category="db"&gt;
+            &lt;content&gt;
                 -- 自定义 CREATE TABLE 逻辑
                 CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
                     {{> columns}}
                 ) ENGINE=InnoDB;
-            </content>
-        </template>
-    </templates>
-</plugin>
+            &lt;/content&gt;
+        &lt;/template&gt;
+    &lt;/templates&gt;
+&lt;/plugin&gt;
 ```
 
 ## 模板覆盖规则
@@ -85,9 +85,9 @@ custom-plugin (扩展层)
 ### 覆盖示例
 
 ```xml
-<!-- 策略1：覆盖主入口，添加自定义路由逻辑 -->
-<template id="drop-table">
-  <content>
+&lt;!-- 策略1：覆盖主入口，添加自定义路由逻辑 --&gt;
+&lt;template id="drop-table"&gt;
+  &lt;content&gt;
     {{#if @root.customLogic}}
         -- 自定义逻辑
         {{> custom-drop-table}}
@@ -96,19 +96,19 @@ custom-plugin (扩展层)
     {{else}}
         {{> drop-table-raw}}
     {{/if}}
-  </content>
-</template>
+  &lt;/content&gt;
+&lt;/template&gt;
 
-<!-- 策略2：覆盖操作层，提供特定实现 -->
-<template id="rename-table">
-  <content>
+&lt;!-- 策略2：覆盖操作层，提供特定实现 --&gt;
+&lt;template id="rename-table"&gt;
+  &lt;content&gt;
     -- MySQL 特定优化版 RENAME
     RENAME TABLE {{> table-name ..}} TO {{> table-name-safe}};
-  </content>
-</template>
+  &lt;/content&gt;
+&lt;/template&gt;
 
-<!-- 策略3：完全不覆盖，使用血统模板 -->
-<!-- MySQL plugin 不定义 drop-table，自动使用 sql-standard-root 的条件路由 -->
+&lt;!-- 策略3：完全不覆盖，使用血统模板 --&gt;
+&lt;!-- MySQL plugin 不定义 drop-table，自动使用 sql-standard-root 的条件路由 --&gt;
 ```
 
 ## 插件引用 (ref-id)
@@ -116,9 +116,9 @@ custom-plugin (扩展层)
 ### ref-id 机制
 
 ```xml
-<plugin id="mysql" dialect="mysql" ref-id="sql-standard-root">
-    <!-- 继承 sql-standard-root 的所有模板 -->
-</plugin>
+&lt;plugin id="mysql" dialect="mysql" ref-id="sql-standard-root"&gt;
+    &lt;!-- 继承 sql-standard-root 的所有模板 --&gt;
+&lt;/plugin&gt;
 ```
 
 ### 继承行为
@@ -130,17 +130,17 @@ custom-plugin (扩展层)
 ### 多级继承
 
 ```xml
-<plugin id="base-plugin">
-    <!-- 基础模板 -->
-</plugin>
+&lt;plugin id="base-plugin"&gt;
+    &lt;!-- 基础模板 --&gt;
+&lt;/plugin&gt;
 
-<plugin id="mysql-base" ref-id="base-plugin">
-    <!-- MySQL 通用模板 -->
-</plugin>
+&lt;plugin id="mysql-base" ref-id="base-plugin"&gt;
+    &lt;!-- MySQL 通用模板 --&gt;
+&lt;/plugin&gt;
 
-<plugin id="mysql-8.0" ref-id="mysql-base">
-    <!-- MySQL 8.0 特定模板 -->
-</plugin>
+&lt;plugin id="mysql-8.0" ref-id="mysql-base"&gt;
+    &lt;!-- MySQL 8.0 特定模板 --&gt;
+&lt;/plugin&gt;
 ```
 
 ## 模板注入
@@ -150,12 +150,12 @@ custom-plugin (扩展层)
 在指定模板之前注入：
 
 ```xml
-<template id="custom-create-table" injectBefore="create-table">
-    <content>
+&lt;template id="custom-create-table" injectBefore="create-table"&gt;
+    &lt;content&gt;
         -- 在 CREATE TABLE 之前执行的 SQL
         SET @sql_mode = 'STRICT_TRANS_TABLES';
-    </content>
-</template>
+    &lt;/content&gt;
+&lt;/template&gt;
 ```
 
 ### injectAfter
@@ -163,12 +163,12 @@ custom-plugin (扩展层)
 在指定模板之后注入：
 
 ```xml
-<template id="custom-index" injectAfter="create-table">
-    <content>
+&lt;template id="custom-index" injectAfter="create-table"&gt;
+    &lt;content&gt;
         -- 在 CREATE TABLE 之后创建索引
         CREATE INDEX idx_users_email ON users(email);
-    </content>
-</template>
+    &lt;/content&gt;
+&lt;/template&gt;
 ```
 
 ### injectReplace
@@ -176,12 +176,12 @@ custom-plugin (扩展层)
 替换指定模板：
 
 ```xml
-<template id="custom-drop" injectReplace="drop-table">
-    <content>
+&lt;template id="custom-drop" injectReplace="drop-table"&gt;
+    &lt;content&gt;
         -- 自定义 DROP TABLE 逻辑
         DROP TABLE IF EXISTS {{> table-name}} CASCADE;
-    </content>
-</template>
+    &lt;/content&gt;
+&lt;/template&gt;
 ```
 
 ## 模板查找顺序
@@ -226,21 +226,21 @@ public String execute(String name, TemplateRootContext context) {
 ### 场景 1：添加方言特定语法
 
 ```xml
-<!-- PostgreSQL 需要 AFTER COLUMN 语法 -->
-<template id="add-column" dialect="postgresql">
-    <content>
+&lt;!-- PostgreSQL 需要 AFTER COLUMN 语法 --&gt;
+&lt;template id="add-column" dialect="postgresql"&gt;
+    &lt;content&gt;
         ALTER TABLE {{> table-name ..}}
         ADD COLUMN {{> column-spec this}};
-    </content>
-</template>
+    &lt;/content&gt;
+&lt;/template&gt;
 ```
 
 ### 场景 2：覆盖通用逻辑
 
 ```xml
-<!-- Oracle 不支持 IF EXISTS -->
-<template id="drop-table" dialect="oracle">
-    <content>
+&lt;!-- Oracle 不支持 IF EXISTS --&gt;
+&lt;template id="drop-table" dialect="oracle"&gt;
+    &lt;content&gt;
         DECLARE
             table_count NUMBER;
         BEGIN
@@ -252,16 +252,16 @@ public String execute(String name, TemplateRootContext context) {
                 EXECUTE IMMEDIATE 'DROP TABLE {{this.name}}';
             END IF;
         END;
-    </content>
-</template>
+    &lt;/content&gt;
+&lt;/template&gt;
 ```
 
 ### 场景 3：添加性能优化
 
 ```xml
-<!-- MySQL 8.0 使用 RENAME INDEX 优化 -->
-<template id="rename-index" dialect="mysql">
-    <content>
+&lt;!-- MySQL 8.0 使用 RENAME INDEX 优化 --&gt;
+&lt;template id="rename-index" dialect="mysql"&gt;
+    &lt;content&gt;
         {{#if (version @root.dbType '>=8.0')}}
             RENAME INDEX {{this.oldName}} TO {{this.newName}};
         {{else}}
@@ -269,8 +269,8 @@ public String execute(String name, TemplateRootContext context) {
             DROP INDEX {{this.oldName}};
             CREATE INDEX {{this.newName}} ON {{> table-name ..}}({{this.columns}});
         {{/if}}
-    </content>
-</template>
+    &lt;/content&gt;
+&lt;/template&gt;
 ```
 
 ## 最佳实践
@@ -278,48 +278,48 @@ public String execute(String name, TemplateRootContext context) {
 ### 1. 优先使用血统模板
 
 ```xml
-<!-- 好的做法：使用血统模板 -->
-<template id="create-table">
-    <content>{{> create-table-mysql-lineage}}</content>
-</template>
+&lt;!-- 好的做法：使用血统模板 --&gt;
+&lt;template id="create-table"&gt;
+    &lt;content&gt;{{> create-table-mysql-lineage}}&lt;/content&gt;
+&lt;/template&gt;
 
-<!-- 避免：每个插件都重复定义 -->
-<template id="create-table">
-    <content>CREATE TABLE ...</content>
-</template>
+&lt;!-- 避免：每个插件都重复定义 --&gt;
+&lt;template id="create-table"&gt;
+    &lt;content&gt;CREATE TABLE ...&lt;/content&gt;
+&lt;/template&gt;
 ```
 
 ### 2. 只覆盖差异部分
 
 ```xml
-<!-- 好的做法：只覆盖需要修改的部分 -->
-<template id="modify-column" dialect="mysql">
-    <content>ALTER TABLE ... MODIFY COLUMN ...;</content>
-</template>
+&lt;!-- 好的做法：只覆盖需要修改的部分 --&gt;
+&lt;template id="modify-column" dialect="mysql"&gt;
+    &lt;content&gt;ALTER TABLE ... MODIFY COLUMN ...;&lt;/content&gt;
+&lt;/template&gt;
 
-<!-- 避免：重新定义整个模板 -->
+&lt;!-- 避免：重新定义整个模板 --&gt;
 ```
 
 ### 3. 保持模板层次清晰
 
 ```xml
-<!-- 好的做法：清晰的层次结构 -->
+&lt;!-- 好的做法：清晰的层次结构 --&gt;
 sql-standard-root (血统模板)
   └── mysql (方言模板)
       └── custom-mysql (扩展模板)
 
-<!-- 避免：扁平结构，所有模板都在同一层级 -->
+&lt;!-- 避免：扁平结构，所有模板都在同一层级 --&gt;
 ```
 
 ### 4. 使用模板引用
 
 ```xml
-<!-- 好的做法：引用共享模板 -->
+&lt;!-- 好的做法：引用共享模板 --&gt;
 {{> table-name}}
 {{> column-spec}}
 {{> index-spec}}
 
-<!-- 避免：在每个模板中重复定义 -->
+&lt;!-- 避免：在每个模板中重复定义 --&gt;
 ```
 
 ## 相关文档

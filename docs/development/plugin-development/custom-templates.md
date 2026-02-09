@@ -28,13 +28,13 @@ JustDB 使用 [Handlebars](https://handlebarsjs.com/) 作为模板引擎：
 ### 基本模板
 
 ```xml
-<template id="create-table" name="create-table" type="SQL" category="db">
-    <content>CREATE TABLE {{name}} (
+&lt;template id="create-table" name="create-table" type="SQL" category="db"&gt;
+    &lt;content&gt;CREATE TABLE {{name}} (
         {{#each columns}}
         {{name}} {{type}}{{#unless @last}},{{/unless}}
         {{/each}}
-    );</content>
-</template>
+    );&lt;/content&gt;
+&lt;/template&gt;
 ```
 
 ### 模板属性
@@ -95,13 +95,13 @@ JustDB 使用 [Handlebars](https://handlebarsjs.com/) 作为模板引擎：
 ### 变量输出
 
 ```handlebars
-<!-- 直接输出 -->
+&lt;!-- 直接输出 --&gt;
 {{tableName}}
 
-<!-- 带默认值 -->
+&lt;!-- 带默认值 --&gt;
 {{tableName || 'default_table'}}
 
-<!-- HTML 转义（通常不需要）-->
+&lt;!-- HTML 转义（通常不需要）--&gt;
 {{{rawSQL}}}
 ```
 
@@ -109,13 +109,13 @@ JustDB 使用 [Handlebars](https://handlebarsjs.com/) 作为模板引擎：
 
 ```handlebars
 {{#if condition}}
-  <!-- 条件为真 -->
+  &lt;!-- 条件为真 --&gt;
 {{else}}
-  <!-- 条件为假 -->
+  &lt;!-- 条件为假 --&gt;
 {{/if}}
 
 {{#unless condition}}
-  <!-- 条件为假 -->
+  &lt;!-- 条件为假 --&gt;
 {{/unless}}
 ```
 
@@ -124,10 +124,10 @@ JustDB 使用 [Handlebars](https://handlebarsjs.com/) 作为模板引擎：
 ```handlebars
 {{#each columns}}
   Column: {{name}}
-  {{#unless @last}},{{/unless}}  <!-- 非最后一项添加逗号 -->
+  {{#unless @last}},{{/unless}}  &lt;!-- 非最后一项添加逗号 --&gt;
 {{/each}}
 
-<!-- 使用 @index 获取索引 -->
+&lt;!-- 使用 @index 获取索引 --&gt;
 {{#each items}}
   Index: {{@index}}
   Value: {{this}}
@@ -137,13 +137,13 @@ JustDB 使用 [Handlebars](https://handlebarsjs.com/) 作为模板引擎：
 ### 模板引用
 
 ```handlebars
-<!-- 引用其他模板 -->
+&lt;!-- 引用其他模板 --&gt;
 {{> table-name}}
 
-<!-- 传递上下文 -->
+&lt;!-- 传递上下文 --&gt;
 {{> column-spec column=this}}
 
-<!-- 使用父上下文 -->
+&lt;!-- 使用父上下文 --&gt;
 {{> table-name ..}}
 ```
 
@@ -171,19 +171,19 @@ CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{name}} (
 ### 引用 Lineage 模板
 
 ```xml
-<!-- 定义 Lineage 模板 -->
-<template id="create-table-mysql-lineage" type="SQL" category="db">
-    <content>CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{name}} (...)</content>
-</template>
+&lt;!-- 定义 Lineage 模板 --&gt;
+&lt;template id="create-table-mysql-lineage" type="SQL" category="db"&gt;
+    &lt;content&gt;CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{name}} (...)&lt;/content&gt;
+&lt;/template&gt;
 
-<!-- 在 MySQL 插件中引用 -->
-<plugin id="mysql" dialect="mysql" ref-id="sql-standard-root">
-    <templates>
-        <template id="create-table" type="SQL" category="db">
-            <content>{{> create-table-mysql-lineage}}</content>
-        </template>
-    </templates>
-</plugin>
+&lt;!-- 在 MySQL 插件中引用 --&gt;
+&lt;plugin id="mysql" dialect="mysql" ref-id="sql-standard-root"&gt;
+    &lt;templates&gt;
+        &lt;template id="create-table" type="SQL" category="db"&gt;
+            &lt;content&gt;{{> create-table-mysql-lineage}}&lt;/content&gt;
+        &lt;/template&gt;
+    &lt;/templates&gt;
+&lt;/plugin&gt;
 ```
 
 ### 模板覆盖
@@ -191,16 +191,16 @@ CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{name}} (
 子插件可以覆盖父插件的模板：
 
 ```xml
-<plugin id="mysql" dialect="mysql" ref-id="sql-standard-root">
-    <!-- 覆盖父插件的 create-table 模板 -->
-    <templates>
-        <template id="create-table" type="SQL" category="db">
-            <content>
-                <!-- 自定义实现 -->
-            </content>
-        </template>
-    </templates>
-</plugin>
+&lt;plugin id="mysql" dialect="mysql" ref-id="sql-standard-root"&gt;
+    &lt;!-- 覆盖父插件的 create-table 模板 --&gt;
+    &lt;templates&gt;
+        &lt;template id="create-table" type="SQL" category="db"&gt;
+            &lt;content&gt;
+                &lt;!-- 自定义实现 --&gt;
+            &lt;/content&gt;
+        &lt;/template&gt;
+    &lt;/templates&gt;
+&lt;/plugin&gt;
 ```
 
 ## 模板注入
@@ -212,8 +212,8 @@ CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{name}} (
 ```xml
 <template id="custom-table-options" type="SQL" category="db"
          injectAfter="create-table">
-    <content> ENGINE=InnoDB DEFAULT CHARSET=utf8mb4</content>
-</template>
+    &lt;content&gt; ENGINE=InnoDB DEFAULT CHARSET=utf8mb4&lt;/content&gt;
+&lt;/template&gt;
 ```
 
 生成结果：
@@ -228,8 +228,8 @@ CREATE TABLE users (...) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```xml
 <template id="before-drop" type="SQL" category="db"
          injectBefore="drop-table">
-    <content>-- Warning: Dropping table</content>
-</template>
+    &lt;content&gt;-- Warning: Dropping table&lt;/content&gt;
+&lt;/template&gt;
 ```
 
 ### injectReplace
@@ -239,8 +239,8 @@ CREATE TABLE users (...) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```xml
 <template id="my-drop" type="SQL" category="db"
          injectReplace="drop-table">
-    <content>DROP TABLE IF EXISTS {{name}} CASCADE;</content>
-</template>
+    &lt;content&gt;DROP TABLE IF EXISTS {{name}} CASCADE;&lt;/content&gt;
+&lt;/template&gt;
 ```
 
 ## 完整示例
@@ -250,38 +250,38 @@ CREATE TABLE users (...) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```xml
 <template id="create-table-mysql-lineage" name="create-table-mysql-lineage"
          type="SQL" category="db">
-    <content>
+    &lt;content&gt;
 CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
 {{> columns}}
 {{#if this.indexes}}
 {{> indexes}}
 {{/if}}
 ){{> table-options}};
-    </content>
-</template>
+    &lt;/content&gt;
+&lt;/template&gt;
 ```
 
 ### 子模板定义
 
 ```xml
-<!-- 表名（含 schema）-->
-<template id="table-name" type="SQL" category="db">
-    <content>{{#if schema}}{{schema}}.{{/if}}{{name}}</content>
-</template>
+&lt;!-- 表名（含 schema）--&gt;
+&lt;template id="table-name" type="SQL" category="db"&gt;
+    &lt;content&gt;{{#if schema}}{{schema}}.{{/if}}{{name}}&lt;/content&gt;
+&lt;/template&gt;
 
-<!-- 列定义 -->
-<template id="columns" type="SQL" category="db">
-    <content>{{#each columns}}
+&lt;!-- 列定义 --&gt;
+&lt;template id="columns" type="SQL" category="db"&gt;
+    &lt;content&gt;{{#each columns}}
 {{#unless virtual}}
   {{name}} {{type}}{{#if primaryKey}} PRIMARY KEY{{/if}}{{#if autoIncrement}} AUTO_INCREMENT{{/if}}{{#unless @last}},{{/unless}}
 {{/unless}}
-{{/each}}</content>
-</template>
+{{/each}}&lt;/content&gt;
+&lt;/template&gt;
 
-<!-- 表选项 -->
-<template id="table-options" type="SQL" category="db">
-    <content>{{#if engine}} ENGINE={{engine}}{{/if}}{{#if charset}} DEFAULT CHARSET={{charset}}{{/if}}</content>
-</template>
+&lt;!-- 表选项 --&gt;
+&lt;template id="table-options" type="SQL" category="db"&gt;
+    &lt;content&gt;{{#if engine}} ENGINE={{engine}}{{/if}}{{#if charset}} DEFAULT CHARSET={{charset}}{{/if}}&lt;/content&gt;
+&lt;/template&gt;
 ```
 
 ## 测试模板

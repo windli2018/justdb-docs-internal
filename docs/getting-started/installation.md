@@ -1,6 +1,6 @@
 ---
 icon: download
-title: 安装指南
+title: 安装 JustDB
 order: 2
 category:
   - 快速开始
@@ -59,51 +59,51 @@ mvn -v
 #### 核心模块
 
 ```xml
-<dependency>
-    <groupId>org.verydb.justdb</groupId>
-    <artifactId>justdb-core</artifactId>
-    <version>1.0.0</version>
-</dependency>
+&lt;dependency&gt;
+    &lt;groupId&gt;org.verydb.justdb&lt;/groupId&gt;
+    &lt;artifactId&gt;justdb-core&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;
 ```
 
 #### Spring Boot Starter
 
 ```xml
-<dependency>
-    <groupId>org.verydb.justdb</groupId>
-    <artifactId>justdb-spring-boot-starter</artifactId>
-    <version>1.0.0</version>
-</dependency>
+&lt;dependency&gt;
+    &lt;groupId&gt;org.verydb.justdb&lt;/groupId&gt;
+    &lt;artifactId&gt;justdb-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;
 ```
 
 #### CLI 工具
 
 ```xml
-<dependency>
-    <groupId>org.verydb.justdb</groupId>
-    <artifactId>justdb-cli</artifactId>
-    <version>1.0.0</version>
-</dependency>
+&lt;dependency&gt;
+    &lt;groupId&gt;org.verydb.justdb&lt;/groupId&gt;
+    &lt;artifactId&gt;justdb-cli&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;
 ```
 
 #### AI 集成
 
 ```xml
-<dependency>
-    <groupId>org.verydb.justdb</groupId>
-    <artifactId>justdb-ai</artifactId>
-    <version>1.0.0</version>
-</dependency>
+&lt;dependency&gt;
+    &lt;groupId&gt;org.verydb.justdb&lt;/groupId&gt;
+    &lt;artifactId&gt;justdb-ai&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;
 ```
 
 #### Excel 支持
 
 ```xml
-<dependency>
-    <groupId>org.verydb.justdb</groupId>
-    <artifactId>justdb-excel</artifactId>
-    <version>1.0.0</version>
-</dependency>
+&lt;dependency&gt;
+    &lt;groupId&gt;org.verydb.justdb&lt;/groupId&gt;
+    &lt;artifactId&gt;justdb-excel&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;
 ```
 
 ### 方式二：下载发行版
@@ -188,16 +188,16 @@ services:
 在 `~/.m2/settings.xml` 中配置：
 
 ```xml
-<settings>
-  <mirrors>
-    <mirror>
-      <id>aliyun</id>
-      <mirrorOf>central</mirrorOf>
-      <name>Aliyun Maven</name>
-      <url>https://maven.aliyun.com/repository/public</url>
-    </mirror>
-  </mirrors>
-</settings>
+&lt;settings&gt;
+  &lt;mirrors&gt;
+    &lt;mirror&gt;
+      &lt;id&gt;aliyun&lt;/id&gt;
+      &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+      &lt;name&gt;Aliyun Maven&lt;/name&gt;
+      &lt;url&gt;https://maven.aliyun.com/repository/public&lt;/url&gt;
+    &lt;/mirror&gt;
+  &lt;/mirrors&gt;
+&lt;/settings&gt;
 ```
 
 ## IDE 配置
@@ -328,31 +328,31 @@ JustDB 会自动下载支持的数据库驱动，也可以手动配置：
 ### MySQL
 
 ```xml
-<dependency>
-    <groupId>mysql</groupId>
-    <artifactId>mysql-connector-java</artifactId>
-    <version>8.0.28</version>
-</dependency>
+&lt;dependency&gt;
+    &lt;groupId&gt;mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+    &lt;version&gt;8.0.28&lt;/version&gt;
+&lt;/dependency&gt;
 ```
 
 ### PostgreSQL
 
 ```xml
-<dependency>
-    <groupId>org.postgresql</groupId>
-    <artifactId>postgresql</artifactId>
-    <version>42.3.1</version>
-</dependency>
+&lt;dependency&gt;
+    &lt;groupId&gt;org.postgresql&lt;/groupId&gt;
+    &lt;artifactId&gt;postgresql&lt;/artifactId&gt;
+    &lt;version&gt;42.3.1&lt;/version&gt;
+&lt;/dependency&gt;
 ```
 
 ### H2（内存数据库，适合测试）
 
 ```xml
-<dependency>
-    <groupId>com.h2database</groupId>
-    <artifactId>h2</artifactId>
-    <version>2.1.210</version>
-</dependency>
+&lt;dependency&gt;
+    &lt;groupId&gt;com.h2database&lt;/groupId&gt;
+    &lt;artifactId&gt;h2&lt;/artifactId&gt;
+    &lt;version&gt;2.1.210&lt;/version&gt;
+&lt;/dependency&gt;
 ```
 
 ## 常见问题

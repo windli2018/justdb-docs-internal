@@ -1,0 +1,21 @@
+{
+  "name": "justdb-docs-scripts",
+  "version": "1.0.0",
+  "description": "Scripts for JustDB documentation maintenance",
+  "main": "find-duplicate-frontmatter.js",
+  "scripts": {
+    "find-duplicates": "node find-duplicate-frontmatter.js",
+    "analyze-frontmatter": "node analyze-frontmatter.js"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "keywords": [
+    "justdb",
+    "documentation",
+    "frontmatter",
+    "markdown"
+  ],
+  "author": "JustDB Team",
+  "license": "MIT"
+}

@@ -1,245 +1,393 @@
 ---
-title: CLI Overview
 icon: terminal
-description: JustDB command-line interface introduction, installation and basic usage
-order: 1
+title: CLI Reference
+order: 3
 ---
 
-# CLI Overview
+# CLI Reference
 
-JustDB CLI is a powerful command-line tool for managing database schemas, executing migrations, generating code, and interacting with AI assistants.
+Complete reference for the JustDB command-line interface.
 
 ## Installation
 
-### Build with Maven
-
 ```bash
-# Clone repository
-git clone https://github.com/verydb/justdb.git
-cd justdb
+# Download
+wget https://github.com/verydb/justdb/releases/download/v1.0.0/justdb-1.0.0-linux.tar.gz
+tar -xzf justdb-1.0.0-linux.tar.gz
 
-# Build project
-mvn clean package -DskipTests
+# Add to PATH
+export PATH=$PATH:$PWD/bin
 
-# CLI tool is located at justdb-cli/target/justdb-cli-*-bin.tar.gz
-```
-
-### Use Docker
-
-```bash
-docker pull verydb/justdb:latest
-docker run -it --rm verydb/justdb:latest --help
-```
-
-### Download from Release
-
-Download pre-compiled binaries from [GitHub Releases](https://github.com/verydb/justdb/releases).
-
-## Basic Usage
-
-```bash
-# Display help
-justdb --help
-
-# Display specific command help
-justdb migrate --help
-
-# View version
+# Verify
 justdb --version
 ```
 
-## Command Categories
+## Global Options
 
-### Schema Management
+| Option | Short | Description |
+|--------|-------|-------------|
+| `--config` | `-c` | Configuration file path |
+| `--dialect` | `-d` | Database dialect (mysql, postgresql, etc.) |
+| `--verbose` | `-v` | Verbose output |
+| `--quiet` | `-q` | Quiet mode |
+| `--help` | `-h` | Show help |
+| `--version` | `-V` | Show version |
 
-| Command | Description |
-|---------|-------------|
-| [`init`](./commands.md#init) | Initialize new JustDB project |
-| [`db2schema`](./commands.md#db2schema) | Export schema from database |
-| [`format`](./commands.md#format) | Format schema files |
-| [`validate`](./commands.md#validate) | Validate schema definitions |
+## Commands
 
-### Migration and Deployment
+### migrate
 
-| Command | Description |
-|---------|-------------|
-| [`migrate`](./commands.md#migrate) | Execute schema migration |
-| [`diff`](./commands.md#diff) | Compare schema differences |
-| [`deploy`](./commands.md#deploy) | Deploy schema to database |
-
-### Code Generation
-
-| Command | Description |
-|---------|-------------|
-| [`convert`](./commands.md#convert) | Convert schema format or generate code |
-
-### SQL Operations
-
-| Command | Description |
-|---------|-------------|
-| [`sql`](./commands.md#sql) | SQL interactive mode or execute SQL |
-
-### AI Integration
-
-| Command | Description |
-|---------|-------------|
-| [`ai`](./commands.md#ai) | One-time AI query |
-| [`interactive`](./interactive-mode.md) | Interactive shell (with AI assistant) |
-| [`ai-history`](./commands.md#ai-history) | Manage AI history |
-
-### Configuration and Plugins
-
-| Command | Description |
-|---------|-------------|
-| [`config`](./commands.md#config) | Manage CLI configuration |
-| [`plugin`](./commands.md#plugin) | Manage plugins |
-| [`driver`](./commands.md#driver) | Manage JDBC drivers |
-
-### Other Tools
-
-| Command | Description |
-|---------|-------------|
-| [`show`](./commands.md#show) | Display schema information |
-| [`test`](./commands.md#test) | Test database connection |
-| [`testrun`](./commands.md#testrun) | Test run schema |
-| [`load`](./commands.md#load) | Load schema files |
-| [`save`](./commands.md#save) | Save schema files |
-| [`watch`](./commands.md#watch) | Monitor file changes |
-
-## Common Options
-
-All commands support the following common options:
-
-### Input Options (InputMixin)
+Execute database migrations.
 
 ```bash
--i, --input <files>      # Input files/directories/URLs (comma-separated)
---type <types>           # File types (yaml, json, xml, sql, java, class)
--p, --project <name>     # Project name or path
+justdb migrate [options] [schema-files...]
 ```
 
-### Output Options (OutputMixin)
+**Options:**
+- `--dry-run` - Preview changes without executing
+- `--baseline` - Set baseline version
+- `--idempotent` - Enable idempotent mode (default: true)
+- `--safe-drop` - Enable safe drop (rename instead of delete)
+- `--force` - Force execution
+- `--validate` - Only validate schema
+
+**Examples:**
 
 ```bash
--o, --output <path>      # Output file or directory (auto-detected)
--t, --format <fmt>       # Output format: yaml, json, xml, toml, sql, java
--r, --report-format <fmt> # Report format: text, xml, md, html, json, yaml
+# Basic migration
+justdb migrate
+
+# Specific schema files
+justdb migrate users.yaml orders.yaml
+
+# Preview changes
+justdb migrate --dry-run
+
+# Set baseline
+justdb migrate --baseline
 ```
 
-### Database Connection Options (DatabaseConnectionMixin)
+### validate
+
+Validate schema definitions.
 
 ```bash
--U, --db-url <url>       # JDBC URL
--u, --db-username <user> # Database username
--w, --db-password <pass> # Database password
--D, --dialect <type>     # Database dialect (auto-detected)
--C, --current-database <name> # Use database from config file
+justdb validate [options] [schema-files...]
 ```
 
-### Table Filter Options (TableFilterMixin)
+**Options:**
+- `--strict` - Enable strict validation
+- `--verbose` - Show detailed validation results
+
+**Examples:**
 
 ```bash
--I, --include-tables <patterns>  # Include table patterns (supports * and ?)
--X, --exclude-tables <patterns>  # Exclude table patterns
+# Validate all schemas
+justdb validate
+
+# Strict mode
+justdb validate --strict
 ```
 
-### Data Filter Options (DataFilterMixin)
+### diff
+
+Compare schemas.
 
 ```bash
---data-filter <condition>         # Data filter condition
---process-data                    # Process data nodes
+justdb diff [options]
 ```
 
-### Global Options
+**Options:**
+- `--schema` | `-s` - Target schema file
+- `--format` | `-f` - Output format (text, json, yaml)
+- `--output` | `-o` - Output file
+
+**Examples:**
 
 ```bash
--c, --config <files>     # Configuration files (can be specified multiple times)
---disable-plugins <list> # Disable plugins
--v, --verbose            # Verbose output
--q, --quiet              # Quiet mode
---log-level <level>      # Log level: trace, debug, info, warn, error
---log-file <file>        # Log file
--f, --force              # Force execution
--n, --dry-run            # Dry run
+# Show differences
+justdb diff
+
+# JSON output
+justdb diff -f json
+
+# Save to file
+justdb diff -o diff.txt
 ```
 
-## Configuration Files
+### db2schema
 
-JustDB CLI supports multiple configuration formats:
-
-### Configuration File Lookup Order (low to high priority)
-
-1. Built-in configuration (`justdb/builtin-config.*`)
-2. Auto-discovered configuration (`~/.justdb-cli.*`, `./.justdb-cli.*`)
-3. User-specified configuration (`-c` option)
-4. Environment variables
-5. Command-line arguments (highest priority)
-
-### Supported Configuration Formats
-
-- YAML (`.yaml`, `.yml`)
-- JSON (`.json`)
-- XML (`.xml`)
-- Properties (`.properties`)
-- TOML (`.toml`)
-
-For detailed configuration, see [Configuration File Documentation](./configuration.md).
-
-## Quick Start
-
-### 1. Initialize Project
+Extract schema from database.
 
 ```bash
-justdb init myproject
-cd myproject
+justdb db2schema [options]
 ```
 
-### 2. Connect Database
+**Options:**
+- `--url` | `-u` - Database URL
+- `--username` - Database username
+- `--password` - Database password
+- `--output` | `-o` - Output file (default: schema.yaml)
+- `--format` - Output format (default: yaml)
 
-Edit `justdb.yaml`:
+**Examples:**
+
+```bash
+# Extract schema
+justdb db2schema -u jdbc:mysql://localhost:3306/myapp
+
+# JSON format
+justdb db2schema -u jdbc:postgresql://localhost:5432/myapp -o schema.json
+```
+
+### backup
+
+Backup database schema and data.
+
+```bash
+justdb backup [options]
+```
+
+**Options:**
+- `--output` | `-o` - Output file (default: backup.sql)
+- `--data` - Include data
+- `--compress` - Compress backup
+
+**Examples:**
+
+```bash
+# Backup schema only
+justdb backup
+
+# Backup schema and data
+justdb backup --data
+
+# Compressed backup
+justdb backup --compress
+```
+
+### history
+
+View migration history.
+
+```bash
+justdb history [options] [migration-id]
+```
+
+**Options:**
+- `--number` | `-n` - Number of recent migrations (default: 10)
+- `--format` - Output format
+
+**Examples:**
+
+```bash
+# Show recent migrations
+justdb history
+
+# Show last 20
+justdb history -n 20
+
+# Show specific migration
+justdb history 001
+```
+
+### rollback
+
+Rollback migrations.
+
+```bash
+justdb rollback [options] [version]
+```
+
+**Options:**
+- `--dry-run` - Preview rollback
+- `--last` - Rollback last migration
+
+**Examples:**
+
+```bash
+# Rollback to version
+justdb rollback 002
+
+# Rollback last migration
+justdb rollback --last
+```
+
+### convert
+
+Convert between formats.
+
+```bash
+justdb convert [options] <input> [output]
+```
+
+**Options:**
+- `--from` | `-f` - Input format
+- `--to` | `-t` - Output format
+
+**Examples:**
+
+```bash
+# YAML to JSON
+justdb convert -f yaml -t json schema.yaml schema.json
+
+# JSON to YAML
+justdb convert schema.json schema.yaml
+```
+
+### doc
+
+Generate documentation.
+
+```bash
+justdb doc [options]
+```
+
+**Options:**
+- `--format` - Output format (markdown, html, ascii)
+- `--output` | `-o` - Output file (default: DATABASE.md)
+
+**Examples:**
+
+```bash
+# Generate Markdown
+justdb doc
+
+# Generate HTML
+justdb doc --format html
+```
+
+## Interactive Mode
+
+Start interactive mode:
+
+```bash
+justdb
+```
+
+### Interactive Commands
+
+```bash
+justdb> /load schema.yaml        # Load schema
+justdb> /migrate                 # Run migration
+justdb> /diff                    # Show differences
+justdb> /validate                # Validate schema
+justdb> /help                    # Show help
+justdb> /exit                    # Exit
+```
+
+## Configuration File
+
+Create `justdb-config.yaml`:
 
 ```yaml
-databases:
-  - name: production
-    type: mysql
-    jdbcUrl: jdbc:mysql://localhost:3306/mydb
-    username: root
-    password: password
+database:
+  url: jdbc:mysql://localhost:3306/myapp
+  username: root
+  password: password
+
+schema:
+  locations:
+    - ./justdb
+    - ./db
+  format: yaml
+
+migrate:
+  auto-diff: true
+  safe-drop: false
+  idempotent: true
+  dry-run: false
+
+history:
+  enabled: true
+  table: justdb_history
+
+logging:
+  level: INFO
+  file: logs/justdb.log
 ```
 
-### 3. Export Schema
+Use configuration:
 
 ```bash
-justdb db2schema -C production -o schema.yaml
+justdb -c justdb-config.yaml migrate
 ```
 
-### 4. Execute Migration
+## Environment Variables
 
 ```bash
-justdb migrate -C production schema.yaml
+# Database configuration
+export JUSTDB_DATABASE_URL="jdbc:mysql://localhost:3306/myapp"
+export JUSTDB_DATABASE_USERNAME="root"
+export JUSTDB_DATABASE_PASSWORD="password"
+
+# Migration options
+export JUSTDB_MIGRATION_DRY_RUN="false"
+export JUSTDB_MIGRATION_SAFE_DROP="false"
 ```
 
-### 5. Use AI Assistant
+## Exit Codes
+
+| Code | Meaning |
+|------|---------|
+| 0 | Success |
+| 1 | General error |
+| 2 | Validation failed |
+| 3 | Migration failed |
+
+## Examples
+
+### Complete Workflow
 
 ```bash
-# Enter interactive mode
-justdb interactive
+# 1. Initialize
+justdb init
 
-# Or one-time query
-justdb ai "create a user table"
+# 2. Create schema
+cat > schema.yaml << EOF
+id: myapp
+Table:
+  - name: users
+    Column:
+      - name: id
+        type: BIGINT
+        primaryKey: true
+EOF
+
+# 3. Validate
+justdb validate schema.yaml
+
+# 4. Preview
+justdb migrate --dry-run schema.yaml
+
+# 5. Deploy
+justdb migrate schema.yaml
+
+# 6. Verify
+justdb diff
 ```
 
-## Best Practices
+### CI/CD Integration
 
-1. **Use Configuration Files**: Store database connection info in config files to avoid entering it every time
-2. **Version Control**: Include schema files in version control
-3. **Validate Before Migrate**: Use `validate` command to check schema before migration
-4. **Use AI Assistance**: Leverage AI assistant to quickly generate schema definitions
-5. **Check Differences**: Use `diff` command to view changes before migration
+```bash
+# In CI/CD pipeline
+set -e  # Exit on error
 
-## Related Documentation
+# Validate schema
+justdb validate
 
-- [Command Reference](./commands.md) - Complete command list and options *(Coming soon)*
-- [Interactive Mode](./interactive-mode.md) - Interactive shell usage guide *(Coming soon)*
-- [Configuration Files](./configuration.md) - Configuration file details *(Coming soon)*
-- [File Loading Mechanism](./file-loading.md) - Schema file loading rules *(Coming soon)*
+# Preview changes
+justdb migrate --dry-run
+
+# Deploy
+justdb migrate
+
+# Verify deployment
+justdb diff
+```
+
+## Next Steps
+
+- **[Quick Start](/getting-started/)** - Get started quickly
+- **[API Reference](/reference/api/)** - Programmatic API
+- **[Configuration](/reference/config/)** - Configuration options

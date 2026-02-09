@@ -29,13 +29,13 @@ JustDB 提供了一套完整的 Java API，用于定义、加载、生成和部�
 | 属性 | 类型 | 描述 |
 |------|------|------|
 | `namespace` | String | 命名空间，用于代码生成 |
-| `tables` | List\<Table\> | 表定义列表 |
-| `views` | List\<View\> | 视图定义列表 |
-| `sequences` | List\<Sequence\> | 序列定义列表 |
-| `indexes` | List\<Index\> | 索引定义列表 |
-| `constraints` | List\<Constraint\> | 约束定义列表 |
-| `data` | List\<Data\> | 数据导出定义 |
-| `properties` | List\<Property\> | Schema 属性 |
+| `tables` | List\&lt;Table\&gt; | 表定义列表 |
+| `views` | List\&lt;View\&gt; | 视图定义列表 |
+| `sequences` | List\&lt;Sequence\&gt; | 序列定义列表 |
+| `indexes` | List\&lt;Index\&gt; | 索引定义列表 |
+| `constraints` | List\&lt;Constraint\&gt; | 约束定义列表 |
+| `data` | List\&lt;Data\&gt; | 数据导出定义 |
+| `properties` | List\&lt;Property\&gt; | Schema 属性 |
 
 **代码示例**:
 
@@ -70,16 +70,16 @@ justdb.setTables(Arrays.asList(usersTable));
 | `name` | String | 表名 |
 | `id` | String | 表 ID |
 | `comment` | String | 表注释 |
-| `columns` | List\<Column\> | 列定义 |
-| `indexes` | List\<Index\> | 索引定义 |
-| `constraints` | List\<Constraint\> | 约束定义 |
-| `sequences` | List\<Sequence\> | 序列定义 |
+| `columns` | List\&lt;Column\&gt; | 列定义 |
+| `indexes` | List\&lt;Index\&gt; | 索引定义 |
+| `constraints` | List\&lt;Constraint\&gt; | 约束定义 |
+| `sequences` | List\&lt;Sequence\&gt; | 序列定义 |
 | `engine` | String | 存储引擎（MySQL） |
 | `charset` | String | 字符集 |
 | `collation` | String | 排序规则 |
 | `autoIncrement` | Long | 自增值起始值 |
 | `changeType` | ChangeType | 变更类型 |
-| `formerNames` | List\<String\> | 旧名称列表 |
+| `formerNames` | List\&lt;String\&gt; | 旧名称列表 |
 | `dataExportStrategy` | DataExportStrategy | 数据导出策略 |
 | `dataFilterCondition` | String | 数据过滤条件 |
 
@@ -126,7 +126,7 @@ table.setDataFilterCondition("status = 'active'");
 | `precision` | Integer | 精度 |
 | `scale` | Integer | 小数位数 |
 | `changeType` | ChangeType | 变更类型 |
-| `formerNames` | List\<String\> | 旧名称列表 |
+| `formerNames` | List\&lt;String\&gt; | 旧名称列表 |
 
 **支持的数据类型**:
 
@@ -173,7 +173,7 @@ emailColumn.setComment("邮箱地址");
 |------|------|------|
 | `name` | String | 索引名 |
 | `tableName` | String | 所属表名 |
-| `columns` | List\<String\> | 索引列 |
+| `columns` | List\&lt;String\&gt; | 索引列 |
 | `unique` | Boolean | 是否唯一索引 |
 | `type` | String | 索引类型 |
 | `comment` | String | 索引注释 |
@@ -209,7 +209,7 @@ compositeIndex.setColumns(Arrays.asList("email", "status"));
 | `name` | String | 约束名 |
 | `tableName` | String | 所属表名 |
 | `type` | ConstraintType | 约束类型 |
-| `columns` | List\<String\> | 约束列 |
+| `columns` | List\&lt;String\&gt; | 约束列 |
 | `referencedTable` | String | 引用表（外键） |
 | `referencedColumn` | String | 引用列（外键） |
 | `checkExpression` | String | 检查表达式 |
@@ -267,7 +267,7 @@ check.setCheckExpression("age >= 18");
 | `cycle` | Boolean | 是否循环 |
 | `cache` | Long | 缓存大小 |
 | `changeType` | ChangeType | 变更类型 |
-| `formerNames` | List\<String\> | 旧名称列表 |
+| `formerNames` | List\&lt;String\&gt; | 旧名称列表 |
 
 **代码示例**:
 
@@ -300,8 +300,8 @@ sequence.setCycle(false);
 **方法签名**:
 
 ```java
-public static Loaded<Justdb> load(String location, JustdbManager manager)
-public static List<Loaded<Justdb>> loadAll(String location, List<String> fileTypes, JustdbManager manager)
+public static Loaded&lt;Justdb&gt; load(String location, JustdbManager manager)
+public static List&lt;Loaded<Justdb&gt;> loadAll(String location, List&lt;String&gt; fileTypes, JustdbManager manager)
 ```
 
 **代码示例**:
@@ -310,19 +310,19 @@ public static List<Loaded<Justdb>> loadAll(String location, List<String> fileTyp
 JustdbManager manager = JustdbManager.getInstance();
 
 // 从文件加载
-Loaded<Justdb> result = SchemaLoaderFactory.load("schema.json", manager);
+Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("schema.json", manager);
 if (result.isSuccess()) {
     Justdb justdb = result.getData();
 }
 
 // 从类路径加载
-Loaded<Justdb> result = SchemaLoaderFactory.load("classpath:schema.xml", manager);
+Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("classpath:schema.xml", manager);
 
 // 从 HTTP 加载
-Loaded<Justdb> result = SchemaLoaderFactory.load("https://example.com/schema.json", manager);
+Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("https://example.com/schema.json", manager);
 
 // 从目录加载所有 Schema
-List<Loaded<Justdb>> results = SchemaLoaderFactory.loadAll("./schemas", null, manager);
+List&lt;Loaded<Justdb&gt;> results = SchemaLoaderFactory.loadAll("./schemas", null, manager);
 ```
 
 ### Loaded - 加载结果
@@ -539,11 +539,11 @@ import org.verydb.justdb.schema.*;
 import java.util.*;
 
 public class DynamicSchemaBuilder {
-    public static Table buildTable(String name, List<Map<String, Object>> columns) {
+    public static Table buildTable(String name, List&lt;Map&lt;String, Object&gt;&gt; columns) {
         Table table = new Table(name);
-        List<Column> columnList = new ArrayList<>();
+        List&lt;Column&gt; columnList = new ArrayList&lt;&gt;();
 
-        for (Map<String, Object> colDef : columns) {
+        for (Map&lt;String, Object&gt; colDef : columns) {
             Column column = new Column();
             column.setName((String) colDef.get("name"));
             column.setType((String) colDef.get("type"));
@@ -570,9 +570,9 @@ public class DynamicSchemaBuilder {
     }
 
     public static void main(String[] args) {
-        List<Map<String, Object>> columns = new ArrayList<>();
+        List&lt;Map&lt;String, Object&gt;&gt; columns = new ArrayList&lt;&gt;();
 
-        Map<String, Object> idCol = new HashMap<>();
+        Map&lt;String, Object&gt; idCol = new HashMap&lt;&gt;();
         idCol.put("name", "id");
         idCol.put("type", "BIGINT");
         idCol.put("primaryKey", true);
@@ -580,7 +580,7 @@ public class DynamicSchemaBuilder {
         idCol.put("comment", "主键");
         columns.add(idCol);
 
-        Map<String, Object> nameCol = new HashMap<>();
+        Map&lt;String, Object&gt; nameCol = new HashMap&lt;&gt;();
         nameCol.put("name", "name");
         nameCol.put("type", "VARCHAR(100)");
         nameCol.put("nullable", false);

@@ -8,7 +8,7 @@
 **最后更新**: 2026-02-07
 **维护者**: Wind Li
 
----
+---------------------------
 
 ## 目录
 
@@ -21,7 +21,7 @@
 7. [与 SchemaDeployer 的集成](#7-与-schemadeployer-的集成)
 8. [设计特点与权衡](#8-设计特点与权衡)
 
----
+---------------------------
 
 ## 1. 架构概述
 
@@ -87,7 +87,7 @@
 │  │  │  │ execution_time INT      | 执行时间（毫秒）               │  │  │ │
 │  │  │  │ success BOOLEAN         | 是否成功                       │  │  │ │
 │  │  │  └─────────────────────────────────────────────────────────────┘  │  │ │
-│  │  │  索引: idx_<table>_version, idx_<table>_success, idx_<table>_installed_on │  │ │
+│  │  │  索引: idx_&lt;table&gt;_version, idx_&lt;table&gt;_success, idx_&lt;table&gt;_installed_on │  │ │
 │  │  └─────────────────────────────────────────────────────────────────┘  │ │
 │  │                                                                       │ │
 │  │  ┌─────────────────────────────────────────────────────────────────┐  │ │
@@ -106,7 +106,7 @@
 │  │  │  │ success BOOLEAN         | 是否成功                       │  │  │ │
 │  │  │  │ status_code VARCHAR(50)  | 状态码（SUCCESS/ERROR）       │  │  │ │
 │  │  │  └─────────────────────────────────────────────────────────────┘  │  │ │
-│  │  │  索引: idx_<table>_obj_name, idx_<table>_obj_version, idx_<table>_obj_status │ │ │
+│  │  │  索引: idx_&lt;table&gt;_obj_name, idx_&lt;table&gt;_obj_version, idx_&lt;table&gt;_obj_status │ │ │
 │  │  └─────────────────────────────────────────────────────────────────┘  │ │
 │  └───────────────────────────────────────────────────────────────────────┘ │
 │                                                                             │
@@ -121,7 +121,7 @@
 3. **幂等性支持**: 通过 `isVersionApplied()` 实现重复执行安全
 4. **checksum 校验**: 支持基于 SHA256 的变更校验
 
----
+---------------------------
 
 ## 2. 数据模型
 
@@ -220,7 +220,7 @@ CREATE INDEX IF NOT EXISTS idx_justdb_schema_history_obj_status
   ON justdb_schema_history_objects(status_code);
 ```
 
----
+---------------------------
 
 ## 3. 核心组件
 
@@ -321,7 +321,7 @@ public SchemaHistoryManager(SchemaHistoryRepository schemaHistoryRepository) {
 
 // 3. 基于 PluginManager 的构造函数（支持扩展）
 public SchemaHistoryManager(PluginManager pluginManager, String repositoryId, Object... params) {
-    Class<? extends SchemaHistoryRepository> repoClass = pluginManager.getSchemaHistoryRepository(repositoryId);
+    Class&lt;? extends SchemaHistoryRepository&gt; repoClass = pluginManager.getSchemaHistoryRepository(repositoryId);
     if (repoClass == null) {
         throw new IllegalArgumentException("SchemaHistoryRepository not found for ID: " + repositoryId);
     }
@@ -378,7 +378,7 @@ public boolean isVersionApplied(String version) {
 }
 
 // 获取已应用的版本列表
-public List<String> getAppliedVersions() {
+public List&lt;String&gt; getAppliedVersions() {
     return schemaHistoryRepository.getAppliedVersions();
 }
 
@@ -388,12 +388,12 @@ public String getLatestAppliedVersion() {
 }
 
 // 获取版本的所有对象变更
-public List<SchemaObjectHistory> getObjectChangesByVersion(String version) {
+public List&lt;SchemaObjectHistory&gt; getObjectChangesByVersion(String version) {
     return schemaHistoryRepository.getObjectChangesByVersion(version);
 }
 
 // 获取所有 History 记录
-public List<SchemaHistory> getAllHistory() {
+public List&lt;SchemaHistory&gt; getAllHistory() {
     return schemaHistoryRepository.findAll();
 }
 
@@ -403,7 +403,7 @@ public boolean validateHistory() {
 }
 ```
 
----
+---------------------------
 
 ## 4. 工作流程
 
@@ -597,7 +597,7 @@ public boolean validateHistory() {
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
----
+---------------------------
 
 ## 5. 两种 History 实现对比
 
@@ -636,7 +636,7 @@ public boolean validateHistory() {
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  存储位置: 文件系统                                                        │
-│  - ~/.justdb/<project-name>/YYYYMMDD-HHmmss-tag.json                   │
+│  - ~/.justdb/&lt;project-name&gt;/YYYYMMDD-HHmmss-tag.json                   │
 │                                                                             │
 │  示例:                                                                     │
 │  - ~/.justdb/myapp/20240207-143000-initial.json                          │
@@ -670,7 +670,7 @@ public boolean validateHistory() {
 ### 5.3 对比表
 
 | 特性 | DatabaseSchemaHistoryRepository | AiSchemaHistoryManager |
-|------|--------------------------------|------------------------|
+|------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **存储位置** | 数据库表 | 文件系统 |
 | **数据粒度** | 版本级别 + 对象级别 | Schema 完整快照 |
 | **持久化** | 持久化 | 临时（可清理） |
@@ -680,7 +680,7 @@ public boolean validateHistory() {
 | **自动清理** | 手动 | 自动（limit 机制） |
 | **适用场景** | 生产环境 | AI 会话/开发环境 |
 
----
+---------------------------
 
 ## 6. 关键方法分析
 
@@ -823,7 +823,7 @@ public boolean isVersionApplied(String version) {
  * @param version 版本号
  * @return 对象变更列表
  */
-public List<SchemaObjectHistory> getObjectChangesByVersion(String version) {
+public List&lt;SchemaObjectHistory&gt; getObjectChangesByVersion(String version) {
     try {
         return objectHistoryRepository.findBySchemaVersion(version);
     } catch (Exception e) {
@@ -831,8 +831,8 @@ public List<SchemaObjectHistory> getObjectChangesByVersion(String version) {
     }
 }
 
-public List<SchemaObjectHistory> findBySchemaVersion(String schemaVersion) {
-    List<SchemaObjectHistory> changes = new ArrayList<>();
+public List&lt;SchemaObjectHistory&gt; findBySchemaVersion(String schemaVersion) {
+    List&lt;SchemaObjectHistory&gt; changes = new ArrayList&lt;&gt;();
     String selectSql = String.format(
         "SELECT id, object_type, object_name, schema_version, description, ddl_statement, " +
         "checksum, installed_by, installed_on, execution_time, success, status_code " +
@@ -862,7 +862,7 @@ public List<SchemaObjectHistory> findBySchemaVersion(String schemaVersion) {
 - 按 `installed_on` 排序（执行顺序）
 - 返回完整的对象变更历史
 
----
+---------------------------
 
 ## 7. 与 SchemaDeployer 的集成
 
@@ -1019,7 +1019,7 @@ public List<SchemaObjectHistory> findBySchemaVersion(String schemaVersion) {
 │
 ```
 
----
+---------------------------
 
 ## 8. 设计特点与权衡
 
@@ -1068,21 +1068,21 @@ public List<SchemaObjectHistory> findBySchemaVersion(String schemaVersion) {
 ### 8.3 设计权衡
 
 | 方面 | 当前设计 | 替代方案 | 权衡说明 |
-|------|---------|---------|-----------|
+|------------------------------------------------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
 | **History 表粒度** | 两级（版本+对象） | 单级（只有版本）或三级（版本+子版本+对象） | 两级设计在易用性和细粒度之间取得平衡 |
 | **installed_rank 生成** | 子查询 `MAX+1` | 序列/计数器 | 子查询简单但性能略差，序列更高效但增加复杂度 |
 | **checksum 类型** | INT | VARCHAR(64) | INT 不够精确，VARCHAR 更适合 SHA256 |
 | **对象 action 存储** | `description` 字段 | 专用 `action_type` 字段 | 当前设计利用现有字段，但语义不清 |
 | **失败处理** | 记录失败但不回滚 | 自动回滚 | 自动回滚更安全但实现复杂 |
 
----
+---------------------------
 
 ## 附录
 
 ### A. 关键类文件清单
 
 | 文件路径 | 说明 |
-|---------|------|
+|---------------------------------------------------------------------------------|------------------------------------------------------|
 | `SchemaHistoryManager.java` | History 管理门面类 |
 | `DatabaseSchemaHistoryRepository.java` | 数据库 History 实现（主表） |
 | `DatabaseSchemaObjectHistoryRepository.java` | 数据库 History 实现（对象表） |
@@ -1095,8 +1095,8 @@ public List<SchemaObjectHistory> findBySchemaVersion(String schemaVersion) {
 
 ### B. 相关文档
 
-- [migrate-system-integration.md](migrate-system-integration.md) - Migrate 系统整合方案
-- [db-migrate-design.md](db-migrate-design.md) - 数据迁移功能设计
+- [迁移系统概述](/design/migration-system/overview.md) - 迁移系统概述
+- [Hash-based History](./hash-based-history.md) - Hash History 设计
 
 ### C. History 表完整 DDL
 

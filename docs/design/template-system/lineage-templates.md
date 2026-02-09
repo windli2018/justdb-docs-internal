@@ -69,36 +69,36 @@ graph TD
 ### 在 sql-standard-root 中定义
 
 ```xml
-<plugin id="sql-standard-root">
-    <templates>
-        <!-- MySQL 血统：CREATE TABLE -->
-        <template id="create-table-mysql-lineage" type="SQL" category="db">
-            <content>
+&lt;plugin id="sql-standard-root"&gt;
+    &lt;templates&gt;
+        &lt;!-- MySQL 血统：CREATE TABLE --&gt;
+        &lt;template id="create-table-mysql-lineage" type="SQL" category="db"&gt;
+            &lt;content&gt;
                 CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
                     {{> columns}}
                 ){{#if this.engine}} ENGINE={{this.engine}}{{/if}};
-            </content>
-        </template>
+            &lt;/content&gt;
+        &lt;/template&gt;
 
-        <!-- PostgreSQL 血统：CREATE TABLE -->
-        <template id="create-table-postgres-lineage" type="SQL" category="db">
-            <content>
+        &lt;!-- PostgreSQL 血统：CREATE TABLE --&gt;
+        &lt;template id="create-table-postgres-lineage" type="SQL" category="db"&gt;
+            &lt;content&gt;
                 CREATE TABLE{{#if @root.idempotent}} IF NOT EXISTS{{/if}} {{> table-name}} (
                     {{> columns}}
                 );
-            </content>
-        </template>
+            &lt;/content&gt;
+        &lt;/template&gt;
 
-        <!-- ANSI 血统：CREATE TABLE -->
-        <template id="create-table-ansi-lineage" type="SQL" category="db">
-            <content>
+        &lt;!-- ANSI 血统：CREATE TABLE --&gt;
+        &lt;template id="create-table-ansi-lineage" type="SQL" category="db"&gt;
+            &lt;content&gt;
                 CREATE TABLE {{> table-name}} (
                     {{> columns}}
                 );
-            </content>
-        </template>
-    </templates>
-</plugin>
+            &lt;/content&gt;
+        &lt;/template&gt;
+    &lt;/templates&gt;
+&lt;/plugin&gt;
 ```
 
 ## 血统模板引用
@@ -106,49 +106,49 @@ graph TD
 ### 在方言插件中引用
 
 ```xml
-<!-- MySQL plugin -->
-<plugin id="mysql" dialect="mysql" ref-id="sql-standard-root">
-    <templates>
-        <!-- 引用 MySQL 血统模板 -->
-        <template id="create-table" type="SQL" category="db">
-            <content>{{> create-table-mysql-lineage}}</content>
-        </template>
-    </templates>
-</plugin>
+&lt;!-- MySQL plugin --&gt;
+&lt;plugin id="mysql" dialect="mysql" ref-id="sql-standard-root"&gt;
+    &lt;templates&gt;
+        &lt;!-- 引用 MySQL 血统模板 --&gt;
+        &lt;template id="create-table" type="SQL" category="db"&gt;
+            &lt;content&gt;{{> create-table-mysql-lineage}}&lt;/content&gt;
+        &lt;/template&gt;
+    &lt;/templates&gt;
+&lt;/plugin&gt;
 
-<!-- PostgreSQL plugin -->
-<plugin id="postgresql" dialect="postgresql" ref-id="sql-standard-root">
-    <templates>
-        <!-- 引用 PostgreSQL 血统模板 -->
-        <template id="create-table" type="SQL" category="db">
-            <content>{{> create-table-postgres-lineage}}</content>
-        </template>
-    </templates>
-</plugin>
+&lt;!-- PostgreSQL plugin --&gt;
+&lt;plugin id="postgresql" dialect="postgresql" ref-id="sql-standard-root"&gt;
+    &lt;templates&gt;
+        &lt;!-- 引用 PostgreSQL 血统模板 --&gt;
+        &lt;template id="create-table" type="SQL" category="db"&gt;
+            &lt;content&gt;{{> create-table-postgres-lineage}}&lt;/content&gt;
+        &lt;/template&gt;
+    &lt;/templates&gt;
+&lt;/plugin&gt;
 ```
 
 ### 多数据库共享
 
 ```xml
-<!-- MariaDB plugin -->
-<plugin id="mariadb" dialect="mariadb" ref-id="sql-standard-root">
-    <templates>
-        <!-- 也使用 MySQL 血统 -->
-        <template id="create-table" type="SQL" category="db">
-            <content>{{> create-table-mysql-lineage}}</content>
-        </template>
-    </templates>
-</plugin>
+&lt;!-- MariaDB plugin --&gt;
+&lt;plugin id="mariadb" dialect="mariadb" ref-id="sql-standard-root"&gt;
+    &lt;templates&gt;
+        &lt;!-- 也使用 MySQL 血统 --&gt;
+        &lt;template id="create-table" type="SQL" category="db"&gt;
+            &lt;content&gt;{{> create-table-mysql-lineage}}&lt;/content&gt;
+        &lt;/template&gt;
+    &lt;/templates&gt;
+&lt;/plugin&gt;
 
-<!-- TiDB plugin -->
-<plugin id="tidb" dialect="tidb" ref-id="sql-standard-root">
-    <templates>
-        <!-- 也使用 MySQL 血统 -->
-        <template id="create-table" type="SQL" category="db">
-            <content>{{> create-table-mysql-lineage}}</content>
-        </template>
-    </templates>
-</plugin>
+&lt;!-- TiDB plugin --&gt;
+&lt;plugin id="tidb" dialect="tidb" ref-id="sql-standard-root"&gt;
+    &lt;templates&gt;
+        &lt;!-- 也使用 MySQL 血统 --&gt;
+        &lt;template id="create-table" type="SQL" category="db"&gt;
+            &lt;content&gt;{{> create-table-mysql-lineage}}&lt;/content&gt;
+        &lt;/template&gt;
+    &lt;/templates&gt;
+&lt;/plugin&gt;
 ```
 
 ## 血统模板差异
@@ -176,13 +176,13 @@ graph TD
 ### 索引创建
 
 ```handlebars
-<!-- MySQL 血统 -->
+&lt;!-- MySQL 血统 --&gt;
 CREATE INDEX {{> index-name}} ON {{> table-name}}({{> columns}});
 
-<!-- PostgreSQL 血统 -->
+&lt;!-- PostgreSQL 血统 --&gt;
 CREATE INDEX{{#if @root.concurrent}} CONCURRENTLY{{/if}} {{> index-name}} ON {{> table-name}}({{> columns}});
 
-<!-- ANSI 血统 -->
+&lt;!-- ANSI 血统 --&gt;
 CREATE INDEX {{> index-name}} ON {{> table-name}}({{> columns}});
 ```
 
@@ -191,46 +191,46 @@ CREATE INDEX {{> index-name}} ON {{> table-name}}({{> columns}});
 ### 添加新血统
 
 ```xml
-<!-- 1. 定义新血统模板 -->
-<template id="create-table-newdb-lineage" type="SQL" category="db">
-    <content>
+&lt;!-- 1. 定义新血统模板 --&gt;
+&lt;template id="create-table-newdb-lineage" type="SQL" category="db"&gt;
+    &lt;content&gt;
         -- 新数据库的 CREATE TABLE 语法
         CREATE TABLE {{> table-name}} (
             {{> columns}}
         );
-    </content>
-</template>
+    &lt;/content&gt;
+&lt;/template&gt;
 
-<!-- 2. 在新插件中引用 -->
-<plugin id="newdb" dialect="newdb" ref-id="sql-standard-root">
-    <templates>
-        <template id="create-table" type="SQL" category="db">
-            <content>{{> create-table-newdb-lineage}}</content>
-        </template>
-    </templates>
-</plugin>
+&lt;!-- 2. 在新插件中引用 --&gt;
+&lt;plugin id="newdb" dialect="newdb" ref-id="sql-standard-root"&gt;
+    &lt;templates&gt;
+        &lt;template id="create-table" type="SQL" category="db"&gt;
+            &lt;content&gt;{{> create-table-newdb-lineage}}&lt;/content&gt;
+        &lt;/template&gt;
+    &lt;/templates&gt;
+&lt;/plugin&gt;
 ```
 
 ### 血统变体
 
 ```xml
-<!-- MySQL 血统变体 -->
-<template id="create-table-mysql-8.0-lineage" type="SQL" category="db">
-    <content>
+&lt;!-- MySQL 血统变体 --&gt;
+&lt;template id="create-table-mysql-8.0-lineage" type="SQL" category="db"&gt;
+    &lt;content&gt;
         CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
             {{> columns}}
         ) ENGINE=InnoDB;
-    </content>
-</template>
+    &lt;/content&gt;
+&lt;/template&gt;
 
-<!-- MySQL 8.0 plugin -->
-<plugin id="mysql-8.0" dialect="mysql" ref-id="sql-standard-root">
-    <templates>
-        <template id="create-table" type="SQL" category="db">
-            <content>{{> create-table-mysql-8.0-lineage}}</content>
-        </template>
-    </templates>
-</plugin>
+&lt;!-- MySQL 8.0 plugin --&gt;
+&lt;plugin id="mysql-8.0" dialect="mysql" ref-id="sql-standard-root"&gt;
+    &lt;templates&gt;
+        &lt;template id="create-table" type="SQL" category="db"&gt;
+            &lt;content&gt;{{> create-table-mysql-8.0-lineage}}&lt;/content&gt;
+        &lt;/template&gt;
+    &lt;/templates&gt;
+&lt;/plugin&gt;
 ```
 
 ## 血统映射
@@ -239,7 +239,7 @@ CREATE INDEX {{> index-name}} ON {{> table-name}}({{> columns}});
 
 ```java
 public class LineageDetector {
-    private static final Map<String, String> DIALECT_TO_LINEAGE = Map.of(
+    private static final Map&lt;String, String&gt; DIALECT_TO_LINEAGE = Map.of(
         "mysql", "mysql-lineage",
         "mariadb", "mysql-lineage",
         "tidb", "mysql-lineage",
@@ -268,42 +268,42 @@ public class LineageDetector {
 ### 1. 优先使用血统模板
 
 ```xml
-<!-- 好的做法：定义血统模板 -->
-<template id="create-table-mysql-lineage">...</template>
-<template id="create-table-postgres-lineage">...</template>
+&lt;!-- 好的做法：定义血统模板 --&gt;
+&lt;template id="create-table-mysql-lineage"&gt;...&lt;/template&gt;
+&lt;template id="create-table-postgres-lineage"&gt;...&lt;/template&gt;
 
-<!-- 在插件中引用 -->
-<template id="create-table">{{> create-table-mysql-lineage}}</template>
+&lt;!-- 在插件中引用 --&gt;
+&lt;template id="create-table"&gt;{{> create-table-mysql-lineage}}&lt;/template&gt;
 ```
 
 ### 2. 保持血统独立性
 
 ```xml
-<!-- 好的做法：每个血统独立定义 -->
-<template id="drop-table-mysql-lineage">DROP TABLE `table`;</template>
-<template id="drop-table-postgres-lineage">DROP TABLE "table";</template>
+&lt;!-- 好的做法：每个血统独立定义 --&gt;
+&lt;template id="drop-table-mysql-lineage"&gt;DROP TABLE `table`;&lt;/template&gt;
+&lt;template id="drop-table-postgres-lineage"&gt;DROP TABLE "table";&lt;/template&gt;
 
-<!-- 避免：在一个模板中处理多种方言 -->
-<template id="drop-table">
+&lt;!-- 避免：在一个模板中处理多种方言 --&gt;
+&lt;template id="drop-table"&gt;
     {{#if (eq @root.dbType 'mysql')}}DROP TABLE `table`;{{/if}}
     {{#if (eq @root.dbType 'postgresql')}}DROP TABLE "table";{{/if}}
-</template>
+&lt;/template&gt;
 ```
 
 ### 3. 合理分类
 
 ```xml
-<!-- 好的做法：按 SQL 语法相似性分类 -->
+&lt;!-- 好的做法：按 SQL 语法相似性分类 --&gt;
 -mysql-lineage: MySQL, MariaDB, TiDB
 -postgres-lineage: PostgreSQL, Redshift, TimescaleDB
 
-<!-- 避免：按品牌分类 -->
+&lt;!-- 避免：按品牌分类 --&gt;
 ```
 
 ### 4. 文档说明
 
 ```xml
-<!-- 好的做法：添加注释说明血统特征 -->
+&lt;!-- 好的做法：添加注释说明血统特征 --&gt;
 <!--
   MySQL 血统特征：
   - 标识符使用反引号
@@ -311,7 +311,7 @@ public class LineageDetector {
   - 支持 ENGINE 子句
   - 支持 IF NOT EXISTS
 -->
-<template id="create-table-mysql-lineage">...</template>
+&lt;template id="create-table-mysql-lineage"&gt;...&lt;/template&gt;
 ```
 
 ## 相关文档

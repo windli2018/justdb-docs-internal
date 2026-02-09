@@ -1,6 +1,6 @@
 ---
 icon: file-code
-title: 第一个 Schema
+title: 创建第一个 Schema
 order: 4
 category:
   - 快速开始

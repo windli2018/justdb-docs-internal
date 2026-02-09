@@ -1,0 +1,129 @@
+---
+icon: server
+title: JustDB vs Atlas
+order: 5
+category:
+  - Guide
+  - Comparison
+tag:
+  - comparison
+  - Atlas
+---
+
+# JustDB vs Atlas
+
+## Core Differences
+
+| Dimension | JustDB | Atlas |
+|:---|:---|:---|
+| **Language Ecosystem** | Java/JVM | Multi-language (Go core) |
+| **Design Philosophy** | Declarative | Declarative + GitOps |
+| **Schema Definition** | YAML/JSON/XML | SQL/HCL/ORM |
+| **Diff Calculation** | Automatic | Automatic |
+| **AI Integration** | Local/Cloud AI | Atlas Copilot (cloud) |
+| **JDBC Driver** | ✅ Unique | ❌ |
+| **Deployment** | CLI/JDBC | CLI/Terraform/K8s |
+| **Enterprise Features** | Open Source | Cloud SaaS |
+
+## Code Comparison
+
+<CodeGroup>
+<CodeGroupItem title="JustDB">
+
+```yaml
+# schema.yaml
+Table:
+  - name: users
+    Column:
+      - name: id
+        type: BIGINT
+        primaryKey: true
+        autoIncrement: true
+      - name: username
+        type: VARCHAR(50)
+        nullable: false
+      - name: email
+        type: VARCHAR(100)
+    Index:
+      - name: idx_username
+        columns: [username]
+        unique: true
+
+# Run migration directly
+justdb migrate
+```
+
+</CodeGroupItem>
+
+<CodeGroupItem title="Atlas (HCL)">
+
+```hcl
+# schema.hcl
+table "users" {
+  schema = schema.public
+  column "id" {
+    type = serial
+    null = false
+  }
+  column "username" {
+    type = varchar(50)
+    null = false
+  }
+  column "email" {
+    type = varchar(100)
+  }
+  primary_key {
+    columns = [column.id]
+  }
+}
+
+# Apply changes
+atlas schema apply -u "postgres://user:pass@localhost/db" \
+  --to file://schema.hcl
+```
+
+</CodeGroupItem>
+
+<CodeGroupItem title="Atlas (SQL)">
+
+```sql
+-- schema.sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(50) NOT NULL,
+  email VARCHAR(100)
+);
+
+CREATE UNIQUE INDEX idx_username ON users(username);
+```
+
+</CodeGroupItem>
+</CodeGroup>
+
+## Pros and Cons
+
+**JustDB Advantages**:
+- ✅ **JDBC Driver**: Unique in-memory database driver for offline development
+- ✅ **Multi-format Support**: Native support for 8 data formats (YAML/JSON/XML/Properties, etc.)
+- ✅ **AI Integration**: Support for local LLMs and multiple cloud AI providers
+- ✅ **Java Ecosystem**: Deep integration with Java/JVM ecosystem
+- ✅ **Template System**: Flexible template engine for custom SQL generation
+- ✅ **Open Source**: Fully open source, no enterprise paywall
+
+**Atlas Advantages**:
+- ✅ **GitOps Native**: Designed specifically for GitOps/CI-CD workflows
+- ✅ **Terraform Integration**: Official Terraform provider support
+- ✅ **Multi-language Friendly**: Works with SQL/HCL from any language project
+- ✅ **Linting Validation**: Powerful schema change validation
+- ✅ **Atlas Cloud**: Enterprise-grade platform (paid)
+- ✅ **ORM Integration**: Auto-generate migrations from ORMs (Ent/GORM)
+
+**Atlas Disadvantages**:
+- ❌ **Proprietary HCL Format**: Requires learning Atlas HCL DSL, adds learning curve
+- ❌ **No JDBC Driver**: Does not provide in-memory database driver
+- ❌ **Enterprise Features Paid**: Advanced features require Atlas Cloud subscription
+
+## Use Cases
+
+- **Choose JustDB**: Java projects, need JDBC driver, multi-format support, local AI
+- **Choose Atlas**: DevOps/GitOps first, Terraform users, need cloud enterprise features

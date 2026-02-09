@@ -22,11 +22,11 @@ tag:
 | `id` | String | 否 | 唯一标识符，用于引用 |
 | `name` | String | 是 | 视图名称 |
 | `referenceId` | String | 否 | 引用其他视图的 id |
-| `formerNames` | List<String> | 否 | 曾用名列表 |
+| `formerNames` | List&lt;String&gt; | 否 | 曾用名列表 |
 | `content` | String | 是 | 视图定义的 SQL 查询 |
 | `comment` | String | 否 | 视图注释 |
 | `remark` | String | 否 | JustDB 备注 |
-| `dbms` | List<String> | 否 | 适用数据库列表 |
+| `dbms` | List&lt;String&gt; | 否 | 适用数据库列表 |
 
 ## 基本示例
 

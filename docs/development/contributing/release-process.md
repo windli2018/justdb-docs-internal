@@ -44,7 +44,7 @@ git checkout -b release/1.0.0
 `pom.xml`:
 
 ```xml
-<version>1.0.0</version>
+&lt;version&gt;1.0.0&lt;/version&gt;
 ```
 
 #### 子模块 POM
@@ -202,15 +202,15 @@ gpg --gen-key
 gpg --keyserver hkp://pool.sks-keyservers.net --send-keys YOUR_KEY_ID
 
 # 配置 Maven settings.xml
-<settings>
-    <servers>
-        <server>
-            <id>ossrh</id>
-            <username>your-username</username>
-            <password>your-password</password>
-        </server>
-    </servers>
-</settings>
+&lt;settings&gt;
+    &lt;servers&gt;
+        &lt;server&gt;
+            &lt;id&gt;ossrh&lt;/id&gt;
+            &lt;username&gt;your-username&lt;/username&gt;
+            &lt;password&gt;your-password&lt;/password&gt;
+        &lt;/server&gt;
+    &lt;/servers&gt;
+&lt;/settings&gt;
 ```
 
 ### 手动发布（如需要）

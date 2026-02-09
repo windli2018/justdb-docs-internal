@@ -11,7 +11,20 @@ export const enSidebar = sidebar({
       children: [
         "what-is-justdb.md",
         "why-justdb.md",
-        "comparison.md",
+        {
+          text: "Comparison",
+          icon: "balance-scale",
+          prefix: "/en/guide/comparison/",
+          link: "/en/guide/comparison/",
+          collapsible: true,
+          children: [
+            "flyway.md",
+            "liquibase.md",
+            "sqlalchemy.md",
+            "prisma.md",
+            "atlas.md",
+          ],
+        },
         "design-philosophy.md",
         "use-cases.md",
       ],

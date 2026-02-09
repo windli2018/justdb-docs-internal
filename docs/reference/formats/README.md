@@ -31,8 +31,8 @@ JustDB 支持多种 Schema 定义格式，你可以根据项目需求选择最�
 
 ### 可读性对比
 
-<CodeGroup>
-<CodeGroupItem title="YAML">
+&lt;CodeGroup&gt;
+&lt;CodeGroupItem title="YAML"&gt;
 ```yaml
 Table:
   - name: users
@@ -44,9 +44,9 @@ Table:
       - name: username
         type: VARCHAR(50)
 ```
-</CodeGroupItem>
+&lt;/CodeGroupItem&gt;
 
-<CodeGroupItem title="JSON">
+&lt;CodeGroupItem title="JSON"&gt;
 ```json
 {
   "Table": [
@@ -68,17 +68,17 @@ Table:
   ]
 }
 ```
-</CodeGroupItem>
+&lt;/CodeGroupItem&gt;
 
-<CodeGroupItem title="XML">
+&lt;CodeGroupItem title="XML"&gt;
 ```xml
-<Table name="users" comment="用户表">
-  <Column name="id" type="BIGINT" primaryKey="true"/>
-  <Column name="username" type="VARCHAR(50)"/>
-</Table>
+&lt;Table name="users" comment="用户表"&gt;
+  &lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
+  &lt;Column name="username" type="VARCHAR(50)"/&gt;
+&lt;/Table&gt;
 ```
-</CodeGroupItem>
-</CodeGroup>
+&lt;/CodeGroupItem&gt;
+&lt;/CodeGroup&gt;
 
 ### 功能对比
 
@@ -155,11 +155,11 @@ Table:
 - JAXB 注解项目
 
 ```xml
-<Justdb id="myapp">
-  <Table name="users">
-    <Column name="id" type="BIGINT" primaryKey="true"/>
-  </Table>
-</Justdb>
+&lt;Justdb id="myapp"&gt;
+  &lt;Table name="users"&gt;
+    &lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
+  &lt;/Table&gt;
+&lt;/Justdb&gt;
 ```
 
 ### 使用 TOML
@@ -308,19 +308,19 @@ JustDB 支持 JSON5 扩展语法：
 ### XML 命名空间
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 <justdb:Justdb xmlns:justdb="http://www.verydb.org/justdb"
                id="myapp"
                namespace="com.example">
-  <justdb:Table name="users"/>
-</justdb:Justdb>
+  &lt;justdb:Table name="users"/&gt;
+&lt;/justdb:Justdb&gt;
 ```
 
 ## 完整示例
 
 ### 同一 Schema 的多种格式
 
-<tabs>
+&lt;tabs&gt;
 
 #### YAML 格式
 
@@ -430,32 +430,32 @@ Table:
 #### XML 格式
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<Justdb id="ecommerce" namespace="com.example.ecommerce">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;Justdb id="ecommerce" namespace="com.example.ecommerce"&gt;
 
-  <!-- 全局列定义 -->
+  &lt;!-- 全局列定义 --&gt;
   <Column id="global_id" name="id" type="BIGINT"
           primaryKey="true" autoIncrement="true"/>
 
   <Column id="global_created_at" name="created_at" type="TIMESTAMP"
           nullable="false" defaultValueComputed="CURRENT_TIMESTAMP"/>
 
-  <!-- 用户表 -->
-  <Table name="users" comment="用户表">
-    <Column id="col_users_id" referenceId="global_id" name="id"/>
-    <Column name="username" type="VARCHAR(50)" nullable="false"/>
-    <Column name="email" type="VARCHAR(100)"/>
-    <Column id="col_users_created_at" referenceId="global_created_at" name="created_at"/>
+  &lt;!-- 用户表 --&gt;
+  &lt;Table name="users" comment="用户表"&gt;
+    &lt;Column id="col_users_id" referenceId="global_id" name="id"/&gt;
+    &lt;Column name="username" type="VARCHAR(50)" nullable="false"/&gt;
+    &lt;Column name="email" type="VARCHAR(100)"/&gt;
+    &lt;Column id="col_users_created_at" referenceId="global_created_at" name="created_at"/&gt;
 
-    <Index name="idx_users_username" unique="true">
-      <columns>username</columns>
-    </Index>
-  </Table>
+    &lt;Index name="idx_users_username" unique="true"&gt;
+      &lt;columns&gt;username&lt;/columns&gt;
+    &lt;/Index&gt;
+  &lt;/Table&gt;
 
-</Justdb>
+&lt;/Justdb&gt;
 ```
 
-</tabs>
+&lt;/tabs&gt;
 
 ## 相关文档
 
@@ -466,4 +466,4 @@ Table:
 - [Properties 格式](./properties.md)
 - [SQL 格式](./sql.md)
 - [Markdown 格式](./markdown.md)
-- Excel 格式 *(即将推出)*
+- [Excel 格式](./excel.md)

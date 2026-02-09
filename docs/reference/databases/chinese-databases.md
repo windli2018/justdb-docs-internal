@@ -29,11 +29,11 @@ JustDB 支持多款国产数据库，包括达梦、人大金仓、GBase、TiDB�
 **JDBC 驱动:**
 
 ```xml
-<dependency>
-    <groupId>com.dameng</groupId>
-    <artifactId>DmJdbcDriver18</artifactId>
-    <version>8.1.3.62</version>
-</dependency>
+&lt;dependency&gt;
+    &lt;groupId&gt;com.dameng&lt;/groupId&gt;
+    &lt;artifactId&gt;DmJdbcDriver18&lt;/artifactId&gt;
+    &lt;version&gt;8.1.3.62&lt;/version&gt;
+&lt;/dependency&gt;
 ```
 
 **连接字符串:**
@@ -111,11 +111,11 @@ CREATE TABLE "users" (
 **JDBC 驱动:**
 
 ```xml
-<dependency>
-    <groupId>cn.com.kingbase</groupId>
-    <artifactId>kingbase8</artifactId>
-    <version>9.0.1</version>
-</dependency>
+&lt;dependency&gt;
+    &lt;groupId&gt;cn.com.kingbase&lt;/groupId&gt;
+    &lt;artifactId&gt;kingbase8&lt;/artifactId&gt;
+    &lt;version&gt;9.0.1&lt;/version&gt;
+&lt;/dependency&gt;
 ```
 
 **连接字符串:**
@@ -189,11 +189,11 @@ CREATE TABLE "users" (
 **JDBC 驱动:**
 
 ```xml
-<dependency>
-    <groupId>com.gbase</groupId>
-    <artifactId>gbasejdbc</artifactId>
-    <version>8.8.0</version>
-</dependency>
+&lt;dependency&gt;
+    &lt;groupId&gt;com.gbase&lt;/groupId&gt;
+    &lt;artifactId&gt;gbasejdbc&lt;/artifactId&gt;
+    &lt;version&gt;8.8.0&lt;/version&gt;
+&lt;/dependency&gt;
 ```
 
 **连接字符串 (GBase 8s):**
@@ -248,11 +248,11 @@ databases:
 TiDB 兼容 MySQL 协议，使用 MySQL JDBC 驱动。
 
 ```xml
-<dependency>
-    <groupId>com.mysql</groupId>
-    <artifactId>mysql-connector-j</artifactId>
-    <version>8.2.0</version>
-</dependency>
+&lt;dependency&gt;
+    &lt;groupId&gt;com.mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-j&lt;/artifactId&gt;
+    &lt;version&gt;8.2.0&lt;/version&gt;
+&lt;/dependency&gt;
 ```
 
 **连接字符串:**
@@ -319,11 +319,11 @@ tables:
 OceanBase MySQL 模式兼容 MySQL 协议，使用 MySQL JDBC 驱动。
 
 ```xml
-<dependency>
-    <groupId>com.mysql</groupId>
-    <artifactId>mysql-connector-j</artifactId>
-    <version>8.2.0</version>
-</dependency>
+&lt;dependency&gt;
+    &lt;groupId&gt;com.mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-j&lt;/artifactId&gt;
+    &lt;version&gt;8.2.0&lt;/version&gt;
+&lt;/dependency&gt;
 ```
 
 **连接字符串:**

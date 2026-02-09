@@ -4,7 +4,7 @@
 
 在开发 JustDB 项目时，需要实现一个反向解析器，能够根据 Handlebars 模板从字符串中提取变量值。例如：
 
-- 模板：`jdbc:mysql://&#123;&#123;host&#125;&#125;:&#123;&#123;port&#125;&#125;/&#123;&#123;database&#125;&#125;`
+- 模板：`jdbc:mysql://{{host}}:{{port}}/{{database}}`
 - 输入：`jdbc:mysql://localhost:3306/mydb`
 - 提取结果：`{host: "localhost", port: "3306", database: "mydb"}`
 
@@ -20,13 +20,13 @@
 **变更前（使用 `[]`）：**
 
 ```
-jdbc:mysql://&#123;&#123;host&#125;&#125;[:&#123;&#123;port&#125;&#125;]/[&#123;&#123;database&#125;&#125;]
+jdbc:mysql://{{host}}[:{{port}}]/[{{database}}]
 ```
 
-**变更后（使用 `&#123;&#123;#if}}`）：**
+**变更后（使用 if 块）：**
 
 ```
-jdbc:mysql://&#123;&#123;host&#125;&#125;&#123;&#123;#if port&#125;&#125;:&#123;&#123;port&#125;&#125;&#123;&#123;/if&#125;&#125;/&#123;&#123;#if database&#125;&#125;&#123;&#123;database&#125;&#125;&#123;&#123;/if&#125;&#125;
+jdbc:mysql://{{host}}{{#if port}}:{{port}}{{/if}}/{{#if database}}{{database}}{{/if}}
 ```
 
 ### 3. Parser 实现方式要求
@@ -61,12 +61,12 @@ jdbc:mysql://&#123;&#123;host&#125;&#125;&#123;&#123;#if port&#125;&#125;:&#123;
 
 ### 支持的 Handlebars 语法
 
-| 语法 | 示例 | 说明 |
-|------|------|------|
-| 简单变量 | `&#123;&#123;var&#125;&#125;` | 提取变量值 |
-| 可选块 | `&#123;&#123;#if var&#125;&#125;prefix&#123;&#123;var&#125;&#125;suffix&#123;&#123;/if&#125;&#125;` | 可选部分，匹配或不匹配 |
-| 循环块 | `&#123;&#123;#each items&#125;&#125;&#123;&#123;name&#125;&#125;=&#123;&#123;value&#125;&#125;&#123;&#123;/each&#125;&#125;` | 提取列表数据 |
-| 条件块 | `&#123;&#123;#unless @last&#125;&#125;&amp;&#123;&#123;/unless&#125;&#125;` | 分隔符处理 |
+| 语法 | 说明 |
+|------|------|
+| 简单变量 `{{var}}` | 提取变量值 |
+| 可选块 `{{#if var}}...{{/if}}` | 可选部分，匹配或不匹配 |
+| 循环块 `{{#each items}}...{{/each}}` | 提取列表数据 |
+| 条件块 `{{#unless @last}}...{{/unless}}` | 分隔符处理 |
 
 ### 核心实现结构
 
@@ -74,7 +74,7 @@ jdbc:mysql://&#123;&#123;host&#125;&#125;&#123;&#123;#if port&#125;&#125;:&#123;
 // AST 节点类型
 private static abstract class TemplateNode {
     abstract String generateRegex();
-    abstract int extractValue(Matcher matcher, int groupIndex, Map<String, Object> result);
+    abstract int extractValue(Matcher matcher, int groupIndex, Map&lt;String, Object&gt; result);
 }
 
 // 字面量节点
@@ -97,7 +97,7 @@ private static class EachNode extends TemplateNode
    - 确保变量只匹配到分隔符之前的内容
 
 2. **可选块处理**
-   - `&#123;&#123;#if&#125;&#125;` 块生成 `(?:content)?` 正则表达式
+   - `{{#if}}` 块生成 `(?:content)?` 正则表达式
    - 正确处理空匹配情况
 
 3. **Each 块处理**
@@ -117,7 +117,7 @@ private static class EachNode extends TemplateNode
 | 需求 | 状态 | 说明 |
 |------|------|------|
 | 修复 HandlebarsReverseParser 测试 | ✅ 完成 | 所有测试通过 |
-| 使用标准 Handlebars &#123;&#123;#if&#125;&#125; 语法 | ✅ 完成 | 测试模板已更新 |
+| 使用标准 Handlebars if 语法 | ✅ 完成 | 测试模板已更新 |
 | 使用 handlebars.java parser | ⚠️ 部分完成 | 内部类不可访问，实现了功能等效的自定义 parser |
 
 ### 技术实现说明
@@ -128,31 +128,36 @@ private static class EachNode extends TemplateNode
 
 ### 示例 1：JDBC URL 解析
 
+:::v-pre
 ```java
-String template = "jdbc:mysql://&#123;&#123;host&#125;&#125;:&#123;&#123;port&#125;&#125;/&#123;&#123;database&#125;&#125;";
+String template = "jdbc:mysql://{{host}}:{{port}}/{{database}}";
 String input = "jdbc:mysql://localhost:3306/mydb";
 
-Map<String, Object> result = HandlebarsReverseParser.parse(template, input);
+Map&lt;String, Object&gt; result = HandlebarsReverseParser.parse(template, input);
 // 结果：{host: "localhost", port: "3306", database: "mydb"}
 ```
+:::
 
 ### 示例 2：带可选部分
 
+:::v-pre
 ```java
-String template = "jdbc:mysql://&#123;&#123;host&#125;&#125;&#123;&#123;#if port&#125;&#125;:&#123;&#123;port&#125;&#125;&#123;&#123;/if&#125;&#125;/&#123;&#123;database&#125;&#125;";
+String template = "jdbc:mysql://{{host}}{{#if port}}:{{port}}{{/if}}/{{database}}";
 String input = "jdbc:mysql://localhost/mydb";
 
-Map<String, Object> result = HandlebarsReverseParser.parse(template, input);
+Map&lt;String, Object&gt; result = HandlebarsReverseParser.parse(template, input);
 // 结果：{host: "localhost", database: "mydb"}
 ```
+:::
 
 ### 示例 3：带参数列表
 
+:::v-pre
 ```java
-String template = "jdbc:postgresql://&#123;&#123;host&#125;&#125;:&#123;&#123;port&#125;&#125;/&#123;&#123;database&#125;&#125;&#123;&#123;#if params&#125;&#125;?&#123;&#123;/if&#125;&#125;&#123;&#123;#each params&#125;&#125;&#123;&#123;name&#125;&#125;=&#123;&#123;value&#125;&#125;&#123;&#123;#unless @last&#125;&#125;&amp;&#123;&#123;/unless&#125;&#125;&#123;&#123;/each&#125;&#125;";
+String template = "jdbc:postgresql://{{host}}:{{port}}/{{database}}{{#if params}}?{{/if}}{{#each params}}{{name}}={{value}}{{#unless @last}}&{{/unless}}{{/each}}";
 String input = "jdbc:postgresql://localhost:5432/mydb?param1=value1&param2=value2";
 
-Map<String, Object> result = HandlebarsReverseParser.parse(template, input);
+Map&lt;String, Object&gt; result = HandlebarsReverseParser.parse(template, input);
 // 结果：
 // {
 //   host: "localhost",
@@ -164,6 +169,7 @@ Map<String, Object> result = HandlebarsReverseParser.parse(template, input);
 //   ]
 // }
 ```
+:::
 
 ## 文件位置
 

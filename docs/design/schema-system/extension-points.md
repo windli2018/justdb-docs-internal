@@ -23,7 +23,7 @@ JustDB 的扩展点系统允许为 Schema 对象添加自定义属性，支持�
 
 ```java
 public class UnknownValues {
-    private Map<String, Object> unknownValues = new HashMap<>();
+    private Map&lt;String, Object&gt; unknownValues = new HashMap&lt;&gt;();
 
     public Object get(String key) {
         return unknownValues.get(key);
@@ -33,7 +33,7 @@ public class UnknownValues {
         unknownValues.put(key, value);
     }
 
-    public Map<String, Object> getUnknownValues() {
+    public Map&lt;String, Object&gt; getUnknownValues() {
         return unknownValues;
     }
 }
@@ -42,15 +42,15 @@ public class UnknownValues {
 ### 使用示例
 
 ```xml
-<!-- MySQL 表使用 engine 属性（存储在 UnknownValues） -->
-<Table name="users" engine="InnoDB" row_format="COMPRESSED" charset="utf8mb4">
-    <columns>...</columns>
-</Table>
+&lt;!-- MySQL 表使用 engine 属性（存储在 UnknownValues） --&gt;
+&lt;Table name="users" engine="InnoDB" row_format="COMPRESSED" charset="utf8mb4"&gt;
+    &lt;columns&gt;...&lt;/columns&gt;
+&lt;/Table&gt;
 
-<!-- PostgreSQL 表使用 tablespace 属性 -->
-<Table name="users" tablespace="user_space">
-    <columns>...</columns>
-</Table>
+&lt;!-- PostgreSQL 表使用 tablespace 属性 --&gt;
+&lt;Table name="users" tablespace="user_space"&gt;
+    &lt;columns&gt;...&lt;/columns&gt;
+&lt;/Table&gt;
 ```
 
 ### 序列化支持
@@ -83,7 +83,7 @@ public class ExtensionPoint {
     private String target;                    // 目标对象类型 (table, column, index 等)
     private String type;                      // 类型: standard 或 custom
     private String customClass;               // 自定义类型类名
-    private List<ExtensionAttribute> attributes; // 属性列表
+    private List&lt;ExtensionAttribute&gt; attributes; // 属性列表
 }
 
 public class ExtensionAttribute {
@@ -98,11 +98,11 @@ public class ExtensionAttribute {
 ### 在插件中定义扩展点
 
 ```xml
-<JustdbPlugin id="mysql-plugin" dialect="mysql">
-    <extensionPoints>
-        <!-- MySQL 表扩展点 -->
-        <ExtensionPoint name="mysql-table" target="table" type="standard">
-            <attributes>
+&lt;JustdbPlugin id="mysql-plugin" dialect="mysql"&gt;
+    &lt;extensionPoints&gt;
+        &lt;!-- MySQL 表扩展点 --&gt;
+        &lt;ExtensionPoint name="mysql-table" target="table" type="standard"&gt;
+            &lt;attributes&gt;
                 <ExtensionAttribute name="engine" type="String"
                                   defaultValue="InnoDB"
                                   description="存储引擎"/>
@@ -114,34 +114,34 @@ public class ExtensionAttribute {
                                   description="排序规则"/>
                 <ExtensionAttribute name="row_format" type="String"
                                   description="行格式"/>
-            </attributes>
-        </ExtensionPoint>
+            &lt;/attributes&gt;
+        &lt;/ExtensionPoint&gt;
 
-        <!-- MySQL 列扩展点 -->
-        <ExtensionPoint name="mysql-column" target="column" type="standard">
-            <attributes>
+        &lt;!-- MySQL 列扩展点 --&gt;
+        &lt;ExtensionPoint name="mysql-column" target="column" type="standard"&gt;
+            &lt;attributes&gt;
                 <ExtensionAttribute name="unsigned" type="boolean"
                                   defaultValue="false"
                                   description="无符号"/>
                 <ExtensionAttribute name="zerofill" type="boolean"
                                   defaultValue="false"
                                   description="零填充"/>
-            </attributes>
-        </ExtensionPoint>
-    </extensionPoints>
-</JustdbPlugin>
+            &lt;/attributes&gt;
+        &lt;/ExtensionPoint&gt;
+    &lt;/extensionPoints&gt;
+&lt;/JustdbPlugin&gt;
 ```
 
 ### 使用扩展点
 
 ```xml
-<!-- 使用定义的扩展点属性 -->
-<Table name="users" engine="MyISAM" charset="utf8" row_format="DYNAMIC">
-    <columns>
-        <Column name="id" type="BIGINT" primaryKey="true" unsigned="true"/>
-        <Column name="username" type="VARCHAR(50)" nullable="false"/>
-    </columns>
-</Table>
+&lt;!-- 使用定义的扩展点属性 --&gt;
+&lt;Table name="users" engine="MyISAM" charset="utf8" row_format="DYNAMIC"&gt;
+    &lt;columns&gt;
+        &lt;Column name="id" type="BIGINT" primaryKey="true" unsigned="true"/&gt;
+        &lt;Column name="username" type="VARCHAR(50)" nullable="false"/&gt;
+    &lt;/columns&gt;
+&lt;/Table&gt;
 ```
 
 ## 扩展点注册表
@@ -150,7 +150,7 @@ public class ExtensionAttribute {
 
 ```java
 public class ExtensionPointRegistry {
-    private Map<String, ExtensionPoint> extensionPoints = new HashMap<>();
+    private Map&lt;String, ExtensionPoint&gt; extensionPoints = new HashMap&lt;&gt;();
 
     public void register(ExtensionPoint extensionPoint) {
         extensionPoints.put(extensionPoint.getName(), extensionPoint);
@@ -160,7 +160,7 @@ public class ExtensionPointRegistry {
         return extensionPoints.get(name);
     }
 
-    public List<ExtensionPoint> getByTarget(String target) {
+    public List&lt;ExtensionPoint&gt; getByTarget(String target) {
         return extensionPoints.values().stream()
             .filter(ep -> ep.getTarget().equals(target))
             .collect(Collectors.toList());
@@ -177,17 +177,17 @@ public class ExtensionPointRegistry {
 插件系统会自动加载 `default-plugins.xml` 中定义的扩展点：
 
 ```xml
-<JustdbPlugin id="sql-standard-root">
-    <extensionPoints>
-        <!-- 标准扩展点定义 -->
-    </extensionPoints>
-</JustdbPlugin>
+&lt;JustdbPlugin id="sql-standard-root"&gt;
+    &lt;extensionPoints&gt;
+        &lt;!-- 标准扩展点定义 --&gt;
+    &lt;/extensionPoints&gt;
+&lt;/JustdbPlugin&gt;
 
-<JustdbPlugin id="mysql" dialect="mysql" ref-id="sql-standard-root">
-    <extensionPoints>
-        <!-- MySQL 特定扩展点 -->
-    </extensionPoints>
-</JustdbPlugin>
+&lt;JustdbPlugin id="mysql" dialect="mysql" ref-id="sql-standard-root"&gt;
+    &lt;extensionPoints&gt;
+        &lt;!-- MySQL 特定扩展点 --&gt;
+    &lt;/extensionPoints&gt;
+&lt;/JustdbPlugin&gt;
 ```
 
 ## 常见扩展场景
@@ -201,8 +201,8 @@ public class ExtensionPointRegistry {
        collation="utf8mb4_unicode_ci"
        row_format="COMPRESSED"
        key_block_size="8">
-    <columns>...</columns>
-</Table>
+    &lt;columns&gt;...&lt;/columns&gt;
+&lt;/Table&gt;
 ```
 
 ### 2. PostgreSQL 表级扩展
@@ -213,8 +213,8 @@ public class ExtensionPointRegistry {
        with_oids="false"
        autovacuum_enabled="true"
        fillfactor="90">
-    <columns>...</columns>
-</Table>
+    &lt;columns&gt;...&lt;/columns&gt;
+&lt;/Table&gt;
 ```
 
 ### 3. Oracle 表级扩展
@@ -225,28 +225,28 @@ public class ExtensionPointRegistry {
        logging="yes"
        compress="yes"
        parallel="4">
-    <columns>...</columns>
-</Table>
+    &lt;columns&gt;...&lt;/columns&gt;
+&lt;/Table&gt;
 ```
 
 ### 4. 列级扩展
 
 ```xml
-<Table name="users">
-    <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
-    <Column name="username" type="VARCHAR(50)" nullable="false" charset="utf8mb4"/>
-    <Column name="balance" type="DECIMAL(10,2)" unsigned="true"/>
-</Table>
+&lt;Table name="users"&gt;
+    &lt;Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
+    &lt;Column name="username" type="VARCHAR(50)" nullable="false" charset="utf8mb4"/&gt;
+    &lt;Column name="balance" type="DECIMAL(10,2)" unsigned="true"/&gt;
+&lt;/Table&gt;
 ```
 
 ### 5. 分区扩展
 
 ```xml
-<Table name="orders" partition_by="RANGE" partition_expression="created_at">
-    <Partition name="p_2023" values="LESS THAN ('2024-01-01')"/>
-    <Partition name="p_2024" values="LESS THAN ('2025-01-01')"/>
-    <columns>...</columns>
-</Table>
+&lt;Table name="orders" partition_by="RANGE" partition_expression="created_at"&gt;
+    &lt;Partition name="p_2023" values="LESS THAN ('2024-01-01')"/&gt;
+    &lt;Partition name="p_2024" values="LESS THAN ('2025-01-01')"/&gt;
+    &lt;columns&gt;...&lt;/columns&gt;
+&lt;/Table&gt;
 ```
 
 ## 扩展点验证
@@ -255,8 +255,8 @@ public class ExtensionPointRegistry {
 
 ```java
 public class ExtensionPointValidator {
-    public void validate(Item item, List<ExtensionPoint> extensionPoints) {
-        Map<String, Object> unknownValues = item.getUnknownValues();
+    public void validate(Item item, List&lt;ExtensionPoint&gt; extensionPoints) {
+        Map&lt;String, Object&gt; unknownValues = item.getUnknownValues();
 
         for (ExtensionPoint ep : extensionPoints) {
             if (ep.getTarget().equals(item.getClass().getSimpleName())) {
@@ -299,17 +299,17 @@ try {
 ### 访问扩展属性
 
 ```handlebars
-<!-- MySQL 表创建模板 -->
-<template id="create-table" type="SQL" category="db">
-    <content>
+&lt;!-- MySQL 表创建模板 --&gt;
+&lt;template id="create-table" type="SQL" category="db"&gt;
+    &lt;content&gt;
 CREATE TABLE {{> table-name}} (
     {{> columns}}
 ){{#if this.engine}} ENGINE={{this.engine}}{{/if}}
 {{#if this.charset}} CHARSET={{this.charset}}{{/if}}
 {{#if this.collation}} COLLATE={{this.collation}}{{/if}}
 {{#if this.row_format}} ROW_FORMAT={{this.row_format}}{{/if}};
-    </content>
-</template>
+    &lt;/content&gt;
+&lt;/template&gt;
 ```
 
 ### 条件渲染
@@ -329,21 +329,21 @@ CREATE TABLE {{> table-name}} (
 ### 1. 定义明确的扩展点
 
 ```xml
-<!-- 好的做法：明确定义扩展点 -->
-<ExtensionPoint name="mysql-table" target="table">
-    <attributes>
-        <ExtensionAttribute name="engine" type="String" defaultValue="InnoDB"/>
-    </attributes>
-</ExtensionPoint>
+&lt;!-- 好的做法：明确定义扩展点 --&gt;
+&lt;ExtensionPoint name="mysql-table" target="table"&gt;
+    &lt;attributes&gt;
+        &lt;ExtensionAttribute name="engine" type="String" defaultValue="InnoDB"/&gt;
+    &lt;/attributes&gt;
+&lt;/ExtensionPoint&gt;
 
-<!-- 避免：未定义直接使用 -->
-<Table name="users" custom_attr="value"/>
+&lt;!-- 避免：未定义直接使用 --&gt;
+&lt;Table name="users" custom_attr="value"/&gt;
 ```
 
 ### 2. 提供默认值
 
 ```xml
-<ExtensionAttribute name="engine" type="String" defaultValue="InnoDB"/>
+&lt;ExtensionAttribute name="engine" type="String" defaultValue="InnoDB"/&gt;
 ```
 
 ### 3. 添加文档说明
@@ -356,8 +356,8 @@ CREATE TABLE {{> table-name}} (
 ### 4. 类型安全
 
 ```xml
-<ExtensionAttribute name="parallel" type="Integer" description="并行度"/>
-<ExtensionAttribute name="logging" type="Boolean" defaultValue="true"/>
+&lt;ExtensionAttribute name="parallel" type="Integer" description="并行度"/&gt;
+&lt;ExtensionAttribute name="logging" type="Boolean" defaultValue="true"/&gt;
 ```
 
 ## 相关文档

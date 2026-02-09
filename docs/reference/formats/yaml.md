@@ -410,14 +410,14 @@ YAML 支持在一个文件中定义多个文档：
 
 ```yaml
 # 文档 1：基础 Schema
----
+---------------------------
 id: myapp
 namespace: com.example
 Table:
   - name: users
 
 # 文档 2：扩展 Schema
----
+---------------------------
 id: myapp-extensions
 namespace: com.example
 Table:

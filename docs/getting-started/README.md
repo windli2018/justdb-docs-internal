@@ -271,8 +271,8 @@ JustDB 支持多种格式，选择最适合你的：
   desc="企业级配置格式"
 />
 
-<CodeGroup>
-<CodeGroupItem title="YAML">
+&lt;CodeGroup&gt;
+&lt;CodeGroupItem title="YAML"&gt;
 ```yaml
 Table:
   - name: users
@@ -281,9 +281,9 @@ Table:
         type: BIGINT
         primaryKey: true
 ```
-</CodeGroupItem>
+&lt;/CodeGroupItem&gt;
 
-<CodeGroupItem title="JSON">
+&lt;CodeGroupItem title="JSON"&gt;
 ```json
 {
   "Table": [
@@ -300,18 +300,18 @@ Table:
   ]
 }
 ```
-</CodeGroupItem>
+&lt;/CodeGroupItem&gt;
 
-<CodeGroupItem title="XML">
+&lt;CodeGroupItem title="XML"&gt;
 ```xml
-<Justdb>
-  <Table name="users">
-    <Column name="id" type="BIGINT" primaryKey="true"/>
-  </Table>
-</Justdb>
+&lt;Justdb&gt;
+  &lt;Table name="users"&gt;
+    &lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
+  &lt;/Table&gt;
+&lt;/Justdb&gt;
 ```
-</CodeGroupItem>
-</CodeGroup>
+&lt;/CodeGroupItem&gt;
+&lt;/CodeGroup&gt;
 
 ## 常用命令
 

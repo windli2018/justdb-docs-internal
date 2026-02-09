@@ -1,254 +1,465 @@
 ---
 icon: code
-title: API Overview
-order: 20
-category:
-  - Reference
-  - API
-tag:
-  - api
-  - reference
+title: API Reference
+order: 4
 ---
 
-# API Overview
+# API Reference
 
-JustDB provides comprehensive APIs for programmatic database schema management, migration, and JDBC driver integration.
+Programmatic API for working with JustDB schemas.
 
-## API Sections
+## Core API
 
-### JDBC Driver
+### FormatFactory
 
-**[JDBC Driver](./jdbc-driver.md)** - Standard JDBC 4.2 driver implementation
+Load and save schemas in various formats.
 
-JustDB provides a complete JDBC driver that allows you to use JustDB schemas directly in your applications with standard JDBC APIs.
-
-```java
-// Use JustDB JDBC driver
-Class.forName("org.verydb.justdb.jdbc.JustdbDriver");
-
-// Connect with schema path
-Connection conn = DriverManager.getConnection(
-    "jdbc:justdb:classpath:/justdb/schema.yaml");
-
-// Use standard JDBC
-Statement stmt = conn.createStatement();
-ResultSet rs = stmt.executeQuery("SELECT * FROM users");
-```
-
-### Java API
-
-**[Java API](./java-api.md)** - Core Java programming interface
-
-Core APIs for schema loading, manipulation, and deployment.
-
-```java
-// Load schema
-Justdb schema = FormatFactory.loadFromFile("schema.yaml");
-
-// Deploy to database
-SchemaDeployer deployer = new SchemaDeployer(connection);
-deployer.deploy(schema);
-
-// Generate migration
-SchemaDiff diff = SchemaDiff.calculate(oldSchema, newSchema);
-List<String> sql = MigrationService.generateSql(diff);
-```
-
-### Schema API
-
-**[Schema API](./schema-api.md)** - Schema manipulation API
-
-APIs for programmatically creating and modifying schema objects.
-
-```java
-// Create table
-Table table = new Table();
-table.setName("users");
-
-// Add column
-Column idColumn = new Column();
-idColumn.setName("id");
-idColumn.setType("BIGINT");
-idColumn.setPrimaryKey(true);
-table.addColumn(idColumn);
-
-// Add to schema
-Justdb schema = new Justdb();
-schema.addTable(table);
-```
-
-### Migration API
-
-**[Migration API](./migration-api.md)** - Migration control API
-
-APIs for managing schema migrations, diff calculation, and SQL generation.
-
-```java
-// Calculate schema differences
-SchemaDiffService diffService = new SchemaDiffService();
-CanonicalSchemaDiff diff = diffService.calculateDiff(oldSchema, newSchema);
-
-// Generate migration SQL
-MigrationService migrationService = new MigrationService(justdbManager);
-List<String> sql = migrationService.generateSql(diff, "mysql");
-
-// Execute migration
-for (String statement : sql) {
-    stmt.execute(statement);
-}
-```
-
-## Quick Reference
-
-### Common APIs
-
-| API | Description |
-|-----|-------------|
-| `FormatFactory` | Load/save schemas in various formats |
-| `SchemaDeployer` | Deploy schema to database |
-| `SchemaDiffService` | Calculate schema differences |
-| `MigrationService` | Generate migration SQL |
-| `JustdbManager` | Core manager for plugin and configuration |
-
-### Usage Patterns
-
-#### Load Schema
+#### Loading Schemas
 
 ```java
 import org.verydb.justdb.FormatFactory;
-import org.verydb.justdb.schema.Justdb;
 
 // From file
 Justdb schema = FormatFactory.loadFromFile("schema.yaml");
 
-// From string
-Justdb schema = FormatFactory.loadFromString(
-    "{ \"id\": \"myapp\", \"Table\": [...]}",
-    Format.JSON);
+// From URL
+Justdb schema = FormatFactory.loadFromURL(new URL("http://example.com/schema.yaml"));
 
-// From stream
-Justdb schema = FormatFactory.loadFromStream(inputStream, Format.YAML);
+// From string
+Justdb schema = FormatFactory.loadFromString("""
+    id: myapp
+    Table:
+      - name: users
+        Column:
+          - name: id
+            type: BIGINT
+""");
+
+// From input stream
+try (InputStream is = new FileInputStream("schema.json")) {
+    Justdb schema = FormatFactory.loadFromStream(is, "json");
+}
 ```
 
-#### Deploy Schema
+#### Saving Schemas
+
+```java
+// Save to file
+FormatFactory.saveToFile(schema, "output.yaml");
+
+// Save as different format
+FormatFactory.saveToFile(schema, "output.json");
+FormatFactory.saveToFile(schema, "output.xml");
+
+// Save to string
+String yaml = FormatFactory.saveToString(schema, "yaml");
+String json = FormatFactory.saveToString(schema, "json");
+```
+
+### SchemaDeployer
+
+Deploy schemas to database.
+
+#### Basic Deployment
 
 ```java
 import org.verydb.justdb.SchemaDeployer;
 import java.sql.Connection;
 
-// Basic deployment
-SchemaDeployer deployer = new SchemaDeployer(connection);
-deployer.deploy(schema);
+try (Connection conn = DriverManager.getConnection(url, user, pass)) {
+    Justdb schema = FormatFactory.loadFromFile("schema.yaml");
 
-// With options
-SchemaDeployer deployer = new SchemaDeployer(connection)
-    .setDryRun(false)
-    .setSafeDrop(true);
+    SchemaDeployer deployer = new SchemaDeployer(conn);
+    deployer.deploy(schema);
+}
+```
+
+#### Deployment Options
+
+```java
+SchemaDeployer deployer = new SchemaDeployer(conn);
+
+// Idempotent mode (adds IF NOT EXISTS)
+deployer.setIdempotent(true);
+
+// Safe drop (rename instead of delete)
+deployer.setSafeDrop(true);
+
+// Dry run (don't execute)
+deployer.setDryRun(true);
+
+// Execute deployment
 deployer.deploy(schema);
 ```
 
-#### Generate Migration
+### SchemaMigrationService
+
+Handle incremental migrations.
+
+#### Basic Migration
 
 ```java
-import org.verydb.justdb.migration.SchemaMigrationService;
+import org.verydb.justdb.SchemaMigrationService;
 
-// Calculate diff
-CanonicalSchemaDiff diff = SchemaDiffService.calculateDiff(
-    oldSchema, newSchema);
+try (Connection conn = DriverManager.getConnection(url, user, pass)) {
+    SchemaMigrationService service = new SchemaMigrationService(conn);
 
-// Generate SQL
-List<String> sql = MigrationService.generateSql(diff, "mysql");
+    // Execute migration
+    MigrationResult result = service.migrate(schema);
+
+    if (result.isSuccess()) {
+        System.out.println("Migration completed");
+    }
+}
+```
+
+#### Migration Configuration
+
+```java
+SchemaMigrationService service = new SchemaMigrationService(conn);
+
+// Auto-diff enabled
+service.setAutoDiff(true);
+
+// Idempotent mode
+service.setIdempotent(true);
+
+// Safe drop disabled
+service.setSafeDrop(false);
+
+// Set baseline
+service.setBaselineOnMigrate(true);
 
 // Execute
-try (Statement stmt = connection.createStatement()) {
-    for (String statement : sql) {
-        stmt.execute(statement);
-    }
-}
+service.migrate(schema);
 ```
 
-## API Design Principles
+### DBGenerator
 
-### 1. Simplicity
+Generate SQL from schemas.
 
-Clean, intuitive APIs that follow Java conventions.
-
-### 2. Flexibility
-
-Support multiple usage patterns - from simple to advanced.
-
-### 3. Type Safety
-
-Strong typing with comprehensive validation.
-
-### 4. Database Agnostic
-
-Same API works across all supported databases.
-
-## Complete Examples
-
-### Example 1: Schema Migration
+#### Generate SQL
 
 ```java
-public class SchemaMigrationExample {
-    public static void main(String[] args) throws Exception {
-        // Load schemas
-        Justdb oldSchema = FormatFactory.loadFromFile("schema-old.yaml");
-        Justdb newSchema = FormatFactory.loadFromFile("schema-new.yaml");
+import org.verydb.justdb.generator.DBGenerator;
 
-        // Calculate diff
-        SchemaDiffService diffService = new SchemaDiffService();
-        CanonicalSchemaDiff diff = diffService.calculateDiff(oldSchema, newSchema);
+// Create generator for specific database
+DBGenerator generator = new DBGenerator(
+    PluginManager.getInstance(),
+    "mysql"
+);
 
-        // Generate SQL
-        MigrationService migrationService = new MigrationService(justdbManager);
-        List<String> sql = migrationService.generateSql(diff, "mysql");
+// Generate CREATE TABLE
+String sql = generator.generateCreateTable(table);
 
-        // Execute migration
-        try (Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/myapp", "user", "pass")) {
-            SchemaDeployer deployer = new SchemaDeployer(conn);
-            deployer.applyDiff(diff);
+// Generate DROP TABLE
+String sql = generator.generateDropTable(table);
+
+// Generate ALTER TABLE
+String sql = generator.generateAlterTable(table, diff);
+```
+
+#### Batch Generation
+
+```java
+// Generate all SQL
+List<String> sqlList = generator.generateAll(schema);
+
+// Generate specific types
+List<String> createSQL = generator.generateCreates(schema);
+List<String> dropSQL = generator.generateDrops(schema);
+List<String> alterSQL = generator.generateAlters(schema);
+```
+
+## Schema Model
+
+### Justdb
+
+Root schema object.
+
+```java
+Justdb schema = new Justdb();
+schema.setId("myapp");
+schema.setNamespace("com.example");
+
+// Add table
+Table table = new Table();
+table.setName("users");
+schema.addTable(table);
+
+// Get tables
+List<Table> tables = schema.getTables();
+```
+
+### Table
+
+Table definition.
+
+```java
+Table table = new Table();
+table.setName("users");
+table.setComment("User accounts");
+
+// Add columns
+Column column = new Column();
+column.setName("id");
+column.setType("BIGINT");
+table.addColumn(column);
+
+// Add indexes
+Index index = new Index();
+index.setName("idx_username");
+index.setColumns(Arrays.asList("username"));
+table.addIndex(index);
+
+// Add constraints
+Constraint constraint = new Constraint();
+constraint.setName("pk_users");
+constraint.setType(ConstraintType.PRIMARY_KEY);
+table.addConstraint(constraint);
+```
+
+### Column
+
+Column definition.
+
+```java
+Column column = new Column();
+column.setName("username");
+column.setType("VARCHAR(50)");
+column.setNullable(false);
+column.setDefaultValue("guest");
+column.setComment("User name");
+
+// Primary key
+column.setPrimaryKey(true);
+column.setAutoIncrement(true);
+
+// Unique constraint
+column.setUnique(true);
+```
+
+### Index
+
+Index definition.
+
+```java
+Index index = new Index();
+index.setName("idx_email");
+index.setColumns(Arrays.asList("email"));
+index.setUnique(true);
+index.setType("BTREE");
+index.setComment("Email unique index");
+```
+
+### Constraint
+
+Constraint definition.
+
+```java
+// Foreign key constraint
+Constraint constraint = new Constraint();
+constraint.setName("fk_orders_user");
+constraint.setType(ConstraintType.FOREIGN_KEY);
+constraint.setReferencedTable("users");
+constraint.setReferencedColumn("id");
+constraint.setForeignKey("user_id");
+constraint.setOnDelete(ConstraintAction.CASCADE);
+constraint.setOnUpdate(ConstraintAction.RESTRICT);
+```
+
+## JDBC Driver
+
+Use JustDB as a JDBC driver.
+
+### Connection URL
+
+```java
+// Schema file
+String url = "jdbc:justdb:schema.yaml";
+
+// Multiple schema files
+String url = "jdbc:justdb:schema1.yaml,schema2.yaml";
+
+// Specify directory
+String url = "jdbc:justdb:./justdb/";
+
+// With config
+String url = "jdbc:justdb:?config=justdb-config.yaml";
+```
+
+### Query Execution
+
+```java
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.ResultSet;
+
+try (Connection conn = DriverManager.getConnection(
+        "jdbc:justdb:schema.yaml",
+        null,
+        null)) {
+
+    // Execute query
+    try (Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery("SELECT * FROM users")) {
+
+        while (rs.next()) {
+            String username = rs.getString("username");
+            System.out.println(username);
         }
     }
 }
 ```
 
-### Example 2: JDBC Usage
+### With Database Connection
 
 ```java
-public class JdbcExample {
-    public static void main(String[] args) throws Exception {
-        // Load JustDB JDBC driver
-        Class.forName("org.verydb.justdb.jdbc.JustdbDriver");
+String url = "jdbc:justdb:schema.yaml?target.url=jdbc:mysql://localhost:3306/myapp";
 
-        // Connect with schema
-        try (Connection conn = DriverManager.getConnection(
-                "jdbc:justdb:classpath:/justdb/schema.yaml")) {
+try (Connection conn = DriverManager.getConnection(url, null, null)) {
+    // Queries execute against actual MySQL database
+    // Schema from schema.yaml is used for validation
+}
+```
 
-            // Use standard JDBC
-            String sql = "INSERT INTO users (username, email) VALUES (?, ?)";
-            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, "john");
-                pstmt.setString(2, "john@example.com");
-                pstmt.executeUpdate();
-            }
+## Error Handling
 
-            // Query
-            try (Statement stmt = conn.createStatement();
-                 ResultSet rs = stmt.executeQuery("SELECT * FROM users")) {
-                while (rs.next()) {
-                    System.out.println("User: " + rs.getString("username"));
-                }
-            }
-        }
+### Exception Types
+
+```java
+try {
+    schema = FormatFactory.loadFromFile("schema.yaml");
+} catch (SchemaParseException e) {
+    // Schema parsing error
+    System.err.println("Parse error: " + e.getMessage());
+} catch (FileNotFoundException e) {
+    // File not found
+    System.err.println("File not found: " + e.getMessage());
+} catch (IOException e) {
+    // IO error
+    System.err.println("IO error: " + e.getMessage());
+}
+
+try {
+    deployer.deploy(schema);
+} catch (MigrationException e) {
+    // Migration error
+    System.err.println("Migration error: " + e.getMessage());
+} catch (SQLException e) {
+    // SQL error
+    System.err.println("SQL error: " + e.getMessage());
+}
+```
+
+## Plugin System
+
+### PluginManager
+
+Manage plugins.
+
+```java
+import org.verydb.justdb.plugin.PluginManager;
+
+// Get instance
+PluginManager pluginManager = PluginManager.getInstance();
+
+// Load plugins
+pluginManager.loadPlugins();
+
+// Get database adapter
+DatabaseAdapter adapter = pluginManager.getDatabaseAdapter("mysql");
+
+// Get template
+GenericTemplate template = pluginManager.getTemplate("create-table", "mysql");
+
+// Get type mapping
+TypeMapping typeMapping = pluginManager.getTypeMapping("mysql");
+```
+
+### DatabaseAdapter
+
+Database-specific adapter.
+
+```java
+DatabaseAdapter adapter = pluginManager.getDatabaseAdapter("mysql");
+
+// Get database type
+String dialect = adapter.getDialect();
+
+// Get URL pattern
+String urlPattern = adapter.getUrlPattern();
+
+// Get driver class
+String driverClass = adapter.getDriverClass();
+
+// Get type mapping
+TypeMapping typeMapping = adapter.getTypeMapping();
+
+// Check feature support
+boolean supportsSequences = adapter.supports("sequences");
+```
+
+## Validation
+
+### SchemaValidator
+
+Validate schemas.
+
+```java
+import org.verydb.justdb.validation.SchemaValidator;
+
+SchemaValidator validator = new SchemaValidator();
+ValidationResult result = validator.validate(schema);
+
+if (!result.isValid()) {
+    System.err.println("Validation failed:");
+    for (String error : result.getErrors()) {
+        System.err.println("  - " + error);
     }
 }
 ```
 
-## Related Documentation
+## Best Practices
 
-- [JDBC Driver](./jdbc-driver.md) - JDBC driver details *(Coming soon)*
-- [Java API](./java-api.md) - Java API reference *(Coming soon)*
-- [Schema API](./schema-api.md) - Schema manipulation *(Coming soon)*
-- [Migration API](./migration-api.md) - Migration control *(Coming soon)*
+### 1. Resource Management
+
+```java
+// Use try-with-resources
+try (Connection conn = DriverManager.getConnection(url);
+     InputStream is = new FileInputStream("schema.yaml")) {
+    // Auto-closed resources
+}
+```
+
+### 2. Error Handling
+
+```java
+try {
+    deployer.deploy(schema);
+} catch (MigrationException e) {
+    // Log error
+    logger.error("Migration failed", e);
+    // Handle or rethrow
+    throw e;
+}
+```
+
+### 3. Validation
+
+```java
+// Always validate before deployment
+SchemaValidator validator = new SchemaValidator();
+ValidationResult result = validator.validate(schema);
+
+if (!result.isValid()) {
+    throw new ValidationException(result.getErrors());
+}
+```
+
+## Next Steps
+
+- **[Quick Start](/getting-started/)** - Get started quickly
+- **[CLI Reference](/reference/cli/)** - Command-line tools
+- **[Schema Reference](/reference/schema/)** - Schema definitions

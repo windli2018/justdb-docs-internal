@@ -81,9 +81,9 @@ builder.put(TemplateRootContext.KEY_SAFE_DROP, idempotentParams.getSafeDrop());
 在 `sql-standard-root` 中定义：
 
 ```xml
-<!-- 主入口：根据 @root.safeDrop 的值路由 -->
-<template id="drop-column" name="drop-column" type="SQL" category="db">
-  <content>{{#if @root.safeDrop}}
+&lt;!-- 主入口：根据 @root.safeDrop 的值路由 --&gt;
+&lt;template id="drop-column" name="drop-column" type="SQL" category="db"&gt;
+  &lt;content&gt;{{#if @root.safeDrop}}
     {{#ifCond @root.safeDrop "eq" "copy-drop"}}
       {{> drop-column-copy-data}}
     {{else}}
@@ -91,8 +91,8 @@ builder.put(TemplateRootContext.KEY_SAFE_DROP, idempotentParams.getSafeDrop());
     {{/ifCond}}
   {{else}}
     {{> drop-column-raw}}
-  {{/if}}</content>
-</template>
+  {{/if}}&lt;/content&gt;
+&lt;/template&gt;
 ```
 
 ### 3.2 copy-drop 血统模板
@@ -100,37 +100,37 @@ builder.put(TemplateRootContext.KEY_SAFE_DROP, idempotentParams.getSafeDrop());
 在 `sql-standard-root` 中定义：
 
 ```xml
-<!-- ==================== COPY-DROP COLUMN 模板 ==================== -->
+&lt;!-- ==================== COPY-DROP COLUMN 模板 ==================== --&gt;
 
-<!-- MySQL lineage: ADD COLUMN + UPDATE + DROP COLUMN -->
-<template id="drop-column-copy-data-mysql-lineage" name="drop-column-copy-data-mysql-lineage" type="SQL" category="db">
-  <content>-- Step 1: Add backup column
+&lt;!-- MySQL lineage: ADD COLUMN + UPDATE + DROP COLUMN --&gt;
+&lt;template id="drop-column-copy-data-mysql-lineage" name="drop-column-copy-data-mysql-lineage" type="SQL" category="db"&gt;
+  &lt;content&gt;-- Step 1: Add backup column
 ALTER TABLE {{> table-name ..}} ADD COLUMN {{> column-name @root.newcolumn}} {{> column-type ..}}{{#unless this.nullable}} NOT{{/unless}} NULL{{#if this.defaultValue}} DEFAULT {{this.defaultValue}}{{/if}};
 -- Step 2: Copy data
 UPDATE {{> table-name ..}} SET {{> column-name @root.newcolumn}} = {{> column-name ..}};
 -- Step 3: Drop original column
-ALTER TABLE {{> table-name ..}} DROP COLUMN {{> column-name ..}};</content>
-</template>
+ALTER TABLE {{> table-name ..}} DROP COLUMN {{> column-name ..}};&lt;/content&gt;
+&lt;/template&gt;
 
-<!-- PostgreSQL lineage -->
-<template id="drop-column-copy-data-postgres-lineage" name="drop-column-copy-data-postgres-lineage" type="SQL" category="db">
-  <content>-- Step 1: Add backup column
+&lt;!-- PostgreSQL lineage --&gt;
+&lt;template id="drop-column-copy-data-postgres-lineage" name="drop-column-copy-data-postgres-lineage" type="SQL" category="db"&gt;
+  &lt;content&gt;-- Step 1: Add backup column
 ALTER TABLE {{> table-name ..}} ADD COLUMN {{> column-name @root.newcolumn}} {{> column-type ..}}{{#unless this.nullable}} NOT{{/unless}} NULL{{#if this.defaultValue}} DEFAULT {{this.defaultValue}}{{/if}};
 -- Step 2: Copy data
 UPDATE {{> table-name ..}} SET {{> column-name @root.newcolumn}} = {{> column-name ..}};
 -- Step 3: Drop original column
-ALTER TABLE {{> table-name ..}} DROP COLUMN {{> column-name ..}};</content>
-</template>
+ALTER TABLE {{> table-name ..}} DROP COLUMN {{> column-name ..}};&lt;/content&gt;
+&lt;/template&gt;
 
-<!-- SQL Server lineage -->
-<template id="drop-column-copy-data-sqlserver-lineage" name="drop-column-copy-data-sqlserver-lineage" type="SQL" category="db">
-  <content>-- Step 1: Add backup column
+&lt;!-- SQL Server lineage --&gt;
+&lt;template id="drop-column-copy-data-sqlserver-lineage" name="drop-column-copy-data-sqlserver-lineage" type="SQL" category="db"&gt;
+  &lt;content&gt;-- Step 1: Add backup column
 ALTER TABLE {{> table-name ..}} ADD {{> column-name @root.newcolumn}} {{> column-type ..}}{{#unless this.nullable}} NOT{{/unless}} NULL{{#if this.defaultValue}} DEFAULT {{this.defaultValue}}{{/if}};
 -- Step 2: Copy data
 UPDATE {{> table-name ..}} SET {{> column-name @root.newcolumn}} = {{> column-name ..}};
 -- Step 3: Drop original column
-ALTER TABLE {{> table-name ..}} DROP COLUMN {{> column-name ..}};</content>
-</template>
+ALTER TABLE {{> table-name ..}} DROP COLUMN {{> column-name ..}};&lt;/content&gt;
+&lt;/template&gt;
 ```
 
 ### 3.3 各 Plugin 实现
@@ -138,64 +138,64 @@ ALTER TABLE {{> table-name ..}} DROP COLUMN {{> column-name ..}};</content>
 MySQL Plugin:
 
 ```xml
-<plugin id="mysql" dialect="mysql" ref-id="sql-standard-root">
-  <templates>
-    <!-- drop-column-raw: 引用血统模板 -->
-    <template id="drop-column-raw" name="drop-column-raw" type="SQL" category="db">
-      <content>{{> drop-column-raw-mysql-lineage}}</content>
-    </template>
+&lt;plugin id="mysql" dialect="mysql" ref-id="sql-standard-root"&gt;
+  &lt;templates&gt;
+    &lt;!-- drop-column-raw: 引用血统模板 --&gt;
+    &lt;template id="drop-column-raw" name="drop-column-raw" type="SQL" category="db"&gt;
+      &lt;content&gt;{{> drop-column-raw-mysql-lineage}}&lt;/content&gt;
+    &lt;/template&gt;
 
-    <!-- rename-column: 引用血统模板 -->
-    <template id="rename-column" name="rename-column" type="SQL" category="db">
-      <content>{{> rename-column-mysql-lineage}}</content>
-    </template>
+    &lt;!-- rename-column: 引用血统模板 --&gt;
+    &lt;template id="rename-column" name="rename-column" type="SQL" category="db"&gt;
+      &lt;content&gt;{{> rename-column-mysql-lineage}}&lt;/content&gt;
+    &lt;/template&gt;
 
-    <!-- drop-column-copy-data: 引用血统模板 -->
-    <template id="drop-column-copy-data" name="drop-column-copy-data" type="SQL" category="db">
-      <content>{{> drop-column-copy-data-mysql-lineage}}</content>
-    </template>
-  </templates>
-</plugin>
+    &lt;!-- drop-column-copy-data: 引用血统模板 --&gt;
+    &lt;template id="drop-column-copy-data" name="drop-column-copy-data" type="SQL" category="db"&gt;
+      &lt;content&gt;{{> drop-column-copy-data-mysql-lineage}}&lt;/content&gt;
+    &lt;/template&gt;
+  &lt;/templates&gt;
+&lt;/plugin&gt;
 ```
 
 PostgreSQL Plugin:
 
 ```xml
-<plugin id="postgresql" dialect="postgresql" ref-id="sql-standard-root">
-  <templates>
-    <template id="drop-column-raw" name="drop-column-raw" type="SQL" category="db">
-      <content>{{> drop-column-raw-postgres-lineage}}</content>
-    </template>
+&lt;plugin id="postgresql" dialect="postgresql" ref-id="sql-standard-root"&gt;
+  &lt;templates&gt;
+    &lt;template id="drop-column-raw" name="drop-column-raw" type="SQL" category="db"&gt;
+      &lt;content&gt;{{> drop-column-raw-postgres-lineage}}&lt;/content&gt;
+    &lt;/template&gt;
 
-    <template id="rename-column" name="rename-column" type="SQL" category="db">
-      <content>{{> rename-column-postgres-lineage}}</content>
-    </template>
+    &lt;template id="rename-column" name="rename-column" type="SQL" category="db"&gt;
+      &lt;content&gt;{{> rename-column-postgres-lineage}}&lt;/content&gt;
+    &lt;/template&gt;
 
-    <template id="drop-column-copy-data" name="drop-column-copy-data" type="SQL" category="db">
-      <content>{{> drop-column-copy-data-postgres-lineage}}</content>
-    </template>
-  </templates>
-</plugin>
+    &lt;template id="drop-column-copy-data" name="drop-column-copy-data" type="SQL" category="db"&gt;
+      &lt;content&gt;{{> drop-column-copy-data-postgres-lineage}}&lt;/content&gt;
+    &lt;/template&gt;
+  &lt;/templates&gt;
+&lt;/plugin&gt;
 ```
 
 SQL Server Plugin:
 
 ```xml
-<plugin id="sqlserver" dialect="sqlserver" ref-id="sql-standard-root">
-  <templates>
-    <template id="drop-column-raw" name="drop-column-raw" type="SQL" category="db">
-      <content>{{> drop-column-raw-sqlserver-lineage}}</content>
-    </template>
+&lt;plugin id="sqlserver" dialect="sqlserver" ref-id="sql-standard-root"&gt;
+  &lt;templates&gt;
+    &lt;template id="drop-column-raw" name="drop-column-raw" type="SQL" category="db"&gt;
+      &lt;content&gt;{{> drop-column-raw-sqlserver-lineage}}&lt;/content&gt;
+    &lt;/template&gt;
 
-    <template id="rename-column" name="rename-column" type="SQL" category="db">
-      <content>{{> rename-column-sqlserver-lineage}}</content>
-    </template>
+    &lt;template id="rename-column" name="rename-column" type="SQL" category="db"&gt;
+      &lt;content&gt;{{> rename-column-sqlserver-lineage}}&lt;/content&gt;
+    &lt;/template&gt;
 
-    <template id="drop-column-copy-data" name="drop-column-copy-data" type="SQL" category="db">
-      <content>{{> drop-column-copy-data-sqlserver-lineage}}</content>
-    </template>
-  </templates>
-</plugin>
+    &lt;template id="drop-column-copy-data" name="drop-column-copy-data" type="SQL" category="db"&gt;
+      &lt;content&gt;{{> drop-column-copy-data-sqlserver-lineage}}&lt;/content&gt;
+    &lt;/template&gt;
+  &lt;/templates&gt;
+&lt;/plugin&gt;
 ```
 
 ## 四、使用示例

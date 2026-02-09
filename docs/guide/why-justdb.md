@@ -36,8 +36,8 @@ tag:
 
 #### 1. 声明式 vs 命令式
 
-<CodeGroup>
-<CodeGroupItem title="JustDB (声明式)">
+&lt;CodeGroup&gt;
+&lt;CodeGroupItem title="JustDB (声明式)"&gt;
 
 ```yaml
 # 只需描述期望的状态
@@ -58,9 +58,9 @@ Table:
 - 自动处理变更计算
 - 避免人为错误
 
-</CodeGroupItem>
+&lt;/CodeGroupItem&gt;
 
-<CodeGroupItem title="Flyway (命令式)">
+&lt;CodeGroupItem title="Flyway (命令式)"&gt;
 
 ```sql
 -- V1__create_users_table.sql
@@ -80,26 +80,26 @@ ALTER TABLE users ADD COLUMN phone VARCHAR(20);
 - 容易出现语法错误
 - 修改已有变更困难
 
-</CodeGroupItem>
+&lt;/CodeGroupItem&gt;
 
-<CodeGroupItem title="Liquibase (命令式)">
+&lt;CodeGroupItem title="Liquibase (命令式)"&gt;
 
 ```xml
-<changeSet id="1" author="john">
-    <createTable tableName="users">
-        <column name="id" type="BIGINT">
-            <constraints primaryKey="true"/>
-        </column>
-        <column name="username" type="VARCHAR(50)"/>
-        <column name="email" type="VARCHAR(100)"/>
-    </createTable>
-</changeSet>
+&lt;changeSet id="1" author="john"&gt;
+    &lt;createTable tableName="users"&gt;
+        &lt;column name="id" type="BIGINT"&gt;
+            &lt;constraints primaryKey="true"/&gt;
+        &lt;/column&gt;
+        &lt;column name="username" type="VARCHAR(50)"/&gt;
+        &lt;column name="email" type="VARCHAR(100)"/&gt;
+    &lt;/createTable&gt;
+&lt;/changeSet&gt;
 
-<changeSet id="2" author="john">
-    <addColumn tableName="users">
-        <column name="phone" type="VARCHAR(20)"/>
-    </addColumn>
-</changeSet>
+&lt;changeSet id="2" author="john"&gt;
+    &lt;addColumn tableName="users"&gt;
+        &lt;column name="phone" type="VARCHAR(20)"/&gt;
+    &lt;/addColumn&gt;
+&lt;/changeSet&gt;
 ```
 
 **劣势**：
@@ -107,8 +107,8 @@ ALTER TABLE users ADD COLUMN phone VARCHAR(20);
 - 需要管理 changeSet ID
 - 修改已有 changeSet 会出错
 
-</CodeGroupItem>
-</CodeGroup>
+&lt;/CodeGroupItem&gt;
+&lt;/CodeGroup&gt;
 
 #### 2. 智能差异计算
 
@@ -134,8 +134,8 @@ flowchart LR
 
 #### 3. Schema 即文档
 
-<CodeGroup>
-<CodeGroupItem title="JustDB">
+&lt;CodeGroup&gt;
+&lt;CodeGroupItem title="JustDB"&gt;
 
 ```yaml
 # Schema 文件本身就是最好的文档
@@ -159,9 +159,9 @@ Table:
 - 支持 Markdown 格式导出
 - 可以生成可视化的 ER 图
 
-</CodeGroupItem>
+&lt;/CodeGroupItem&gt;
 
-<CodeGroupItem title="传统方式">
+&lt;CodeGroupItem title="传统方式"&gt;
 
 ```sql
 -- SQL 脚本
@@ -179,8 +179,8 @@ CREATE TABLE users (
 - 文档与数据库容易不同步
 - 查看文档需要切换到其他工具
 
-</CodeGroupItem>
-</CodeGroup>
+&lt;/CodeGroupItem&gt;
+&lt;/CodeGroup&gt;
 
 #### 4. 多格式支持
 

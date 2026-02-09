@@ -49,3 +49,5 @@ JustDB's architecture is designed around flexibility, extensibility, and databas
 - [Component Design](./components.md) - Core component details *(Coming soon)*
 - [Data Flow](./data-flow.md) - Data flow through system *(Coming soon)*
 - [Plugin Architecture](./plugins.md) - Plugin system design *(Coming soon)*
+
+> **Note**: Detailed documentation is being written. Please refer to the Chinese documentation for complete information.

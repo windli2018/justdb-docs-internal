@@ -1,6 +1,6 @@
 ---
 icon: folder
-title: Section Overview
+title: Contributing Overview
 ---
 
 # Section Overview

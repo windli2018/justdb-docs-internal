@@ -34,8 +34,8 @@ JustDB 模板系统基于 Handlebars 模板引擎，提供丰富的语法支持�
 ### HTML 转义
 
 ```handlebars
-{{&variable}}  <!-- 不转义 -->
-{{{variable}}} <!-- 不转义 -->
+{{&variable}}  &lt;!-- 不转义 --&gt;
+{{{variable}}} &lt;!-- 不转义 --&gt;
 ```
 
 ## 条件渲染
@@ -44,7 +44,7 @@ JustDB 模板系统基于 Handlebars 模板引擎，提供丰富的语法支持�
 
 ```handlebars
 {{#if condition}}
-  <!-- 条件为真时渲染 -->
+  &lt;!-- 条件为真时渲染 --&gt;
 {{/if}}
 ```
 
@@ -52,9 +52,9 @@ JustDB 模板系统基于 Handlebars 模板引擎，提供丰富的语法支持�
 
 ```handlebars
 {{#if condition}}
-  <!-- 条件为真时渲染 -->
+  &lt;!-- 条件为真时渲染 --&gt;
 {{else}}
-  <!-- 条件为假时渲染 -->
+  &lt;!-- 条件为假时渲染 --&gt;
 {{/if}}
 ```
 
@@ -62,26 +62,26 @@ JustDB 模板系统基于 Handlebars 模板引擎，提供丰富的语法支持�
 
 ```handlebars
 {{#unless condition}}
-  <!-- 条件为假时渲染 -->
+  &lt;!-- 条件为假时渲染 --&gt;
 {{/unless}}
 ```
 
 ### 实际示例
 
 ```handlebars
-<!-- 幂等模式 -->
+&lt;!-- 幂等模式 --&gt;
 CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
     {{> columns}}
 );
 
-<!-- 条件渲染列属性 -->
+&lt;!-- 条件渲染列属性 --&gt;
 {{#if column.nullable}}
     NULL
 {{else}}
     NOT NULL
 {{/if}}
 
-<!-- 默认值 -->
+&lt;!-- 默认值 --&gt;
 {{#if column.defaultValue}}
     DEFAULT {{column.defaultValue}}
 {{/if}}
@@ -119,7 +119,7 @@ CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
 ### 实际示例
 
 ```handlebars
-<!-- 生成列定义 -->
+&lt;!-- 生成列定义 --&gt;
 {{#each columns}}
     {{> column-spec}}{{#unless @last}},{{/unless}}
 {{/each}}
@@ -174,7 +174,7 @@ email VARCHAR(100) NOT NULL
 ### 父上下文
 
 ```handlebars
-{{> table-name ..}}  <!-- 使用父上下文 -->
+{{> table-name ..}}  &lt;!-- 使用父上下文 --&gt;
 ```
 
 ### 路径访问
@@ -293,33 +293,33 @@ ALTER TABLE {{> table-name ..}}
 ### 1. 使用模板引用
 
 ```handlebars
-<!-- 好的做法：使用模板引用 -->
+&lt;!-- 好的做法：使用模板引用 --&gt;
 {{> table-name}}
 
-<!-- 避免：重复代码 -->
+&lt;!-- 避免：重复代码 --&gt;
 `{{this.schema}}`.`{{this.name}}`
 ```
 
 ### 2. 保持模板简洁
 
 ```handlebars
-<!-- 好的做法：分解为小模板 -->
+&lt;!-- 好的做法：分解为小模板 --&gt;
 {{> column-spec}}
 {{> index-spec}}
 {{> constraint-spec}}
 
-<!-- 避免：单个大模板 -->
+&lt;!-- 避免：单个大模板 --&gt;
 CREATE TABLE (...) ... (大量代码)
 ```
 
 ### 3. 使用条件渲染
 
 ```handlebars
-<!-- 好的做法：条件渲染 -->
+&lt;!-- 好的做法：条件渲染 --&gt;
 {{#if @root.idempotent}}IF NOT EXISTS {{/if}}
 
-<!-- 避免：多个模板 -->
-<!-- create-table-idempotent 和 create-table-normal -->
+&lt;!-- 避免：多个模板 --&gt;
+&lt;!-- create-table-idempotent 和 create-table-normal --&gt;
 ```
 
 ### 4. 注释说明

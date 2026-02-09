@@ -11,7 +11,20 @@ export const zhSidebar = sidebar({
       children: [
         "what-is-justdb.md",
         "why-justdb.md",
-        "comparison.md",
+        {
+          text: "与其他工具对比",
+          icon: "balance-scale",
+          prefix: "/guide/comparison/",
+          link: "/guide/comparison/",
+          collapsible: true,
+          children: [
+            "flyway.md",
+            "liquibase.md",
+            "sqlalchemy.md",
+            "prisma.md",
+            "atlas.md",
+          ],
+        },
         "design-philosophy.md",
         "use-cases.md",
       ],

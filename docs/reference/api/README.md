@@ -14,13 +14,13 @@ JustDB 提供了丰富的 Java API，支持 Schema 定义、加载、部署、�
 ### 1. Schema 定义 API
 定义数据库 Schema 的核心模型类。
 
-- **[Justdb](../reference/api/java-api.md)** - Schema 根容器
-- **[Table](../reference/api/java-api.md)** - 表定义
-- **[Column](../reference/api/java-api.md)** - 列定义
-- **[Index](../reference/api/java-api.md)** - 索引定义
-- **[Constraint](../reference/api/java-api.md)** - 约束定义
-- **[Sequence](../reference/api/java-api.md)** - 序列定义
-- **[View](../reference/api/java-api.md)** - 视图定义
+- **[Justdb](./java-api.md)** - Schema 根容器
+- **[Table](./java-api.md)** - 表定义
+- **[Column](./java-api.md)** - 列定义
+- **[Index](./java-api.md)** - 索引定义
+- **[Constraint](./java-api.md)** - 约束定义
+- **[Sequence](./java-api.md)** - 序列定义
+- **[View](./java-api.md)** - 视图定义
 
 ### 2. 格式加载 API
 从各种格式加载 Schema 定义。
@@ -32,19 +32,19 @@ JustDB 提供了丰富的 Java API，支持 Schema 定义、加载、部署、�
 ### 3. 部署 API
 将 Schema 部署到数据库。
 
-- **[SchemaDeployer](../reference/api/schema-deployer.md)** - Schema 部署器
+- **[SchemaDeployer](./schema-deployer.md)** - Schema 部署器
 - **SchemaMigrationService** - Schema 迁移服务
 
 ### 4. 迁移 API
 计算和应用 Schema 差异。
 
-- **[CanonicalSchemaDiff](../reference/api/schema-diff.md)** - Schema 差异计算
+- **[CanonicalSchemaDiff](./schema-diff.md)** - Schema 差异计算
 - **ChangeType** - 变更类型枚举
 
 ### 5. JDBC 驱动
 通过标准 JDBC 接口访问 JustDB。
 
-- **[JustdbDriver](../reference/api/jdbc-driver.md)** - JDBC 驱动实现
+- **[JustdbDriver](./jdbc-driver.md)** - JDBC 驱动实现
 - **JustdbConnection** - JDBC 连接
 - **JustdbStatement** - JDBC 语句
 - **JustdbResultSet** - JDBC 结果集
@@ -83,11 +83,11 @@ justdb.setTables(Arrays.asList(usersTable));
 ```java
 // 从文件加载
 JustdbManager manager = JustdbManager.getInstance();
-Loaded<Justdb> result = SchemaLoaderFactory.load("schema.json", manager);
+Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("schema.json", manager);
 Justdb justdb = result.getData();
 
 // 从类路径加载
-Loaded<Justdb> result = SchemaLoaderFactory.load("classpath:schema.xml", manager);
+Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("classpath:schema.xml", manager);
 ```
 
 ### 3. 部署 Schema
@@ -112,8 +112,8 @@ CanonicalSchemaDiff diff = new CanonicalSchemaDiff(currentSchema, targetSchema);
 diff.calculateAll();
 
 // 获取变更
-List<TableChange> tableChanges = diff.getTableChanges();
-List<ColumnChange> columnChanges = diff.getColumnChanges();
+List&lt;TableChange&gt; tableChanges = diff.getTableChanges();
+List&lt;ColumnChange&gt; columnChanges = diff.getColumnChanges();
 ```
 
 ### 5. 使用 JDBC 驱动

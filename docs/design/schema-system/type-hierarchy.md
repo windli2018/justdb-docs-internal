@@ -20,7 +20,7 @@ JustDB Schema 采用清晰的继承层次结构，所有 Schema 对象都继承�
 ```mermaid
 classDiagram
     class Item {
-        <<abstract>>
+        &lt;<abstract&gt;>
         +String id
         +String referenceId
         +String name
@@ -35,20 +35,20 @@ classDiagram
     }
 
     class UnknownValues {
-        <<mixin>>
+        &lt;<mixin&gt;>
         +Map~String, Object~ unknownValues
         +Object get(String key)
         +void set(String key, Object value)
     }
 
     class SchemaSense {
-        <<mixin>>
+        &lt;<mixin&gt;>
         +Justdb justdb
         +String namespace
     }
 
     class QueryAble {
-        <<abstract>>
+        &lt;<abstract&gt;>
         +List~ConditionalSqlScript~ beforeCreates
         +List~ConditionalSqlScript~ afterCreates
         +List~ConditionalSqlScript~ beforeDrops
@@ -192,12 +192,12 @@ classDiagram
 | `id` | String | 唯一标识符 | `"col_users_id"` |
 | `referenceId` | String | 引用其他 item 的 id（复用） | `"global_id"` |
 | `name` | String | 显示名称 | `"users"` |
-| `formerNames` | List\<String\> | 曾用名列表（变更追踪） | `["user"]` |
+| `formerNames` | List\&lt;String\&gt; | 曾用名列表（变更追踪） | `["user"]` |
 | `comment` | String | 数据库注释（会写入数据库） | `"User table"` |
 | `remark` | String | JustDB 备注（不写入数据库） | `"Internal use"` |
 | `author` | String | 作者 | `"wind"` |
 | `version` | String | 版本信息 | `"1.0"` |
-| `dbms` | List\<String\> | 适用数据库列表 | `["mysql", "postgresql"]` |
+| `dbms` | List\&lt;String\&gt; | 适用数据库列表 | `["mysql", "postgresql"]` |
 | `changeType` | ChangeType | Schema diff 变更类型 | `ADDED`, `REMOVED` |
 | `deleted` | Boolean | 是否已删除 | `false` |
 
@@ -207,7 +207,7 @@ classDiagram
 
 ```java
 public class UnknownValues {
-    private Map<String, Object> unknownValues = new HashMap<>();
+    private Map&lt;String, Object&gt; unknownValues = new HashMap&lt;&gt;();
 
     public Object get(String key) {
         return unknownValues.get(key);
@@ -222,10 +222,10 @@ public class UnknownValues {
 **使用示例**：
 
 ```xml
-<!-- MySQL 表使用 engine 属性（存储在 UnknownValues） -->
-<Table name="users" engine="InnoDB" row_format="COMPRESSED">
-    <columns>...</columns>
-</Table>
+&lt;!-- MySQL 表使用 engine 属性（存储在 UnknownValues） --&gt;
+&lt;Table name="users" engine="InnoDB" row_format="COMPRESSED"&gt;
+    &lt;columns&gt;...&lt;/columns&gt;
+&lt;/Table&gt;
 ```
 
 ### SchemaSense (上下文持有者)
@@ -324,7 +324,7 @@ public class Table extends QueryAble {
 
 public class Columns {
     @XmlElement(name = "Column")
-    private List<Column> list = new ArrayList<>();
+    private List&lt;Column&gt; list = new ArrayList&lt;&gt;();
 }
 ```
 

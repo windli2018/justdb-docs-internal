@@ -1,5 +1,5 @@
 ---
-title: Schema 演进
+title: Schema 演进设计
 icon: git-branch
 order: 4
 category: 设计文档
@@ -35,27 +35,27 @@ JustDB 提供两种互补的 Schema 演进追踪机制，实现组件复用和�
 ### 基本用法
 
 ```xml
-<!-- 定义全局列模板 -->
-<Column id="global_id" name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
-<Column id="global_created_at" name="created_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/>
-<Column id="global_updated_at" name="updated_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/>
+&lt;!-- 定义全局列模板 --&gt;
+&lt;Column id="global_id" name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
+&lt;Column id="global_created_at" name="created_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/&gt;
+&lt;Column id="global_updated_at" name="updated_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/&gt;
 
-<!-- 在表中引用 -->
-<Table name="users">
-    <!-- 直接引用，继承所有属性 -->
-    <Column id="col_users_id" referenceId="global_id" name="id"/>
-    <Column id="col_users_username" name="username" type="VARCHAR(50)" nullable="false"/>
-    <Column id="col_users_email" name="email" type="VARCHAR(100)" nullable="false"/>
-    <Column id="col_users_created_at" referenceId="global_created_at" name="created_at"/>
-    <Column id="col_users_updated_at" referenceId="global_updated_at" name="updated_at"/>
-</Table>
+&lt;!-- 在表中引用 --&gt;
+&lt;Table name="users"&gt;
+    &lt;!-- 直接引用，继承所有属性 --&gt;
+    &lt;Column id="col_users_id" referenceId="global_id" name="id"/&gt;
+    &lt;Column id="col_users_username" name="username" type="VARCHAR(50)" nullable="false"/&gt;
+    &lt;Column id="col_users_email" name="email" type="VARCHAR(100)" nullable="false"/&gt;
+    &lt;Column id="col_users_created_at" referenceId="global_created_at" name="created_at"/&gt;
+    &lt;Column id="col_users_updated_at" referenceId="global_updated_at" name="updated_at"/&gt;
+&lt;/Table&gt;
 
-<Table name="orders">
-    <!-- 复用全局列定义 -->
-    <Column id="col_orders_id" referenceId="global_id" name="id"/>
-    <Column id="col_orders_user_id" name="user_id" type="BIGINT" nullable="false"/>
-    <!-- ... -->
-</Table>
+&lt;Table name="orders"&gt;
+    &lt;!-- 复用全局列定义 --&gt;
+    &lt;Column id="col_orders_id" referenceId="global_id" name="id"/&gt;
+    &lt;Column id="col_orders_user_id" name="user_id" type="BIGINT" nullable="false"/&gt;
+    &lt;!-- ... --&gt;
+&lt;/Table&gt;
 ```
 
 ### 继承与覆盖
@@ -63,18 +63,18 @@ JustDB 提供两种互补的 Schema 演进追踪机制，实现组件复用和�
 引用的列可以覆盖特定属性：
 
 ```xml
-<!-- 全局定义 -->
-<Column id="global_id" name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+&lt;!-- 全局定义 --&gt;
+&lt;Column id="global_id" name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
 
-<!-- 引用时覆盖 name -->
-<Table name="users">
-    <Column id="col_users_id" referenceId="global_id" name="user_id"/>
-</Table>
+&lt;!-- 引用时覆盖 name --&gt;
+&lt;Table name="users"&gt;
+    &lt;Column id="col_users_id" referenceId="global_id" name="user_id"/&gt;
+&lt;/Table&gt;
 
-<!-- 引用时覆盖 type -->
-<Table name="config">
-    <Column id="col_config_id" referenceId="global_id" name="id" type="VARCHAR(50)"/>
-</Table>
+&lt;!-- 引用时覆盖 type --&gt;
+&lt;Table name="config"&gt;
+    &lt;Column id="col_config_id" referenceId="global_id" name="id" type="VARCHAR(50)"/&gt;
+&lt;/Table&gt;
 ```
 
 ### 依赖解析
@@ -90,9 +90,9 @@ JustDB 在加载 Schema 时会：
 系统会检测并阻止循环依赖：
 
 ```xml
-<!-- 错误：循环依赖 -->
-<Column id="a" referenceId="b"/>
-<Column id="b" referenceId="a"/>
+&lt;!-- 错误：循环依赖 --&gt;
+&lt;Column id="a" referenceId="b"/&gt;
+&lt;Column id="b" referenceId="a"/&gt;
 ```
 
 抛出异常：
@@ -111,12 +111,12 @@ Circular reference detected: a -> b -> a
 ### 基本用法
 
 ```xml
-<!-- 追踪表名变更 -->
-<Table name="users">
-    <formerNames>
-        <oldName>user</oldName>
-    </formerNames>
-</Table>
+&lt;!-- 追踪表名变更 --&gt;
+&lt;Table name="users"&gt;
+    &lt;formerNames&gt;
+        &lt;oldName&gt;user&lt;/oldName&gt;
+    &lt;/formerNames&gt;
+&lt;/Table&gt;
 ```
 
 生成的迁移 SQL：
@@ -127,12 +127,12 @@ ALTER TABLE user RENAME TO users;
 ### 多次重命名
 
 ```xml
-<Table name="users">
-    <formerNames>
-        <oldName>user</oldName>
-        <oldName>sys_user</oldName>
-    </formerNames>
-</Table>
+&lt;Table name="users"&gt;
+    &lt;formerNames&gt;
+        &lt;oldName&gt;user&lt;/oldName&gt;
+        &lt;oldName&gt;sys_user&lt;/oldName&gt;
+    &lt;/formerNames&gt;
+&lt;/Table&gt;
 ```
 
 生成的迁移 SQL：
@@ -144,13 +144,13 @@ ALTER TABLE user RENAME TO users;
 ### 列重命名
 
 ```xml
-<Table name="users">
-    <Column name="email">
-        <formerNames>
-            <oldName>email_address</oldName>
-        </formerNames>
-    </Column>
-</Table>
+&lt;Table name="users"&gt;
+    &lt;Column name="email"&gt;
+        &lt;formerNames&gt;
+            &lt;oldName&gt;email_address&lt;/oldName&gt;
+        &lt;/formerNames&gt;
+    &lt;/Column&gt;
+&lt;/Table&gt;
 ```
 
 生成的迁移 SQL：
@@ -179,10 +179,10 @@ public enum ChangeType {
 public class CanonicalSchemaDiff {
     private Justdb sourceSchema;      // 源 Schema
     private Justdb targetSchema;      // 目标 Schema
-    private List<Table> tables;       // 变更的表
-    private List<Column> columns;     // 变更的列
-    private List<Index> indexes;      // 变更的索引
-    private List<Constraint> constraints; // 变更的约束
+    private List&lt;Table&gt; tables;       // 变更的表
+    private List&lt;Column&gt; columns;     // 变更的列
+    private List&lt;Index&gt; indexes;      // 变更的索引
+    private List&lt;Constraint&gt; constraints; // 变更的约束
 }
 ```
 
@@ -192,19 +192,19 @@ public class CanonicalSchemaDiff {
 
 **初始状态**：
 ```xml
-<Table name="user">
-    <columns>...</columns>
-</Table>
+&lt;Table name="user"&gt;
+    &lt;columns&gt;...&lt;/columns&gt;
+&lt;/Table&gt;
 ```
 
 **演进**：
 ```xml
-<Table name="users">
-    <formerNames>
-        <oldName>user</oldName>
-    </formerNames>
-    <columns>...</columns>
-</Table>
+&lt;Table name="users"&gt;
+    &lt;formerNames&gt;
+        &lt;oldName&gt;user&lt;/oldName&gt;
+    &lt;/formerNames&gt;
+    &lt;columns&gt;...&lt;/columns&gt;
+&lt;/Table&gt;
 ```
 
 **生成的 SQL**：
@@ -216,12 +216,12 @@ ALTER TABLE user RENAME TO users;
 
 **初始状态**：
 ```xml
-<Column name="username" type="VARCHAR(50)"/>
+&lt;Column name="username" type="VARCHAR(50)"/&gt;
 ```
 
 **演进**：
 ```xml
-<Column name="username" type="VARCHAR(100)"/>
+&lt;Column name="username" type="VARCHAR(100)"/&gt;
 ```
 
 **生成的 SQL**（MySQL）：
@@ -233,19 +233,19 @@ ALTER TABLE users MODIFY COLUMN username VARCHAR(100);
 
 **初始状态**：
 ```xml
-<Table name="users">
-    <columns>...</columns>
-</Table>
+&lt;Table name="users"&gt;
+    &lt;columns&gt;...&lt;/columns&gt;
+&lt;/Table&gt;
 ```
 
 **演进**：
 ```xml
-<Table name="users">
-    <columns>...</columns>
-    <indexes>
-        <Index name="idx_users_email" unique="true" columns="email"/>
-    </indexes>
-</Table>
+&lt;Table name="users"&gt;
+    &lt;columns&gt;...&lt;/columns&gt;
+    &lt;indexes&gt;
+        &lt;Index name="idx_users_email" unique="true" columns="email"/&gt;
+    &lt;/indexes&gt;
+&lt;/Table&gt;
 ```
 
 **生成的 SQL**：
@@ -257,22 +257,22 @@ CREATE UNIQUE INDEX idx_users_email ON users(email);
 
 **全局定义**：
 ```xml
-<Column id="global_timestamp" name="created_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/>
+&lt;Column id="global_timestamp" name="created_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/&gt;
 ```
 
 **多个表引用**：
 ```xml
-<Table name="users">
-    <Column referenceId="global_timestamp" name="created_at"/>
-</Table>
+&lt;Table name="users"&gt;
+    &lt;Column referenceId="global_timestamp" name="created_at"/&gt;
+&lt;/Table&gt;
 
-<Table name="orders">
-    <Column referenceId="global_timestamp" name="created_at"/>
-</Table>
+&lt;Table name="orders"&gt;
+    &lt;Column referenceId="global_timestamp" name="created_at"/&gt;
+&lt;/Table&gt;
 
-<Table name="products">
-    <Column referenceId="global_timestamp" name="created_at"/>
-</Table>
+&lt;Table name="products"&gt;
+    &lt;Column referenceId="global_timestamp" name="created_at"/&gt;
+&lt;/Table&gt;
 ```
 
 **优势**：
@@ -304,7 +304,7 @@ CanonicalSchemaDiff diff = new CanonicalSchemaDiff(currentSchema, targetSchema);
 diff.calculateAll();
 
 // 生成 SQL
-List<String> sqlStatements = diff.generateSql("mysql");
+List&lt;String&gt; sqlStatements = diff.generateSql("mysql");
 
 // 执行变更
 SchemaEvolutionManager manager = new SchemaEvolutionManager(connection);
@@ -316,29 +316,29 @@ manager.evolve(diff);
 ### 1. 使用 referenceId 复用常用定义
 
 ```xml
-<!-- 好的做法 -->
-<Column id="global_id" name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
-<Column id="global_timestamp" name="created_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/>
+&lt;!-- 好的做法 --&gt;
+&lt;Column id="global_id" name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
+&lt;Column id="global_timestamp" name="created_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/&gt;
 
-<!-- 避免：重复定义 -->
-<Table name="users">
-    <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
-    <Column name="created_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/>
-</Table>
+&lt;!-- 避免：重复定义 --&gt;
+&lt;Table name="users"&gt;
+    &lt;Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
+    &lt;Column name="created_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/&gt;
+&lt;/Table&gt;
 ```
 
 ### 2. 记录重命名历史
 
 ```xml
-<!-- 好的做法 -->
-<Table name="users">
-    <formerNames>
-        <oldName>user</oldName>
-    </formerNames>
-</Table>
+&lt;!-- 好的做法 --&gt;
+&lt;Table name="users"&gt;
+    &lt;formerNames&gt;
+        &lt;oldName&gt;user&lt;/oldName&gt;
+    &lt;/formerNames&gt;
+&lt;/Table&gt;
 
-<!-- 避免：直接改名不记录历史 -->
-<Table name="users"/>
+&lt;!-- 避免：直接改名不记录历史 --&gt;
+&lt;Table name="users"/&gt;
 ```
 
 ### 3. 版本控制
@@ -355,20 +355,20 @@ git commit -m "Rename user table to users"
 避免大规模重命名，分步进行：
 
 ```xml
-<!-- 步骤 1：重命名 -->
-<Table name="users">
-    <formerNames>
-        <oldName>user</oldName>
-    </formerNames>
-</Table>
+&lt;!-- 步骤 1：重命名 --&gt;
+&lt;Table name="users"&gt;
+    &lt;formerNames&gt;
+        &lt;oldName&gt;user&lt;/oldName&gt;
+    &lt;/formerNames&gt;
+&lt;/Table&gt;
 
-<!-- 步骤 2：添加新列（下一次提交） -->
-<Table name="users">
-    <formerNames>
-        <oldName>user</oldName>
-    </formerNames>
-    <Column name="avatar" type="VARCHAR(500)"/>
-</Table>
+&lt;!-- 步骤 2：添加新列（下一次提交） --&gt;
+&lt;Table name="users"&gt;
+    &lt;formerNames&gt;
+        &lt;oldName&gt;user&lt;/oldName&gt;
+    &lt;/formerNames&gt;
+    &lt;Column name="avatar" type="VARCHAR(500)"/&gt;
+&lt;/Table&gt;
 ```
 
 ## 相关文档

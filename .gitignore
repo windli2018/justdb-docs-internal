@@ -3,3 +3,5 @@ docs/.vuepress/.cache/
 docs/.vuepress/.temp/
 *.tar.gz
 *.zip
+docs/.vuepress/dist/
+ecosystem/

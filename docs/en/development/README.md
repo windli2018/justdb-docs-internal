@@ -263,7 +263,6 @@ refactor: simplify plugin loading logic
 ### Documentation
 
 - [JustDB Documentation](https://verydb.github.io/justdb)
-- [CLAUDE.md](../../CLAUDE.md) - Project instructions
 
 ### Community
 
@@ -272,7 +271,7 @@ refactor: simplify plugin loading logic
 
 ## Navigation
 
-- **[Quick Start](../getting-started/)** - Get started quickly
-- **[User Guide](../guide/)** - User documentation
-- **[Reference](../reference/)** - API and command reference
-- **[Design](../design/)** - Architecture and design documents
+- **[Quick Start](/en/getting-started/)** - Get started quickly
+- **[User Guide](/guide/)** - User documentation
+- **[Reference](/reference/)** - API and command reference
+- **[Design](/design/)** - Architecture and design documents

@@ -127,12 +127,12 @@ public class CustomTemplateHelper extends TemplateHelper {
 在 `default-plugins.xml` 或插件文件中：
 
 ```xml
-<plugin id="my-plugin" name="My Plugin">
-    <helpers>
+&lt;plugin id="my-plugin" name="My Plugin"&gt;
+    &lt;helpers&gt;
         <TemplateHelper id="custom-helper"
                         class="com.example.justdb.helper.CustomTemplateHelper"/>
-    </helpers>
-</plugin>
+    &lt;/helpers&gt;
+&lt;/plugin&gt;
 ```
 
 #### 编程方式
@@ -162,15 +162,15 @@ pluginManager.registerHelper("ifEquals", helper::ifEquals);
 ### 复杂场景
 
 ```handlebars
-<!-- 带注释的列定义 -->
-<template id="column-with-comment" type="SQL" category="db">
-    <content>
+&lt;!-- 带注释的列定义 --&gt;
+&lt;template id="column-with-comment" type="SQL" category="db"&gt;
+    &lt;content&gt;
         {{column.name}} {{column.type}}
         {{#if column.comment}}
             COMMENT '{{formatComment column.comment}}'
         {{/if}}
-    </content>
-</template>
+    &lt;/content&gt;
+&lt;/template&gt;
 ```
 
 ## 上下文感知辅助函数
@@ -252,7 +252,7 @@ public String toCamelCase(String snakeCase) {
 /**
  * 连接列表为字符串
  */
-public String join(List<?> items, String delimiter) {
+public String join(List&lt;?&gt; items, String delimiter) {
     if (items == null || items.isEmpty()) {
         return "";
     }
@@ -297,7 +297,7 @@ void testHelperInTemplate() throws Exception {
     executor.registerHelper("toCamelCase", new CustomTemplateHelper()::toCamelCase);
 
     // 准备数据
-    Map<String, Object> data = new HashMap<>();
+    Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();
     data.put("tableName", "user_profile");
 
     // 执行模板

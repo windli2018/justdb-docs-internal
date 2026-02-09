@@ -261,21 +261,21 @@ justdb/
 `justdb-parent/pom.xml` 统一管理所有依赖版本：
 
 ```xml
-<properties>
-    <maven.compiler.source>8</maven.compiler.source>
-    <maven.compiler.target>8</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <!-- 依赖版本 -->
-    <jackson.version>2.15.2</jackson.version>
-    <slf4j.version>2.0.7</slf4j.version>
-    <!-- ... -->
-</properties>
+&lt;properties&gt;
+    &lt;maven.compiler.source&gt;8&lt;/maven.compiler.source&gt;
+    &lt;maven.compiler.target&gt;8&lt;/maven.compiler.target&gt;
+    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+    &lt;!-- 依赖版本 --&gt;
+    &lt;jackson.version&gt;2.15.2&lt;/jackson.version&gt;
+    &lt;slf4j.version&gt;2.0.7&lt;/slf4j.version&gt;
+    &lt;!-- ... --&gt;
+&lt;/properties&gt;
 
-<dependencyManagement>
-    <dependencies>
-        <!-- 统一版本管理 -->
-    </dependencies>
-</dependencyManagement>
+&lt;dependencyManagement&gt;
+    &lt;dependencies&gt;
+        &lt;!-- 统一版本管理 --&gt;
+    &lt;/dependencies&gt;
+&lt;/dependencyManagement&gt;
 ```
 
 ### 根 POM (justdb-root)
@@ -283,21 +283,21 @@ justdb/
 `justdb-root/pom.xml` 定义模块列表和构建 profile：
 
 ```xml
-<modules>
-    <module>justdb-parent</module>
-    <module>justdb-api</module>
-    <module>justdb-core</module>
-    <!-- ... -->
-</modules>
+&lt;modules&gt;
+    &lt;module&gt;justdb-parent&lt;/module&gt;
+    &lt;module&gt;justdb-api&lt;/module&gt;
+    &lt;module&gt;justdb-core&lt;/module&gt;
+    &lt;!-- ... --&gt;
+&lt;/modules&gt;
 
-<profiles>
-    <!-- 测试分组 -->
-    <profile>
-        <id>smoke-test</id>
-        <!-- ... -->
-    </profile>
-    <!-- ... -->
-</profiles>
+&lt;profiles&gt;
+    &lt;!-- 测试分组 --&gt;
+    &lt;profile&gt;
+        &lt;id&gt;smoke-test&lt;/id&gt;
+        &lt;!-- ... --&gt;
+    &lt;/profile&gt;
+    &lt;!-- ... --&gt;
+&lt;/profiles&gt;
 ```
 
 ## 配置文件

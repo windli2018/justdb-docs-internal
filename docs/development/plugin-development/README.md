@@ -61,9 +61,9 @@ META-INF/services/org.verydb.justdb.plugin.JustdbPlugin
 插件可以继承其他插件的模板和配置：
 
 ```xml
-<plugin id="mysql" dialect="mysql" ref-id="sql-standard-root">
-    <!-- 继承 sql-standard-root 的模板 -->
-</plugin>
+&lt;plugin id="mysql" dialect="mysql" ref-id="sql-standard-root"&gt;
+    &lt;!-- 继承 sql-standard-root 的模板 --&gt;
+&lt;/plugin&gt;
 ```
 
 ## 开发场景
@@ -100,14 +100,14 @@ cd justdb-myplugin
 ### 配置依赖
 
 ```xml
-<dependencies>
-    <dependency>
-        <groupId>org.verydb.justdb</groupId>
-        <artifactId>justdb-core</artifactId>
-        <version>1.0.0</version>
-        <scope>provided</scope>
-    </dependency>
-</dependencies>
+&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.verydb.justdb&lt;/groupId&gt;
+        &lt;artifactId&gt;justdb-core&lt;/artifactId&gt;
+        &lt;version&gt;1.0.0&lt;/version&gt;
+        &lt;scope&gt;provided&lt;/scope&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
 ```
 
 ### 实现插件类
@@ -160,20 +160,20 @@ com.example.justdb.MyDatabasePlugin
 在 `default-plugins.xml` 或自定义插件文件中：
 
 ```xml
-<plugin id="my-plugin" version="1.0.0" name="My Plugin">
-    <adapters>
-        <DatabaseAdapter dbType="mydb" driverClass="com.example.Driver">
-            <urlPatterns>
-                <UrlPattern>jdbc:mydb://*</urlPatterns>
-            </urlPatterns>
-        </DatabaseAdapter>
-    </adapters>
-    <templates>
-        <template id="create-table" name="create-table" type="SQL" category="db">
-            <content>CREATE TABLE {{name}} (...)</content>
-        </template>
-    </templates>
-</plugin>
+&lt;plugin id="my-plugin" version="1.0.0" name="My Plugin"&gt;
+    &lt;adapters&gt;
+        &lt;DatabaseAdapter dbType="mydb" driverClass="com.example.Driver"&gt;
+            &lt;urlPatterns&gt;
+                &lt;UrlPattern&gt;jdbc:mydb://*&lt;/urlPatterns&gt;
+            &lt;/urlPatterns&gt;
+        &lt;/DatabaseAdapter&gt;
+    &lt;/adapters&gt;
+    &lt;templates&gt;
+        &lt;template id="create-table" name="create-table" type="SQL" category="db"&gt;
+            &lt;content&gt;CREATE TABLE {{name}} (...)&lt;/content&gt;
+        &lt;/template&gt;
+    &lt;/templates&gt;
+&lt;/plugin&gt;
 ```
 
 ### 编程方式

@@ -1,0 +1,12 @@
+id: test-config
+namespace: org.test
+Table:
+  - id: users
+    name: Users Table
+    Column:
+      - id: id
+        name: ID
+        type: INTEGER
+      - id: name
+        name: Name
+        type: VARCHAR

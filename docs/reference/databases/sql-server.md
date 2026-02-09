@@ -18,11 +18,11 @@ JustDB 提供完整的 Microsoft SQL Server 数据库支持，包括 SQL Server 
 ### JDBC 驱动
 
 ```xml
-<dependency>
-    <groupId>com.microsoft.sqlserver</groupId>
-    <artifactId>mssql-jdbc</artifactId>
-    <version>13.2.1.jre11</version>
-</dependency>
+&lt;dependency&gt;
+    &lt;groupId&gt;com.microsoft.sqlserver&lt;/groupId&gt;
+    &lt;artifactId&gt;mssql-jdbc&lt;/artifactId&gt;
+    &lt;version&gt;13.2.1.jre11&lt;/version&gt;
+&lt;/dependency&gt;
 ```
 
 ### 连接字符串
@@ -72,15 +72,15 @@ databases:
 
 **XML:**
 ```xml
-<databases>
-  <database id="production">
-    <url>jdbc:sqlserver://localhost:1433;databaseName=mydb</url>
-    <driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver>
-    <username>sa</username>
-    <password>YourPassword123</password>
-    <dialect>sqlserver</dialect>
-  </database>
-</databases>
+&lt;databases&gt;
+  &lt;database id="production"&gt;
+    &lt;url&gt;jdbc:sqlserver://localhost:1433;databaseName=mydb&lt;/url&gt;
+    &lt;driver&gt;com.microsoft.sqlserver.jdbc.SQLServerDriver&lt;/driver&gt;
+    &lt;username&gt;sa&lt;/username&gt;
+    &lt;password&gt;YourPassword123&lt;/password&gt;
+    &lt;dialect&gt;sqlserver&lt;/dialect&gt;
+  &lt;/database&gt;
+&lt;/databases&gt;
 ```
 
 ## 数据类型映射

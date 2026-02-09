@@ -81,13 +81,13 @@ CanonicalSchemaDiff 是 JustDB 的核心差异计算组件，用于：
 public class CanonicalSchemaDiff {
     private final Justdb currentSchema;        // 当前 Schema
     private final Justdb targetSchema;         // 目标 Schema
-    private final List<TableChange> tableChanges;      // 表变更
-    private final List<ColumnChange> columnChanges;    // 列变更
-    private final List<IndexChange> indexChanges;      // 索引变更
-    private final List<ConstraintChange> constraintChanges; // 约束变更
-    private final List<SequenceChange> sequenceChanges;  // 序列变更
-    private final List<DataChange> dataChanges;         // 数据变更
-    private final List<TableDataFilterChange> tableDataFilterChanges; // 数据过滤变更
+    private final List&lt;TableChange&gt; tableChanges;      // 表变更
+    private final List&lt;ColumnChange&gt; columnChanges;    // 列变更
+    private final List&lt;IndexChange&gt; indexChanges;      // 索引变更
+    private final List&lt;ConstraintChange&gt; constraintChanges; // 约束变更
+    private final List&lt;SequenceChange&gt; sequenceChanges;  // 序列变更
+    private final List&lt;DataChange&gt; dataChanges;         // 数据变更
+    private final List&lt;TableDataFilterChange&gt; tableDataFilterChanges; // 数据过滤变更
 }
 ```
 
@@ -99,7 +99,7 @@ public class CanonicalSchemaDiff {
 public static class TableChange extends Item {
     private String tableName;      // 新表名
     private ChangeType changeType; // 变更类型
-    private List<String> formerNames; // 旧名称列表
+    private List&lt;String&gt; formerNames; // 旧名称列表
     private Table currentTable;    // 当前表
     private Table targetTable;     // 目标表
 }
@@ -114,7 +114,7 @@ public static class ColumnChange extends Item {
     private String tableName;      // 所属表名
     private String columnName;     // 新列名
     private ChangeType changeType; // 变更类型
-    private List<String> formerNames; // 旧名称列表
+    private List&lt;String&gt; formerNames; // 旧名称列表
     private Column currentColumn;  // 当前列
     private Column targetColumn;   // 目标列
 }
@@ -156,7 +156,7 @@ public static class ConstraintChange extends Item {
 public static class SequenceChange extends Item {
     private String sequenceName;       // 序列名
     private ChangeType changeType;     // 变更类型
-    private List<String> formerNames;  // 旧名称列表
+    private List&lt;String&gt; formerNames;  // 旧名称列表
     private Sequence currentSequence;  // 当前序列
     private Sequence targetSequence;   // 目标序列
 }
@@ -214,8 +214,8 @@ CanonicalSchemaDiff diff = new CanonicalSchemaDiff(currentSchema, targetSchema);
 diff.calculateAll();
 
 // 获取变更
-List<TableChange> tableChanges = diff.getTableChanges();
-List<ColumnChange> columnChanges = diff.getColumnChanges();
+List&lt;TableChange&gt; tableChanges = diff.getTableChanges();
+List&lt;ColumnChange&gt; columnChanges = diff.getColumnChanges();
 ```
 
 ### calculateTables()
@@ -347,7 +347,7 @@ deployer.deployDiff(diffSchema);
 生成数据变更 SQL。
 
 ```java
-public List<String> generateDataChangeSql(String dialect)
+public List&lt;String&gt; generateDataChangeSql(String dialect)
 ```
 
 **参数**:
@@ -362,7 +362,7 @@ public List<String> generateDataChangeSql(String dialect)
 生成数据过滤变更 SQL。
 
 ```java
-public List<String> generateTableDataFilterChangeSql(String dialect)
+public List&lt;String&gt; generateTableDataFilterChangeSql(String dialect)
 ```
 
 **策略**: 删除未删除的行，然后根据新过滤条件重新导入。
@@ -383,14 +383,14 @@ public class BasicDiff {
         JustdbManager manager = JustdbManager.getInstance();
 
         // 加载当前 Schema
-        Loaded<Justdb> currentResult = SchemaLoaderFactory.load(
+        Loaded&lt;Justdb&gt; currentResult = SchemaLoaderFactory.load(
             "current-schema.json",
             manager
         );
         Justdb currentSchema = currentResult.getData();
 
         // 加载目标 Schema
-        Loaded<Justdb> targetResult = SchemaLoaderFactory.load(
+        Loaded&lt;Justdb&gt; targetResult = SchemaLoaderFactory.load(
             "target-schema.json",
             manager
         );
@@ -496,7 +496,7 @@ public class MigrationSqlGeneration {
         SchemaMigrationService migrationService =
             new SchemaMigrationService(currentSchema, manager);
 
-        List<String> sqlStatements = migrationService.generateMigrationSql(diff);
+        List&lt;String&gt; sqlStatements = migrationService.generateMigrationSql(diff);
 
         // 输出 SQL
         System.out.println("-- Migration SQL");
@@ -531,20 +531,20 @@ public class TableScopeFiltering {
         scopes.setExcludes(Arrays.asList("*_temp", "*_backup"));
 
         // 过滤表
-        Map<String, Table> currentTables = toTableMap(currentSchema);
-        Map<String, Table> targetTables = toTableMap(targetSchema);
+        Map&lt;String, Table&gt; currentTables = toTableMap(currentSchema);
+        Map&lt;String, Table&gt; targetTables = toTableMap(targetSchema);
 
-        Map<String, Table> filteredCurrent =
+        Map&lt;String, Table&gt; filteredCurrent =
             CanonicalSchemaDiff.filterByTableScopes(currentTables, scopes);
-        Map<String, Table> filteredTarget =
+        Map&lt;String, Table&gt; filteredTarget =
             CanonicalSchemaDiff.filterByTableScopes(targetTables, scopes);
 
         // 使用过滤后的表计算差异
         Justdb filteredCurrent = new Justdb();
-        filteredCurrent.setTables(new ArrayList<>(filteredCurrent.values()));
+        filteredCurrent.setTables(new ArrayList&lt;&gt;(filteredCurrent.values()));
 
         Justdb filteredTarget = new Justdb();
-        filteredTarget.setTables(new ArrayList<>(filteredTarget.values()));
+        filteredTarget.setTables(new ArrayList&lt;&gt;(filteredTarget.values()));
 
         CanonicalSchemaDiff diff = new CanonicalSchemaDiff(filteredCurrent, filteredTarget);
         diff.calculateAll();
@@ -590,7 +590,7 @@ public class FullMigration {
         SchemaMigrationService migrationService =
             new SchemaMigrationService(currentSchema, manager);
 
-        List<String> sqlStatements = migrationService.generateMigrationSql(diff);
+        List&lt;String&gt; sqlStatements = migrationService.generateMigrationSql(diff);
 
         // 3. 执行迁移
         Connection connection = DriverManager.getConnection(
@@ -643,7 +643,7 @@ public class DataChangeDetection {
         diff.calculateAll();
 
         // 获取数据变更
-        List<DataChange> dataChanges = diff.getDataChanges();
+        List&lt;DataChange&gt; dataChanges = diff.getDataChanges();
 
         System.out.println("Data changes: " + dataChanges.size());
 
@@ -656,7 +656,7 @@ public class DataChangeDetection {
         }
 
         // 生成数据变更 SQL
-        List<String> dataSql = diff.generateDataChangeSql("mysql");
+        List&lt;String&gt; dataSql = diff.generateDataChangeSql("mysql");
 
         System.out.println("Data change SQL:");
         for (String sql : dataSql) {
@@ -701,10 +701,10 @@ mergedDiffSchema.setTables(Stream.concat(
 ### 1. 使用 formerNames 跟踪重命名
 
 ```xml
-<!-- 目标 Schema -->
-<Table name="users" formerNames="user">
-  <Column name="username" formerNames="user_name" type="VARCHAR(50)"/>
-</Table>
+&lt;!-- 目标 Schema --&gt;
+&lt;Table name="users" formerNames="user"&gt;
+  &lt;Column name="username" formerNames="user_name" type="VARCHAR(50)"/&gt;
+&lt;/Table&gt;
 ```
 
 ### 2. 验证差异后再部署

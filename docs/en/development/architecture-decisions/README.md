@@ -1,6 +1,6 @@
 ---
 icon: folder
-title: Section Overview
+title: Architecture Decisions Overview
 ---
 
 # Section Overview

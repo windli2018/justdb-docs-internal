@@ -1,6 +1,6 @@
 ---
 icon: leaf
-title: Spring Boot 集成
+title: Spring Boot 快速集成
 order: 6
 category:
   - 快速开始
@@ -20,11 +20,11 @@ JustDB 提供了开箱即用的 Spring Boot Starter，让数据库管理变得�
 ### 添加依赖
 
 ```xml
-<dependency>
-    <groupId>org.verydb.justdb</groupId>
-    <artifactId>justdb-spring-boot-starter</artifactId>
-    <version>1.0.0</version>
-</dependency>
+&lt;dependency&gt;
+    &lt;groupId&gt;org.verydb.justdb&lt;/groupId&gt;
+    &lt;artifactId&gt;justdb-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;
 ```
 
 ### 配置文件
@@ -270,12 +270,12 @@ public class DatabaseMigrationRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         // 加载 Schema
-        List<Loaded<Justdb>> schemas = SchemaLoader.loadFromClasspath(
+        List&lt;Loaded<Justdb&gt;> schemas = SchemaLoader.loadFromClasspath(
             "justdb", justdbManager
         );
 
         // 执行迁移
-        for (Loaded<Justdb> loaded : schemas) {
+        for (Loaded&lt;Justdb&gt; loaded : schemas) {
             schemaDeployer.deploy(loaded.getValue());
         }
     }

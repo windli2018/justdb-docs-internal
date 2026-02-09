@@ -1,268 +1,291 @@
 ---
 icon: database
-title: Database Support Overview
-order: 30
-category:
-  - Reference
-  - Databases
-tag:
-  - database
-  - support
+title: Database Support
+order: 5
 ---
 
-# Database Support Overview
+# Database Reference
 
-JustDB supports 30+ database platforms, providing automatic SQL generation and dialect-specific optimizations.
+Database support and configuration for JustDB.
 
 ## Supported Databases
 
-### Fully Supported
+### MySQL Family
 
-| Database | Versions | Status | Notes |
-|----------|----------|--------|-------|
-| **MySQL** | 5.7+, 8.0+ | ✓ Stable | Full support |
-| **MariaDB** | 10.3+ | ✓ Stable | MySQL-compatible |
-| **PostgreSQL** | 11+, 12+, 13+, 14+ | ✓ Stable | Full support |
-| **Oracle** | 11g, 12c, 19c, 21c | ✓ Stable | Enterprise features |
-| **SQL Server** | 2017+, 2019+, 2022 | ✓ Stable | Full support |
-| **SQLite** | 3.x | ✓ Stable | Embedded database |
-| **H2** | 2.x | ✓ Stable | Development/testing |
-| **HSQLDB** | 2.x | ✓ Stable | Embedded database |
+| Database | Dialect | Support Level |
+|----------|---------|---------------|
+| MySQL | `mysql` | Full |
+| MariaDB | `mariadb` | Full |
+| TiDB | `tidb` | Full |
+| GBase | `gbase` | Full |
 
-### Extended Support
+**Features:**
+- Auto-increment columns
+- Foreign keys with cascading
+- Indexes (BTREE, HASH, FULLTEXT)
+- Views
+- Stored procedures
 
-| Database | Versions | Status | Notes |
-|----------|----------|--------|-------|
-| **DB2** | 9.7+ | ✓ Supported | IBM DB2 |
-| **Derby** | 10.x | ✓ Supported | Apache Derby |
-| **Informix** | 12.x | ✓ Supported | IBM Informix |
-| **Sybase** | 16.x | ✓ Supported | SAP Sybase |
-| **TimescaleDB** | 1.x, 2.x | ✓ Supported | PostgreSQL extension |
-| **CockroachDB** | 20.x+ | ✓ Supported | PostgreSQL-compatible |
-| **Redshift** | Latest | ✓ Supported | Amazon Redshift |
-| **TiDB** | 5.x+ | ✓ Supported | MySQL-compatible |
-| **GBase** | 8a | ✓ Supported | MySQL-compatible |
-| **KingBase** | V8 | ✓ Supported | PostgreSQL-compatible |
-| **DM** (Dameng) | 8 | ✓ Supported | Oracle-compatible |
-| **OceanBase** | 2.x, 3.x | ✓ Supported | MySQL/Oracle mode |
-| **GaiaDB** | Latest | ✓ Supported | MySQL-compatible |
+**Connection URL:**
+```bash
+jdbc:mysql://{{host}}:{{port}}/{{database}}
+```
 
-## Database Lineage
+### PostgreSQL Family
 
-JustDB groups databases by lineage for efficient template sharing:
+| Database | Dialect | Support Level |
+|----------|---------|---------------|
+| PostgreSQL | `postgresql` | Full |
+| Redshift | `redshift` | Basic |
+| TimescaleDB | `timescaledb` | Full |
+| KingBase | `kingbase` | Full |
 
-### MySQL Lineage
-- MySQL, MariaDB, TiDB, GBase, OceanBase (MySQL mode), GaiaDB
+**Features:**
+- Sequences
+- Serial columns
+- Foreign keys
+- Indexes (BTREE, HASH, GiST, GIN)
+- Arrays, JSONB
+- Extensions
 
-**Characteristics**:
-- Backtick identifiers
-- AUTO_INCREMENT syntax
-- InnoDB storage engine
+**Connection URL:**
+```bash
+jdbc:postgresql://{{host}}:{{port}}/{{database}}
+```
 
-### PostgreSQL Lineage
-- PostgreSQL, TimescaleDB, CockroachDB, Redshift, KingBase
+### Oracle Family
 
-**Characteristics**:
-- Double quote identifiers
-- SERIAL/BIGSERIAL for auto-increment
-- No inline auto-increment
+| Database | Dialect | Support Level |
+|----------|---------|---------------|
+| Oracle | `oracle` | Full |
+| DB2 | `db2` | Full |
+| Derby | `derby` | Basic |
+| HSQLDB | `hsqldb` | Basic |
+| Dameng | `dameng` | Full |
 
-### ANSI SQL Lineage
-- Oracle, DB2, Derby, HSQLDB, Dameng
+**Features:**
+- Sequences
+- Synonyms
+- Packages
+- Materialized views
+- PL/SQL
 
-**Characteristics**:
-- ANSI SQL standard syntax
-- IDENTITY for auto-increment
-- Case-insensitive identifiers
+**Connection URL:**
+```bash
+jdbc:oracle:thin:@{{host}}:{{port}}:{{database}}
+```
 
-### SQL Server Lineage
-- SQL Server
+### SQL Server
 
-**Characteristics**:
-- Bracket identifiers [ ]
-- IDENTITY syntax
-- NVARCHAR for Unicode
+| Database | Dialect | Support Level |
+|----------|---------|---------------|
+| SQL Server | `sqlserver` | Full |
 
-### SQLite Lineage
-- SQLite
+**Features:**
+- Identity columns
+- Foreign keys
+- Indexes (clustered, non-clustered)
+- Views
+- Stored procedures
+- Triggers
 
-**Characteristics**:
-- Lightweight syntax
-- AUTOINCREMENT keyword
-- Limited ALTER TABLE support
+**Connection URL:**
+```bash
+jdbc:sqlserver://{{host}}:{{port}};databaseName={{database}}
+```
 
-## Feature Support Matrix
+### SQLite Family
 
-| Feature | MySQL | PostgreSQL | Oracle | SQL Server | SQLite | H2 |
-|---------|-------|------------|--------|------------|--------|-----|
-| Tables | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Columns | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Indexes | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Foreign Keys | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Views | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Triggers | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Stored Procedures | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ |
-| Sequences | ✓ | ✓ | ✓ | ✗ | ✓ | ✓ |
-| Auto Increment | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Comments | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Schemas | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ |
+| Database | Dialect | Support Level |
+|----------|---------|---------------|
+| SQLite | `sqlite` | Full |
+| H2 | `h2` | Full |
 
-## Type Mapping
+**Features:**
+- Auto-increment
+- Foreign keys
+- Indexes
+- Views
+- Triggers
 
-JustDB automatically maps database-agnostic types to database-specific types:
+**Connection URL:**
+```bash
+jdbc:sqlite:{{database}}
+jdbc:h2:{{database}}
+```
+
+## Type Mappings
 
 ### Common Types
 
-| JustDB Type | MySQL | PostgreSQL | Oracle | SQL Server | SQLite |
-|-------------|-------|------------|--------|------------|--------|
-| BIGINT | BIGINT | BIGINT | NUMBER(19) | BIGINT | INTEGER |
-| INT | INT | INTEGER | NUMBER(10) | INT | INTEGER |
-| SMALLINT | SMALLINT | SMALLINT | NUMBER(5) | SMALLINT | SMALLINT |
-| TINYINT | TINYINT | SMALLINT | NUMBER(3) | TINYINT | SMALLINT |
-| VARCHAR(n) | VARCHAR(n) | VARCHAR(n) | VARCHAR2(n) | NVARCHAR(n) | VARCHAR(n) |
-| CHAR(n) | CHAR(n) | CHAR(n) | CHAR(n) | NCHAR(n) | CHAR(n) |
-| TEXT | TEXT | TEXT | CLOB | NVARCHAR(MAX) | TEXT |
-| DECIMAL(p,s) | DECIMAL(p,s) | DECIMAL(p,s) | NUMBER(p,s) | DECIMAL(p,s) | DECIMAL(p,s) |
-| BOOLEAN | TINYINT(1) | BOOLEAN | NUMBER(1) | BIT | INTEGER |
-| DATE | DATE | DATE | DATE | DATE | TEXT |
-| TIME | TIME | TIME | TIMESTAMP | TIME | TEXT |
-| TIMESTAMP | TIMESTAMP | TIMESTAMP | TIMESTAMP | DATETIME2 | TEXT |
-| BLOB | LONGBLOB | BYTEA | BLOB | VARBINARY(MAX) | BLOB |
-| CLOB | LONGTEXT | TEXT | CLOB | NVARCHAR(MAX) | TEXT |
-
-See individual database documentation for complete type mappings.
+| Java Type | MySQL | PostgreSQL | Oracle | SQL Server | SQLite |
+|-----------|-------|------------|--------|------------|---------|
+| `String` | VARCHAR | VARCHAR | VARCHAR2 | NVARCHAR | TEXT |
+| `int` | INT | INTEGER | NUMBER | INT | INTEGER |
+| `long` | BIGINT | BIGINT | NUMBER | BIGINT | INTEGER |
+| `double` | DOUBLE | DOUBLE PRECISION | BINARY_DOUBLE | FLOAT | REAL |
+| `boolean` | TINYINT(1) | BOOLEAN | NUMBER(1) | BIT | INTEGER |
+| `Date` | DATETIME | TIMESTAMP | DATE | DATETIME | TEXT |
+| `byte[]` | BLOB | BYTEA | BLOB | VARBINARY | BLOB |
+| `BigDecimal` | DECIMAL | NUMERIC | NUMBER | DECIMAL | REAL |
 
 ## Database-Specific Features
 
-### MySQL/MariaDB
-
-```yaml
-Table:
-  - name: users
-    engine: InnoDB          # MySQL-specific
-    charset: utf8mb4
-    collation: utf8mb4_unicode_ci
-    Column:
-      - name: id
-        type: BIGINT
-        autoIncrement: true
-```
-
-### PostgreSQL
-
-```yaml
-Table:
-  - name: users
-    Column:
-      - name: id
-        type: BIGINT
-        autoIncrement: true  # Uses SERIAL
-      - name: data
-        type: JSONB          # PostgreSQL-specific
-```
-
-### Oracle
-
-```yaml
-Table:
-  - name: users
-    schema: MYSCHEMA        # Oracle schema
-    Column:
-      - name: id
-        type: BIGINT
-        autoIncrement: true  # Uses IDENTITY
-      - name: data
-        type: CLOB
-```
-
-### SQL Server
-
-```yaml
-Table:
-  - name: users
-    schema: dbo             # SQL Server schema
-    Column:
-      - name: id
-        type: BIGINT
-        autoIncrement: true  # Uses IDENTITY
-      - name: name
-        type: NVARCHAR(100)  # Unicode support
-```
-
-## Connection Strings
-
 ### MySQL
+
+**Engine:**
+```yaml
+Table:
+  - name: users
+    engine: InnoDB
+    rowFormat: COMPRESSED
 ```
-jdbc:mysql://localhost:3306/database
+
+**Auto-increment:**
+```yaml
+Column:
+  - name: id
+    type: BIGINT
+    autoIncrement: true
 ```
 
 ### PostgreSQL
+
+**Sequences:**
+```yaml
+Sequence:
+  - name: users_id_seq
+    startWith: 1000
 ```
-jdbc:postgresql://localhost:5432/database
+
+**Serial columns:**
+```yaml
+Column:
+  - name: id
+    type: SERIAL
 ```
 
 ### Oracle
+
+**Sequences:**
+```yaml
+Sequence:
+  - name: users_seq
+    startWith: 1
+    incrementBy: 1
 ```
-jdbc:oracle:thin:@localhost:1521:ORCL
+
+**Triggers:**
+```yaml
+Table:
+  - name: users
+    beforeInserts:
+      - sql: |
+          BEGIN
+            SELECT users_seq.NEXTVAL INTO :NEW.id FROM DUAL;
+          END;
 ```
 
 ### SQL Server
-```
-jdbc:sqlserver://localhost:1433;databaseName=database
+
+**Identity:**
+```yaml
+Column:
+  - name: id
+    type: INT
+    identity: true
+    identityStart: 1
+    identityIncrement: 1
 ```
 
-### SQLite
-```
-jdbc:sqlite:path/to/database.db
+## Configuration
+
+### Dialect Configuration
+
+```yaml
+# justdb-config.yaml
+database:
+  dialect: mysql
+  url: jdbc:mysql://localhost:3306/myapp
+  username: root
+  password: password
+
+# Override default type mapping
+database:
+  dialect: postgresql
+  typeMapping:
+    String: VARCHAR(255)
+    Integer: INTEGER
+    Long: BIGINT
 ```
 
-### H2
-```
-jdbc:h2:mem:testdb
-jdbc:h2:file:/path/to/database
+### URL Parameters
+
+```yaml
+database:
+  # MySQL with parameters
+  url: jdbc:mysql://localhost:3306/myapp?useSSL=false&serverTimezone=UTC
+
+  # PostgreSQL with parameters
+  url: jdbc:postgresql://localhost:5432/myapp?sslmode=disable
+
+  # Oracle with TNS
+  url: jdbc:oracle:thin:@localhost:1521:ORCL
 ```
 
 ## Best Practices
 
-### 1. Use Database-Agnostic Types
+### 1. Choose Appropriate Types
 
 ```yaml
-# Good: Database-agnostic
+# Good: Appropriate size
 Column:
-  - name: id
-    type: BIGINT
+  - name: username
+    type: VARCHAR(50)
 
-# Avoid: Database-specific (unless needed)
+# Bad: Unnecessarily large
 Column:
-  - name: id
-    type: NUMBER(19)  # Oracle-specific
+  - name: username
+    type: TEXT
 ```
 
-### 2. Test on Target Database
+### 2. Use Constraints
 
-```bash
-# Validate schema for specific database
-justdb validate --dialect postgresql schema.yaml
+```yaml
+Column:
+  - name: email
+    type: VARCHAR(255)
+    nullable: false
+    unique: true
 ```
 
-### 3. Use Conditional SQL
+### 3. Add Comments
 
 ```yaml
 Table:
   - name: users
-    afterCreates:
-      - dbms: [postgresql, timescaledb]
-        content: CREATE INDEX CONCURRENTLY idx_users_username ON users(username);
-      - dbms: mysql
-        content: CREATE INDEX idx_users_username ON users(username);
+    comment: "User account information"
+
+Column:
+  - name: id
+    type: BIGINT
+    comment: "Primary key"
 ```
 
-## Related Documentation
+### 4. Index Appropriately
 
-- [MySQL/MariaDB](./mysql.md) - MySQL specifics *(Coming soon)*
-- [PostgreSQL](./postgresql.md) - PostgreSQL specifics *(Coming soon)*
-- [Oracle](./oracle.md) - Oracle specifics *(Coming soon)*
-- [SQL Server](./sqlserver.md) - SQL Server specifics *(Coming soon)*
-- [SQLite](./sqlite.md) - SQLite specifics *(Coming soon)*
-- [H2/HSQLDB](./h2.md) - Embedded databases *(Coming soon)*
-- [Other Databases](./others.md) - Other supported databases *(Coming soon)*
+```yaml
+Index:
+  - name: idx_username
+    columns: [username]
+    unique: true
+
+  - name: idx_email_status
+    columns: [email, status]
+```
+
+## Next Steps
+
+- **[Quick Start](/getting-started/)** - Get started quickly
+- **[Schema Reference](/reference/schema/)** - Schema definitions
+- **[CLI Reference](/reference/cli/)** - Command-line tools

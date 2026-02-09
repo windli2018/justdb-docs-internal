@@ -7,7 +7,7 @@
 **作者**: Claude Code
 **状态**: 设计中
 
----
+---------------------------
 
 ## 目录
 
@@ -19,7 +19,7 @@
 6. [验证方式](#6-验证方式)
 7. [示例](#7-示例)
 
----
+---------------------------
 
 ## 1. 问题描述
 
@@ -28,12 +28,12 @@
 关联表（如 user_roles）存储纯 ID 难以维护：
 
 ```xml
-<!-- 当前方式：只存储数字 ID -->
-<Data table="user_roles">
-    <Row user_id="1" role_id="5"/>
-    <Row user_id="1" role_id="8"/>
-    <Row user_id="2" role_id="5"/>
-</Data>
+&lt;!-- 当前方式：只存储数字 ID --&gt;
+&lt;Data table="user_roles"&gt;
+    &lt;Row user_id="1" role_id="5"/&gt;
+    &lt;Row user_id="1" role_id="8"/&gt;
+    &lt;Row user_id="2" role_id="5"/&gt;
+&lt;/Data&gt;
 ```
 
 **问题**：
@@ -47,25 +47,25 @@
 支持使用可读标识符来维护关联表数据：
 
 ```xml
-<!-- 期望方式：使用可读标识符 -->
-<Table name="user_roles">
-    <Column name="user_id" type="BIGINT" nullable="false"/>
-    <Column name="role_id" type="BIGINT" nullable="false"/>
+&lt;!-- 期望方式：使用可读标识符 --&gt;
+&lt;Table name="user_roles"&gt;
+    &lt;Column name="user_id" type="BIGINT" nullable="false"/&gt;
+    &lt;Column name="role_id" type="BIGINT" nullable="false"/&gt;
 
-    <!-- 虚拟列：定义可读标识符到 ID 的映射 -->
-    <Column name="username" virtual="true" from="users.username" on="user_id"/>
-    <Column name="rolename" virtual="true" from="roles.rolename" on="role_id"/>
-</Table>
+    &lt;!-- 虚拟列：定义可读标识符到 ID 的映射 --&gt;
+    &lt;Column name="username" virtual="true" from="users.username" on="user_id"/&gt;
+    &lt;Column name="rolename" virtual="true" from="roles.rolename" on="role_id"/&gt;
+&lt;/Table&gt;
 
-<Data table="user_roles">
-    <!-- 直接使用虚拟列名 -->
-    <Row username="alice" rolename="admin"/>
-    <Row username="alice" rolename="editor"/>
-    <Row username="bob" rolename="viewer"/>
-</Data>
+&lt;Data table="user_roles"&gt;
+    &lt;!-- 直接使用虚拟列名 --&gt;
+    &lt;Row username="alice" rolename="admin"/&gt;
+    &lt;Row username="alice" rolename="editor"/&gt;
+    &lt;Row username="bob" rolename="viewer"/&gt;
+&lt;/Data&gt;
 ```
 
----
+---------------------------
 
 ## 2. 核心设计
 
@@ -76,7 +76,7 @@
 **属性**：
 
 | 属性 | 类型 | 必填 | 默认值 | 说明 |
-|------|------|------|--------|------|
+|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|--------------------------------------------------------|------------------------------------------------------|
 | `name` | String | ✓ | - | 虚拟列名（可读标识符，如 username） |
 | `virtual` | Boolean | ✓ | false | 标记为虚拟列 |
 | `from` | String | ✓ | - | 来源：表名.字段名（如 users.username） |
@@ -84,7 +84,7 @@
 
 **示例**：
 ```xml
-<Column name="username" virtual="true" from="users.username" on="user_id"/>
+&lt;Column name="username" virtual="true" from="users.username" on="user_id"/&gt;
 ```
 
 **含义**：
@@ -104,14 +104,14 @@
 ### 2.3 与物理列的区别
 
 | 特性 | 物理列 | 虚拟列 |
-|------|--------|--------|
+|------------------------------------------------------|--------------------------------------------------------|--------------------------------------------------------|
 | 生成 DDL | ✓ | ✗ |
 | 存储数据 | ✓ | ✗ |
 | 数据导入时使用 | ✓ | ✓ |
 | 定义位置 | Column list | Column list |
 | 用途 | 实际存储 | 引用解析 |
 
----
+---------------------------
 
 ## 3. 架构设计
 
@@ -173,13 +173,13 @@
 遵循 JustDB 的模板系统设计：
 
 ```xml
-<!-- 模板: virtual-column-lookup -->
-<!-- 用途: 根据可读标识符查找对应的 ID -->
-<template id="virtual-column-lookup" type="SQL" category="data">
+&lt;!-- 模板: virtual-column-lookup --&gt;
+&lt;!-- 用途: 根据可读标识符查找对应的 ID --&gt;
+&lt;template id="virtual-column-lookup" type="SQL" category="data"&gt;
     SELECT {{targetTable}}.{{idField}}
     FROM {{targetTable}}
     WHERE {{targetTable}}.{{keyField}} = '{{{value}}}'
-</template>
+&lt;/template&gt;
 ```
 
 **模板变量**：
@@ -188,7 +188,7 @@
 - `{{idField}}`: 返回的 ID 字段名
 - `{{{value}}}`: 可读标识符值（三重大括号转义）
 
----
+---------------------------
 
 ## 4. 实现步骤
 
@@ -285,7 +285,7 @@ public class VirtualColumnResolver {
      */
     public static Data resolve(Data data, Table table, Connection connection) throws SQLException {
         // Get virtual columns from table
-        List<Column> virtualColumns = table.getColumns().stream()
+        List&lt;Column&gt; virtualColumns = table.getColumns().stream()
             .filter(c -> c.getVirtual() != null && c.getVirtual())
             .collect(Collectors.toList());
 
@@ -293,10 +293,10 @@ public class VirtualColumnResolver {
             return data; // No virtual columns to resolve
         }
 
-        List<Row> resolvedRows = new ArrayList<>();
+        List&lt;Row&gt; resolvedRows = new ArrayList&lt;&gt;();
 
         for (Row row : data.getRows()) {
-            Map<String, Object> resolvedValues = new HashMap<>(row.getValues());
+            Map&lt;String, Object&gt; resolvedValues = new HashMap&lt;&gt;(row.getValues());
 
             // Resolve each virtual column
             for (Column vc : virtualColumns) {
@@ -393,19 +393,19 @@ public class VirtualColumnResolver {
 更新 column-spec 模板，过滤虚拟列：
 
 ```xml
-<!-- 更新后的列定义模板 -->
-<template id="column-spec" type="SQL" category="column">
+&lt;!-- 更新后的列定义模板 --&gt;
+&lt;template id="column-spec" type="SQL" category="column"&gt;
     {{#unless virtual}}
     {{name}} {{type}}{{#if nullable}} nullable{{/if}}{{#if defaultValue}} DEFAULT {{{defaultValue}}}{{/if}}
     {{/unless}}
-</template>
+&lt;/template&gt;
 ```
 
 或者使用 Java 端过滤（更灵活）：
 
 ```java
 // In DBGenerator or Table processing
-List<Column> physicalColumns = table.getColumns().stream()
+List&lt;Column&gt; physicalColumns = table.getColumns().stream()
     .filter(c -> c.getVirtual() == null || !c.getVirtual())
     .collect(Collectors.toList());
 ```
@@ -435,12 +435,12 @@ private void deployData(Data data, Justdb justdb, Connection connection) throws 
 
 **新建示例文件**：`docs/virtual-column-usage.md`
 
----
+---------------------------
 
 ## 5. 关键文件
 
 | 文件 | 操作 | 说明 |
-|------|------|------|
+|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|
 | `schema/Column.java` | 修改 | 添加 virtual, from, on 字段 |
 | `deploy/VirtualColumnResolver.java` | 新建 | 虚拟列解析器 |
 | `SchemaDeployer.java` | 修改 | 集成虚拟列解析 |
@@ -449,7 +449,7 @@ private void deployData(Data data, Justdb justdb, Connection connection) throws 
 | `deploy/VirtualColumnResolverTest.java` | 新建 | 单元测试 |
 | `docs/virtual-column-usage.md` | 新建 | 使用文档 |
 
----
+---------------------------
 
 ## 6. 验证方式
 
@@ -474,62 +474,62 @@ mvn test -Dtest=DataDeployWithVirtualColumnTest
 3. 验证 DDL 正确生成（无虚拟列）
 4. 验证数据正确导入（虚拟列被解析）
 
----
+---------------------------
 
 ## 7. 示例
 
 ### 7.1 用户-角色关联
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<Justdb id="user-role-demo" namespace="org.example">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;Justdb id="user-role-demo" namespace="org.example"&gt;
 
-    <!-- 用户表 -->
-    <Table id="users" name="users">
-        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
-        <Column name="username" type="VARCHAR(50)" nullable="false"/>
-        <Column name="email" type="VARCHAR(100)"/>
-    </Table>
+    &lt;!-- 用户表 --&gt;
+    &lt;Table id="users" name="users"&gt;
+        &lt;Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
+        &lt;Column name="username" type="VARCHAR(50)" nullable="false"/&gt;
+        &lt;Column name="email" type="VARCHAR(100)"/&gt;
+    &lt;/Table&gt;
 
-    <!-- 角色表 -->
-    <Table id="roles" name="roles">
-        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
-        <Column name="rolename" type="VARCHAR(50)" nullable="false"/>
-        <Column name="description" type="VARCHAR(200)"/>
-    </Table>
+    &lt;!-- 角色表 --&gt;
+    &lt;Table id="roles" name="roles"&gt;
+        &lt;Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
+        &lt;Column name="rolename" type="VARCHAR(50)" nullable="false"/&gt;
+        &lt;Column name="description" type="VARCHAR(200)"/&gt;
+    &lt;/Table&gt;
 
-    <!-- 用户角色关联表 -->
-    <Table id="user_roles" name="user_roles">
-        <!-- 物理列 -->
-        <Column name="user_id" type="BIGINT" nullable="false"/>
-        <Column name="role_id" type="BIGINT" nullable="false"/>
+    &lt;!-- 用户角色关联表 --&gt;
+    &lt;Table id="user_roles" name="user_roles"&gt;
+        &lt;!-- 物理列 --&gt;
+        &lt;Column name="user_id" type="BIGINT" nullable="false"/&gt;
+        &lt;Column name="role_id" type="BIGINT" nullable="false"/&gt;
 
-        <!-- 虚拟列：用于数据导入 -->
-        <Column name="username" virtual="true" from="users.username" on="user_id"/>
-        <Column name="rolename" virtual="true" from="roles.rolename" on="role_id"/>
-    </Table>
+        &lt;!-- 虚拟列：用于数据导入 --&gt;
+        &lt;Column name="username" virtual="true" from="users.username" on="user_id"/&gt;
+        &lt;Column name="rolename" virtual="true" from="roles.rolename" on="role_id"/&gt;
+    &lt;/Table&gt;
 
-    <!-- 用户数据 -->
-    <Data table="users" dataExportStrategy="ALL_DATA">
-        <Row username="alice" email="alice@example.com"/>
-        <Row username="bob" email="bob@example.com"/>
-    </Data>
+    &lt;!-- 用户数据 --&gt;
+    &lt;Data table="users" dataExportStrategy="ALL_DATA"&gt;
+        &lt;Row username="alice" email="alice@example.com"/&gt;
+        &lt;Row username="bob" email="bob@example.com"/&gt;
+    &lt;/Data&gt;
 
-    <!-- 角色数据 -->
-    <Data table="roles" dataExportStrategy="ALL_DATA">
-        <Row rolename="admin" description="Administrator"/>
-        <Row rolename="editor" description="Editor"/>
-        <Row rolename="viewer" description="Viewer"/>
-    </Data>
+    &lt;!-- 角色数据 --&gt;
+    &lt;Data table="roles" dataExportStrategy="ALL_DATA"&gt;
+        &lt;Row rolename="admin" description="Administrator"/&gt;
+        &lt;Row rolename="editor" description="Editor"/&gt;
+        &lt;Row rolename="viewer" description="Viewer"/&gt;
+    &lt;/Data&gt;
 
-    <!-- 用户角色关联数据 - 使用虚拟列名 -->
-    <Data table="user_roles" dataExportStrategy="ALL_DATA">
-        <Row username="alice" rolename="admin"/>
-        <Row username="alice" rolename="editor"/>
-        <Row username="bob" rolename="viewer"/>
-    </Data>
+    &lt;!-- 用户角色关联数据 - 使用虚拟列名 --&gt;
+    &lt;Data table="user_roles" dataExportStrategy="ALL_DATA"&gt;
+        &lt;Row username="alice" rolename="admin"/&gt;
+        &lt;Row username="alice" rolename="editor"/&gt;
+        &lt;Row username="bob" rolename="viewer"/&gt;
+    &lt;/Data&gt;
 
-</Justdb>
+&lt;/Justdb&gt;
 ```
 
 **生成的 DDL**（虚拟列不包含）：
@@ -555,20 +555,20 @@ CREATE TABLE user_roles (
 ### 7.2 分类层级关联
 
 ```xml
-<Table name="categories">
-    <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
-    <Column name="category_name" type="VARCHAR(100)" nullable="false"/>
-    <Column name="parent_id" type="BIGINT"/>
+&lt;Table name="categories"&gt;
+    &lt;Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
+    &lt;Column name="category_name" type="VARCHAR(100)" nullable="false"/&gt;
+    &lt;Column name="parent_id" type="BIGINT"/&gt;
 
-    <!-- 自引用虚拟列 -->
-    <Column name="parent_name" virtual="true" from="categories.category_name" on="parent_id"/>
-</Table>
+    &lt;!-- 自引用虚拟列 --&gt;
+    &lt;Column name="parent_name" virtual="true" from="categories.category_name" on="parent_id"/&gt;
+&lt;/Table&gt;
 
-<Data table="categories" dataExportStrategy="ALL_DATA">
-    <Row category_name="Electronics"/>
-    <Row category_name="Computers" parent_name="Electronics"/>
-    <Row category_name="Laptops" parent_name="Computers"/>
-</Data>
+&lt;Data table="categories" dataExportStrategy="ALL_DATA"&gt;
+    &lt;Row category_name="Electronics"/&gt;
+    &lt;Row category_name="Computers" parent_name="Electronics"/&gt;
+    &lt;Row category_name="Laptops" parent_name="Computers"/&gt;
+&lt;/Data&gt;
 ```
 
 ### 7.3 简化格式（省略表名）
@@ -576,25 +576,25 @@ CREATE TABLE user_roles (
 如果外键约束已定义，可以省略 `from` 中的表名：
 
 ```xml
-<Table name="user_roles">
-    <Column name="user_id" type="BIGINT" nullable="false"/>
-    <Column name="role_id" type="BIGINT" nullable="false"/>
+&lt;Table name="user_roles"&gt;
+    &lt;Column name="user_id" type="BIGINT" nullable="false"/&gt;
+    &lt;Column name="role_id" type="BIGINT" nullable="false"/&gt;
 
-    <!-- 简化格式：from 仅指定字段名 -->
-    <Column name="username" virtual="true" from="username" on="user_id"/>
-    <Column name="rolename" virtual="true" from="rolename" on="role_id"/>
+    &lt;!-- 简化格式：from 仅指定字段名 --&gt;
+    &lt;Column name="username" virtual="true" from="username" on="user_id"/&gt;
+    &lt;Column name="rolename" virtual="true" from="rolename" on="role_id"/&gt;
 
-    <!-- 外键约束帮助推断目标表 -->
-    <Constraint name="fk_user" type="FOREIGN_KEY" referencedTable="users" referencedColumn="id">
+    &lt;!-- 外键约束帮助推断目标表 --&gt;
+    &lt;Constraint name="fk_user" type="FOREIGN_KEY" referencedTable="users" referencedColumn="id"&gt;
         user_id
-    </Constraint>
-    <Constraint name="fk_role" type="FOREIGN_KEY" referencedTable="roles" referencedColumn="id">
+    &lt;/Constraint&gt;
+    &lt;Constraint name="fk_role" type="FOREIGN_KEY" referencedTable="roles" referencedColumn="id"&gt;
         role_id
-    </Constraint>
-</Table>
+    &lt;/Constraint&gt;
+&lt;/Table&gt;
 ```
 
----
+---------------------------
 
 ## 附录
 
@@ -623,13 +623,13 @@ CREATE TABLE user_roles (
 ### D. 与 ReferenceMap 方案对比
 
 | 特性 | ReferenceMap 方案 | Virtual Column 方案 |
-|------|------------------|---------------------|
+|------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 类型系统 | 新建类型 | 复用 Column |
 | 定义位置 | Data 节点 | Table 节点 |
 | 可复用性 | 需重复定义 | 一次定义 |
 | DDL 集成 | 需特殊处理 | 自动过滤 |
 | 语义清晰度 | 中等 | 高 |
 
----
+---------------------------
 
 **文档结束**

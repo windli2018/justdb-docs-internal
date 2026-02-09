@@ -37,14 +37,14 @@
   comment: 部门表
 ```
 
----
+---------------------------
 
 ## 二、核心文件路径
 
 ### 2.1 需要新建的文件
 
 | 文件路径 | 说明 |
-|---------|------|
+|---------------------------------------------------------------------------------|------------------------------------------------------|
 | `justdb-core/src/main/java/org/verydb/justdb/data/config/IncludeRule.java` | 单个 Include 规则定义 |
 | `justdb-core/src/main/java/org/verydb/justdb/data/config/IncludeRuleMatcher.java` | 规则匹配器（优先级计算） |
 | `justdb-core/src/main/java/org/verydb/justdb/data/config/IncludeRuleToSchemaMapper.java` | Schema 映射器 |
@@ -53,7 +53,7 @@
 ### 2.2 需要修改的文件
 
 | 文件路径 | 修改内容 |
-|---------|---------|
+|---------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
 | `justdb-core/src/main/java/org/verydb/justdb/schema/Item.java` | 添加 author、remark、module 字段 |
 | `justdb-core/src/main/java/org/verydb/justdb/schema/Table.java` | 添加 sourcePattern 字段 |
 | `justdb-core/src/main/java/org/verydb/justdb/schema/Data.java` | 添加 sourcePattern 字段，使用 remark 替换 description |
@@ -64,7 +64,7 @@
 | `justdb-core/src/main/java/org/verydb/justdb/generator/AbstractTemplateGenerator.java` | 添加 render/renderInline 方法支持自定义模板渲染 |
 | `justdb-core/src/main/java/org/verydb/justdb/templates/TemplateExecutor.java` | 添加 compile 方法支持 TemplateSource |
 
----
+---------------------------
 
 ## 三、详细实现步骤
 
@@ -148,7 +148,7 @@ private Boolean temporary = false;
 // 4. module is inherited from Item (no need to add separate field)
 ```
 
----
+---------------------------
 
 ### 阶段 2：模板渲染增强（0.5天）
 
@@ -238,7 +238,7 @@ public Template compile(TemplateSource source) throws IOException {
 }
 ```
 
----
+---------------------------
 
 ### 阶段 3：核心数据结构（1天）
 
@@ -542,16 +542,16 @@ import java.util.stream.Collectors;
  */
 public class IncludeRuleMatcher {
 
-    private final List<IncludeRule> rules;
+    private final List&lt;IncludeRule&gt; rules;
 
-    public IncludeRuleMatcher(List<IncludeRule> rules) {
-        this.rules = rules != null ? rules : new ArrayList<>();
+    public IncludeRuleMatcher(List&lt;IncludeRule&gt; rules) {
+        this.rules = rules != null ? rules : new ArrayList&lt;&gt;();
     }
 
     /**
      * Find all matching rules sorted by priority (highest first)
      */
-    public List<IncludeRule> findAllMatches(String tableName) {
+    public List&lt;IncludeRule&gt; findAllMatches(String tableName) {
         return rules.stream()
             .filter(rule -> rule.isEnabled() && rule.matches(tableName))
             .sorted((a, b) -> {
@@ -565,7 +565,7 @@ public class IncludeRuleMatcher {
     /**
      * Get highest priority matching rule
      */
-    public Optional<IncludeRule> findBestMatch(String tableName) {
+    public Optional&lt;IncludeRule&gt; findBestMatch(String tableName) {
         return findAllMatches(tableName).stream().findFirst();
     }
 
@@ -574,8 +574,8 @@ public class IncludeRuleMatcher {
      * Deduplicates by dataFilter, keeps first occurrence
      * All same-priority rules with unique dataFilter are kept
      */
-    public List<IncludeRule> findSamePriorityMatches(String tableName) {
-        List<IncludeRule> matches = findAllMatches(tableName);
+    public List&lt;IncludeRule&gt; findSamePriorityMatches(String tableName) {
+        List&lt;IncludeRule&gt; matches = findAllMatches(tableName);
         if (matches.isEmpty()) {
             return matches;
         }
@@ -583,12 +583,12 @@ public class IncludeRuleMatcher {
         int highestPriority = matches.get(0).calculateMatchPriority(tableName);
 
         // Filter by highest priority
-        List<IncludeRule> samePriority = matches.stream()
+        List&lt;IncludeRule&gt; samePriority = matches.stream()
             .filter(r -> r.calculateMatchPriority(tableName) == highestPriority)
             .collect(Collectors.toList());
 
         // Deduplicate by dataFilter, keep first occurrence
-        Map<String, IncludeRule> uniqueRules = new LinkedHashMap<>();
+        Map&lt;String, IncludeRule&gt; uniqueRules = new LinkedHashMap&lt;&gt;();
         for (IncludeRule rule : samePriority) {
             String df = rule.getDataFilter();
             if (df == null) df = "";
@@ -597,12 +597,12 @@ public class IncludeRuleMatcher {
             }
         }
 
-        return new ArrayList<>(uniqueRules.values());
+        return new ArrayList&lt;&gt;(uniqueRules.values());
     }
 }
 ```
 
----
+---------------------------
 
 ### 阶段 4：IncludeRuleToSchemaMapper（0.5天）
 
@@ -738,7 +738,7 @@ public class IncludeRuleToSchemaMapper {
 }
 ```
 
----
+---------------------------
 
 ### 阶段 5：数据导出增强（0.5天）
 
@@ -769,10 +769,10 @@ public class IncludeRuleDataExtractor {
      * @param rule IncludeRule with dataFilter configuration
      * @return List of Data nodes (main data + temp data if applicable)
      */
-    public List<Data> extractData(Connection connection, Table table, IncludeRule rule)
+    public List&lt;Data&gt; extractData(Connection connection, Table table, IncludeRule rule)
             throws SQLException {
 
-        List<Data> dataNodes = new ArrayList<>();
+        List&lt;Data&gt; dataNodes = new ArrayList&lt;&gt;();
         IncludeRule.DataFilterType filterType = rule.detectDataFilterType();
 
         switch (filterType) {
@@ -811,7 +811,7 @@ public class IncludeRuleDataExtractor {
         data.setTable(table.getName());
         data.setTableRef(table);
         data.setSourcePattern(rule.getPattern());
-        data.setRows(new ArrayList<>());
+        data.setRows(new ArrayList&lt;&gt;());
         // Set author, remark, module from rule
         if (rule.getAuthor() != null) data.setAuthor(rule.getAuthor());
         if (rule.getRemark() != null) data.setRemark(rule.getRemark());
@@ -886,7 +886,7 @@ public class IncludeRuleDataExtractor {
     private Data executeQuery(Connection connection, Table table, String sql, IncludeRule rule)
             throws SQLException {
         // Execute query and build rows
-        List<Row> rows = new ArrayList<>();
+        List&lt;Row&gt; rows = new ArrayList&lt;&gt;();
         // TODO: Implement actual query execution
 
         Data data = new Data();
@@ -919,7 +919,7 @@ public class IncludeRuleDataExtractor {
   - 满足条件的数据 → 主 Data 节点
   - 不满足条件的数据 → 临时 Data 节点（标记 `temporary=true`）
 
----
+---------------------------
 
 ### 阶段 6：命令行集成（0.5天）
 
@@ -946,7 +946,7 @@ public class Db2SchemaMixin extends TableFilterMixin {
      */
     @Option(names = {"-I", "--include"},
             description = "Include rule (pattern&key=value format)")
-    private List<String> includeRules;
+    private List&lt;String&gt; includeRules;
 
     /**
      * Data filter rule (simplified format)
@@ -955,11 +955,11 @@ public class Db2SchemaMixin extends TableFilterMixin {
      */
     @Option(names = {"-d", "--data-filter"},
             description = "Data filter rule (pattern=dataFilter)")
-    private List<String> dataFilterRules;
+    private List&lt;String&gt; dataFilterRules;
 
     // Getters
-    public List<String> getIncludeRules() { return includeRules; }
-    public List<String> getDataFilterRules() { return dataFilterRules; }
+    public List&lt;String&gt; getIncludeRules() { return includeRules; }
+    public List&lt;String&gt; getDataFilterRules() { return dataFilterRules; }
 
     /**
      * Parse include rule string to IncludeRule object
@@ -1005,7 +1005,7 @@ public class Db2SchemaMixin extends TableFilterMixin {
 }
 ```
 
----
+---------------------------
 
 ### 阶段 6：Diff/Migrate 集成（1天）
 
@@ -1036,9 +1036,9 @@ public static class TableDataFilterChange {
     public ChangeType getChangeType() { return changeType; }
 }
 
-private List<TableDataFilterChange> tableDataFilterChanges = new ArrayList<>();
+private List&lt;TableDataFilterChange&gt; tableDataFilterChanges = new ArrayList&lt;&gt;();
 
-public List<TableDataFilterChange> getTableDataFilterChanges() {
+public List&lt;TableDataFilterChange&gt; getTableDataFilterChanges() {
     return tableDataFilterChanges;
 }
 ```
@@ -1069,8 +1069,8 @@ private void calculateTableDataFilterChanges() {
         return;
     }
 
-    Map<String, Table> currentTables = mapTablesByName(currentSchema);
-    Map<String, Table> targetTables = mapTablesByName(targetSchema);
+    Map&lt;String, Table&gt; currentTables = mapTablesByName(currentSchema);
+    Map&lt;String, Table&gt; targetTables = mapTablesByName(targetSchema);
 
     for (Table targetTable : targetSchema.getTables()) {
         String tableName = targetTable.getName();
@@ -1112,8 +1112,8 @@ private void calculateTableDataFilterChanges() {
  * Generate SQL for Table dataFilter changes
  * Strategy: Delete rows with deleted=false, then re-import from DB
  */
-public List<String> generateTableDataFilterChangeSql(String dialect) {
-    List<String> sqlStatements = new ArrayList<>();
+public List&lt;String&gt; generateTableDataFilterChangeSql(String dialect) {
+    List&lt;String&gt; sqlStatements = new ArrayList&lt;&gt;();
 
     for (TableDataFilterChange change : tableDataFilterChanges) {
         Table table = change.getCurrentTable();
@@ -1168,18 +1168,18 @@ private String quoteIdentifier(String name, String dialect) {
 ```java
 // Process data changes (condition-based data migration)
 if (!diff.getDataChanges().isEmpty()) {
-    List<String> dataChangeSql = diff.generateDataChangeSql(dialect);
+    List&lt;String&gt; dataChangeSql = diff.generateDataChangeSql(dialect);
     sqlStatements.addAll(dataChangeSql);
 }
 
 // NEW: Process Table dataFilter changes
 if (!diff.getTableDataFilterChanges().isEmpty()) {
-    List<String> tableDataFilterSql = diff.generateTableDataFilterChangeSql(dialect);
+    List&lt;String&gt; tableDataFilterSql = diff.generateTableDataFilterChangeSql(dialect);
     sqlStatements.addAll(tableDataFilterSql);
 }
 ```
 
----
+---------------------------
 
 ### 阶段 7：Db2SchemaCommand 集成（0.5天）
 
@@ -1202,7 +1202,7 @@ private void executeDb2Schema(JustdbConfiguration config) {
         Justdb schema = extractor.extractSchema(connection, extractConfig);
 
         // ===== NEW: Load and apply Include rules =====
-        List<IncludeRule> includeRules = loadIncludeRules(config, db2SchemaMixin);
+        List&lt;IncludeRule&gt; includeRules = loadIncludeRules(config, db2SchemaMixin);
         if (!includeRules.isEmpty()) {
             DBGenerator dbGenerator = new DBGenerator(
                 getJustdbManager().getPluginManager(),
@@ -1214,12 +1214,12 @@ private void executeDb2Schema(JustdbConfiguration config) {
                 dbConfig.getType()
             );
 
-            List<Data> dataList = new ArrayList<>();
+            List&lt;Data&gt; dataList = new ArrayList&lt;&gt;();
 
             // Apply rules to each table
             for (Table table : schema.getTables()) {
                 // Get same-priority matching rules
-                List<IncludeRule> samePriorityRules =
+                List&lt;IncludeRule&gt; samePriorityRules =
                     matcher.findSamePriorityMatches(table.getName());
 
                 if (!samePriorityRules.isEmpty()) {
@@ -1256,13 +1256,13 @@ private void executeDb2Schema(JustdbConfiguration config) {
 /**
  * Load Include rules from configuration and command line
  */
-private List<IncludeRule> loadIncludeRules(JustdbConfiguration config,
+private List&lt;IncludeRule&gt; loadIncludeRules(JustdbConfiguration config,
                                             Db2SchemaMixin db2SchemaMixin) {
-    List<IncludeRule> rules = new ArrayList<>();
+    List&lt;IncludeRule&gt; rules = new ArrayList&lt;&gt;();
 
     // Load from config file (-c parameter)
     if (config.getIncludeRules() != null) {
-        for (Map<String, Object> ruleMap : config.getIncludeRules()) {
+        for (Map&lt;String, Object&gt; ruleMap : config.getIncludeRules()) {
             IncludeRule rule = mapToIncludeRule(ruleMap);
             if (rule != null) {
                 rules.add(rule);
@@ -1294,7 +1294,7 @@ private List<IncludeRule> loadIncludeRules(JustdbConfiguration config,
     return rules;
 }
 
-private IncludeRule mapToIncludeRule(Map<String, Object> map) {
+private IncludeRule mapToIncludeRule(Map&lt;String, Object&gt; map) {
     try {
         com.fasterxml.jackson.databind.ObjectMapper mapper =
             new com.fasterxml.jackson.databind.ObjectMapper();
@@ -1306,7 +1306,7 @@ private IncludeRule mapToIncludeRule(Map<String, Object> map) {
 }
 ```
 
----
+---------------------------
 
 ## 四、配置文件和命令行示例
 
@@ -1385,7 +1385,7 @@ justdb db2schema -C production \
 ### 4.3 dataFilter 类型自动检测
 
 | dataFilter 值 | 检测类型 | 渲染方式 |
-|--------------|---------|---------|
+|--------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
 | `null`、`""`、`"none"` | NONE | 不导出数据 |
 | `"*"`、`"all"` | ALL | 导出全部数据 |
 | `"deleted=0"` | CONDITION | 拼接成 `SELECT * FROM {{table-name}} WHERE deleted=0` |
@@ -1396,7 +1396,7 @@ justdb db2schema -C production \
 - 如 dataFilter 已是完整 SELECT 语句，直接渲染（不拼接）
 - 所有类型统一通过 template 渲染处理 `{{table-name}}` 占位符
 
----
+---------------------------
 
 ## 五、Diff/Migrate 处理 dataFilter 变化和临时数据
 
@@ -1407,7 +1407,7 @@ justdb db2schema -C production \
 #### 5.1.1 数据分类导出
 
 | dataFilter 类型 | 主 Data 节点 | 临时 Data 节点 |
-|--------------|-----------|-----------|
+|--------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
 | NONE | 空 rows（无数据） | 无 |
 | ALL | 全部数据 | 无 |
 | CONDITION | 满足条件的数据 | 不满足条件的数据（`temporary=true`） |
@@ -1455,11 +1455,11 @@ private void calculateDataChanges() {
     }
 
     // Filter out temporary data nodes
-    List<Data> currentData = currentSchema.getData().stream()
+    List&lt;Data&gt; currentData = currentSchema.getData().stream()
         .filter(d -> Boolean.FALSE.equals(d.isTemporary()))
         .collect(Collectors.toList());
 
-    List<Data> targetData = targetSchema.getData().stream()
+    List&lt;Data&gt; targetData = targetSchema.getData().stream()
         .filter(d -> Boolean.FALSE.equals(d.isTemporary()))
         .collect(Collectors.toList());
 
@@ -1488,12 +1488,12 @@ private void calculateDataChanges() {
  * Generate migration SQL from schema diff
  * Temporary data is preserved during migration
  */
-public List<String> generateMigrationSql(CanonicalSchemaDiff diff) {
+public List&lt;String&gt; generateMigrationSql(CanonicalSchemaDiff diff) {
     // ... existing table/column/index/constraint SQL generation ...
 
     // Process data changes (only non-temporary data)
     if (!diff.getDataChanges().isEmpty()) {
-        List<String> dataChangeSql = diff.generateDataChangeSql(dialect);
+        List&lt;String&gt; dataChangeSql = diff.generateDataChangeSql(dialect);
 
         // Add comment about temporary data preservation
         dataChangeSql.add(0, "-- Temporary data nodes are preserved during migration");
@@ -1543,7 +1543,7 @@ DELETE FROM `sys_user` WHERE deleted IS NULL OR deleted = '0';
 
 处理：同上，先清空非 deleted 行，再按新条件全量导入。临时数据节点由 Diff 阶段过滤，不参与 migrate 操作。
 
----
+---------------------------
 
 ## 六、验证方法
 
@@ -1591,7 +1591,7 @@ justdb db2schema -C production -i schema1.yaml -o schema2.yaml
 # 2. Re-import data comment
 ```
 
----
+---------------------------
 
 ## 七、实施顺序
 

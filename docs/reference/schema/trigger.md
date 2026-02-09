@@ -26,7 +26,7 @@ tag:
 | `timing` | TriggerTiming | 是 | 触发时机 |
 | `content` | String | 是 | 触发器内容 |
 | `comment` | String | 否 | 触发器注释 |
-| `dbms` | List<String> | 否 | 适用数据库列表 |
+| `dbms` | List&lt;String&gt; | 否 | 适用数据库列表 |
 
 ## 触发事件
 

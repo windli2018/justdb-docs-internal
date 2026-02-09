@@ -108,9 +108,9 @@ All schema changes are tracked and reversible.
 SQL is generated through templates, not hardcoded.
 
 ```xml
-<template id="create-table" type="SQL" category="db">
-  <content>CREATE TABLE {{name}} (...)</content>
-</template>
+&lt;template id="create-table" type="SQL" category="db"&gt;
+  &lt;content&gt;CREATE TABLE {{name}} (...)&lt;/content&gt;
+&lt;/template&gt;
 ```
 
 ### 5. Plugin Extensibility
@@ -150,9 +150,9 @@ All functionality can be extended through plugins.
 
 ### High-Level Design
 
-- [Design Philosophy](../guide/design-philosophy.md) - JustDB's design philosophy
-- [Architecture Decisions](../development/architecture-decisions/) - ADR documents
-- [Future Roadmap](../plans/README.md) - Planned features and improvements
+- [Design Philosophy](/guide/design-philosophy.md) - JustDB's design philosophy
+- [Architecture Decisions](/development/architecture-decisions/) - ADR documents
+- [Future Roadmap](/plans/README.md) - Planned features and improvements
 
 ### Subsystem Design
 
@@ -172,7 +172,7 @@ See [Architecture Decision Records](../development/architecture-decisions/) for 
 
 ## Navigation
 
-- **[Quick Start](../getting-started/)** - Get started quickly
-- **[User Guide](../guide/)** - User documentation
-- **[Reference](../reference/)** - API and command reference
-- **[Development](../development/)** - Plugin development and contributing
+- **[Quick Start](/en/getting-started/)** - Get started quickly
+- **[User Guide](/guide/)** - User documentation
+- **[Reference](/reference/)** - API and command reference
+- **[Development](/development/)** - Plugin development and contributing

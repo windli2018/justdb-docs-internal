@@ -117,7 +117,7 @@ PR 描述应该包含：
 
 ```markdown
 ## 概述
-<!-- 简要描述此 PR 的目的 -->
+&lt;!-- 简要描述此 PR 的目的 --&gt;
 
 ## 变更类型
 - [ ] Bug 修复
@@ -131,10 +131,10 @@ PR 描述应该包含：
 Closes #(issue number)
 
 ## 变更说明
-<!-- 详细说明你的更改 -->
+&lt;!-- 详细说明你的更改 --&gt;
 
 ## 测试
-<!-- 描述如何测试这些更改 -->
+&lt;!-- 描述如何测试这些更改 --&gt;
 
 ## 检查清单
 - [ ] 代码遵循项目编码规范
@@ -271,7 +271,7 @@ git rebase upstream/main
 
 # 解决冲突
 # 编辑冲突文件
-git add <resolved-files>
+git add &lt;resolved-files&gt;
 git rebase --continue
 
 # 推送更新

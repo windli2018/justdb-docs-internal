@@ -23,7 +23,7 @@
 └─────────────────────────────────────────────────────────────┘
 ```
 
----
+---------------------------
 
 ## 二、实施状态
 
@@ -36,7 +36,7 @@
 > **✅ Phase 3 完成**：information_schema 虚拟表辅助方法已实现。
 
 | 模块 | 功能 | 状态 | 说明 |
-|------|------|------|------|
+|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|
 | justdb-mysql-protocol | 整个模块 | ✅ 已创建 | 模块已创建并可编译 |
 | | MySQLServer | ✅ 已实现 | 服务器入口 |
 | | MySQLServerConfig | ✅ 已实现 | 配置类 |
@@ -124,14 +124,14 @@ justdb-core/
 - [ ] 性能优化
 - [ ] 多客户端兼容性测试
 
----
+---------------------------
 
 ## 三、现状分析
 
 ### 3.1 现有 JDBC 架构
 
 | 组件 | 路径 | 功能 |
-|------|------|------|
+|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|
 | `JustdbDriver` | `jdbc/JustdbDriver.java` | JDBC 驱动入口 |
 | `JustdbConnection` | `jdbc/JustdbConnection.java` | 连接管理 |
 | `SqlExecutor` | `jdbc/SqlExecutor.java` | **核心 SQL 执行引擎** |
@@ -148,14 +148,14 @@ justdb-core/
 - 缺少网络通信层
 - 缺少会话管理
 
----
+---------------------------
 
 ## 四、最终实施方案
 
 ### 4.1 用户决策确认
 
 | 决策项 | 选择 | 说明 |
-|--------|------|------|
+|--------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|
 | **实施方案** | MySQL 协议兼容层 | 独立服务器，复用现有 JDBC |
 | **技术选型** | 基于 netty-mysql-codec | 使用开源 MySQL 协议库 |
 | **启动方式** | 独立启动 | 命令行或程序内启动 |
@@ -217,7 +217,7 @@ justdb-core/
 - ⏳ COM_STMT_EXECUTE（执行预编译）
 - ⏳ COM_INIT_DB（切换数据库）
 
----
+---------------------------
 
 ## 五、实施计划
 
@@ -301,7 +301,7 @@ justdb-mysql-protocol/
 **新增 JDBC 组件（仅 1 个文件）：**
 - `justdb-core/src/main/java/org/verydb/justdb/jdbc/VirtualTableProvider.java` [虚拟表提供者接口]
 
----
+---------------------------
 
 ## 六、MySQL 协议实现
 
@@ -346,7 +346,7 @@ public class MySQLSession {
 
 ```java
 @ChannelHandler.Sharable
-public class ComQueryHandler extends SimpleChannelInboundHandler<QueryCommandPacket> {
+public class ComQueryHandler extends SimpleChannelInboundHandler&lt;QueryCommandPacket&gt; {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, QueryCommandPacket packet) {
         MySQLSession session = ctx.channel().attr(AttributeKey.valueOf("session")).get();
@@ -403,14 +403,14 @@ public class TextResultSetEncoder {
 }
 ```
 
----
+---------------------------
 
 ## 七、系统表支持
 
 ### 6.1 支持的元数据命令
 
 | 命令 | 说明 | 实现方式 |
-|------|------|----------|
+|------------------------------------------------------|------------------------------------------------------|----------------------------------------------------------------------------------|
 | `SHOW DATABASES` | 列出数据库 | 返回 JustDB schema 列表 |
 | `SHOW TABLES` | 列出表 | 通过 JustdbDatabaseMetaData.getTables() |
 | `DESCRIBE table` | 表结构 | 通过 JustdbDatabaseMetaData.getColumns() |
@@ -437,7 +437,7 @@ public class ShowCommandHandler {
 }
 ```
 
----
+---------------------------
 
 ## 八、虚拟表机制设计
 
@@ -464,8 +464,8 @@ import java.util.Map;
 /**
  * Virtual table provider - 虚拟表提供者（函数式接口）
  *
- * <p>虚拟表 Provider 根据 SQL 上下文和 schema 对象，动态计算虚拟表数据，
- * 封装成 Table 和 Data 对象返回，SqlExecutor 可以直接使用。</p>
+ * &lt;p&gt;虚拟表 Provider 根据 SQL 上下文和 schema 对象，动态计算虚拟表数据，
+ * 封装成 Table 和 Data 对象返回，SqlExecutor 可以直接使用。&lt;/p&gt;
  */
 @FunctionalInterface
 public interface VirtualTableProvider {
@@ -477,7 +477,7 @@ public interface VirtualTableProvider {
      * @param context SQL 执行上下文（包含原始 SQL、参数等）
      * @return VirtualTableResult 包含 Table 和 Data，null 表示不支持此表名
      */
-    VirtualTableResult get(Justdb justdb, String tableName, Map<String, Object> context);
+    VirtualTableResult get(Justdb justdb, String tableName, Map&lt;String, Object&gt; context);
 }
 ```
 
@@ -492,8 +492,8 @@ import org.verydb.justdb.schema.Data;
 /**
  * Virtual table result - 虚拟表结果
  *
- * <p>封装虚拟表的 Table 定义和 Data 数据，
- * SqlExecutor 可以直接将其作为真实表使用。</p>
+ * &lt;p&gt;封装虚拟表的 Table 定义和 Data 数据，
+ * SqlExecutor 可以直接将其作为真实表使用。&lt;/p&gt;
  */
 public class VirtualTableResult {
     private final Table table;
@@ -717,13 +717,13 @@ dataSource.setVirtualTableProvider(builtinProvider);
 
 // 正常使用，虚拟表会自动工作
 SqlExecutor executor = new SqlExecutor(dataSource, connection);
-List<Map<String, Object>> result = executor.executeSelect("SELECT * FROM TABLES");
+List&lt;Map&lt;String, Object&gt;&gt; result = executor.executeSelect("SELECT * FROM TABLES");
 ```
 
 ### 7.8 关键文件清单
 
 | 操作 | 文件 | 说明 |
-|------|------|------|
+|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|
 | 新增 | `jdbc/VirtualTableProvider.java` | 虚拟表提供者接口（函数式） |
 | 新增 | `jdbc/VirtualTableResult.java` | 虚拟表结果（Table + Data） |
 | 修改 | `jdbc/JustdbDataSource.java` | 添加 virtualTableProvider、setVirtualTableProvider()、修改 getTable() |
@@ -739,7 +739,7 @@ List<Map<String, Object>> result = executor.executeSelect("SELECT * FROM TABLES"
 5. **向后兼容** - 不设置 Provider 时行为不变
 6. **SQL 引擎无感** - SqlExecutor 几乎无需修改，通过 DataSource 自动处理虚拟表
 
----
+---------------------------
 
 ## 九、验证方式
 
@@ -772,14 +772,14 @@ Connection conn = DriverManager.getConnection(url, "user", "password");
 // 无需 JustDB 专用驱动！
 ```
 
----
+---------------------------
 
 ## 十、技术参考
 
 ### 10.1 MySQL 协议包结构
 
 | 命令 | Hex | 描述 | 优先级 |
-|------|-----|------|--------|
+|------------------------------------------------------|-----------------------------|------------------------------------------------------|--------------------------------------------------------|
 | COM_QUIT | 0x01 | 断开连接 | P0 |
 | COM_QUERY | 0x03 | 文本 SQL 查询 | **P0** |
 | COM_PING | 0x0E | 心跳检测 | P0 |
@@ -787,7 +787,7 @@ Connection conn = DriverManager.getConnection(url, "user", "password");
 ### 10.2 数据类型映射
 
 | MySQL Type | JustDB Type | Java Type |
-|------------|-------------|-----------|
+|------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
 | MYSQL_TYPE_LONG | INT | Integer |
 | MYSQL_TYPE_LONGLONG | BIGINT | Long |
 | MYSQL_TYPE_VARCHAR | VARCHAR | String |
@@ -796,19 +796,19 @@ Connection conn = DriverManager.getConnection(url, "user", "password");
 ### 10.3 Maven 依赖
 
 ```xml
-<!-- Netty -->
-<dependency>
-    <groupId>io.netty</groupId>
-    <artifactId>netty-all</artifactId>
-    <version>4.1.100.Final</version>
-</dependency>
+&lt;!-- Netty --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.netty&lt;/groupId&gt;
+    &lt;artifactId&gt;netty-all&lt;/artifactId&gt;
+    &lt;version&gt;4.1.100.Final&lt;/version&gt;
+&lt;/dependency&gt;
 
-<!-- MySQL Protocol Codec -->
-<dependency>
-    <groupId>com.github.mheath</groupId>
-    <artifactId>netty-mysql-codec</artifactId>
-    <version>1.0.0-alpha</version>
-</dependency>
+&lt;!-- MySQL Protocol Codec --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.github.mheath&lt;/groupId&gt;
+    &lt;artifactId&gt;netty-mysql-codec&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0-alpha&lt;/version&gt;
+&lt;/dependency&gt;
 ```
 
 ### 10.4 参考资源
@@ -818,7 +818,7 @@ Connection conn = DriverManager.getConnection(url, "user", "password");
   - [netty-mysql-codec](https://github.com/mheath/netty-mysql-codec)
   - [ShardingSphere-Proxy](https://github.com/apache/shardingsphere)
 
----
+---------------------------
 
 ## 十一、虚拟表注册机制实施计划（详细版）
 
@@ -854,7 +854,7 @@ public interface VirtualTableProvider {
      * @param context 上下文
      * @return Table 定义，null 表示不支持此表名
      */
-    Table get(Justdb justdb, String tableName, Map<String, Object> context);
+    Table get(Justdb justdb, String tableName, Map&lt;String, Object&gt; context);
 }
 ```
 
@@ -866,8 +866,8 @@ public interface VirtualTableProvider {
 public class JustdbDataSource {
 
     private final Justdb justdb;
-    private final Map<String, TableData> tables;
-    private final Map<String, Sequence> sequences;
+    private final Map&lt;String, TableData&gt; tables;
+    private final Map&lt;String, Sequence&gt; sequences;
     private final AtomicLong transactionId;
 
     // 新增：虚拟表 Provider（可设置，默认为空）
@@ -875,8 +875,8 @@ public class JustdbDataSource {
 
     public JustdbDataSource(Justdb justdb) {
         this.justdb = justdb;
-        this.tables = new ConcurrentHashMap<>();
-        this.sequences = new ConcurrentHashMap<>();
+        this.tables = new ConcurrentHashMap&lt;&gt;();
+        this.sequences = new ConcurrentHashMap&lt;&gt;();
         this.transactionId = new AtomicLong(0);
         this.virtualTableProvider = null;  // 默认无虚拟表
 
@@ -986,7 +986,7 @@ dataSource.setVirtualTableProvider((j, name, ctx) -> {
 
 // 正常使用，虚拟表会自动工作
 SqlExecutor executor = new SqlExecutor(dataSource, connection);
-List<Map<String, Object>> result = executor.executeSelect("SELECT * FROM TABLES");
+List&lt;Map&lt;String, Object&gt;&gt; result = executor.executeSelect("SELECT * FROM TABLES");
 ```
 
 ### 11.7 实施步骤
@@ -1037,7 +1037,7 @@ List<Map<String, Object>> result = executor.executeSelect("SELECT * FROM TABLES"
 ### 11.8 关键文件清单
 
 | 操作 | 文件 | 说明 |
-|------|------|------|
+|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|
 | 新增 | `jdbc/VirtualTableProvider.java` | 虚拟表提供者接口（函数式） |
 | 修改 | `jdbc/JustdbDataSource.java` | 添加 virtualTableProvider 字段和相关方法，修改 getTable() |
 
@@ -1087,7 +1087,7 @@ void testQueryVirtualTable() {
     SqlExecutor executor = new SqlExecutor(dataSource, connection);
 
     // 查询虚拟表 TABLES
-    List<Map<String, Object>> result = executor.executeSelect(
+    List&lt;Map&lt;String, Object&gt;&gt; result = executor.executeSelect(
         "SELECT TABLE_NAME FROM TABLES"
     );
 
@@ -1104,7 +1104,7 @@ void testQueryVirtualTable() {
 5. **入口清晰** - 虚拟表入口在 JustdbDataSource 上
 6. **向后兼容** - 不设置 Provider 时行为完全不变
 
----
+---------------------------
 
 ## 十二、实施验证
 
@@ -1131,7 +1131,7 @@ private org.verydb.justdb.jdbc.VirtualTableProvider virtualTableProvider;
 **VirtualTableProvider 接口**：
 - ✅ 函数式接口（`@FunctionalInterface`）
 - ✅ 返回 `Table` 定义
-- ✅ 参数：`Justdb justdb`, `String tableName`, `Map<String, Object> context`
+- ✅ 参数：`Justdb justdb`, `String tableName`, `Map&lt;String, Object&gt; context`
 - ✅ 返回 `null` 表示不支持该表名
 
 **JustdbDataSource 集成**：
@@ -1229,7 +1229,7 @@ for (Row row : tablesData.getRows()) {
 }
 ```
 
----
+---------------------------
 
 ## 十三、测试执行验证
 
@@ -1275,7 +1275,7 @@ BUILD SUCCESS
 ### 13.3 数据类型映射验证
 
 | 输入类型 | 映射结果 | 验证状态 |
-|---------|----------|---------|
+|---------------------------------------------------------------------------------|----------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
 | VARCHAR(255) | varchar | ✅ |
 | CHAR(50) | varchar | ✅ |
 | INT / INTEGER | int | ✅ |
@@ -1287,14 +1287,14 @@ BUILD SUCCESS
 | JSON | json | ✅ |
 | BOOLEAN | tinyint | ✅ |
 
----
+---------------------------
 
 ## 总结
 
 ### 已完成
 
 | 项目 | 状态 |
-|------|------|
+|------------------------------------------------------|------------------------------------------------------|
 | VirtualTableProvider 接口 | ✅ 已实现并编译 |
 | JustdbDataSource 修改 | ✅ 已完成（4处修改） |
 | BuiltinVirtualTables 工具类 | ✅ 已实现（5个公共方法） |
@@ -1357,13 +1357,13 @@ VirtualTableProvider createBuiltinProvider()
 ### 待完成
 
 | 项目 | 优先级 |
-|------|--------|
+|------------------------------------------------------|--------------------------------------------------------|
 | 修复结果集编码问题（MySQL协议结果集返回） | P1 |
 | 完善认证逻辑（mysql_native_password 完整实现） | P2 |
 | 支持 SSL/TLS 连接 | P3 |
 | 实现 COM_STMT_PREPARE/EXECUTE（预编译语句） | P3 |
 
----
+---------------------------
 
 ## 十五、MySQL 协议服务器虚拟表集成（Phase 4）
 
@@ -1448,14 +1448,14 @@ server.start();
 ### 15.5 实现总结
 
 | 组件 | 状态 | 说明 |
-|------|------|------|
+|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|
 | MySQLServer 集成 | ✅ 完成 | enableBuiltinVirtualTables() 方法已实现 |
 | 工厂方法 | ✅ 完成 | createWithVirtualTables() 静态方法已实现 |
 | 虚拟表 Provider 设置 | ✅ 完成 | 通过 DataSource 正确设置 |
 | 集成测试 | ✅ 创建 | 测试文件已创建（需要修复编码问题后运行） |
 | 结果集编码 | ⚠️ 已知问题 | 需要单独修复 ComQueryHandler/TextResultSetEncoder |
 
----
+---------------------------
 
 ## 十四、集成测试验证（Phase 4 完成）
 

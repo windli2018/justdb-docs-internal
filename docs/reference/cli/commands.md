@@ -1,9 +1,9 @@
----
+---------------------------
 title: 命令参考
 icon: list
 description: JustDB CLI 完整命令列表、语法和示例
 order: 2
----
+---------------------------
 
 # 命令参考
 
@@ -24,9 +24,9 @@ justdb init [options] [project-name]
 
 **选项**
 ```bash
--p, --project <name>     # 项目名称
--t, --format <fmt>       # 输出格式: xml, yaml, json (默认: xml)
--o, --output <file>      # 输出文件 (默认: <project>/justdb.<fmt>)
+-p, --project &lt;name&gt;     # 项目名称
+-t, --format &lt;fmt&gt;       # 输出格式: xml, yaml, json (默认: xml)
+-o, --output &lt;file&gt;      # 输出文件 (默认: &lt;project&gt;/justdb.&lt;fmt&gt;)
 -f, --force              # 覆盖已存在的文件
 ```
 
@@ -54,7 +54,7 @@ myapp/
         └── products
 ```
 
----
+---------------------------
 
 #### db2schema
 
@@ -68,29 +68,29 @@ justdb db2schema [options]
 **选项**
 ```bash
 # 数据库连接
--C, --current-database <name>    # 使用配置文件中的数据库
--U, --db-url <url>               # JDBC URL
--u, --db-username <user>         # 用户名
--w, --db-password <pass>         # 密码
--D, --dialect <type>             # 数据库方言
+-C, --current-database &lt;name&gt;    # 使用配置文件中的数据库
+-U, --db-url &lt;url&gt;               # JDBC URL
+-u, --db-username &lt;user&gt;         # 用户名
+-w, --db-password &lt;pass&gt;         # 密码
+-D, --dialect &lt;type&gt;             # 数据库方言
 
 # 表过滤
--I, --include-tables <patterns>  # 包含表模式
--X, --exclude-tables <patterns>  # 排除表模式
+-I, --include-tables &lt;patterns&gt;  # 包含表模式
+-X, --exclude-tables &lt;patterns&gt;  # 排除表模式
 
 # Include 规则（增强功能）
--ir, --include-rule <rule>       # Include 规则
+-ir, --include-rule &lt;rule&gt;       # Include 规则
                                   # 格式: pattern&key1=value1&key2=value2
--d, --data-filter <rule>         # 简化数据过滤规则
+-d, --data-filter &lt;rule&gt;         # 简化数据过滤规则
                                   # 格式: pattern=condition
 
 # 输出
--o, --output <file>              # 输出文件
--t, --format <fmt>               # 输出格式 (默认: json)
+-o, --output &lt;file&gt;              # 输出文件
+-t, --format &lt;fmt&gt;               # 输出格式 (默认: json)
 
 # 数据导出
 --process-data                   # 导出数据
---data-filter <condition>        # 数据过滤条件
+--data-filter &lt;condition&gt;        # 数据过滤条件
 ```
 
 **Include 规则支持的键**
@@ -127,13 +127,13 @@ justdb db2schema -C production \
 
 **dataFilter 类型**
 | 值 | 类型 | 说明 |
-|---|---|---|
+|---------------------------|---------------------------|---------------------------|
 | 留空 或 `"none"` | NONE | 不导出数据，仅结构 |
 | `"*"` 或 `"all"` | ALL | 导出全部数据 |
 | 以 `"SELECT"` 开头 | CONDITION | 完整 SQL 语句 |
 | 其他值 | CONDITION | WHERE 条件表达式 |
 
----
+---------------------------
 
 #### format
 
@@ -141,16 +141,16 @@ justdb db2schema -C production \
 
 **语法**
 ```bash
-justdb format [options] <files>...
+justdb format [options] &lt;files&gt;...
 ```
 
 **选项**
 ```bash
--i, --input <files>       # 输入文件
--o, --output <file>       # 输出文件（默认覆盖原文件）
--t, --format <fmt>        # 输出格式
+-i, --input &lt;files&gt;       # 输入文件
+-o, --output &lt;file&gt;       # 输出文件（默认覆盖原文件）
+-t, --format &lt;fmt&gt;        # 输出格式
 --sort-keys               # 排序键
---indent <spaces>         # 缩进空格数
+--indent &lt;spaces&gt;         # 缩进空格数
 ```
 
 **示例**
@@ -165,7 +165,7 @@ justdb format -t json schema.xml -o schema.json
 justdb format *.yaml
 ```
 
----
+---------------------------
 
 #### validate
 
@@ -179,14 +179,14 @@ justdb validate [options] [files...]
 **选项**
 ```bash
 # 数据库连接
--C, --current-database <name>    # 使用配置文件中的数据库
--U, --db-url <url>               # JDBC URL
--u, --db-username <user>         # 用户名
--w, --db-password <pass>         # 密码
+-C, --current-database &lt;name&gt;    # 使用配置文件中的数据库
+-U, --db-url &lt;url&gt;               # JDBC URL
+-u, --db-username &lt;user&gt;         # 用户名
+-w, --db-password &lt;pass&gt;         # 密码
 
 # 表过滤
--I, --include-tables <patterns>  # 包含表模式
--X, --exclude-tables <patterns>  # 排除表模式
+-I, --include-tables &lt;patterns&gt;  # 包含表模式
+-X, --exclude-tables &lt;patterns&gt;  # 排除表模式
 
 # 验证选项
 --validate-data-conditions       # 验证数据条件
@@ -211,7 +211,7 @@ justdb validate -I "user*" schema.yaml
 - **OUTDATED** - 数据库中的版本过期
 - **EXISTS_IN_DB_NOT_IN_HISTORY** - 存在于数据库但不在历史中
 
----
+---------------------------
 
 ### 迁移和部署
 
@@ -234,26 +234,26 @@ status  # 查看迁移状态
 **选项**
 ```bash
 # 数据库连接
--C, --current-database <name>    # 使用配置文件中的数据库
--U, --db-url <url>               # JDBC URL
--u, --db-username <user>         # 用户名
--w, --db-password <pass>         # 密码
+-C, --current-database &lt;name&gt;    # 使用配置文件中的数据库
+-U, --db-url &lt;url&gt;               # JDBC URL
+-u, --db-username &lt;user&gt;         # 用户名
+-w, --db-password &lt;pass&gt;         # 密码
 
 # 表过滤
--I, --include-tables <patterns>  # 包含表模式
--X, --exclude-tables <patterns>  # 排除表模式
+-I, --include-tables &lt;patterns&gt;  # 包含表模式
+-X, --exclude-tables &lt;patterns&gt;  # 排除表模式
 
 # 迁移选项
 --delete-marked                  # 删除标记为删除的对象
---retention-days <days>          # 保留期（默认: 60）
+--retention-days &lt;days&gt;          # 保留期（默认: 60）
 --validate-data-conditions       # 验证数据条件
 
 # 备份选项
 --backup                         # 迁移前备份
---backup-provider <name>         # 备份提供者
---backup-location <path>         # 备份位置
+--backup-provider &lt;name&gt;         # 备份提供者
+--backup-location &lt;path&gt;         # 备份位置
 --backup-encrypt                 # 加密备份
---backup-key <key>               # 加密密钥
+--backup-key &lt;key&gt;               # 加密密钥
 ```
 
 **示例**
@@ -271,7 +271,7 @@ justdb migrate status schema.yaml
 justdb migrate up -I "user*" schema.yaml
 ```
 
----
+---------------------------
 
 #### diff
 
@@ -284,9 +284,9 @@ justdb diff [options] [file1] [file2]
 
 **选项**
 ```bash
--o, --output <file>        # 输出差异 Schema
--oq, --output-sql <file>   # 输出 SQL 迁移脚本
---report-format <fmt>      # 报告格式: text, md, html, json
+-o, --output &lt;file&gt;        # 输出差异 Schema
+-oq, --output-sql &lt;file&gt;   # 输出 SQL 迁移脚本
+--report-format &lt;fmt&gt;      # 报告格式: text, md, html, json
 ```
 
 **示例**
@@ -310,7 +310,7 @@ justdb diff new-schema.yaml -o diff.yaml
 - **MODIFIED** - 修改对象
 - **RENAMED** - 重命名对象
 
----
+---------------------------
 
 #### deploy
 
@@ -318,16 +318,16 @@ justdb diff new-schema.yaml -o diff.yaml
 
 **语法**
 ```bash
-justdb deploy [options] <files>...
+justdb deploy [options] &lt;files&gt;...
 ```
 
 **选项**
 ```bash
 # 数据库连接
--C, --current-database <name>    # 使用配置文件中的数据库
--U, --db-url <url>               # JDBC URL
--u, --db-username <user>         # 用户名
--w, --db-password <pass>         # 密码
+-C, --current-database &lt;name&gt;    # 使用配置文件中的数据库
+-U, --db-url &lt;url&gt;               # JDBC URL
+-u, --db-username &lt;user&gt;         # 用户名
+-w, --db-password &lt;pass&gt;         # 密码
 
 # 部署选项
 --dry-run                        # 模拟运行
@@ -347,7 +347,7 @@ justdb deploy --dry-run schema.yaml
 justdb deploy --idempotent schema.yaml
 ```
 
----
+---------------------------
 
 ### 代码生成
 
@@ -363,12 +363,12 @@ justdb convert [options] [files...]
 **选项**
 ```bash
 # 输入/输出
--i, --input <files>       # 输入文件
--o, --output <path>       # 输出文件或目录
--t, --format <fmt>        # 输出格式
+-i, --input &lt;files&gt;       # 输入文件
+-o, --output &lt;path&gt;       # 输出文件或目录
+-t, --format &lt;fmt&gt;        # 输出格式
 
 # 代码生成选项
---java-orm-type <type>    # Java ORM 类型
+--java-orm-type &lt;type&gt;    # Java ORM 类型
                           # MYBATIS_BEAN (默认)
                           # JPA_ENTITY
                           # HIBERNATE_BEAN
@@ -377,8 +377,8 @@ justdb convert [options] [files...]
                           # GENERIC_DAO
 
 # 表过滤
--I, --include-tables <patterns>  # 包含表模式
--X, --exclude-tables <patterns>  # 排除表模式
+-I, --include-tables &lt;patterns&gt;  # 包含表模式
+-X, --exclude-tables &lt;patterns&gt;  # 排除表模式
 ```
 
 **示例**
@@ -401,7 +401,7 @@ justdb convert schema.yaml --java-orm-type JPA_ENTITY -o src/
 - SQL：`sql`（需要指定方言）
 - 代码：`java`（需要指定 ORM 类型）
 
----
+---------------------------
 
 ### SQL 操作
 
@@ -416,9 +416,9 @@ justdb sql [options] [statement...]
 
 **选项**
 ```bash
--s, --schema <file>       # Schema 文件
---migrate <file>          # 迁移 Schema 文件
--o, --output <file>       # 输出文件
+-s, --schema &lt;file&gt;       # Schema 文件
+--migrate &lt;file&gt;          # 迁移 Schema 文件
+-o, --output &lt;file&gt;       # 输出文件
 ```
 
 **示例**
@@ -444,7 +444,7 @@ sql> DESC users;
 sql> exit          # 退出
 ```
 
----
+---------------------------
 
 ### AI 集成
 
@@ -459,15 +459,15 @@ justdb ai [options] [message]
 
 **选项**
 ```bash
--m, --message <text>           # 发送给 AI 的消息
---message-from-file <file>     # 从文件读取消息
--i, --input <file>             # Schema 文件
--o, --output <file>            # 保存生成的 Schema
+-m, --message &lt;text&gt;           # 发送给 AI 的消息
+--message-from-file &lt;file&gt;     # 从文件读取消息
+-i, --input &lt;file&gt;             # Schema 文件
+-o, --output &lt;file&gt;            # 保存生成的 Schema
 
 # AI 配置
---provider <name>              # AI 提供者（默认: local）
---base-url <url>               # AI 服务 URL
---model <name>                 # 模型名称
+--provider &lt;name&gt;              # AI 提供者（默认: local）
+--base-url &lt;url&gt;               # AI 服务 URL
+--model &lt;name&gt;                 # 模型名称
 ```
 
 **示例**
@@ -494,7 +494,7 @@ justdb ai --provider openai "创建表"
 - `zhipu` / `glm` - 智谱 AI
 - `qwen` - 通义千问
 
----
+---------------------------
 
 #### ai-history
 
@@ -508,8 +508,8 @@ justdb ai-history [options] [command]
 **子命令**
 ```bash
 list        # 列出历史记录
-show <id>   # 显示特定记录
-delete <id> # 删除记录
+show &lt;id&gt;   # 显示特定记录
+delete &lt;id&gt; # 删除记录
 clear       # 清空所有记录
 ```
 
@@ -525,7 +525,7 @@ justdb ai-history show abc123
 justdb ai-history delete abc123
 ```
 
----
+---------------------------
 
 ### 配置和插件
 
@@ -554,7 +554,7 @@ justdb config show
 justdb config validate
 ```
 
----
+---------------------------
 
 #### plugin
 
@@ -568,10 +568,10 @@ justdb plugin [command] [options]
 **子命令**
 ```bash
 list            # 列出所有插件
-install <url>   # 安装插件
-remove <id>     # 移除插件
-enable <id>     # 启用插件
-disable <id>    # 禁用插件
+install &lt;url&gt;   # 安装插件
+remove &lt;id&gt;     # 移除插件
+enable &lt;id&gt;     # 启用插件
+disable &lt;id&gt;    # 禁用插件
 ```
 
 **示例**
@@ -586,7 +586,7 @@ justdb plugin disable mysql
 justdb plugin enable postgres
 ```
 
----
+---------------------------
 
 #### driver
 
@@ -600,8 +600,8 @@ justdb driver [command] [options]
 **子命令**
 ```bash
 list            # 列出所有驱动
-install <url>   # 安装驱动
-remove <id>     # 移除驱动
+install &lt;url&gt;   # 安装驱动
+remove &lt;id&gt;     # 移除驱动
 ```
 
 **示例**
@@ -613,7 +613,7 @@ justdb driver list
 justdb driver install mysql:mysql-connector-java:8.0.33
 ```
 
----
+---------------------------
 
 ### 其他工具
 
@@ -630,10 +630,10 @@ justdb show [what] [options]
 ```bash
 schema              # 显示 Schema 概览
 tables              # 列出所有表
-columns <table>     # 显示表的列
-indexes <table>     # 显示表的索引
-constraints <table> # 显示表的约束
-data <table>        # 显示表数据
+columns &lt;table&gt;     # 显示表的列
+indexes &lt;table&gt;     # 显示表的索引
+constraints &lt;table&gt; # 显示表的约束
+data &lt;table&gt;        # 显示表数据
 ```
 
 **示例**
@@ -648,7 +648,7 @@ justdb show tables schema.yaml
 justdb show columns users schema.yaml
 ```
 
----
+---------------------------
 
 #### test
 
@@ -661,10 +661,10 @@ justdb test [options]
 
 **选项**
 ```bash
--C, --current-database <name>    # 使用配置文件中的数据库
--U, --db-url <url>               # JDBC URL
--u, --db-username <user>         # 用户名
--w, --db-password <pass>         # 密码
+-C, --current-database &lt;name&gt;    # 使用配置文件中的数据库
+-U, --db-url &lt;url&gt;               # JDBC URL
+-u, --db-username &lt;user&gt;         # 用户名
+-w, --db-password &lt;pass&gt;         # 密码
 ```
 
 **示例**
@@ -676,7 +676,7 @@ justdb test -C production
 justdb test -U "jdbc:mysql://localhost:3306/test" -u root
 ```
 
----
+---------------------------
 
 #### load
 
@@ -684,7 +684,7 @@ justdb test -U "jdbc:mysql://localhost:3306/test" -u root
 
 **语法**
 ```bash
-justdb load [options] <files...>
+justdb load [options] &lt;files...&gt;
 ```
 
 **示例**
@@ -696,7 +696,7 @@ justdb load schema.yaml
 justdb load schema1.yaml schema2.yaml
 ```
 
----
+---------------------------
 
 #### save
 
@@ -709,7 +709,7 @@ justdb save [options] [file]
 
 **选项**
 ```bash
--t, --format <fmt>        # 输出格式
+-t, --format &lt;fmt&gt;        # 输出格式
 ```
 
 **示例**
@@ -721,7 +721,7 @@ justdb save schema.yaml
 justdb save -t json schema.json
 ```
 
----
+---------------------------
 
 #### watch
 
@@ -734,8 +734,8 @@ justdb watch [options] [files...]
 
 **选项**
 ```bash
---command <cmd>           # 文件变化时执行的命令
---delay <ms>              # 检查间隔（毫秒）
+--command &lt;cmd&gt;           # 文件变化时执行的命令
+--delay &lt;ms&gt;              # 检查间隔（毫秒）
 ```
 
 **示例**
@@ -747,7 +747,7 @@ justdb watch schema.yaml
 justdb watch --command "justdb validate %f" schema.yaml
 ```
 
----
+---------------------------
 
 ## 相关文档
 

@@ -22,9 +22,9 @@ public class DatabaseAdapter {
     private String dbType;           // 数据库类型标识
     private String name;             // 数据库名称
     private String driverClass;      // JDBC 驱动类
-    private List<UrlPattern> urlPatterns;  // URL 匹配模式
-    private List<TypeMapping> typeMappings; // 类型映射
-    private List<SqlFeature> features;      // SQL 特性
+    private List&lt;UrlPattern&gt; urlPatterns;  // URL 匹配模式
+    private List&lt;TypeMapping&gt; typeMappings; // 类型映射
+    private List&lt;SqlFeature&gt; features;      // SQL 特性
 }
 ```
 
@@ -33,31 +33,31 @@ public class DatabaseAdapter {
 ### 定义适配器
 
 ```xml
-<adapters>
-    <DatabaseAdapter dbType="mydb" name="My Database">
-        <!-- JDBC 驱动 -->
-        <driverClass>com.example.jdbc.Driver</driverClass>
+&lt;adapters&gt;
+    &lt;DatabaseAdapter dbType="mydb" name="My Database"&gt;
+        &lt;!-- JDBC 驱动 --&gt;
+        &lt;driverClass&gt;com.example.jdbc.Driver&lt;/driverClass&gt;
 
-        <!-- URL 模式 -->
-        <urlPatterns>
-            <UrlPattern>jdbc:mydb://*</urlPatterns>
-            <UrlPattern>jdbc:mydb:thin://*</urlPatterns>
-        </urlPatterns>
+        &lt;!-- URL 模式 --&gt;
+        &lt;urlPatterns&gt;
+            &lt;UrlPattern&gt;jdbc:mydb://*&lt;/urlPatterns&gt;
+            &lt;UrlPattern&gt;jdbc:mydb:thin://*&lt;/urlPatterns&gt;
+        &lt;/urlPatterns&gt;
 
-        <!-- 类型映射 -->
-        <typeMappings>
-            <TypeMapping logicalType="INTEGER" physicalType="INTEGER" jdbcType="INTEGER"/>
-            <TypeMapping logicalType="VARCHAR" physicalType="VARCHAR" jdbcType="VARCHAR"/>
-            <!-- ... -->
-        </typeMappings>
+        &lt;!-- 类型映射 --&gt;
+        &lt;typeMappings&gt;
+            &lt;TypeMapping logicalType="INTEGER" physicalType="INTEGER" jdbcType="INTEGER"/&gt;
+            &lt;TypeMapping logicalType="VARCHAR" physicalType="VARCHAR" jdbcType="VARCHAR"/&gt;
+            &lt;!-- ... --&gt;
+        &lt;/typeMappings&gt;
 
-        <!-- SQL 特性 -->
-        <features>
-            <SqlFeature name="IDENTIFIER_QUOTE" value="`"/>
-            <SqlFeature name="SUPPORTS_IF_NOT_EXISTS" value="true"/>
-        </features>
-    </DatabaseAdapter>
-</adapters>
+        &lt;!-- SQL 特性 --&gt;
+        &lt;features&gt;
+            &lt;SqlFeature name="IDENTIFIER_QUOTE" value="`"/&gt;
+            &lt;SqlFeature name="SUPPORTS_IF_NOT_EXISTS" value="true"/&gt;
+        &lt;/features&gt;
+    &lt;/DatabaseAdapter&gt;
+&lt;/adapters&gt;
 ```
 
 ### URL 模式
@@ -79,13 +79,13 @@ adapter.setName("My Database");
 adapter.setDriverClass("com.example.jdbc.Driver");
 
 // URL 模式
-List<UrlPattern> patterns = new ArrayList<>();
+List&lt;UrlPattern&gt; patterns = new ArrayList&lt;&gt;();
 patterns.add(new UrlPattern("jdbc:mydb://*"));
 patterns.add(new UrlPattern("jdbc:mydb:thin://*"));
 adapter.setUrlPatterns(patterns);
 
 // 类型映射
-List<TypeMapping> mappings = new ArrayList<>();
+List&lt;TypeMapping&gt; mappings = new ArrayList&lt;&gt;();
 mappings.add(new TypeMapping("INTEGER", "INTEGER", "INTEGER"));
 mappings.add(new TypeMapping("VARCHAR", "VARCHAR", "VARCHAR"));
 adapter.setTypeMappings(mappings);
@@ -98,22 +98,22 @@ adapter.setTypeMappings(mappings);
 JustDB 使用逻辑类型抽象，适配器将其转换为数据库特定类型：
 
 ```xml
-<typeMappings>
-    <!-- 基本类型 -->
-    <TypeMapping logicalType="INTEGER" physicalType="INT" jdbcType="INTEGER"/>
-    <TypeMapping logicalType="BIGINT" physicalType="BIGINT" jdbcType="BIGINT"/>
-    <TypeMapping logicalType="VARCHAR" physicalType="VARCHAR" jdbcType="VARCHAR"/>
+&lt;typeMappings&gt;
+    &lt;!-- 基本类型 --&gt;
+    &lt;TypeMapping logicalType="INTEGER" physicalType="INT" jdbcType="INTEGER"/&gt;
+    &lt;TypeMapping logicalType="BIGINT" physicalType="BIGINT" jdbcType="BIGINT"/&gt;
+    &lt;TypeMapping logicalType="VARCHAR" physicalType="VARCHAR" jdbcType="VARCHAR"/&gt;
 
-    <!-- 带参数的类型 -->
+    &lt;!-- 带参数的类型 --&gt;
     <TypeMapping logicalType="VARCHAR(%d)"
                   physicalType="VARCHAR(%d)"
                   jdbcType="VARCHAR"/>
 
-    <!-- 类型族 -->
+    &lt;!-- 类型族 --&gt;
     <TypeMapping logicalType="TEXT"
                   physicalType="LONGTEXT"
                   jdbcType="LONGVARCHAR"/>
-</typeMappings>
+&lt;/typeMappings&gt;
 ```
 
 ### 常用类型映射
@@ -132,22 +132,22 @@ JustDB 使用逻辑类型抽象，适配器将其转换为数据库特定类型�
 ### 支持的特性
 
 ```xml
-<features>
-    <!-- 标识符引号 -->
-    <SqlFeature name="IDENTIFIER_QUOTE" value="`"/>
+&lt;features&gt;
+    &lt;!-- 标识符引号 --&gt;
+    &lt;SqlFeature name="IDENTIFIER_QUOTE" value="`"/&gt;
 
-    <!-- IF NOT EXISTS 支持 -->
-    <SqlFeature name="SUPPORTS_IF_NOT_EXISTS" value="true"/>
+    &lt;!-- IF NOT EXISTS 支持 --&gt;
+    &lt;SqlFeature name="SUPPORTS_IF_NOT_EXISTS" value="true"/&gt;
 
-    <!-- CASCADE 支持 -->
-    <SqlFeature name="SUPPORTS_CASCADE" value="true"/>
+    &lt;!-- CASCADE 支持 --&gt;
+    &lt;SqlFeature name="SUPPORTS_CASCADE" value="true"/&gt;
 
-    <!-- AUTO_INCREMENT 语法 -->
-    <SqlFeature name="AUTO_INCREMENT_KEYWORD" value="AUTO_INCREMENT"/>
+    &lt;!-- AUTO_INCREMENT 语法 --&gt;
+    &lt;SqlFeature name="AUTO_INCREMENT_KEYWORD" value="AUTO_INCREMENT"/&gt;
 
-    <!-- 外键约束 -->
-    <SqlFeature name="SUPPORTS_FOREIGN_KEYS" value="true"/>
-</features>
+    &lt;!-- 外键约束 --&gt;
+    &lt;SqlFeature name="SUPPORTS_FOREIGN_KEYS" value="true"/&gt;
+&lt;/features&gt;
 ```
 
 ### 特性列表
@@ -164,22 +164,22 @@ JustDB 使用逻辑类型抽象，适配器将其转换为数据库特定类型�
 ### 大小写敏感性
 
 ```xml
-<DatabaseAdapter dbType="mysql">
-    <caseSensitive>true</caseSensitive>
-</DatabaseAdapter>
+&lt;DatabaseAdapter dbType="mysql"&gt;
+    &lt;caseSensitive&gt;true&lt;/caseSensitive&gt;
+&lt;/DatabaseAdapter&gt;
 ```
 
 ### 保留字
 
 ```xml
-<DatabaseAdapter dbType="mysql">
-    <reservedWords>
-        <word>SELECT</word>
-        <word>INSERT</word>
-        <word>UPDATE</word>
-        <!-- ... -->
-    </reservedWords>
-</DatabaseAdapter>
+&lt;DatabaseAdapter dbType="mysql"&gt;
+    &lt;reservedWords&gt;
+        &lt;word&gt;SELECT&lt;/word&gt;
+        &lt;word&gt;INSERT&lt;/word&gt;
+        &lt;word&gt;UPDATE&lt;/word&gt;
+        &lt;!-- ... --&gt;
+    &lt;/reservedWords&gt;
+&lt;/DatabaseAdapter&gt;
 ```
 
 ## 完整示例
@@ -187,29 +187,29 @@ JustDB 使用逻辑类型抽象，适配器将其转换为数据库特定类型�
 ### MySQL 适配器
 
 ```xml
-<plugin id="mysql" dialect="mysql" ref-id="sql-standard-root">
-    <adapters>
-        <DatabaseAdapter dbType="mysql" name="MySQL">
-            <driverClass>com.mysql.cj.jdbc.Driver</driverClass>
-            <urlPatterns>
-                <UrlPattern>jdbc:mysql://*</urlPatterns>
-                <UrlPattern>jdbc:mysql:replication://*</urlPatterns>
-            </urlPatterns>
-            <typeMappings>
-                <TypeMapping logicalType="INTEGER" physicalType="INT" jdbcType="INTEGER"/>
-                <TypeMapping logicalType="BIGINT" physicalType="BIGINT" jdbcType="BIGINT"/>
-                <TypeMapping logicalType="VARCHAR(%d)" physicalType="VARCHAR(%d)" jdbcType="VARCHAR"/>
-                <TypeMapping logicalType="TEXT" physicalType="LONGTEXT" jdbcType="LONGVARCHAR"/>
-                <TypeMapping logicalType="TIMESTAMP" physicalType="TIMESTAMP" jdbcType="TIMESTAMP"/>
-            </typeMappings>
-            <features>
-                <SqlFeature name="IDENTIFIER_QUOTE" value="`"/>
-                <SqlFeature name="SUPPORTS_IF_NOT_EXISTS" value="true"/>
-                <SqlFeature name="AUTO_INCREMENT_KEYWORD" value="AUTO_INCREMENT"/>
-            </features>
-        </DatabaseAdapter>
-    </adapters>
-</plugin>
+&lt;plugin id="mysql" dialect="mysql" ref-id="sql-standard-root"&gt;
+    &lt;adapters&gt;
+        &lt;DatabaseAdapter dbType="mysql" name="MySQL"&gt;
+            &lt;driverClass&gt;com.mysql.cj.jdbc.Driver&lt;/driverClass&gt;
+            &lt;urlPatterns&gt;
+                &lt;UrlPattern&gt;jdbc:mysql://*&lt;/urlPatterns&gt;
+                &lt;UrlPattern&gt;jdbc:mysql:replication://*&lt;/urlPatterns&gt;
+            &lt;/urlPatterns&gt;
+            &lt;typeMappings&gt;
+                &lt;TypeMapping logicalType="INTEGER" physicalType="INT" jdbcType="INTEGER"/&gt;
+                &lt;TypeMapping logicalType="BIGINT" physicalType="BIGINT" jdbcType="BIGINT"/&gt;
+                &lt;TypeMapping logicalType="VARCHAR(%d)" physicalType="VARCHAR(%d)" jdbcType="VARCHAR"/&gt;
+                &lt;TypeMapping logicalType="TEXT" physicalType="LONGTEXT" jdbcType="LONGVARCHAR"/&gt;
+                &lt;TypeMapping logicalType="TIMESTAMP" physicalType="TIMESTAMP" jdbcType="TIMESTAMP"/&gt;
+            &lt;/typeMappings&gt;
+            &lt;features&gt;
+                &lt;SqlFeature name="IDENTIFIER_QUOTE" value="`"/&gt;
+                &lt;SqlFeature name="SUPPORTS_IF_NOT_EXISTS" value="true"/&gt;
+                &lt;SqlFeature name="AUTO_INCREMENT_KEYWORD" value="AUTO_INCREMENT"/&gt;
+            &lt;/features&gt;
+        &lt;/DatabaseAdapter&gt;
+    &lt;/adapters&gt;
+&lt;/plugin&gt;
 ```
 
 ## 测试适配器
@@ -247,7 +247,7 @@ void testTypeMapping() {
 class MySQLAdapterIntegrationTest {
 
     @Container
-    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0");
+    static MySQLContainer&lt;?&gt; mysql = new MySQLContainer&lt;&gt;("mysql:8.0");
 
     @Test
     void testConnection() throws Exception {

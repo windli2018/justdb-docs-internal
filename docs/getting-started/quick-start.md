@@ -31,11 +31,11 @@ tag:
 ### 方式一：Maven 依赖
 
 ```xml
-<dependency>
-    <groupId>org.verydb.justdb</groupId>
-    <artifactId>justdb-core</artifactId>
-    <version>1.0.0</version>
-</dependency>
+&lt;dependency&gt;
+    &lt;groupId&gt;org.verydb.justdb&lt;/groupId&gt;
+    &lt;artifactId&gt;justdb-core&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;
 ```
 
 ```java
@@ -78,11 +78,11 @@ justdb --version
 ### 方式三：Spring Boot
 
 ```xml
-<dependency>
-    <groupId>org.verydb.justdb</groupId>
-    <artifactId>justdb-spring-boot-starter</artifactId>
-    <version>1.0.0</version>
-</dependency>
+&lt;dependency&gt;
+    &lt;groupId&gt;org.verydb.justdb&lt;/groupId&gt;
+    &lt;artifactId&gt;justdb-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;
 ```
 
 ```yaml
@@ -226,8 +226,8 @@ justdb
 
 JustDB 支持多种格式，你可以选择最适合的：
 
-<CodeGroup>
-<CodeGroupItem title="YAML">
+&lt;CodeGroup&gt;
+&lt;CodeGroupItem title="YAML"&gt;
 ```yaml
 Table:
   - name: users
@@ -236,9 +236,9 @@ Table:
         type: BIGINT
         primaryKey: true
 ```
-</CodeGroupItem>
+&lt;/CodeGroupItem&gt;
 
-<CodeGroupItem title="JSON">
+&lt;CodeGroupItem title="JSON"&gt;
 ```json
 {
   "Table": [
@@ -255,18 +255,18 @@ Table:
   ]
 }
 ```
-</CodeGroupItem>
+&lt;/CodeGroupItem&gt;
 
-<CodeGroupItem title="XML">
+&lt;CodeGroupItem title="XML"&gt;
 ```xml
-<Justdb>
-  <Table name="users">
-    <Column name="id" type="BIGINT" primaryKey="true"/>
-  </Table>
-</Justdb>
+&lt;Justdb&gt;
+  &lt;Table name="users"&gt;
+    &lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
+  &lt;/Table&gt;
+&lt;/Justdb&gt;
 ```
-</CodeGroupItem>
-</CodeGroup>
+&lt;/CodeGroupItem&gt;
+&lt;/CodeGroup&gt;
 
 格式转换：
 

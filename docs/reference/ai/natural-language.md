@@ -272,7 +272,7 @@ justdb> add index on email in customers
 aiManager.resetSession();
 
 // 获取对话历史
-List<Message> history = aiManager.getAiService()
+List&lt;Message&gt; history = aiManager.getAiService()
     .getConversationHistory();
 
 for (Message msg : history) {
@@ -284,8 +284,8 @@ for (Message msg : history) {
 
 ```java
 // 查找相似的表名
-List<String> tables = Arrays.asList("users", "customers", "clients");
-List<String> similar = aiManager.findSimilarTableNames(
+List&lt;String&gt; tables = Arrays.asList("users", "customers", "clients");
+List&lt;String&gt; similar = aiManager.findSimilarTableNames(
     "客户",  // 中文查询
     tables,
     0.7  // 相似度阈值

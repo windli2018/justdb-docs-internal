@@ -148,7 +148,7 @@ Table:
 
 ## Navigation
 
-- **[Quick Start](../getting-started/)** - Get started quickly
-- **[User Guide](../guide/)** - In-depth guides
-- **[Design Docs](../design/)** - Architecture and design
-- **[Development](../development/)** - Plugin development and contributing
+- **[Quick Start](/en/getting-started/)** - Get started quickly
+- **[User Guide](/guide/)** - In-depth guides
+- **[Design Docs](/design/)** - Architecture and design
+- **[Development](/development/)** - Plugin development and contributing

@@ -20,11 +20,11 @@ tag:
 JustDB 使用[语义化提交](https://www.conventionalcommits.org/)格式：
 
 ```
-<type>(<scope>): <subject>
+&lt;type&gt;(&lt;scope&gt;): &lt;subject&gt;
 
-<body>
+&lt;body&gt;
 
-<footer>
+&lt;footer&gt;
 ```
 
 ### 必需部分
@@ -86,13 +86,13 @@ Closes #456"
 ```bash
 git commit -m "feat(api): change SchemaLoader return type
 
-BREAKING CHANGE: SchemaLoader.load() now returns Loaded<Justdb>
+BREAKING CHANGE: SchemaLoader.load() now returns Loaded&lt;Justdb&gt;
 instead of Justdb directly. This provides better error handling
 and file location tracking.
 
 Migration guide:
 - Before: Justdb schema = loader.load(file);
-- After: Loaded<Justdb> result = loader.load(file);"
+- After: Loaded&lt;Justdb&gt; result = loader.load(file);"
 ```
 
 ## 提交最佳实践
@@ -267,7 +267,7 @@ git reset --hard HEAD~1
 
 ```bash
 # 创建新的提交来撤销
-git revert <commit-hash>
+git revert &lt;commit-hash&gt;
 ```
 
 ## 下一步

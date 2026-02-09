@@ -183,7 +183,7 @@ AI 会话支持上下文记忆，可以记住之前的对话：
 aiManager.resetSession();
 
 // 获取对话历史
-List<Message> history = aiManager.getAiService().getConversationHistory();
+List&lt;Message&gt; history = aiManager.getAiService().getConversationHistory();
 ```
 
 ### 3. 语义相似度搜索
@@ -192,7 +192,7 @@ List<Message> history = aiManager.getAiService().getConversationHistory();
 
 ```java
 // 查找相似的表名
-List<String> similarTables = aiManager.findSimilarTableNames(
+List&lt;String&gt; similarTables = aiManager.findSimilarTableNames(
     "客户信息",
     Arrays.asList("users", "customers", "clients", "profiles"),
     0.7  // 相似度阈值

@@ -8,7 +8,7 @@
 **最后更新**: 2026-02-06
 **维护者**: Wind Li
 
----
+---------------------------
 
 ## 目录
 
@@ -25,7 +25,7 @@
 11. [设计原则](#11-设计原则)
 12. [完整示例](#12-完整示例)
 
----
+---------------------------
 
 ## 1. 概述
 
@@ -51,7 +51,7 @@ JustDB Migrate 模式提供动态测试能力，使得：
 - 用户数据通过 SQL 或应用层管理，不受 migrate 影响
 - 所有数据迁移逻辑集中在 `CanonicalSchemaDiff`
 
----
+---------------------------
 
 ## 2. 核心架构
 
@@ -98,20 +98,20 @@ JustDB Migrate 模式提供动态测试能力，使得：
 ├─────────────────────────────────────────────────────────────┤
 │ + currentSchema: Justdb                                     │
 │ + targetSchema: Justdb                                     │
-│ + dataChanges: List<DataChange>                            │
+│ + dataChanges: List&lt;DataChange&gt;                            │
 │                                                          │
 │ + calculateAll(): CanonicalSchemaDiff                       │
 │ + calculateTables(): CanonicalSchemaDiff                       │
 │ + calculateColumns(): CanonicalSchemaDiff                      │
 │ + calculateDataChanges(): CanonicalSchemaDiff                 │
 │                                                          │
-│ + generateSql(dialect): List<String>                         │
-│ + generateDataChangeSql(dialect): List<String>               │
+│ + generateSql(dialect): List&lt;String&gt;                         │
+│ + generateDataChangeSql(dialect): List&lt;String&gt;               │
 │                                                          │
 │ + detectConditionOverlaps(table, dataNodes): OverlapResult  │
 │ + findMatchingDataNode(currentDataNodes, target): Data       │
-│ + groupDataByTable(schema): Map<String, List<Data>>          │
-│ + filterByTableScopes(tables, scopes): Map<String, Table>   │
+│ + groupDataByTable(schema): Map&lt;String, List<Data&gt;>          │
+│ + filterByTableScopes(tables, scopes): Map&lt;String, Table&gt;   │
 └─────────────────────────────────────────────────────────────┘
 ┌─────────────────────────────────────────────────────────────┐
 │                        DataChange                           │
@@ -126,7 +126,7 @@ JustDB Migrate 模式提供动态测试能力，使得：
 └─────────────────────────────────────────────────────────────┘
 ```
 
----
+---------------------------
 
 ## 3. CanonicalSchemaDiff 增强
 
@@ -138,7 +138,7 @@ public class CanonicalSchemaDiff {
     private final Justdb targetSchema;
 
     // 新增：数据变更列表
-    private final List<DataChange> dataChanges = new ArrayList<>();
+    private final List&lt;DataChange&gt; dataChanges = new ArrayList&lt;&gt;();
 
     // ========== 核心方法 ==========
 
@@ -162,12 +162,12 @@ public class CanonicalSchemaDiff {
     /**
      * 生成所有变更的 SQL（DDL + DML）
      */
-    public List<String> generateSql(String dialect);
+    public List&lt;String&gt; generateSql(String dialect);
 
     /**
      * 生成数据变更的 SQL 语句
      */
-    public List<String> generateDataChangeSql(String dialect);
+    public List&lt;String&gt; generateDataChangeSql(String dialect);
 
     // ========== 辅助方法 ==========
 
@@ -176,27 +176,27 @@ public class CanonicalSchemaDiff {
      */
     private OverlapDetectionResult detectConditionOverlaps(
         Table table,
-        List<Data> dataNodes
+        List&lt;Data&gt; dataNodes
     );
 
     /**
      * 找到匹配的 Data 节点（通过 condition 和 module）
      */
     private Data findMatchingDataNode(
-        List<Data> currentDataNodes,
+        List&lt;Data&gt; currentDataNodes,
         Data targetData
     );
 
     /**
      * 将 Data 节点按表名分组
      */
-    private Map<String, List<Data>> groupDataByTable(Justdb schema);
+    private Map&lt;String, List<Data&gt;> groupDataByTable(Justdb schema);
 
     /**
      * 按 tableScopes 过滤表
      */
-    private Map<String, Table> filterByTableScopes(
-        Map<String, Table> tables,
+    private Map&lt;String, Table&gt; filterByTableScopes(
+        Map&lt;String, Table&gt; tables,
         TableScopes scopes
     );
 
@@ -213,7 +213,7 @@ public class CanonicalSchemaDiff {
      * 2. UPDATE 匹配主键的行
      * 3. INSERT schema 中 deleted=false 的行
      */
-    private List<String> generateRestorationSql(
+    private List&lt;String&gt; generateRestorationSql(
         Table table,
         Data data,
         String dialect
@@ -225,7 +225,7 @@ public class CanonicalSchemaDiff {
      * 2. INSERT 新数据
      * 3. 处理 deleted=true 的行
      */
-    private List<String> generateDefaultDataSql(
+    private List&lt;String&gt; generateDefaultDataSql(
         Table table,
         Data data,
         String dialect
@@ -234,11 +234,11 @@ public class CanonicalSchemaDiff {
     private String buildDeleteOutOfScopeSql(
         Table table,
         String condition,
-        List<Row> schemaRows,
+        List&lt;Row&gt; schemaRows,
         String dialect
     );
 
-    private String buildNotEqualsClause(Map<String, Object> primaryKey);
+    private String buildNotEqualsClause(Map&lt;String, Object&gt; primaryKey);
 
     private String formatValue(Object value);
 
@@ -283,7 +283,7 @@ public static class DataChange extends Item {
 }
 ```
 
----
+---------------------------
 
 ## 4. Data 节点设计
 
@@ -305,7 +305,7 @@ public class Data extends SchemaSense {
 
     @JsonProperty("Row")
     @XmlElement(name = "Row")
-    List<Row> rows = new ArrayList<>();
+    List&lt;Row&gt; rows = new ArrayList&lt;&gt;();
 }
 ```
 
@@ -324,9 +324,9 @@ public class Data extends SchemaSense {
       condition="is_system=1 and deleted=0"
       module="system-users"
       description="系统管理员用户">
-  <Row id="1" name="admin" is_system="1" deleted="0"/>
-  <Row id="2" name="system" is_system="1" deleted="0"/>
-</Data>
+  &lt;Row id="1" name="admin" is_system="1" deleted="0"/&gt;
+  &lt;Row id="2" name="system" is_system="1" deleted="0"/&gt;
+&lt;/Data&gt;
 ```
 
 ### 4.3 无 condition 的 Data 节点
@@ -341,7 +341,7 @@ public class Data extends SchemaSense {
 **与有 condition 的 Data 节点的区别**:
 
 | 特性 | 有 condition | 无 condition |
-|------|-------------|-------------|
+|------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
 | 现有数据 | DELETE 范围内行不匹配主键的行，更新匹配 id 的行 | 更新匹配 id 的数据（不匹配保留原样） |
 | 新数据 | INSERT（deleted=false） | INSERT（deleted=false） |
 | deleted=true | 逻辑删除或物理删除 | 逻辑删除或物理删除 |
@@ -353,13 +353,13 @@ public class Data extends SchemaSense {
 <Data table="users"
       module="default-users"
       description="默认用户数据（新数据导入）">
-  <!-- 新数据：如果不存在则插入 -->
-  <Row id="1" name="admin" deleted="false"/>
-  <Row id="2" name="guest" deleted="false"/>
-  <!-- 已删除的数据：将被逻辑删除或物理删除 -->
-  <Row id="999" name="old_admin" deleted="true"/>
-  <Row id="998" name="legacy_system" deleted="true"/>
-</Data>
+  &lt;!-- 新数据：如果不存在则插入 --&gt;
+  &lt;Row id="1" name="admin" deleted="false"/&gt;
+  &lt;Row id="2" name="guest" deleted="false"/&gt;
+  &lt;!-- 已删除的数据：将被逻辑删除或物理删除 --&gt;
+  &lt;Row id="999" name="old_admin" deleted="true"/&gt;
+  &lt;Row id="998" name="legacy_system" deleted="true"/&gt;
+&lt;/Data&gt;
 ```
 
 **生成的 SQL**:
@@ -393,7 +393,7 @@ DELETE FROM `users` WHERE `id`=998;
 - **推荐**: 与有 condition 的 Data 节点配合使用（精准同步 + 默认数据）
 - **注意**: 只更新匹配主键的数据，不匹配的数据保持不变
 
----
+---------------------------
 
 ## 5. 迁移流程
 
@@ -441,9 +441,9 @@ DELETE FROM `users` WHERE `id`=998;
 │           CanonicalSchemaDiff.calculateDataChanges()            │
 │                                                                 │
 │  1. 按表分组 Data 节点                                          │
-│     Map<String, List<Data>> targetDataByTable =              │
+│     Map&lt;String, List<Data&gt;> targetDataByTable =              │
 │         groupDataByTable(targetSchema)                         │
-│     Map<String, List<Data>> currentDataByTable =             │
+│     Map&lt;String, List<Data&gt;> currentDataByTable =             │
 │         groupDataByTable(currentSchema)                        │
 │                                                                 │
 │  2. 对每个表的 Data 节点进行处理                                 │
@@ -515,7 +515,7 @@ DELETE FROM `users` WHERE `id`=998;
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+---------------------------
 
 ## 6. tableScopes 过滤
 
@@ -529,13 +529,13 @@ public class TableScopes extends ItemScopes {
     @JsonAlias({"includeTables", "tableIncludes",
                "includeTablePatterns", "table-include-patterns"})
     @Override
-    public List<String> getIncludes();
+    public List&lt;String&gt; getIncludes();
 
     @JsonProperty("excludes")
     @JsonAlias({"excludeTables", "tableExcludes",
                "excludeTablePatterns", "table-exclude-patterns"})
     @Override
-    public List<String> getExcludes();
+    public List&lt;String&gt; getExcludes();
 }
 ```
 
@@ -590,12 +590,12 @@ public class TableScopes extends ItemScopes {
 **示例**:
 
 | 模式 | 匹配 | 不匹配 |
-|------|------|--------|
+|------------------------------------------------------|------------------------------------------------------|--------------------------------------------------------|
 | `users*` | users, users_active, users_temp | orders, sys_users |
 | `*_temp` | users_temp, orders_temp | users, temp_table |
 | `*.config` | app.config, system.config | .config, config |
 
----
+---------------------------
 
 ## 7. 多 Data 节点场景
 
@@ -606,25 +606,25 @@ public class TableScopes extends ItemScopes {
       condition="type='status' and deleted=0"
       module="dict-status"
       description="状态字典数据">
-  <Row code="active" label="激活" type="status"/>
-  <Row code="inactive" label="停用" type="status"/>
-</Data>
+  &lt;Row code="active" label="激活" type="status"/&gt;
+  &lt;Row code="inactive" label="停用" type="status"/&gt;
+&lt;/Data&gt;
 
 <Data table="dict"
       condition="type='region' and deleted=0"
       module="dict-region"
       description="区域字典数据">
-  <Row code="east" label="华东" type="region"/>
-  <Row code="west" label="华西" type="region"/>
-</Data>
+  &lt;Row code="east" label="华东" type="region"/&gt;
+  &lt;Row code="west" label="华西" type="region"/&gt;
+&lt;/Data&gt;
 
 <Data table="dict"
       condition="type='category' and deleted=0"
       module="dict-category"
       description="分类字典数据">
-  <Row code="electronics" label="电子产品" type="category"/>
-  <Row code="clothing" label="服装" type="category"/>
-</Data>
+  &lt;Row code="electronics" label="电子产品" type="category"/&gt;
+  &lt;Row code="clothing" label="服装" type="category"/&gt;
+&lt;/Data&gt;
 ```
 
 **migrate 行为**:
@@ -639,28 +639,28 @@ public class TableScopes extends ItemScopes {
       condition="env='dev' and deleted=0"
       module="dev-config"
       description="开发环境配置">
-  <Row key="debug_mode" value="true" env="dev"/>
-</Data>
+  &lt;Row key="debug_mode" value="true" env="dev"/&gt;
+&lt;/Data&gt;
 
 <Data table="config"
       condition="env='prod' and deleted=0"
       module="prod-config"
       description="生产环境配置">
-  <Row key="debug_mode" value="false" env="prod"/>
-</Data>
+  &lt;Row key="debug_mode" value="false" env="prod"/&gt;
+&lt;/Data&gt;
 ```
 
 ### 7.3 场景 3：条件重叠（需要检测）
 
 ```xml
-<!-- 不推荐：条件有重叠 -->
-<Data table="users" condition="is_system=1 and deleted=0">
-  <Row id="1" is_system="1" deleted="0" role="admin"/>
-</Data>
+&lt;!-- 不推荐：条件有重叠 --&gt;
+&lt;Data table="users" condition="is_system=1 and deleted=0"&gt;
+  &lt;Row id="1" is_system="1" deleted="0" role="admin"/&gt;
+&lt;/Data&gt;
 
-<Data table="users" condition="role='admin' and deleted=0">
-  <Row id="1" is_system="1" deleted="0" role="admin"/>
-</Data>
+&lt;Data table="users" condition="role='admin' and deleted=0"&gt;
+  &lt;Row id="1" is_system="1" deleted="0" role="admin"/&gt;
+&lt;/Data&gt;
 ```
 
 **检测结果**:
@@ -668,14 +668,14 @@ public class TableScopes extends ItemScopes {
 - 发出警告日志
 - 使用第一个匹配的 Data 节点
 
----
+---------------------------
 
 ## 8. 命令行接口
 
 ### 8.1 MigrateCommand 新增参数
 
 | 参数 | 简写 | 描述 |
-|------|------|------|
+|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|
 | `--migrate-data-filter` | `-mdf` | 数据过滤条件（WHERE 子句） |
 | `--migrate-include-tables` | `-mit` | 包含的表模式（逗号分隔） |
 | `--migrate-exclude-tables` | `-met` | 排除的表模式（逗号分隔） |
@@ -684,11 +684,11 @@ public class TableScopes extends ItemScopes {
 ### 8.2 Db2SchemaCommand 新增参数
 
 | 参数 | 简写 | 描述 |
-|------|------|------|
+|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|
 | `--db2schema-multi-data-nodes` | `-dmn` | 提取多个 Data 节点 |
 | `--db2schema-data-group-by` | `-dgb` | 按列值分组提取 Data 节点 |
 
----
+---------------------------
 
 ## 9. 配置支持
 
@@ -697,8 +697,8 @@ public class TableScopes extends ItemScopes {
 ```java
 public class JustdbConfiguration extends UnknownValues {
     // 新增：表过滤模式
-    private List<String> includeTablePatterns = new ArrayList<>();
-    private List<String> excludeTablePatterns = new ArrayList<>();
+    private List&lt;String&gt; includeTablePatterns = new ArrayList&lt;&gt;();
+    private List&lt;String&gt; excludeTablePatterns = new ArrayList&lt;&gt;();
 
     // 新增：数据过滤条件
     private String dataFilter;
@@ -729,7 +729,7 @@ dataFilter: "deleted=0 and is_system=1"
 validateDataConditions: true
 ```
 
----
+---------------------------
 
 ## 10. 验证机制
 
@@ -746,17 +746,17 @@ public class DataConditionValidator {
      * 验证单个表的多个 Data 节点
      * @return ValidationResult
      */
-    public ValidationResult validate(Table table, List<Data> dataNodes);
+    public ValidationResult validate(Table table, List&lt;Data&gt; dataNodes);
 
     private ValidationResult validateConditionSyntax(Table table, Data data);
-    private OverlapDetectionResult detectOverlaps(Table table, List<Data> dataNodes);
-    private CoverageResult checkCoverage(Table table, List<Data> dataNodes);
+    private OverlapDetectionResult detectOverlaps(Table table, List&lt;Data&gt; dataNodes);
+    private CoverageResult checkCoverage(Table table, List&lt;Data&gt; dataNodes);
 }
 
 public static class ValidationResult {
     private boolean valid = true;
-    private List<String> errors = new ArrayList<>();
-    private List<String> warnings = new ArrayList<>();
+    private List&lt;String&gt; errors = new ArrayList&lt;&gt;();
+    private List&lt;String&gt; warnings = new ArrayList&lt;&gt;();
 }
 ```
 
@@ -774,7 +774,7 @@ public static class ValidationResult {
    - 检查系统数据是否都被覆盖
    - 识别未覆盖的数据缺口
 
----
+---------------------------
 
 ## 11. 设计原则
 
@@ -787,7 +787,7 @@ public static class ValidationResult {
 // 唯一的入口
 CanonicalSchemaDiff diff = new CanonicalSchemaDiff(current, target);
 diff.calculateAll();        // 计算所有变更
-List<String> sql = diff.generateSql();  // 生成 SQL
+List&lt;String&gt; sql = diff.generateSql();  // 生成 SQL
 executeSql(sql);               // 执行 SQL
 ```
 
@@ -813,21 +813,21 @@ executeSql(sql);               // 执行 SQL
 **推荐**：多个 Data 节点的 condition 应该互斥
 
 ```xml
-<!-- 好的设计 -->
-<Data table="users" condition="user_type='admin' and deleted=0">
-  <Row id="1" user_type="admin"/>
-</Data>
-<Data table="users" condition="user_type='guest' and deleted=0">
-  <Row id="2" user_type="guest"/>
-</Data>
+&lt;!-- 好的设计 --&gt;
+&lt;Data table="users" condition="user_type='admin' and deleted=0"&gt;
+  &lt;Row id="1" user_type="admin"/&gt;
+&lt;/Data&gt;
+&lt;Data table="users" condition="user_type='guest' and deleted=0"&gt;
+  &lt;Row id="2" user_type="guest"/&gt;
+&lt;/Data&gt;
 
-<!-- 避免：条件重叠 -->
-<Data table="users" condition="deleted=0">
-  <Row id="1" deleted="0"/>
-</Data>
-<Data table="users" condition="is_active=1">
-  <Row id="1" is_active="1"/>  <!-- 重叠 -->
-</Data>
+&lt;!-- 避免：条件重叠 --&gt;
+&lt;Data table="users" condition="deleted=0"&gt;
+  &lt;Row id="1" deleted="0"/&gt;
+&lt;/Data&gt;
+&lt;Data table="users" condition="is_active=1"&gt;
+  &lt;Row id="1" is_active="1"/&gt;  &lt;!-- 重叠 --&gt;
+&lt;/Data&gt;
 ```
 
 #### 原则 2：条件完整性
@@ -846,111 +846,111 @@ executeSql(sql);               // 执行 SQL
 
 按功能模块、数据类型、环境等维度拆分。
 
----
+---------------------------
 
 ## 12. 完整示例
 
 ### 12.1 Schema 示例
 
 ```xml
-<Justdb>
-  <!-- tableScopes: 定义表级别过滤 -->
-  <tableScopes>
-    <includes>
-      <include>users*</include>
-      <include>dict*</include>
-      <include>config*</include>
-    </includes>
-    <excludes>
-      <exclude>*_temp</exclude>
-      <exclude>*_bak</exclude>
-    </excludes>
-  </tableScopes>
+&lt;Justdb&gt;
+  &lt;!-- tableScopes: 定义表级别过滤 --&gt;
+  &lt;tableScopes&gt;
+    &lt;includes&gt;
+      &lt;include&gt;users*&lt;/include&gt;
+      &lt;include&gt;dict*&lt;/include&gt;
+      &lt;include&gt;config*&lt;/include&gt;
+    &lt;/includes&gt;
+    &lt;excludes&gt;
+      &lt;exclude&gt;*_temp&lt;/exclude&gt;
+      &lt;exclude&gt;*_bak&lt;/exclude&gt;
+    &lt;/excludes&gt;
+  &lt;/tableScopes&gt;
 
-  <!-- 表定义 -->
-  <tables>
-    <Table name="users">
-      <columns>
-        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
-        <Column name="name" type="VARCHAR(100)" nullable="false"/>
-        <Column name="is_system" type="BOOLEAN" defaultValue="false"/>
-        <Column name="deleted" type="BOOLEAN" defaultValue="false"/>
-        <Column name="env" type="VARCHAR(20)"/>
-      </columns>
-    </Table>
+  &lt;!-- 表定义 --&gt;
+  &lt;tables&gt;
+    &lt;Table name="users"&gt;
+      &lt;columns&gt;
+        &lt;Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
+        &lt;Column name="name" type="VARCHAR(100)" nullable="false"/&gt;
+        &lt;Column name="is_system" type="BOOLEAN" defaultValue="false"/&gt;
+        &lt;Column name="deleted" type="BOOLEAN" defaultValue="false"/&gt;
+        &lt;Column name="env" type="VARCHAR(20)"/&gt;
+      &lt;/columns&gt;
+    &lt;/Table&gt;
 
-    <Table name="dict">
-      <columns>
-        <Column name="code" type="VARCHAR(50)" primaryKey="true"/>
-        <Column name="label" type="VARCHAR(100)"/>
-        <Column name="type" type="VARCHAR(50)"/>
-        <Column name="deleted" type="BOOLEAN" defaultValue="false"/>
-      </columns>
-    </Table>
+    &lt;Table name="dict"&gt;
+      &lt;columns&gt;
+        &lt;Column name="code" type="VARCHAR(50)" primaryKey="true"/&gt;
+        &lt;Column name="label" type="VARCHAR(100)"/&gt;
+        &lt;Column name="type" type="VARCHAR(50)"/&gt;
+        &lt;Column name="deleted" type="BOOLEAN" defaultValue="false"/&gt;
+      &lt;/columns&gt;
+    &lt;/Table&gt;
 
-    <Table name="config">
-      <columns>
-        <Column name="key" type="VARCHAR(100)" primaryKey="true"/>
-        <Column name="value" type="TEXT"/>
-        <Column name="env" type="VARCHAR(20)"/>
-        <Column name="deleted" type="BOOLEAN" defaultValue="false"/>
-      </columns>
-    </Table>
-  </tables>
+    &lt;Table name="config"&gt;
+      &lt;columns&gt;
+        &lt;Column name="key" type="VARCHAR(100)" primaryKey="true"/&gt;
+        &lt;Column name="value" type="TEXT"/&gt;
+        &lt;Column name="env" type="VARCHAR(20)"/&gt;
+        &lt;Column name="deleted" type="BOOLEAN" defaultValue="false"/&gt;
+      &lt;/columns&gt;
+    &lt;/Table&gt;
+  &lt;/tables&gt;
 
-  <!-- 数据定义 -->
-  <Datas>
-    <!-- users 表：系统管理员（有 condition） -->
+  &lt;!-- 数据定义 --&gt;
+  &lt;Datas&gt;
+    &lt;!-- users 表：系统管理员（有 condition） --&gt;
     <Data table="users"
           condition="is_system=1 and deleted=0"
           module="system-users"
           description="系统管理员用户，拥有系统级权限">
-      <Row id="1" name="admin" is_system="true" deleted="false"/>
-      <Row id="2" name="system" is_system="true" deleted="false"/>
-    </Data>
+      &lt;Row id="1" name="admin" is_system="true" deleted="false"/&gt;
+      &lt;Row id="2" name="system" is_system="true" deleted="false"/&gt;
+    &lt;/Data&gt;
 
-    <!-- users 表：默认用户（无 condition，新数据导入 + 处理 deleted） -->
+    &lt;!-- users 表：默认用户（无 condition，新数据导入 + 处理 deleted） --&gt;
     <Data table="users"
           module="default-users"
           description="默认用户数据，包括初始用户和需要清理的旧用户">
-      <Row id="1" name="admin" deleted="false"/>
-      <Row id="2" name="guest" deleted="false"/>
-      <Row id="999" name="old_admin" deleted="true"/>
-    </Data>
+      &lt;Row id="1" name="admin" deleted="false"/&gt;
+      &lt;Row id="2" name="guest" deleted="false"/&gt;
+      &lt;Row id="999" name="old_admin" deleted="true"/&gt;
+    &lt;/Data&gt;
 
-    <!-- dict 表：按类型分类（多 Data 节点） -->
+    &lt;!-- dict 表：按类型分类（多 Data 节点） --&gt;
     <Data table="dict"
           condition="type='status' and deleted=0"
           module="dict-status"
           description="状态字典数据">
-      <Row code="active" label="激活" type="status"/>
-      <Row code="inactive" label="停用" type="status"/>
-    </Data>
+      &lt;Row code="active" label="激活" type="status"/&gt;
+      &lt;Row code="inactive" label="停用" type="status"/&gt;
+    &lt;/Data&gt;
 
     <Data table="dict"
           condition="type='region' and deleted=0"
           module="dict-region"
           description="区域字典数据">
-      <Row code="east" label="华东" type="region"/>
-      <Row code="west" label="华西" type="region"/>
-    </Data>
+      &lt;Row code="east" label="华东" type="region"/&gt;
+      &lt;Row code="west" label="华西" type="region"/&gt;
+    &lt;/Data&gt;
 
-    <!-- config 表：按环境分类（多 Data 节点） -->
+    &lt;!-- config 表：按环境分类（多 Data 节点） --&gt;
     <Data table="config"
           condition="env='dev' and deleted=0"
           module="dev-config"
           description="开发环境配置">
-      <Row key="debug_mode" value="true" env="dev"/>
-    </Data>
+      &lt;Row key="debug_mode" value="true" env="dev"/&gt;
+    &lt;/Data&gt;
 
     <Data table="config"
           condition="env='prod' and deleted=0"
           module="prod-config"
           description="生产环境配置">
-      <Row key="debug_mode" value="false" env="prod"/>
-    </Data>
-  </Datas>
-</Justdb>
+      &lt;Row key="debug_mode" value="false" env="prod"/&gt;
+    &lt;/Data&gt;
+  &lt;/Datas&gt;
+&lt;/Justdb&gt;
 ```
 
 ### 12.2 迁移示例
@@ -986,14 +986,14 @@ justdb migrate up --migrate-include-tables="users*,dict*,config*"
 3. `south` 区域保留（不在任何 Data 节点中，或属于用户添加）
 4. `type='status'` 和 `type='region'` 的字典数据保持一致
 
----
+---------------------------
 
 ## 附录
 
 ### A. 关键类文件清单
 
 | 文件路径 | 说明 |
-|---------|------|
+|---------------------------------------------------------------------------------|------------------------------------------------------|
 | `justdb-core/src/main/java/org/verydb/justdb/schema/CanonicalSchemaDiff.java` | 核心实现 |
 | `justdb-core/src/main/java/org/verydb/justdb/schema/Data.java` | Data 节点定义 |
 | `justdb-core/src/main/java/org/verydb/justdb/schema/TableScopes.java` | tableScopes 定义 |

@@ -113,52 +113,52 @@ justdb --version
 ### 输入选项 (InputMixin)
 
 ```bash
--i, --input <files>      # 输入文件/目录/URL（逗号分隔）
---type <types>           # 文件类型 (yaml, json, xml, sql, java, class)
--p, --project <name>     # 项目名称或路径
+-i, --input &lt;files&gt;      # 输入文件/目录/URL（逗号分隔）
+--type &lt;types&gt;           # 文件类型 (yaml, json, xml, sql, java, class)
+-p, --project &lt;name&gt;     # 项目名称或路径
 ```
 
 ### 输出选项 (OutputMixin)
 
 ```bash
--o, --output <path>      # 输出文件或目录（自动检测）
--t, --format <fmt>       # 输出格式: yaml, json, xml, toml, sql, java
--r, --report-format <fmt> # 报告格式: text, xml, md, html, json, yaml
+-o, --output &lt;path&gt;      # 输出文件或目录（自动检测）
+-t, --format &lt;fmt&gt;       # 输出格式: yaml, json, xml, toml, sql, java
+-r, --report-format &lt;fmt&gt; # 报告格式: text, xml, md, html, json, yaml
 ```
 
 ### 数据库连接选项 (DatabaseConnectionMixin)
 
 ```bash
--U, --db-url <url>       # JDBC URL
--u, --db-username <user> # 数据库用户名
--w, --db-password <pass> # 数据库密码
--D, --dialect <type>     # 数据库方言（自动检测）
--C, --current-database <name> # 使用配置文件中的数据库
+-U, --db-url &lt;url&gt;       # JDBC URL
+-u, --db-username &lt;user&gt; # 数据库用户名
+-w, --db-password &lt;pass&gt; # 数据库密码
+-D, --dialect &lt;type&gt;     # 数据库方言（自动检测）
+-C, --current-database &lt;name&gt; # 使用配置文件中的数据库
 ```
 
 ### 表过滤选项 (TableFilterMixin)
 
 ```bash
--I, --include-tables <patterns>  # 包含表模式（支持通配符 * 和 ?）
--X, --exclude-tables <patterns>  # 排除表模式
+-I, --include-tables &lt;patterns&gt;  # 包含表模式（支持通配符 * 和 ?）
+-X, --exclude-tables &lt;patterns&gt;  # 排除表模式
 ```
 
 ### 数据过滤选项 (DataFilterMixin)
 
 ```bash
---data-filter <condition>         # 数据过滤条件
+--data-filter &lt;condition&gt;         # 数据过滤条件
 --process-data                    # 处理数据节点
 ```
 
 ### 全局选项
 
 ```bash
--c, --config <files>     # 配置文件（可多次指定）
---disable-plugins <list> # 禁用插件
+-c, --config &lt;files&gt;     # 配置文件（可多次指定）
+--disable-plugins &lt;list&gt; # 禁用插件
 -v, --verbose            # 详细输出
 -q, --quiet              # 静默模式
---log-level <level>      # 日志级别: trace, debug, info, warn, error
---log-file <file>        # 日志文件
+--log-level &lt;level&gt;      # 日志级别: trace, debug, info, warn, error
+--log-file &lt;file&gt;        # 日志文件
 -f, --force              # 强制执行
 -n, --dry-run            # 模拟运行
 ```

@@ -23,13 +23,13 @@ XML（eXtensible Markup Language）是企业级应用中常用的配置格式，
 ### 基本结构
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<Justdb id="myapp" namespace="com.example">
-  <Table name="users" comment="用户表">
-    <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
-    <Column name="username" type="VARCHAR(50)" nullable="false"/>
-  </Table>
-</Justdb>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;Justdb id="myapp" namespace="com.example"&gt;
+  &lt;Table name="users" comment="用户表"&gt;
+    &lt;Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
+    &lt;Column name="username" type="VARCHAR(50)" nullable="false"/&gt;
+  &lt;/Table&gt;
+&lt;/Justdb&gt;
 ```
 
 ## 语法特性
@@ -37,30 +37,30 @@ XML（eXtensible Markup Language）是企业级应用中常用的配置格式，
 ### XML 声明
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 ```
 
 ### 元素和属性
 
 ```xml
-<!-- 元素内容 -->
-<Column>
-  <name>id</name>
-  <type>BIGINT</type>
-</Column>
+&lt;!-- 元素内容 --&gt;
+&lt;Column&gt;
+  &lt;name&gt;id&lt;/name&gt;
+  &lt;type&gt;BIGINT&lt;/type&gt;
+&lt;/Column&gt;
 
-<!-- 属性 -->
-<Column name="id" type="BIGINT" primaryKey="true"/>
+&lt;!-- 属性 --&gt;
+&lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
 ```
 
 ### 注释
 
 ```xml
-<!-- 这是注释 -->
-<Table name="users">
-  <!-- comment: 用户表 -->
-  <Column name="id" type="BIGINT"/>
-</Table>
+&lt;!-- 这是注释 --&gt;
+&lt;Table name="users"&gt;
+  &lt;!-- comment: 用户表 --&gt;
+  &lt;Column name="id" type="BIGINT"/&gt;
+&lt;/Table&gt;
 ```
 
 ### 转义字符
@@ -74,7 +74,7 @@ XML（eXtensible Markup Language）是企业级应用中常用的配置格式，
 | `"` | `&quot;` |
 
 ```xml
-<content>SELECT * FROM &quot;users&quot;</content>
+&lt;content&gt;SELECT * FROM &quot;users&quot;&lt;/content&gt;
 ```
 
 ### CDATA 区块
@@ -82,13 +82,13 @@ XML（eXtensible Markup Language）是企业级应用中常用的配置格式，
 包含特殊字符时使用 CDATA：
 
 ```xml
-<View name="active_users">
-  <content><![CDATA[
+&lt;View name="active_users"&gt;
+  &lt;content&gt;<![CDATA[
     SELECT *
     FROM users
     WHERE status = 'active'
-  ]]></content>
-</View>
+  ]]>&lt;/content&gt;
+&lt;/View&gt;
 ```
 
 ## JAXB 注解映射
@@ -106,7 +106,7 @@ public class Justdb {
 
     @XmlElementWrapper(name = "Table")
     @XmlElement(name = "Table")
-    private List<Table> tables;
+    private List&lt;Table&gt; tables;
 }
 ```
 
@@ -115,14 +115,14 @@ public class Justdb {
 ### 简单 Schema
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<Justdb id="myapp" namespace="com.example">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;Justdb id="myapp" namespace="com.example"&gt;
 
-  <!-- 用户表 -->
-  <Table name="users" comment="用户表">
-    <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true" comment="用户ID"/>
-    <Column name="username" type="VARCHAR(50)" nullable="false" comment="用户名"/>
-    <Column name="email" type="VARCHAR(100)" comment="邮箱"/>
+  &lt;!-- 用户表 --&gt;
+  &lt;Table name="users" comment="用户表"&gt;
+    &lt;Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true" comment="用户ID"/&gt;
+    &lt;Column name="username" type="VARCHAR(50)" nullable="false" comment="用户名"/&gt;
+    &lt;Column name="email" type="VARCHAR(100)" comment="邮箱"/&gt;
     <Column name="created_at" type="TIMESTAMP" nullable="false"
             defaultValueComputed="CURRENT_TIMESTAMP" comment="创建时间"/>
 
@@ -130,18 +130,18 @@ public class Justdb {
            comment="用户名唯一索引"/>
     <Index name="idx_users_email" columns="email" unique="true"
            comment="邮箱唯一索引"/>
-  </Table>
+  &lt;/Table&gt;
 
-</Justdb>
+&lt;/Justdb&gt;
 ```
 
 ### 复杂 Schema
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<Justdb id="ecommerce" namespace="com.example.ecommerce">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;Justdb id="ecommerce" namespace="com.example.ecommerce"&gt;
 
-  <!-- 全局列定义 -->
+  &lt;!-- 全局列定义 --&gt;
   <Column id="global_id" name="id" type="BIGINT"
           primaryKey="true" autoIncrement="true" comment="主键ID"/>
 
@@ -151,23 +151,23 @@ public class Justdb {
   <Column id="global_updated_at" name="updated_at" type="TIMESTAMP"
           nullable="false" defaultValueComputed="CURRENT_TIMESTAMP" comment="更新时间"/>
 
-  <!-- 用户表 -->
+  &lt;!-- 用户表 --&gt;
   <Table id="table_users" name="users" comment="用户表"
          expectedRecordCount="1000000" expectedGrowthRate="10000">
 
-    <Column id="col_users_id" referenceId="global_id" name="id"/>
+    &lt;Column id="col_users_id" referenceId="global_id" name="id"/&gt;
 
-    <Column name="username" type="VARCHAR(50)" nullable="false" comment="用户名"/>
+    &lt;Column name="username" type="VARCHAR(50)" nullable="false" comment="用户名"/&gt;
 
-    <Column name="email" type="VARCHAR(100)" comment="邮箱"/>
+    &lt;Column name="email" type="VARCHAR(100)" comment="邮箱"/&gt;
 
-    <Column name="password_hash" type="VARCHAR(255)" nullable="false" comment="密码哈希"/>
+    &lt;Column name="password_hash" type="VARCHAR(255)" nullable="false" comment="密码哈希"/&gt;
 
-    <Column name="status" type="VARCHAR(20)" defaultValue="active" comment="状态"/>
+    &lt;Column name="status" type="VARCHAR(20)" defaultValue="active" comment="状态"/&gt;
 
-    <Column id="col_users_created_at" referenceId="global_created_at" name="created_at"/>
+    &lt;Column id="col_users_created_at" referenceId="global_created_at" name="created_at"/&gt;
 
-    <Column id="col_users_updated_at" referenceId="global_updated_at" name="updated_at"/>
+    &lt;Column id="col_users_updated_at" referenceId="global_updated_at" name="updated_at"/&gt;
 
     <Index name="idx_users_username" columns="username" unique="true"
            comment="用户名唯一索引"/>
@@ -175,39 +175,39 @@ public class Justdb {
     <Index name="idx_users_email" columns="email" unique="true"
            comment="邮箱唯一索引"/>
 
-    <Index name="idx_users_status" columns="status" comment="状态索引"/>
-  </Table>
+    &lt;Index name="idx_users_status" columns="status" comment="状态索引"/&gt;
+  &lt;/Table&gt;
 
-  <!-- 订单表 -->
-  <Table id="table_orders" name="orders" comment="订单表">
+  &lt;!-- 订单表 --&gt;
+  &lt;Table id="table_orders" name="orders" comment="订单表"&gt;
 
-    <Column id="col_orders_id" referenceId="global_id" name="id"/>
+    &lt;Column id="col_orders_id" referenceId="global_id" name="id"/&gt;
 
-    <Column name="user_id" type="BIGINT" nullable="false" comment="用户ID"/>
+    &lt;Column name="user_id" type="BIGINT" nullable="false" comment="用户ID"/&gt;
 
-    <Column name="order_no" type="VARCHAR(50)" nullable="false" comment="订单号"/>
+    &lt;Column name="order_no" type="VARCHAR(50)" nullable="false" comment="订单号"/&gt;
 
-    <Column name="status" type="VARCHAR(20)" defaultValue="pending" comment="订单状态"/>
+    &lt;Column name="status" type="VARCHAR(20)" defaultValue="pending" comment="订单状态"/&gt;
 
-    <Column name="total_amount" type="DECIMAL(10,2)" defaultValue="0.00" comment="订单总额"/>
+    &lt;Column name="total_amount" type="DECIMAL(10,2)" defaultValue="0.00" comment="订单总额"/&gt;
 
-    <Column id="col_orders_created_at" referenceId="global_created_at" name="created_at"/>
+    &lt;Column id="col_orders_created_at" referenceId="global_created_at" name="created_at"/&gt;
 
-    <Column id="col_orders_updated_at" referenceId="global_updated_at" name="updated_at"/>
+    &lt;Column id="col_orders_updated_at" referenceId="global_updated_at" name="updated_at"/&gt;
 
     <Constraint name="fk_orders_user_id" type="FOREIGN_KEY"
                 referencedTable="users" referencedColumn="id"
                 columns="user_id" onDelete="RESTRICT" comment="用户外键"/>
 
-    <Index name="idx_orders_user_id" columns="user_id" comment="用户ID索引"/>
+    &lt;Index name="idx_orders_user_id" columns="user_id" comment="用户ID索引"/&gt;
 
     <Index name="idx_orders_order_no" columns="order_no" unique="true"
            comment="订单号唯一索引"/>
-  </Table>
+  &lt;/Table&gt;
 
-  <!-- 视图定义 -->
-  <View name="active_users" comment="活跃用户视图">
-    <content><![CDATA[
+  &lt;!-- 视图定义 --&gt;
+  &lt;View name="active_users" comment="活跃用户视图"&gt;
+    &lt;content&gt;<![CDATA[
       SELECT
         u.id,
         u.username,
@@ -217,10 +217,10 @@ public class Justdb {
       LEFT JOIN orders o ON u.id = o.user_id
       WHERE u.status = 'active'
       GROUP BY u.id, u.username, u.email
-    ]]></content>
-  </View>
+    ]]>&lt;/content&gt;
+  &lt;/View&gt;
 
-</Justdb>
+&lt;/Justdb&gt;
 ```
 
 ## 命名空间
@@ -228,17 +228,17 @@ public class Justdb {
 ### 使用命名空间
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 <justdb:Justdb xmlns:justdb="http://www.verydb.org/justdb"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               id="myapp"
               namespace="com.example">
 
-  <justdb:Table name="users">
-    <justdb:Column name="id" type="BIGINT"/>
-  </justdb:Table>
+  &lt;justdb:Table name="users"&gt;
+    &lt;justdb:Column name="id" type="BIGINT"/&gt;
+  &lt;/justdb:Table&gt;
 
-</justdb:Justdb>
+&lt;/justdb:Justdb&gt;
 ```
 
 ## XML Schema 验证
@@ -246,12 +246,12 @@ public class Justdb {
 ### 使用 XSD 验证
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 <Justdb id="myapp"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="justdb.xsd">
-  <!-- Schema 内容 -->
-</Justdb>
+  &lt;!-- Schema 内容 --&gt;
+&lt;/Justdb&gt;
 ```
 
 ## 最佳实践
@@ -259,32 +259,32 @@ public class Justdb {
 ### 1. 使用属性表示简单值
 
 ```xml
-<!-- 推荐 -->
-<Column name="id" type="BIGINT" primaryKey="true"/>
+&lt;!-- 推荐 --&gt;
+&lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
 
-<!-- 不推荐 -->
-<Column>
-  <name>id</name>
-  <type>BIGINT</type>
-  <primaryKey>true</primaryKey>
-</Column>
+&lt;!-- 不推荐 --&gt;
+&lt;Column&gt;
+  &lt;name&gt;id&lt;/name&gt;
+  &lt;type&gt;BIGINT&lt;/type&gt;
+  &lt;primaryKey&gt;true&lt;/primaryKey&gt;
+&lt;/Column&gt;
 ```
 
 ### 2. 使用元素表示复杂值
 
 ```xml
-<!-- 推荐：复杂内容使用元素 -->
-<View name="active_users">
-  <content><![CDATA[
+&lt;!-- 推荐：复杂内容使用元素 --&gt;
+&lt;View name="active_users"&gt;
+  &lt;content&gt;<![CDATA[
     SELECT * FROM users
-  ]]></content>
-</View>
+  ]]>&lt;/content&gt;
+&lt;/View&gt;
 ```
 
 ### 3. 添加注释
 
 ```xml
-<!-- 全局主键定义 -->
+&lt;!-- 全局主键定义 --&gt;
 <Column id="global_id" name="id" type="BIGINT"
         primaryKey="true" autoIncrement="true"/>
 ```
@@ -292,11 +292,11 @@ public class Justdb {
 ### 4. 使用格式化
 
 ```xml
-<!-- 推荐：格式化的 XML -->
-<Table name="users">
-  <Column name="id" type="BIGINT"/>
-  <Column name="username" type="VARCHAR(50)"/>
-</Table>
+&lt;!-- 推荐：格式化的 XML --&gt;
+&lt;Table name="users"&gt;
+  &lt;Column name="id" type="BIGINT"/&gt;
+  &lt;Column name="username" type="VARCHAR(50)"/&gt;
+&lt;/Table&gt;
 ```
 
 ## 相关文档

@@ -1,0 +1,134 @@
+{
+  "tables": [
+    {
+      "name": "users",
+      "comment": "用户表",
+      "idempotent": true,
+      "expectedRecordCount": 10000,
+      "expectedGrowthRate": 100,
+      "expectedRecordSize": 256,
+      "isPrimaryQueryTable": true,
+      "queryFrequencyLevel": 5,
+      "indexStrategy": "B_TREE",
+      "partitionStrategy": "RANGE_BY_DATE",
+      "temporaryTable": false,
+      "retentionPeriod": 365,
+      "dataExportStrategy": "ALL_DATA",
+      "dataFilterCondition": "created_date > '2023-01-01'",
+      "maxExportRecords": 50000,
+      "exportOrderField": "id",
+      "exportOrderAsc": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT",
+          "nullable": false,
+          "primaryKey": true,
+          "autoIncrement": true,
+          "comment": "用户ID"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(255)",
+          "nullable": false,
+          "comment": "用户名"
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(255)",
+          "nullable": true,
+          "unique": true,
+          "comment": "邮箱地址"
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "defaultValue": "CURRENT_TIMESTAMP",
+          "comment": "创建时间"
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMP",
+          "nullable": true,
+          "defaultValueComputed": "ON UPDATE CURRENT_TIMESTAMP",
+          "comment": "更新时间"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_users_email",
+          "unique": true,
+          "columnList": "email"
+        },
+        {
+          "name": "idx_users_created_at",
+          "unique": false,
+          "columnList": "created_at"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "fk_users_profile",
+          "type": "FOREIGN_KEY",
+          "tableName": "users",
+          "columns": ["id"],
+          "referencedTable": "profiles",
+          "referencedColumn": "user_id"
+        }
+      ]
+    },
+    {
+      "name": "orders",
+      "comment": "订单表",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "primaryKey": true,
+          "autoIncrement": true
+        },
+        {
+          "name": "user_id",
+          "type": "INT",
+          "nullable": false
+        },
+        {
+          "name": "order_date",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "amount",
+          "type": "DECIMAL(10,2)",
+          "nullable": false
+        }
+      ]
+    }
+  ],
+  "views": [
+    {
+      "name": "user_orders_summary",
+      "definition": "SELECT u.name, COUNT(o.id) as order_count, SUM(o.amount) as total_amount FROM users u LEFT JOIN orders o ON u.id = o.user_id GROUP BY u.id, u.name"
+    }
+  ],
+  "queries": [
+    {
+      "name": "active_users",
+      "sql": "SELECT * FROM users WHERE created_at > DATE_SUB(NOW(), INTERVAL 30 DAY)"
+    }
+  ],
+  "procedures": [
+    {
+      "name": "sp_get_user_orders",
+      "definition": "CREATE PROCEDURE sp_get_user_orders(IN userId INT) BEGIN SELECT * FROM orders WHERE user_id = userId; END"
+    }
+  ],
+  "databases": [
+    {
+      "name": "main_db",
+      "comment": "主数据库"
+    }
+  ]
+}
