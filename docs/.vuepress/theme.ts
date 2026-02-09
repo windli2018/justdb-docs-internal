@@ -4,10 +4,10 @@ import { enNavbar, zhNavbar } from "./navbar/index.js";
 import { enSidebar, zhSidebar } from "./sidebar/index.js";
 
 export default hopeTheme({
-  hostname: "https://vuepress-theme-hope.github.io",
+  hostname: "https://justdb.ai",
   author: {
-    name: "VuePress Theme Hope",
-    url: "https://theme-hope.vuejs.press",
+    name: "JustDB Team",
+    url: "https://github.com/verydb/justdb",
   },
 
   // 使用新配置方式
@@ -15,11 +15,11 @@ export default hopeTheme({
     assets: "fontawesome-with-brands",
   },
 
-  logo: "/favicon.ico",
+  logo: "/logo.png",
 
   favicon: "/favicon.ico",
 
-  repo: "vuepress-theme-hope/vuepress-theme-hope",
+  repo: "verydb/justdb",
 
   docsDir: "docs",
 
@@ -37,6 +37,38 @@ export default hopeTheme({
   encrypt: {
     config: {
       "/guide/encrypt.html": ["1234"],
+    },
+  },
+
+  // Markdown 增强
+  markdown: {
+    // 启用 Mermaid
+    mermaid: true,
+
+    // 启用图表
+    chart: true,
+
+    // 启用 ECharts
+    echarts: true,
+
+    // 启用 Flowchart
+    flowchart: true,
+
+    // 启用 Markmap
+    markmap: [
+      "/markmap/",
+      "http://localhost:8081/markmap/",
+    ],
+
+    // 启用 PlantUML
+    plantuml: true,
+
+    // 启用 vue-playground
+    vuePlayground: true,
+
+    // 启用 playground
+    playground: {
+      presets: ["ts", "vue"],
     },
   },
 
@@ -69,35 +101,6 @@ export default hopeTheme({
     sup: true,
     tasklist: true,
     vPre: true,
-
-    // 启用图表
-    chart: true,
-
-    // 启用 ECharts
-    echarts: true,
-
-    // 启用 Mermaid
-    mermaid: true,
-
-    // 启用 Flowchart
-    flowchart: true,
-
-    // 启用 Markmap
-    markmap: [
-      "/markmap/",
-      "http://localhost:8081/markmap/",
-    ],
-
-    // 启用 PlantUML
-    plantuml: true,
-
-    // 启用 vue-playground
-    vuePlayground: true,
-
-    // 启用 playground
-    playground: {
-      presets: ["ts", "vue"],
-    },
   },
 
   // 多语言配置
@@ -226,7 +229,9 @@ export default hopeTheme({
       components: ["Badge", "VPCard"],
     },
 
-    // 搜索插件
+    // 搜索插件 - 临时禁用以修复 duplicate ID 问题
+    // TODO: 需要找出并修复重复的文档标题
+    /*
     slimsearch: {
       indexContent: true,
       suggestion: true,
@@ -241,40 +246,41 @@ export default hopeTheme({
         },
       ],
       locales: {
-        '/': { 
-          cancel: "取消", 
-          placeholder: "搜索", 
-          search: "搜索", 
-          searching: "搜索中", 
-          defaultTitle: "文档", 
-          select: "选择", 
-          navigate: "切换", 
-          autocomplete: "自动补全", 
-          exit: "关闭", 
-          queryHistory: "搜索历史", 
-          resultHistory: "历史结果", 
-          emptyHistory: "无搜索历史", 
-          emptyResult: "没有找到结果", 
-          loading: "正在加载搜索索引..." 
+        '/': {
+          cancel: "取消",
+          placeholder: "搜索",
+          search: "搜索",
+          searching: "搜索中",
+          defaultTitle: "文档",
+          select: "选择",
+          navigate: "切换",
+          autocomplete: "自动补全",
+          exit: "关闭",
+          queryHistory: "搜索历史",
+          resultHistory: "历史结果",
+          emptyHistory: "无搜索历史",
+          emptyResult: "没有找到结果",
+          loading: "正在加载搜索索引..."
         },
-        '/en/': { 
-          cancel: "Cancel", 
-          placeholder: "Search", 
-          search: "Search", 
-          searching: "Searching", 
-          defaultTitle: "Documentation", 
-          select: "to select", 
-          navigate: "to navigate", 
-          autocomplete: "to autocomplete", 
-          exit: "to exit", 
-          queryHistory: "Search History", 
-          resultHistory: "Result History", 
-          emptyHistory: "Empty Search History", 
-          emptyResult: "No results found", 
-          loading: "Loading search indexes..." 
+        '/en/': {
+          cancel: "Cancel",
+          placeholder: "Search",
+          search: "Search",
+          searching: "Searching",
+          defaultTitle: "Documentation",
+          select: "to select",
+          navigate: "to navigate",
+          autocomplete: "to autocomplete",
+          exit: "to exit",
+          queryHistory: "Search History",
+          resultHistory: "Result History",
+          emptyHistory: "Empty Search History",
+          emptyResult: "No results found",
+          loading: "Loading search indexes..."
         },
       },
     },
+    */
 
     // SEO插件
     seo: {
