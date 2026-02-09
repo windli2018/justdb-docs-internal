@@ -8,7 +8,7 @@
 **最后更新**: 2026-02-07
 **维护者**: Wind Li
 
----
+---------------------------
 
 ## 目录
 
@@ -21,7 +21,7 @@
 7. [迁移路径](#7-迁移路径)
 8. [待确认问题](#8-待确认问题)
 
----
+---------------------------
 
 ## 1. 背景与问题
 
@@ -30,7 +30,7 @@
 JustDB 当前存在两套独立的 migrate 方案：
 
 | 维度 | SchemaDeployer | SchemaMigrationService |
-|------|----------------|----------------------|
+|------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **核心类** | `SchemaDeployer` + `SchemaHistoryManager` | `SchemaMigrationService` + `CanonicalSchemaDiff` |
 | **入口** | CLI `justdb migrate up` | JDBC URL `?migrate=...` |
 | **版本管理** | 基于 version 的幂等性 | 无版本概念，直接 diff |
@@ -67,7 +67,7 @@ JustDB 当前存在两套独立的 migrate 方案：
 - `SchemaMigrationService` 也有类似职责
 - 两者之间的边界不清晰
 
----
+---------------------------
 
 ## 2. 当前架构分析
 
@@ -179,7 +179,7 @@ JustDB 当前存在两套独立的 migrate 方案：
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
----
+---------------------------
 
 ## 3. 整合设计
 
@@ -261,14 +261,14 @@ JustDB 当前存在两套独立的 migrate 方案：
 ### 3.3 组件职责划分
 
 | 组件 | 职责 | 输入 | 输出 |
-|------|------|------|------|
+|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|
 | **DbSchemaExtractor** | 从真实数据库抽取当前 schema | Connection, ExtractOptions | Justdb |
 | **DiffService** | 计算 schema 之间的差异 | currentSchema, targetSchema | CanonicalSchemaDiff |
-| **SqlGenerator** | 从 diff 生成 SQL | CanonicalSchemaDiff, dialect, options | List\<String\> |
+| **SqlGenerator** | 从 diff 生成 SQL | CanonicalSchemaDiff, dialect, options | List\&lt;String\&gt; |
 | **HistoryRecorder** | 记录和查询 History | version, diff, sqlStatements | - |
 | **UnifiedMigrationService** | 协调所有组件 | MigrationContext | MigrationResult |
 
----
+---------------------------
 
 ## 4. DatabaseSchemaExtractor 集成
 
@@ -378,7 +378,7 @@ JustDB 当前存在两套独立的 migrate 方案：
 │  │      //    └── 基于 history_objects 表移除已应用的变更                  │ │
 │  │                                                                       │ │
 │  │      // 4. 生成 SQL                                                   │ │
-│  │      List<String> sql = generateSql(diff, dialect);                    │ │
+│  │      List&lt;String&gt; sql = generateSql(diff, dialect);                    │ │
 │  │                                                                       │ │
 │  │      // 5. 执行 SQL                                                   │ │
 │  │      executeSql(sql, connection);                                     │ │
@@ -392,7 +392,7 @@ JustDB 当前存在两套独立的 migrate 方案：
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
----
+---------------------------
 
 ## 5. 核心类设计
 
@@ -460,7 +460,7 @@ public class UnifiedMigrationService {
         }
 
         // 4. 生成 SQL
-        List<String> sqlStatements = sqlGenerator.generateMigrationSql(
+        List&lt;String&gt; sqlStatements = sqlGenerator.generateMigrationSql(
             diff,
             context.getDialect(),
             context.getSqlGenerationOptions()
@@ -687,11 +687,11 @@ public class SqlGenerator {
      * 整合 DiffCommand.generateSql() 和 SchemaMigrationService.generateMigrationSql()
      * 的重复逻辑
      */
-    public List<String> generateMigrationSql(CanonicalSchemaDiff diff,
+    public List&lt;String&gt; generateMigrationSql(CanonicalSchemaDiff diff,
                                             String dialect,
                                             SqlGenerationOptions options) {
         DBGenerator dbGenerator = new DBGenerator(pluginManager, dialect);
-        List<String> sqlStatements = new ArrayList<>();
+        List&lt;String&gt; sqlStatements = new ArrayList&lt;&gt;();
 
         // 1. 处理 sequences
         sqlStatements.addAll(generateSequenceSql(diff, dbGenerator));
@@ -708,9 +708,9 @@ public class SqlGenerator {
         return sqlStatements;
     }
 
-    private List<String> generateSequenceSql(CanonicalSchemaDiff diff,
+    private List&lt;String&gt; generateSequenceSql(CanonicalSchemaDiff diff,
                                             DBGenerator dbGenerator) {
-        List<String> sql = new ArrayList<>();
+        List&lt;String&gt; sql = new ArrayList&lt;&gt;();
         if (diff.getSequences() != null) {
             for (Sequence sequence : diff.getSequences()) {
                 if (sequence.getChangeType() == null) continue;
@@ -733,10 +733,10 @@ public class SqlGenerator {
         return sql;
     }
 
-    private List<String> generateTableSql(CanonicalSchemaDiff diff,
+    private List&lt;String&gt; generateTableSql(CanonicalSchemaDiff diff,
                                          DBGenerator dbGenerator,
                                          SqlGenerationOptions options) {
-        List<String> sql = new ArrayList<>();
+        List&lt;String&gt; sql = new ArrayList&lt;&gt;();
         // 抽取 DiffCommand 和 SchemaMigrationService 中的表处理逻辑
         // ...
         return sql;
@@ -768,7 +768,7 @@ public class HistoryRecorder {
      * 记录迁移
      */
     public void recordMigration(String version, String description,
-                               List<String> sqlStatements,
+                               List&lt;String&gt; sqlStatements,
                                CanonicalSchemaDiff diff) {
         long startTime = System.currentTimeMillis();
 
@@ -823,12 +823,12 @@ public class HistoryRecorder {
         );
 
         // 获取所有已应用的对象变更
-        List<SchemaObjectHistory> appliedObjects =
+        List&lt;SchemaObjectHistory&gt; appliedObjects =
             historyManager.getAllObjectChanges();
 
         // 构建已应用对象的集合
-        Set<String> appliedTableChanges = new HashSet<>();
-        Set<String> appliedColumnChanges = new HashSet<>();
+        Set&lt;String&gt; appliedTableChanges = new HashSet&lt;&gt;();
+        Set&lt;String&gt; appliedColumnChanges = new HashSet&lt;&gt;();
         // ...
 
         for (SchemaObjectHistory history : appliedObjects) {
@@ -910,7 +910,7 @@ public class DbSchemaExtractor {
     /**
      * 从数据库抽取特定表的 schema
      */
-    public Justdb extractTables(Connection connection, List<String> tableNames) {
+    public Justdb extractTables(Connection connection, List&lt;String&gt; tableNames) {
         ExtractOptions options = new ExtractOptions();
         options.setTableScopes(toTableScopes(tableNames));
         return extract(connection, options);
@@ -925,7 +925,7 @@ public class DbSchemaExtractor {
 }
 ```
 
----
+---------------------------
 
 ## 6. 使用示例
 
@@ -1009,7 +1009,7 @@ MigrationContext context = MigrationContext.builder()
 MigrationResult result = service.migrate(context);
 
 // 输出 SQL
-List<String> sqlStatements = result.getSqlStatements();
+List&lt;String&gt; sqlStatements = result.getSqlStatements();
 for (String sql : sqlStatements) {
     System.out.println(sql);
 }
@@ -1032,7 +1032,7 @@ MigrationContext context = MigrationContext.builder()
     .build();
 ```
 
----
+---------------------------
 
 ## 7. 迁移路径
 
@@ -1103,7 +1103,7 @@ MigrationContext context = MigrationContext.builder()
 在下一个主要版本移除旧类
 ```
 
----
+---------------------------
 
 ## 8. 待确认问题
 
@@ -1137,14 +1137,14 @@ MigrationContext context = MigrationContext.builder()
 2. 是否需要支持 Rollback 功能？
 3. 是否需要支持多租户场景（多个应用共用一个数据库）？
 
----
+---------------------------
 
 ## 附录
 
 ### A. 关键类文件清单
 
 | 文件路径 | 说明 | 状态 |
-|---------|------|------|
+|---------------------------------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|
 | `SchemaDeployer.java` | 现有：带 History 的部署器 | 待废弃 |
 | `SchemaMigrationService.java` | 现有：不带 History 的迁移服务 | 待废弃 |
 | `CanonicalSchemaDiff.java` | 核心：Diff 计算模型 | 保留 |
@@ -1159,6 +1159,6 @@ MigrationContext context = MigrationContext.builder()
 
 ### B. 相关文档
 
-- [db-migrate-design.md](db-migrate-design.md) - 数据迁移功能设计
-- [Schema 结构设计](../../../reference/schema/README.md) - Schema 结构设计
-- [schema-extractor-architecture.md](schema-extractor-architecture.md) - Schema 抽取器架构
+- [Schema 结构设计](../../reference/schema/README.md) - Schema 结构设计
+
+> 注意: 历史文档中引用的部分设计文档（db-migrate-design.md、schema-extractor-architecture.md）已不再维护，请参考最新的架构设计文档。

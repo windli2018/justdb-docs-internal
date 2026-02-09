@@ -19,7 +19,7 @@
    - 创建独立的 justdb-mcp module
    - 编写相应的 MCP tools
 
----
+---------------------------
 
 ## 架构设计
 
@@ -62,7 +62,7 @@ justdb-mcp/
 ### 2. MCP Tools 定义
 
 | Tool Name | Description | Input Schema | 安全级别 |
-|-----------|-------------|--------------|----------|
+|-----------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
 | `read_schema` | 读取数据库 schema | `{path: string, format: string}` | SAFE |
 | `modify_schema` | 修改 schema | `{path: string, operations: []}` | MODERATE |
 | `convert_schema` | 转换 schema 格式 | `{input: string, output: string, format: string}` | SAFE |
@@ -117,13 +117,13 @@ mcp:
       password: ""
 ```
 
----
+---------------------------
 
 ## 实现步骤
 
 ### Step 1: 创建模块结构
 
-1. 在根 pom.xml 添加 `<module>justdb-mcp</module>`
+1. 在根 pom.xml 添加 `&lt;module&gt;justdb-mcp&lt;/module&gt;`
 2. 创建 justdb-mcp/pom.xml
 3. 创建子模块 pom.xml 文件
 
@@ -148,21 +148,21 @@ public class McpConfig {
     private String transport = "stdio";
     private SecurityConfig security = new SecurityConfig();
     private ToolsConfig tools = new ToolsConfig();
-    private List<DatabaseConfig> databases = new ArrayList<>();
+    private List&lt;DatabaseConfig&gt; databases = new ArrayList&lt;&gt;();
 
     @Data
     public static class SecurityConfig {
         private boolean allowRealDatabase = false;
-        private List<String> allowedPaths = new ArrayList<>();
-        private List<String> blockedPaths = Arrays.asList("/etc", "/sys", "/proc");
+        private List&lt;String&gt; allowedPaths = new ArrayList&lt;&gt;();
+        private List&lt;String&gt; blockedPaths = Arrays.asList("/etc", "/sys", "/proc");
     }
 
     @Data
     public static class ToolsConfig {
-        private List<String> enabled = Arrays.asList(
+        private List&lt;String&gt; enabled = Arrays.asList(
             "read_schema", "convert_schema", "export_schema", "validate_schema", "ai_history"
         );
-        private Map<String, String> requiresPermission = new HashMap<>();
+        private Map&lt;String, String&gt; requiresPermission = new HashMap&lt;&gt;();
     }
 
     @Data
@@ -180,15 +180,15 @@ public class McpConfig {
 
 **依赖配置** (pom.xml):
 ```xml
-<dependency>
-    <groupId>io.modelcontextprotocol.sdk</groupId>
-    <artifactId>mcp</artifactId>
-    <version>0.15.0</version>
-</dependency>
-<dependency>
-    <groupId>org.verydb.justdb</groupId>
-    <artifactId>justdb-core</artifactId>
-</dependency>
+&lt;dependency&gt;
+    &lt;groupId&gt;io.modelcontextprotocol.sdk&lt;/groupId&gt;
+    &lt;artifactId&gt;mcp&lt;/artifactId&gt;
+    &lt;version&gt;0.15.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.verydb.justdb&lt;/groupId&gt;
+    &lt;artifactId&gt;justdb-core&lt;/artifactId&gt;
+&lt;/dependency&gt;
 ```
 
 **文件**: `justdb-mcp-core/src/main/java/org/verydb/justdb/mcp/core/server/JustdbMcpServer.java`
@@ -235,7 +235,7 @@ public class JustdbMcpServer {
             .build();
 
         // Create tool specifications
-        List<McpServerFeatures.SyncToolSpecification> tools = createTools();
+        List&lt;McpServerFeatures.SyncToolSpecification&gt; tools = createTools();
 
         this.server = McpServer.sync(transportProvider)
             .serverInfo(config.getName(), config.getVersion())
@@ -246,8 +246,8 @@ public class JustdbMcpServer {
         return server;
     }
 
-    private List<McpServerFeatures.SyncToolSpecification> createTools() {
-        List<McpServerFeatures.SyncToolSpecification> tools = new ArrayList<>();
+    private List&lt;McpServerFeatures.SyncToolSpecification&gt; createTools() {
+        List&lt;McpServerFeatures.SyncToolSpecification&gt; tools = new ArrayList&lt;&gt;();
 
         // Only add enabled tools
         McpConfig.ToolsConfig toolsConfig = config.getTools();
@@ -360,7 +360,7 @@ public class SchemaReadTool {
                     }
 
                     // Load schema
-                    Loaded<Justdb> loaded = SchemaLoaderFactory.load(path, justdbManager);
+                    Loaded&lt;Justdb&gt; loaded = SchemaLoaderFactory.load(path, justdbManager);
                     Justdb schema = loaded.getData();
 
                     // Convert to JSON
@@ -433,7 +433,7 @@ import java.util.concurrent.Callable;
  * 启动 MCP 服务器的命令
  */
 @CommandLine.Command(name = "mcp", description = "Start JustDB MCP server")
-public class McpCommand extends BaseCommand implements Callable<Integer> {
+public class McpCommand extends BaseCommand implements Callable&lt;Integer&gt; {
 
     @Option(names = {"--config", "-c"}, description = "MCP config file")
     private String configFile;
@@ -534,13 +534,13 @@ public class McpCommand extends BaseCommand implements Callable<Integer> {
 
 ### Step 7: 更新根 pom.xml
 
-在 `/home/wind/workspace/justdb/pom.xml` 的 `<modules>` 中添加：
+在 `/home/wind/workspace/justdb/pom.xml` 的 `&lt;modules&gt;` 中添加：
 
 ```xml
-<module>justdb-mcp</module>
+&lt;module&gt;justdb-mcp&lt;/module&gt;
 ```
 
----
+---------------------------
 
 ## 关键文件列表
 
@@ -568,7 +568,7 @@ public class McpCommand extends BaseCommand implements Callable<Integer> {
 1. `/home/wind/workspace/justdb/pom.xml` - 添加模块引用
 2. `/home/wind/workspace/justdb/justdb-core/src/main/java/org/verydb/justdb/cli/JustDBCli.java` - 注册 McpCommand
 
----
+---------------------------
 
 ## 验证计划
 
@@ -599,7 +599,7 @@ echo '{"method": "tools/call", "params": {"name": "read_schema", "arguments": {"
 echo '{"method": "tools/call", "params": {"name": "convert_schema", "arguments": {"input": "schema.yaml", "format": "json"}}}' | justdb mcp
 ```
 
----
+---------------------------
 
 ## 配置示例
 
@@ -624,7 +624,7 @@ echo '{"method": "tools/call", "params": {"name": "convert_schema", "arguments":
 }
 ```
 
----
+---------------------------
 
 ## 风险与注意事项
 

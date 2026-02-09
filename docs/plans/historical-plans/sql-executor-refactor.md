@@ -13,7 +13,7 @@
 ### 1.2 存在问题
 
 | 问题 | 描述 | 影响 |
-|------|------|------|
+|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|
 | 单一职责违背 | 一个类承担查询、变更、DDL、表达式、元数据处理等职责 | 代码难以理解和维护 |
 | 修改风险高 | 修改一处可能影响多个功能模块 | 回归成本大 |
 | 测试困难 | 需要准备大量测试环境来测试单一功能 | 测试效率低 |
@@ -23,13 +23,13 @@
 ### 1.3 重构目标
 
 | 指标 | 当前 | 目标 |
-|------|------|------|
+|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|
 | 单文件最大行数 | 8252 | ~2500 |
 | 单一职责 | 否 | 是 |
 | 可测试性 | 低 | 高 |
 | 可维护性 | 低 | 高 |
 
----
+---------------------------
 
 ## 二、拆分方案
 
@@ -59,7 +59,7 @@ SqlExecutor (8252 行)
 **核心方法**：
 
 | 分类 | 方法名 | 原行号范围 |
-|------|--------|-----------|
+|------------------------------------------------------|--------------------------------------------------------|-----------------------------------------------------------------------------------|
 | UNION 查询 | executeUnionQuery, normalizeUnionColumnNames, combineUnionResults, intersectResults, exceptResults | 325-465 |
 | CTE/递归查询 | executeWithClauseQuery, extractMainQueryFromWith, parseCteDefinitions, splitCteDefinitions, executeRecursiveCte, executeMainQueryWithCte | 530-990 |
 | FROM 子查询 | executeFromSubquery | 505-527 |
@@ -88,34 +88,34 @@ public interface QueryProcessor {
     /**
      * Process UNION query
      */
-    List<Map<String, Object>> processUnion(
+    List&lt;Map&lt;String, Object&gt;&gt; processUnion(
         com.alibaba.druid.sql.ast.statement.SQLUnionQuery unionQuery
     ) throws SQLException;
 
     /**
      * Process WITH clause (CTE) query
      */
-    List<Map<String, Object>> processWithClause(String sql) throws SQLException;
+    List&lt;Map&lt;String, Object&gt;&gt; processWithClause(String sql) throws SQLException;
 
     /**
      * Process JOIN query
      */
-    List<Map<String, Object>> processJoin(
+    List&lt;Map&lt;String, Object&gt;&gt; processJoin(
         com.alibaba.druid.sql.ast.SQLJoinTableSource joinSource,
-        List<Map<String, Object>> leftRows
+        List&lt;Map&lt;String, Object&gt;&gt; leftRows
     ) throws SQLException;
 
     /**
      * Process FROM subquery
      */
-    List<Map<String, Object>> processFromSubquery(
+    List&lt;Map&lt;String, Object&gt;&gt; processFromSubquery(
         com.alibaba.druid.sql.ast.statement.SQLSelectQueryBlock queryBlock
     ) throws SQLException;
 
     /**
      * Process SELECT INTO
      */
-    List<Map<String, Object>> processSelectInto(String sql) throws SQLException;
+    List&lt;Map&lt;String, Object&gt;&gt; processSelectInto(String sql) throws SQLException;
 }
 ```
 
@@ -128,7 +128,7 @@ public interface QueryProcessor {
 **核心方法**：
 
 | 分类 | 方法名 | 原行号范围 |
-|------|--------|-----------|
+|------------------------------------------------------|--------------------------------------------------------|-----------------------------------------------------------------------------------|
 | INSERT | executeInsert, executeInsertMySql, executeInsertSelect, executeInsertOnDuplicateKeyUpdate, executeInsertSetFromString | 1786-2368 |
 | REPLACE | executeReplace, executeReplaceFromSql | 1995-2185 |
 | UPDATE | executeUpdate, executeUpdateMySql, executeUpdateWithJoin | 2610-2750 |
@@ -192,7 +192,7 @@ public interface MutationProcessor {
     /**
      * Process INSERT/UPDATE/DELETE with RETURNING clause
      */
-    List<Map<String, Object>> processMutationWithReturning(String sql) throws SQLException;
+    List&lt;Map&lt;String, Object&gt;&gt; processMutationWithReturning(String sql) throws SQLException;
 }
 ```
 
@@ -205,7 +205,7 @@ public interface MutationProcessor {
 **核心方法**：
 
 | 分类 | 方法名 | 原行号范围 |
-|------|--------|-----------|
+|------------------------------------------------------|--------------------------------------------------------|-----------------------------------------------------------------------------------|
 | TABLE | executeCreateTable, executeCreateTableAsSelect, executeDropTable, executeRenameTable | 2853-2993, 3866-3937 |
 | COLUMN | executeAlterTableAddColumn, executeAlterTableDropColumn, executeAlterTableRenameColumn, executeMySqlAlterTableChangeColumn, executeAlterTableAlterColumn, executeMySqlAlterTableAlterColumn, executeMySqlAlterTableModifyColumn, executeAlterTableReplaceColumn, executeRenameColumn | 3071-3325, 3905-4086 |
 | INDEX | executeCreateIndex, executeCreateIndexFromString, executeDropIndex, executeDropIndexFromString, executeAlterTableAddIndex, executeAlterTableDropIndex | 3940-3977, 3364-3403 |
@@ -289,7 +289,7 @@ public interface DdlProcessor {
 **核心方法**：
 
 | 分类 | 方法名 | 原行号范围 |
-|------|--------|-----------|
+|------------------------------------------------------|--------------------------------------------------------|-----------------------------------------------------------------------------------|
 | 表达式求值 | evaluateExpr, evaluateExprForRow, evaluateExprForInsert, evaluateExprForOnDuplicate, evaluateBinaryOpExpr, evaluateConditionExpr, evaluateFunction | 5253-6260 |
 | 类型转换 | evaluateCast, evaluateCastExpr, evalCast, toInt, toBoolean | 6006-6104, 5647-5663 |
 | CASE 表达式 | evaluateCaseExpr | 6102-6137 |
@@ -328,7 +328,7 @@ public interface ExpressionEngine {
      */
     Object evaluate(
         com.alibaba.druid.sql.ast.SQLExpr expr,
-        Map<String, Object> row
+        Map&lt;String, Object&gt; row
     ) throws SQLException;
 
     /**
@@ -341,7 +341,7 @@ public interface ExpressionEngine {
      */
     Object evaluateBinaryOp(
         com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr expr,
-        Map<String, Object> row
+        Map&lt;String, Object&gt; row
     ) throws SQLException;
 
     /**
@@ -349,12 +349,12 @@ public interface ExpressionEngine {
      */
     boolean evaluateCondition(
         com.alibaba.druid.sql.ast.SQLExpr conditionExpr,
-        Map<String, Object> row
+        Map&lt;String, Object&gt; row
     ) throws SQLException;
 
     /**
      * Compare two values
-     * @return negative if v1 < v2, 0 if equal, positive if v1 > v2
+     * @return negative if v1 &lt; v2, 0 if equal, positive if v1 &gt; v2
      */
     int compare(Object v1, Object v2);
 
@@ -378,7 +378,7 @@ public interface ExpressionEngine {
      */
     Object evaluateFunction(
         com.alibaba.druid.sql.ast.expr.SQLMethodInvokeExpr functionExpr,
-        Map<String, Object> row
+        Map&lt;String, Object&gt; row
     ) throws SQLException;
 }
 ```
@@ -392,7 +392,7 @@ public interface ExpressionEngine {
 **核心方法**：
 
 | 分类 | 方法名 | 原行号范围 |
-|------|--------|-----------|
+|------------------------------------------------------|--------------------------------------------------------|-----------------------------------------------------------------------------------|
 | 投影处理 | applyProjection, extractColumnNames, applyDistinct | 6350-6487, 4573-4849, 6289-6346 |
 | 聚合处理 | applyAggregateProjection, computeAggregateStreaming, applyGroupBy | 6936-7029, 6490-6644 |
 | 窗口函数 | applyWindowFunctionProjection, computeWindowFunction, evaluateLag, evaluateLead, evaluateFirstValue, evaluateLastValue, sortRows | 6647-6876, 6759-6923 |
@@ -421,47 +421,47 @@ public interface ResultSetProcessor {
     /**
      * Apply projection to rows
      */
-    List<Map<String, Object>> project(
-        List<Map<String, Object>> rows,
+    List&lt;Map&lt;String, Object&gt;&gt; project(
+        List&lt;Map&lt;String, Object&gt;&gt; rows,
         com.alibaba.druid.sql.ast.statement.SQLSelectQueryBlock queryBlock
     ) throws SQLException;
 
     /**
      * Apply aggregation to rows
      */
-    List<Map<String, Object>> aggregate(
-        List<Map<String, Object>> rows,
+    List&lt;Map&lt;String, Object&gt;&gt; aggregate(
+        List&lt;Map&lt;String, Object&gt;&gt; rows,
         com.alibaba.druid.sql.ast.statement.SQLSelectQueryBlock queryBlock
     ) throws SQLException;
 
     /**
      * Apply window functions to rows
      */
-    List<Map<String, Object>> applyWindowFunctions(
-        List<Map<String, Object>> rows,
+    List&lt;Map&lt;String, Object&gt;&gt; applyWindowFunctions(
+        List&lt;Map&lt;String, Object&gt;&gt; rows,
         com.alibaba.druid.sql.ast.statement.SQLSelectQueryBlock queryBlock
     ) throws SQLException;
 
     /**
      * Apply ORDER BY and LIMIT to rows
      */
-    List<Map<String, Object>> sortAndLimit(
-        List<Map<String, Object>> rows,
+    List&lt;Map&lt;String, Object&gt;&gt; sortAndLimit(
+        List&lt;Map&lt;String, Object&gt;&gt; rows,
         com.alibaba.druid.sql.ast.statement.SQLSelectQueryBlock queryBlock
     ) throws SQLException;
 
     /**
      * Apply DISTINCT to rows
      */
-    List<Map<String, Object>> distinct(
-        List<Map<String, Object>> rows,
+    List&lt;Map&lt;String, Object&gt;&gt; distinct(
+        List&lt;Map&lt;String, Object&gt;&gt; rows,
         com.alibaba.druid.sql.ast.statement.SQLSelectQueryBlock queryBlock
     ) throws SQLException;
 
     /**
      * Build table alias map from query block
      */
-    Map<String, String> buildTableAliasMap(
+    Map&lt;String, String&gt; buildTableAliasMap(
         com.alibaba.druid.sql.ast.statement.SQLSelectQueryBlock queryBlock
     );
 }
@@ -476,7 +476,7 @@ public interface ResultSetProcessor {
 **核心方法**：
 
 | 分类 | 方法名 | 原行号范围 |
-|------|--------|-----------|
+|------------------------------------------------------|--------------------------------------------------------|-----------------------------------------------------------------------------------|
 | SHOW 命令 | executeShowStatement, executeShowDatabases, executeShowTables, executeShowTableStatus, executeShowColumns, executeShowIndex, executeShowCreateTable | 7420-7951 |
 | EXPLAIN | executeExplain | 7269-7397 |
 | 系统变量 | executeSystemVariableQuery, getSystemVariableValue, hasSystemVariableReference, containsSystemVariable | 7562-7700 |
@@ -504,17 +504,17 @@ public interface MetadataProcessor {
     /**
      * Process SHOW statement
      */
-    List<Map<String, Object>> processShow(String sql) throws SQLException;
+    List&lt;Map&lt;String, Object&gt;&gt; processShow(String sql) throws SQLException;
 
     /**
      * Process EXPLAIN statement
      */
-    List<Map<String, Object>> processExplain(String sql) throws SQLException;
+    List&lt;Map&lt;String, Object&gt;&gt; processExplain(String sql) throws SQLException;
 
     /**
      * Process system variable query
      */
-    List<Map<String, Object>> processSystemVariableQuery(String sql) throws SQLException;
+    List&lt;Map&lt;String, Object&gt;&gt; processSystemVariableQuery(String sql) throws SQLException;
 
     /**
      * Process transaction command (BEGIN/COMMIT/ROLLBACK/SAVEPOINT)
@@ -528,7 +528,7 @@ public interface MetadataProcessor {
 }
 ```
 
----
+---------------------------
 
 ## 三、目录结构
 
@@ -631,7 +631,7 @@ public class SqlExecutor {
 }
 ```
 
----
+---------------------------
 
 ## 四、实施计划
 
@@ -731,7 +731,7 @@ public class SqlExecutor {
 - [ ] 提交代码
 - [ ] 更新文档
 
----
+---------------------------
 
 ## 五、技术方案
 
@@ -798,7 +798,7 @@ public class SqlExecutor implements SqlExecutorContext {
 }
 ```
 
----
+---------------------------
 
 ## 六、测试策略
 
@@ -850,14 +850,14 @@ public void testExpressionEngineEvaluate() {
 }
 ```
 
----
+---------------------------
 
 ## 七、风险评估
 
 ### 7.1 风险矩阵
 
 | 风险 | 概率 | 影响 | 缓解措施 |
-|------|------|------|----------|
+|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|----------------------------------------------------------------------------------|
 | 循环依赖 | 中 | 高 | 使用接口解耦，延迟初始化 |
 | 方法移动复杂 | 高 | 中 | 分阶段进行，每次只移动一个模块 |
 | 测试覆盖不足 | 中 | 高 | 迁移前补充测试用例 |
@@ -881,14 +881,14 @@ main (stable)
   └─ ...
 ```
 
----
+---------------------------
 
 ## 八、预期收益
 
 ### 8.1 量化指标
 
 | 指标 | 改进前 | 改进后 | 改进幅度 |
-|------|--------|--------|----------|
+|------------------------------------------------------|--------------------------------------------------------|--------------------------------------------------------|----------------------------------------------------------------------------------|
 | 单文件最大行数 | 8252 | ~2500 | -70% |
 | 单一类职责数量 | 6+ | 1 | -80% |
 | 方法可测试性 | 低 | 高 | +100% |
@@ -911,7 +911,7 @@ main (stable)
    - 并行开发可能性增加
    - 知识传递更容易
 
----
+---------------------------
 
 ## 九、后续优化
 
@@ -939,7 +939,7 @@ main (stable)
    - 简单查询的执行计划可缓存
    - 复杂查询可部分缓存
 
----
+---------------------------
 
 ## 十、总结
 

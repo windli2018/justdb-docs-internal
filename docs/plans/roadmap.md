@@ -1,8 +1,8 @@
----
+---------------------------
 title: 产品路线图
 icon: 🗺️
 description: JustDB 产品发展路线图，展示已完成、进行中和计划中的功能
----
+---------------------------
 
 # 产品路线图
 
@@ -109,12 +109,24 @@ timeline
 
 ### v1.3 - 功能增强 (预计 2025 Q3)
 
-#### 计划功能
+#### 核心功能
 - ⏳ CLI init 命令
 - ⏳ 自动发现 Schema 文件
-- ⏳ 性能优化
-- ⏳ 内存优化 (大型项目支持)
+- ⏳ 默认加载机制（justdb/justdb.*）
 - ⏳ Testcontainers 标准化
+
+#### 架构改进
+- ⏳ SchemaLoader 依赖注入（移除 getInstance）
+- ⏳ JustdbManager/PluginManager 实例统一
+- ⏳ Schema 内置 Plugin 支持
+- ⏳ 模板系统独立化
+- ⏳ 运行时引擎（justdb-runtime）
+
+#### 性能优化
+- ⏳ 内存优化（大型项目支持）
+- ⏳ 流式加载 Schema
+- ⏳ Hash 计算优化（忽略 remark）
+- ⏳ Data 条件 SQL 更改
 
 ## v2.0 计划中 📋
 
@@ -137,9 +149,19 @@ timeline
 #### 高级功能
 - ⏳ Raw SQL 支持 (类似 MyBatis)
 - ⏳ 版本兼容机制 (类似 Protobuf)
-- ⏳ 关联表数据维护方案
+- ⏳ 关联表数据维护方案（用户-角色关系）
 - ⏳ 报表分析功能
-- ⏳ 外部 ORM 集成 (MCP 配置)
+- ⏳ 外部 ORM 集成 (MCP 配置/Atlas provider)
+- ⏳ Import/Include/Ref-id 支持
+- ⏳ Schema 嵌套创建（类 Builder 模型）
+- ⏳ ER 图生成（justdb erd）
+
+#### Plugin 系统
+- ⏳ Adapter 集成 Driver 属性（版本号、Maven 坐标）
+- ⏳ 动态 Plugin 加载（Maven URL、文件 URL）
+- ⏳ 扩展下载支持（git、oss、minio、s3）
+- ⏳ Pre-init Schema 支持
+- ⏳ Script 插件扩展（text、list、json、xml、yaml、toml、properties）
 
 #### 导出工具
 - ⏳ Web 版导出工具
@@ -147,6 +169,12 @@ timeline
 - ⏳ 脚本版导出工具
 - ⏳ Excel 文件导出
 - ⏳ 一键导出 SQL
+
+#### 跨语言支持
+- ⏳ JavaScript/TypeScript 版本
+- ⏳ Node.js 工具
+- ⏳ 浏览器版工具
+- ⏳ 完全兼容 Java 版的 Plugin 和 Schema 系统
 
 ## 长期愿景 🔭
 
@@ -171,6 +199,9 @@ timeline
 - 🔌 模板库
 - 🔌 社区贡献的数据库适配器
 - 🔌 第三方工具集成
+- 🔌 官网（justdb.ai）
+- 🔌 Logo 设计
+- 🔌 多语言支持（中英双语）
 
 ### 企业级功能
 
@@ -221,9 +252,9 @@ timeline
 2. 参与讨论现有功能请求
 3. 投票影响优先级
 
----
+---------------------------
 
 **相关文档**:
 - [当前 TODO](./current-todos.md)
 - [历史计划](./historical-plans/)
-- [贡献指南](../development/contributing/README.md)
+- [贡献指南](/development/contributing/overview.md)

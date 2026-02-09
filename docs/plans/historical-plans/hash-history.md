@@ -58,13 +58,13 @@ long recordDeployment(Justdb schema, String deployedBy, Connection conn);
 // 查询Hash
 String getLatestSchemaHash(Connection conn);
 String getLatestSchemaHash(String projectName, Connection conn);
-Map<String, String> getLatestObjectHashes(Connection conn);
-Map<String, String> getLatestObjectHashes(String projectName, Connection conn);
-Map<String, String> getObjectHashes(long historyId, Connection conn);
+Map&lt;String, String&gt; getLatestObjectHashes(Connection conn);
+Map&lt;String, String&gt; getLatestObjectHashes(String projectName, Connection conn);
+Map&lt;String, String&gt; getObjectHashes(long historyId, Connection conn);
 
 // 历史记录
-List<SchemaHashHistoryRecord> getHistory(int limit, Connection conn);
-List<SchemaHashHistoryRecord> getHistory(String projectName, int limit, Connection conn);
+List&lt;SchemaHashHistoryRecord&gt; getHistory(int limit, Connection conn);
+List&lt;SchemaHashHistoryRecord&gt; getHistory(String projectName, int limit, Connection conn);
 SchemaHashHistoryRecord getLatestRecord(Connection conn);
 SchemaHashHistoryRecord getLatestRecord(String projectName, Connection conn);
 SchemaHashHistoryRecord getRecordById(long id, Connection conn);
@@ -75,7 +75,7 @@ ConsistencyReport checkConsistency(Justdb schema, Connection conn);
 
 // 对象级查询
 SchemaObjectHashRecord getObjectHash(long historyId, String objectType, String objectName, Connection conn);
-List<SchemaObjectHashRecord> getObjectHashesByType(String objectType, Connection conn);
+List&lt;SchemaObjectHashRecord&gt; getObjectHashesByType(String objectType, Connection conn);
 
 // 清理
 void clearHistory(Connection conn);

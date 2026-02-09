@@ -11,7 +11,7 @@
 - **上下文压缩**: 分层记忆（短期+长期向量检索）
 - **交互体验**: 混合模式（简单问题实时，复杂问题清单）
 
----
+---------------------------
 
 ## 二、现状分析
 
@@ -32,7 +32,7 @@
 - **AiSchemaHistoryManager**: 时间戳命名、淘汰式修剪算法、项目隔离设计
 - **AiService 接口**: 清晰的抽象层
 
----
+---------------------------
 
 ## 三、新架构设计
 
@@ -108,7 +108,7 @@ public class JustdbAgent {
     private final TokenManager tokenManager;
 
     public AiResponse processRequest(AiRequest request);
-    public List<ConversationMessage> getHistory();
+    public List&lt;ConversationMessage&gt; getHistory();
     public void reset();
 }
 ```
@@ -124,14 +124,14 @@ public class ConversationMemory {
 
     public void add(AiRequest request, AiResponse response);
     public void compress();  // 压缩旧消息到长期记忆
-    public List<ConversationMessage> searchRelevant(String query, int topK);
-    public List<ConversationMessage> getFullContext();
+    public List&lt;ConversationMessage&gt; searchRelevant(String query, int topK);
+    public List&lt;ConversationMessage&gt; getFullContext();
 }
 
 // ShortTermMemory - FIFO 队列
 public class ShortTermMemory {
     private final int capacity;  // 默认 20 条消息
-    private final LinkedList<ConversationMessage> messages;
+    private final LinkedList&lt;ConversationMessage&gt; messages;
 }
 
 // LongTermMemory - 向量检索
@@ -139,13 +139,13 @@ public class LongTermMemory {
     private final EmbeddingService embeddingService;
     private final VectorStore vectorStore;
 
-    public void store(List<Summary> summaries);
-    public List<ConversationMessage> semanticSearch(String query, int topK);
+    public void store(List&lt;Summary&gt; summaries);
+    public List&lt;ConversationMessage&gt; semanticSearch(String query, int topK);
 }
 
 // MemoryCompressor - 记忆压缩器
 public class MemoryCompressor {
-    public List<Summary> summarize(List<ConversationMessage> messages);
+    public List&lt;Summary&gt; summarize(List&lt;ConversationMessage&gt; messages);
 }
 ```
 
@@ -162,7 +162,7 @@ public class TokenManager {
 
 public class TokenCounter {
     public int count(AiRequest request);
-    public int count(List<ConversationMessage> messages);
+    public int count(List&lt;ConversationMessage&gt; messages);
 }
 ```
 
@@ -171,7 +171,7 @@ public class TokenCounter {
 ```java
 public interface AiProvider {
     AiResponse execute(AgentContext context);
-    String summarize(List<ConversationMessage> messages);  // 用于记忆压缩
+    String summarize(List&lt;ConversationMessage&gt; messages);  // 用于记忆压缩
     int getContextWindowSize();
 }
 
@@ -203,7 +203,7 @@ public class QueryTool implements Tool {
 }
 
 public class ToolRegistry {
-    private final Map<String, Tool> tools;
+    private final Map&lt;String, Tool&gt; tools;
     public String generateToolDescriptions();  // 用于 System Prompt
 }
 ```
@@ -270,20 +270,20 @@ public class AiInteractiveSession {
 
 public class ConversationDisplay {
     public void showThinking();
-    public void showToolCalls(List<ToolCall> calls);
+    public void showToolCalls(List&lt;ToolCall&gt; calls);
     public void showResponse(AiResponse response);
-    public void showInterviewQuestions(List<String> questions);
-    public void showHistory(List<ConversationMessage> history);
+    public void showInterviewQuestions(List&lt;String&gt; questions);
+    public void showHistory(List&lt;ConversationMessage&gt; history);
 }
 ```
 
----
+---------------------------
 
 ## 四、Token 管理策略
 
 ### 配置参数
 | 参数 | 默认值 | 说明 |
-|------|--------|------|
+|------------------------------------------------------|--------------------------------------------------------|------------------------------------------------------|
 | maxContextTokens | 4000 | 最大上下文 Token 数 |
 | compressionThreshold | 0.8 | 触发压缩的阈值（80%） |
 | shortTermCapacity | 20 | 短期记忆容量（消息数） |
@@ -314,7 +314,7 @@ public class ConversationDisplay {
 总计 ~3200 tokens（安全余量 800 tokens）
 ```
 
----
+---------------------------
 
 ## 五、实现步骤
 
@@ -352,7 +352,7 @@ public class ConversationDisplay {
 1. 更新 API 文档、使用指南
 2. 迁移现有代码、更新配置文件
 
----
+---------------------------
 
 ## 六、关键文件清单
 
@@ -397,7 +397,7 @@ justdb-cli/src/main/java/org/verydb/justdb/cli/
 └── commands/AiCommand.java (简化)
 ```
 
----
+---------------------------
 
 ## 七、验证计划
 
@@ -420,7 +420,7 @@ justdb-cli/src/main/java/org/verydb/justdb/cli/
 5. 验证 Schema 历史保存和恢复
 6. 验证上下文压缩触发
 
----
+---------------------------
 
 ## 八、参考资料
 
