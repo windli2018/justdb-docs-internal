@@ -111,12 +111,12 @@ export const enNavbar = navbar([
     children: [
       {
         text: "GitHub",
-        link: "https://github.com/verydb/justdb",
+        link: "https://github.com/justdb/justdb",
         icon: "github",
       },
       {
         text: "Gitee",
-        link: "https://gitee.com/verydb/justdb",
+        link: "https://gitee.com/justdb/justdb",
         icon: "gitee",
       },
     ],

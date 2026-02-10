@@ -137,9 +137,9 @@ JustDB 基于约定俗成自动推断 schema 配置，减少用户重复输入�
 
 | 类 | 路径 | 说明 |
 |---|------|------|
-| `ConventionInferrer` | `org.verydb.justdb.util.ConventionInferrer` | 约定推断处理器 |
-| `ConventionInferenceResult` | `org.verydb.justdb.util.ConventionInferenceResult` | 推断结果类 |
-| `SchemaLoader` | `org.verydb.justdb.util.SchemaLoader` | Schema 加载器（集成推断） |
+| `ConventionInferrer` | `ai.justdb.justdb.util.ConventionInferrer` | 约定推断处理器 |
+| `ConventionInferenceResult` | `ai.justdb.justdb.util.ConventionInferenceResult` | 推断结果类 |
+| `SchemaLoader` | `ai.justdb.justdb.util.SchemaLoader` | Schema 加载器（集成推断） |
 
 ### 日志示例
 

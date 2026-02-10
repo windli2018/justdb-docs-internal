@@ -12,7 +12,7 @@ Complete reference for the JustDB command-line interface.
 
 ```bash
 # Download
-wget https://github.com/verydb/justdb/releases/download/v1.0.0/justdb-1.0.0-linux.tar.gz
+wget https://github.com/justdb/justdb/releases/download/v1.0.0/justdb-1.0.0-linux.tar.gz
 tar -xzf justdb-1.0.0-linux.tar.gz
 
 # Add to PATH

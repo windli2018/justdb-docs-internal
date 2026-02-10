@@ -408,8 +408,8 @@ JustDB supports JSON5 extended syntax:
 ### Java
 
 ```java
-import org.verydb.justdb.FormatFactory;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.FormatFactory;
+import ai.justdb.justdb.schema.Justdb;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 // Read JSON

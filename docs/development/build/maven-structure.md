@@ -69,11 +69,11 @@ justdb/
 - 迁移执行引擎
 
 **关键组件**:
-- `org.verydb.justdb.schema.*` - Schema 模型
-- `org.verydb.justdb.generator.*` - SQL 生成
-- `org.verydb.justdb.templates.*` - 模板引擎
-- `org.verydb.justdb.plugin.*` - 插件系统
-- `org.verydb.justdb.migration.*` - 迁移管理
+- `ai.justdb.justdb.schema.*` - Schema 模型
+- `ai.justdb.justdb.generator.*` - SQL 生成
+- `ai.justdb.justdb.templates.*` - 模板引擎
+- `ai.justdb.justdb.plugin.*` - 插件系统
+- `ai.justdb.justdb.migration.*` - 迁移管理
 
 **依赖**:
 - `justdb-api` - 公共 API

@@ -253,9 +253,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 ### Generate Entities in Code
 
 ```java
-import org.verydb.justdb.orm.OrmIntegration;
-import org.verydb.justdb.schema.Justdb;
-import org.verydb.justdb.SchemaLoader;
+import ai.justdb.justdb.orm.OrmIntegration;
+import ai.justdb.justdb.schema.Justdb;
+import ai.justdb.justdb.SchemaLoader;
 
 // Load schema
 Justdb schema = SchemaLoader.loadFromFile("schema.xml");

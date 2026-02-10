@@ -62,7 +62,7 @@ Trigger is a database object that automatically executes in response to certain 
 ### XML Format
 
 ```xml
-<Justdb xmlns="http://www.verydb.org/schema">
+<Justdb xmlns="http://www.justdb.ai/schema">
     <!-- Insert trigger -->
     <Trigger name="trg_users_insert_audit"
              tableName="users"

@@ -40,9 +40,9 @@ tag:
 
 | 来源 | 说明 |
 |------|------|
-| [GitHub Issues](https://github.com/verydb/justdb/issues) | Bug 和功能请求 |
+| [GitHub Issues](https://github.com/justdb/justdb/issues) | Bug 和功能请求 |
 | `good first issue` 标签 | 适合新手的任务 |
-| [`help wanted`](https://github.com/verydb/justdb/labels/help%20wanted) 标签 | 需要帮助的任务 |
+| [`help wanted`](https://github.com/justdb/justdb/labels/help%20wanted) 标签 | 需要帮助的任务 |
 | [路线图](../../plans/roadmap.md) | 计划中的功能 |
 
 ### 2. 环境准备
@@ -55,7 +55,7 @@ git clone https://github.com/YOUR_USERNAME/justdb.git
 cd justdb
 
 # 添加上游远程仓库
-git remote add upstream https://github.com/verydb/justdb.git
+git remote add upstream https://github.com/justdb/justdb.git
 
 # 创建功能分支
 git checkout -b feature/your-feature-name

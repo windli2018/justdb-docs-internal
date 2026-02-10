@@ -125,4 +125,4 @@ Schema migration commands and strategies.
 - [Schema Definition](../../reference/schema/)
 - [CLI Commands](../../reference/cli/commands.md)
 - [Template System](../../design/template-system/)
-- [Examples](https://github.com/verydb/justdb/tree/main/examples)
+- [Examples](https://github.com/justdb/justdb/tree/main/examples)

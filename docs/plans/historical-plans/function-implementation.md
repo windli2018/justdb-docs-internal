@@ -486,7 +486,7 @@
 ## File Structure
 
 ```
-justdb-core/src/main/java/org/verydb/justdb/function/
+justdb-core/src/main/java/ai.justdb/justdb/function/
 ├── FunctionRegistry.java              # Core registry
 ├── FunctionSignature.java             # Function metadata
 ├── FunctionInvoker.java               # Invocation interface
@@ -511,7 +511,7 @@ justdb-core/src/main/java/org/verydb/justdb/function/
 
 ### Test Files
 ```
-justdb-core/src/test/java/org/verydb/justdb/function/
+justdb-core/src/test/java/ai.justdb/justdb/function/
 ├── FunctionRegistryTest.java
 ├── StringFunctionsTest.java
 ├── MathFunctionsTest.java

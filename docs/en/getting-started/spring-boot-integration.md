@@ -22,7 +22,7 @@ JustDB provides an out-of-the-box Spring Boot Starter, making database managemen
 
 ```xml
 <dependency>
-    <groupId>org.verydb.justdb</groupId>
+    <groupId>ai.justdb.justdb</groupId>
     <artifactId>justdb-spring-boot-starter</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -502,7 +502,7 @@ View logs:
 ```yaml
 logging:
   level:
-    org.verydb.justdb: DEBUG
+    ai.justdb.justdb: DEBUG
 ```
 
 ### Connection Issues

@@ -13,7 +13,7 @@
 
 ### 2.1 SchemaBackupProvider 接口
 
-**文件**: `org/verydb/justdb/backup/SchemaBackupProvider.java`
+**文件**: `ai.justdb/justdb/backup/SchemaBackupProvider.java`
 
 ```java
 public interface SchemaBackupProvider {
@@ -70,7 +70,7 @@ public interface SchemaBackupProvider {
 
 ### 2.2 BackupConfig 配置类
 
-**文件**: `org/verydb/justdb/cli/config/BackupConfig.java`
+**文件**: `ai.justdb/justdb/cli/config/BackupConfig.java`
 
 ```java
 @Data
@@ -95,7 +95,7 @@ public class BackupConfig extends UnknownValues {
 
 ### 2.3 BackupResult 结果类
 
-**文件**: `org/verydb/justdb/backup/BackupResult.java`
+**文件**: `ai.justdb/justdb/backup/BackupResult.java`
 
 ```java
 @Data
@@ -111,7 +111,7 @@ public class BackupResult {
 
 ### 2.4 BackupMetadata 元数据类
 
-**文件**: `org/verydb/justdb/backup/BackupMetadata.java`
+**文件**: `ai.justdb/justdb/backup/BackupMetadata.java`
 
 ```java
 @Data
@@ -128,7 +128,7 @@ public class BackupMetadata {
 
 ### 2.5 BackupEncryptionService 加密服务
 
-**文件**: `org/verydb/justdb/backup/BackupEncryptionService.java`
+**文件**: `ai.justdb/justdb/backup/BackupEncryptionService.java`
 
 ```java
 public interface BackupEncryptionService {
@@ -164,7 +164,7 @@ public interface BackupEncryptionService {
 
 ### 2.6 AesBackupEncryptionService 实现
 
-**文件**: `org/verydb/justdb/backup/crypto/AesBackupEncryptionService.java`
+**文件**: `ai.justdb/justdb/backup/crypto/AesBackupEncryptionService.java`
 
 使用 AES/GCM/NoPadding 算法进行加密：
 - 256位密钥（从用户提供的密钥派生）
@@ -180,7 +180,7 @@ public interface BackupEncryptionService {
 
 ### 2.8 FileSystemSchemaBackupProvider 实现
 
-**文件**: `org/verydb/justdb/backup/filesystem/FileSystemSchemaBackupProvider.java`
+**文件**: `ai.justdb/justdb/backup/filesystem/FileSystemSchemaBackupProvider.java`
 
 **备份路径结构**:
 ```
@@ -198,7 +198,7 @@ public interface BackupEncryptionService {
 
 ### 2.9 SchemaBackupManager 管理器
 
-**文件**: `org/verydb/justdb/backup/SchemaBackupManager.java`
+**文件**: `ai.justdb/justdb/backup/SchemaBackupManager.java`
 
 ```java
 public class SchemaBackupManager {
@@ -226,7 +226,7 @@ public class SchemaBackupManager {
 
 ### 3.1 JustdbConfiguration 集成
 
-**修改文件**: `org/verydb/justdb/cli/JustdbConfiguration.java`
+**修改文件**: `ai.justdb/justdb/cli/JustdbConfiguration.java`
 
 ```java
 // Add field
@@ -243,7 +243,7 @@ public void addBackupConfigsFromCommandLine(List&lt;String&gt; backupConfigs);
 
 ### 3.2 MigrateCommand 集成
 
-**修改文件**: `org/verydb/justdb/cli/commands/MigrateCommand.java`
+**修改文件**: `ai.justdb/justdb/cli/commands/MigrateCommand.java`
 
 在 `deploy()` 之前添加备份逻辑：
 
@@ -283,7 +283,7 @@ private String backupKey;
 
 ### 3.3 SchemaDeployer 集成 (可选)
 
-**修改文件**: `org/verydb/justdb/SchemaDeployer.java`
+**修改文件**: `ai.justdb/justdb/SchemaDeployer.java`
 
 ```java
 private SchemaBackupManager backupManager;
@@ -302,10 +302,10 @@ private void backupBeforeDeploy(Justdb schema) {
 
 ## 4. ServiceLoader 配置
 
-**文件**: `justdb-core/src/main/resources/META-INF/services/org.verydb.justdb.backup.SchemaBackupProvider`
+**文件**: `justdb-core/src/main/resources/META-INF/services/ai.justdb.justdb.backup.SchemaBackupProvider`
 
 ```
-org.verydb.justdb.backup.filesystem.FileSystemSchemaBackupProvider
+ai.justdb.justdb.backup.filesystem.FileSystemSchemaBackupProvider
 ```
 
 ## 5. 配置文件支持
@@ -344,24 +344,24 @@ backupProviders:
 
 | 文件路径 | 说明 |
 |----------|------|
-| `justdb-core/src/main/java/org/verydb/justdb/backup/SchemaBackupProvider.java` | Provider 接口 |
-| `justdb-core/src/main/java/org/verydb/justdb/backup/BackupResult.java` | 备份结果类 |
-| `justdb-core/src/main/java/org/verydb/justdb/backup/BackupMetadata.java` | 备份元数据类 |
-| `justdb-core/src/main/java/org/verydb/justdb/backup/BackupException.java` | 异常类 |
-| `justdb-core/src/main/java/org/verydb/justdb/backup/SchemaBackupManager.java` | 管理器 |
-| `justdb-core/src/main/java/org/verydb/justdb/backup/BackupEncryptionService.java` | 加密服务接口 |
-| `justdb-core/src/main/java/org/verydb/justdb/backup/crypto/AesBackupEncryptionService.java` | AES加密实现 |
-| `justdb-core/src/main/java/org/verydb/justdb/backup/crypto/EncryptionUtils.java` | 加密工具类 |
-| `justdb-core/src/main/java/org/verydb/justdb/backup/filesystem/FileSystemSchemaBackupProvider.java` | 文件系统实现 |
-| `justdb-core/src/main/resources/META-INF/services/org.verydb.justdb.backup.SchemaBackupProvider` | ServiceLoader 配置 |
-| `justdb-core/src/main/java/org/verydb/justdb/cli/config/BackupConfig.java` | 配置类 |
+| `justdb-core/src/main/java/ai.justdb/justdb/backup/SchemaBackupProvider.java` | Provider 接口 |
+| `justdb-core/src/main/java/ai.justdb/justdb/backup/BackupResult.java` | 备份结果类 |
+| `justdb-core/src/main/java/ai.justdb/justdb/backup/BackupMetadata.java` | 备份元数据类 |
+| `justdb-core/src/main/java/ai.justdb/justdb/backup/BackupException.java` | 异常类 |
+| `justdb-core/src/main/java/ai.justdb/justdb/backup/SchemaBackupManager.java` | 管理器 |
+| `justdb-core/src/main/java/ai.justdb/justdb/backup/BackupEncryptionService.java` | 加密服务接口 |
+| `justdb-core/src/main/java/ai.justdb/justdb/backup/crypto/AesBackupEncryptionService.java` | AES加密实现 |
+| `justdb-core/src/main/java/ai.justdb/justdb/backup/crypto/EncryptionUtils.java` | 加密工具类 |
+| `justdb-core/src/main/java/ai.justdb/justdb/backup/filesystem/FileSystemSchemaBackupProvider.java` | 文件系统实现 |
+| `justdb-core/src/main/resources/META-INF/services/ai.justdb.justdb.backup.SchemaBackupProvider` | ServiceLoader 配置 |
+| `justdb-core/src/main/java/ai.justdb/justdb/cli/config/BackupConfig.java` | 配置类 |
 
 ### 6.2 修改文件
 
 | 文件路径 | 修改内容 |
 |----------|----------|
-| `justdb-core/src/main/java/org/verydb/justdb/cli/JustdbConfiguration.java` | 添加 backupProviders 字段和合并逻辑 |
-| `justdb-core/src/main/java/org/verydb/justdb/cli/commands/MigrateCommand.java` | 添加备份命令行选项和备份逻辑 |
+| `justdb-core/src/main/java/ai.justdb/justdb/cli/JustdbConfiguration.java` | 添加 backupProviders 字段和合并逻辑 |
+| `justdb-core/src/main/java/ai.justdb/justdb/cli/commands/MigrateCommand.java` | 添加备份命令行选项和备份逻辑 |
 
 ## 7. 实现步骤
 

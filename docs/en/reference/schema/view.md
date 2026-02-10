@@ -238,7 +238,7 @@ View:
 ### XML Format
 
 ```xml
-<Justdb xmlns="http://www.verydb.org/schema">
+<Justdb xmlns="http://www.justdb.ai/schema">
     <View name="user_orders" comment="User order view">
         <query><![CDATA[
             SELECT u.id, u.username, COUNT(o.id) as order_count

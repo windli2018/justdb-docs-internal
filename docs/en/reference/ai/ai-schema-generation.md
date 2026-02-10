@@ -14,9 +14,9 @@ JustDB AI can automatically generate complete database Schema from business requ
 ### Basic Usage
 
 ```java
-import org.verydb.justdb.ai.AiSchemaManager;
-import org.verydb.justdb.cli.config.AiConfig;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.ai.AiSchemaManager;
+import ai.justdb.justdb.cli.config.AiConfig;
+import ai.justdb.justdb.schema.Justdb;
 
 // Create AI Schema manager
 AiSchemaManager aiManager = new AiSchemaManager();
@@ -234,11 +234,11 @@ Justdb schema = aiManager.processNaturalLanguageRequest(description, null);
 ### Complete Example: Blog System
 
 ```java
-import org.verydb.justdb.ai.AiSchemaManager;
-import org.verydb.justdb.cli.config.AiConfig;
-import org.verydb.justdb.schema.Justdb;
-import org.verydb.justdb.schema.Table;
-import org.verydb.justdb.schema.Column;
+import ai.justdb.justdb.ai.AiSchemaManager;
+import ai.justdb.justdb.cli.config.AiConfig;
+import ai.justdb.justdb.schema.Justdb;
+import ai.justdb.justdb.schema.Table;
+import ai.justdb.justdb.schema.Column;
 
 public class BlogSchemaGenerator {
 
@@ -307,7 +307,7 @@ public class BlogSchemaGenerator {
         }
 
         // Use SchemaAnalyzer for analysis
-        String analysis = org.verydb.justdb.ai.SchemaAnalyzer.analyzeSchema(blogSchema);
+        String analysis = ai.justdb.justdb.ai.SchemaAnalyzer.analyzeSchema(blogSchema);
         System.out.println("\n=== Schema Analysis ===");
         System.out.println(analysis);
     }
@@ -360,7 +360,7 @@ Justdb ecommerceSchema = aiManager.processNaturalLanguageRequest(
 ### Using SchemaAnalyzer
 
 ```java
-import org.verydb.justdb.ai.SchemaAnalyzer;
+import ai.justdb.justdb.ai.SchemaAnalyzer;
 
 // Analyze Schema
 String analysis = SchemaAnalyzer.analyzeSchema(schema);

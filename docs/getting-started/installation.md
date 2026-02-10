@@ -61,7 +61,7 @@ mvn -v
 
 ```xml
 <dependency>
-    <groupId>org.verydb.justdb</groupId>
+    <groupId>ai.justdb.justdb</groupId>
     <artifactId>justdb-core</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -71,7 +71,7 @@ mvn -v
 
 ```xml
 <dependency>
-    <groupId>org.verydb.justdb</groupId>
+    <groupId>ai.justdb.justdb</groupId>
     <artifactId>justdb-spring-boot-starter</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -81,7 +81,7 @@ mvn -v
 
 ```xml
 <dependency>
-    <groupId>org.verydb.justdb</groupId>
+    <groupId>ai.justdb.justdb</groupId>
     <artifactId>justdb-cli</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -91,7 +91,7 @@ mvn -v
 
 ```xml
 <dependency>
-    <groupId>org.verydb.justdb</groupId>
+    <groupId>ai.justdb.justdb</groupId>
     <artifactId>justdb-ai</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -101,7 +101,7 @@ mvn -v
 
 ```xml
 <dependency>
-    <groupId>org.verydb.justdb</groupId>
+    <groupId>ai.justdb.justdb</groupId>
     <artifactId>justdb-excel</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -115,7 +115,7 @@ mvn -v
 
 ```bash
 # 下载
-wget https://github.com/verydb/justdb/releases/download/v1.0.0/justdb-1.0.0-linux.tar.gz
+wget https://github.com/justdb/justdb/releases/download/v1.0.0/justdb-1.0.0-linux.tar.gz
 
 # 解压
 tar -xzf justdb-1.0.0-linux.tar.gz
@@ -143,7 +143,7 @@ justdb --version
 
 ```bash
 # 克隆仓库
-git clone https://github.com/verydb/justdb.git
+git clone https://github.com/justdb/justdb.git
 cd justdb
 
 # 构建全部模块
@@ -165,16 +165,16 @@ justdb-cli/target/justdb-cli-1.0.0.jar
 
 ```bash
 # 拉取镜像
-docker pull verydb/justdb:1.0.0
+docker pull justdb/justdb:1.0.0
 
 # 运行容器
-docker run -v $(pwd)/schemas:/schemas verydb/justdb:1.0.0 migrate
+docker run -v $(pwd)/schemas:/schemas justdb/justdb:1.0.0 migrate
 
 # 使用 Docker Compose
 version: '3'
 services:
   justdb:
-    image: verydb/justdb:1.0.0
+    image: justdb/justdb:1.0.0
     volumes:
       - ./schemas:/schemas
       - ./config:/config
@@ -368,7 +368,7 @@ JustDB 会自动下载支持的数据库驱动，也可以手动配置：
 2. 清理本地仓库缓存：
 
 ```bash
-rm -rf ~/.m2/repository/org/verydb
+rm -rf ~/.m2/repository/ai.justdb
 mvn clean install
 ```
 

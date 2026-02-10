@@ -383,6 +383,6 @@ Justdb (根容器)
 
 ## 相关资源
 
-- **源代码**: https://github.com/verydb/justdb
+- **源代码**: https://github.com/justdb/justdb
 - **文档**: docs/ 目录
 - **问题反馈**: GitHub Issues

@@ -373,7 +373,7 @@ justdb db2schema \
 如果你的 Atlas provider 可以输出 JSON/YAML 格式，可以配置自定义导入器：
 
 ```java
-import org.verydb.justdb.orm.importer.external.*;
+import ai.justdb.justdb.orm.importer.external.*;
 
 SchemaImporter importer = ExternalProgramImporter.builder()
     .id("atlas-custom")

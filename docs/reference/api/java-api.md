@@ -22,7 +22,7 @@ JustDB 提供了一套完整的 Java API，用于定义、加载、生成和部�
 
 `Justdb` 是 Schema 定义的根元素，包含所有数据库对象。
 
-**包路径**: `org.verydb.justdb.schema.Justdb`
+**包路径**: `ai.justdb.justdb.schema.Justdb`
 
 **核心属性**:
 
@@ -40,9 +40,9 @@ JustDB 提供了一套完整的 Java API，用于定义、加载、生成和部�
 **代码示例**:
 
 ```java
-import org.verydb.justdb.schema.Justdb;
-import org.verydb.justdb.schema.Table;
-import org.verydb.justdb.schema.Column;
+import ai.justdb.justdb.schema.Justdb;
+import ai.justdb.justdb.schema.Table;
+import ai.justdb.justdb.schema.Column;
 import java.util.Arrays;
 
 // 创建 Schema
@@ -61,7 +61,7 @@ justdb.setTables(Arrays.asList(usersTable));
 
 `Table` 表示数据库表，继承自 `QueryAble`，支持列、索引、约束等子元素。
 
-**包路径**: `org.verydb.justdb.schema.Table`
+**包路径**: `ai.justdb.justdb.schema.Table`
 
 **核心属性**:
 
@@ -108,7 +108,7 @@ table.setDataFilterCondition("status = 'active'");
 
 `Column` 表示表中的列，支持所有标准数据类型和约束。
 
-**包路径**: `org.verydb.justdb.schema.Column`
+**包路径**: `ai.justdb.justdb.schema.Column`
 
 **核心属性**:
 
@@ -165,7 +165,7 @@ emailColumn.setComment("邮箱地址");
 
 `Index` 表示表索引。
 
-**包路径**: `org.verydb.justdb.schema.Index`
+**包路径**: `ai.justdb.justdb.schema.Index`
 
 **核心属性**:
 
@@ -200,7 +200,7 @@ compositeIndex.setColumns(Arrays.asList("email", "status"));
 
 `Constraint` 表示表约束，包括主键、外键、唯一约束、检查约束等。
 
-**包路径**: `org.verydb.justdb.schema.Constraint`
+**包路径**: `ai.justdb.justdb.schema.Constraint`
 
 **核心属性**:
 
@@ -253,7 +253,7 @@ check.setCheckExpression("age >= 18");
 
 `Sequence` 表示数据库序列。
 
-**包路径**: `org.verydb.justdb.schema.Sequence`
+**包路径**: `ai.justdb.justdb.schema.Sequence`
 
 **核心属性**:
 
@@ -288,7 +288,7 @@ sequence.setCycle(false);
 
 工厂类，用于从各种来源加载 Schema。
 
-**包路径**: `org.verydb.justdb.util.schema.SchemaLoaderFactory`
+**包路径**: `ai.justdb.justdb.util.schema.SchemaLoaderFactory`
 
 **支持的位置协议**:
 
@@ -329,7 +329,7 @@ List<Loaded&gt;<Justdb>> results = SchemaLoaderFactory.loadAll("./schemas", null
 
 封装 Schema 加载结果。
 
-**包路径**: `org.verydb.justdb.cli.Loaded`
+**包路径**: `ai.justdb.justdb.cli.Loaded`
 
 **方法**:
 
@@ -346,7 +346,7 @@ public Exception getError()       // 获取错误信息
 
 SQL 生成器，根据 Schema 生成数据库特定的 SQL。
 
-**包路径**: `org.verydb.justdb.generator.DBGenerator`
+**包路径**: `ai.justdb.justdb.generator.DBGenerator`
 
 **构造方法**:
 
@@ -408,9 +408,9 @@ String addColumnSql = generator.generateAddColumn(table, column);
 ### 完整 Schema 定义
 
 ```java
-import org.verydb.justdb.schema.*;
-import org.verydb.justdb.JustdbManager;
-import org.verydb.justdb.generator.DBGenerator;
+import ai.justdb.justdb.schema.*;
+import ai.justdb.justdb.JustdbManager;
+import ai.justdb.justdb.generator.DBGenerator;
 import java.util.Arrays;
 
 public class SchemaExample {
@@ -535,7 +535,7 @@ public class SchemaExample {
 ### 动态 Schema 构建
 
 ```java
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.schema.*;
 import java.util.*;
 
 public class DynamicSchemaBuilder {

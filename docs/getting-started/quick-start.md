@@ -33,7 +33,7 @@ tag:
 
 ```xml
 <dependency>
-    <groupId>org.verydb.justdb</groupId>
+    <groupId>ai.justdb.justdb</groupId>
     <artifactId>justdb-core</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -41,9 +41,9 @@ tag:
 
 ```java
 // QuickStart.java
-import org.verydb.justdb.FormatFactory;
-import org.verydb.justdb.SchemaDeployer;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.FormatFactory;
+import ai.justdb.justdb.SchemaDeployer;
+import ai.justdb.justdb.schema.Justdb;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -68,7 +68,7 @@ public class QuickStart {
 
 ```bash
 # 下载并安装 JustDB CLI
-wget https://github.com/verydb/justdb/releases/download/v1.0.0/justdb-1.0.0-linux.tar.gz
+wget https://github.com/justdb/justdb/releases/download/v1.0.0/justdb-1.0.0-linux.tar.gz
 tar -xzf justdb-1.0.0-linux.tar.gz
 export PATH=$PATH:$PWD/bin
 
@@ -80,7 +80,7 @@ justdb --version
 
 ```xml
 <dependency>
-    <groupId>org.verydb.justdb</groupId>
+    <groupId>ai.justdb.justdb</groupId>
     <artifactId>justdb-spring-boot-starter</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -527,6 +527,6 @@ justdb migrate --help
 
 ## 获取帮助
 
-- **文档**: [https://verydb.github.io/justdb](https://verydb.github.io/justdb)
-- **GitHub**: [https://github.com/verydb/justdb](https://github.com/verydb/justdb)
-- **问题反馈**: [GitHub Issues](https://github.com/verydb/justdb/issues)
+- **文档**: [https://justdb.github.io/justdb](https://justdb.github.io/justdb)
+- **GitHub**: [https://github.com/justdb/justdb](https://github.com/justdb/justdb)
+- **问题反馈**: [GitHub Issues](https://github.com/justdb/justdb/issues)

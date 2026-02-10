@@ -18,9 +18,9 @@
 - 创建测试验证Hash计算正确性
 
 **文件**：
-- `justdb-core/src/main/java/org/verydb/justdb/hash/SchemaHashCalculator.java`
-- `justdb-core/src/main/java/org/verydb/justdb/hash/NormalizedJsonSchemaHashCalculator.java`
-- `justdb-core/src/test/java/org/verydb/justdb/hash/SchemaHashCalculatorTest.java`
+- `justdb-core/src/main/java/ai.justdb/justdb/hash/SchemaHashCalculator.java`
+- `justdb-core/src/main/java/ai.justdb/justdb/hash/NormalizedJsonSchemaHashCalculator.java`
+- `justdb-core/src/test/java/ai.justdb/justdb/hash/SchemaHashCalculatorTest.java`
 
 ### 阶段二：Hash History实体类
 
@@ -30,9 +30,9 @@
 - 创建变更类型枚举
 
 **文件**：
-- `justdb-core/src/main/java/org/verydb/justdb/hash/SchemaHashHistoryRecord.java`
-- `justdb-core/src/main/java/org/verydb/justdb/hash/SchemaObjectHashRecord.java`
-- `justdb-core/src/main/java/org/verydb/justdb/hash/HashChangeType.java`
+- `justdb-core/src/main/java/ai.justdb/justdb/hash/SchemaHashHistoryRecord.java`
+- `justdb-core/src/main/java/ai.justdb/justdb/hash/SchemaObjectHashRecord.java`
+- `justdb-core/src/main/java/ai.justdb/justdb/hash/HashChangeType.java`
 
 ### 阶段三：Repository接口和实现
 
@@ -43,8 +43,8 @@
 - 实现所有CRUD方法
 
 **文件**：
-- `justdb-core/src/main/java/org/verydb/justdb/hash/SchemaHashHistoryRepository.java`
-- `justdb-core/src/main/java/org/verydb/justdb/hash/DatabaseSchemaHashHistoryRepository.java`
+- `justdb-core/src/main/java/ai.justdb/justdb/hash/SchemaHashHistoryRepository.java`
+- `justdb-core/src/main/java/ai.justdb/justdb/hash/DatabaseSchemaHashHistoryRepository.java`
 
 **Repository方法列表**：
 ```java
@@ -91,8 +91,8 @@ void deleteOldRecords(int keepCount, Connection conn);
 - 生成部署计划
 
 **文件**：
-- `justdb-core/src/main/java/org/verydb/justdb/hash/DeploymentValidator.java`
-- `justdb-core/src/main/java/org/verydb/justdb/hash/DeploymentPlan.java`
+- `justdb-core/src/main/java/ai.justdb/justdb/hash/DeploymentValidator.java`
+- `justdb-core/src/main/java/ai.justdb/justdb/hash/DeploymentPlan.java`
 
 ### 阶段五：集成SchemaDeployer
 
@@ -101,7 +101,7 @@ void deleteOldRecords(int keepCount, Connection conn);
 - 保持向后兼容
 
 **文件**：
-- 修改 `justdb-core/src/main/java/org/verydb/justdb/SchemaDeployer.java`
+- 修改 `justdb-core/src/main/java/ai.justdb/justdb/SchemaDeployer.java`
 
 ### 阶段六：测试
 

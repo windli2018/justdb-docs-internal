@@ -28,7 +28,7 @@ CanonicalSchemaDiff is JustDB's core difference calculation component, used for:
 - Generating diff Schema for migration
 - Supporting data change detection
 
-**Package Path**: `org.verydb.justdb.schema.CanonicalSchemaDiff`
+**Package Path**: `ai.justdb.justdb.schema.CanonicalSchemaDiff`
 
 ### Core Features
 
@@ -372,10 +372,10 @@ public List&lt;String&gt; generateTableDataFilterChangeSql(String dialect)
 ### Basic Diff Calculation
 
 ```java
-import org.verydb.justdb.schema.*;
-import org.verydb.justdb.util.schema.SchemaLoaderFactory;
-import org.verydb.justdb.JustdbManager;
-import org.verydb.justdb.cli.Loaded;
+import ai.justdb.justdb.schema.*;
+import ai.justdb.justdb.util.schema.SchemaLoaderFactory;
+import ai.justdb.justdb.JustdbManager;
+import ai.justdb.justdb.cli.Loaded;
 import java.util.List;
 
 public class BasicDiff {
@@ -418,7 +418,7 @@ public class BasicDiff {
 ### Rename Detection
 
 ```java
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.schema.*;
 import java.util.Arrays;
 
 public class RenameDetection {
@@ -477,9 +477,9 @@ public class RenameDetection {
 ### Generate Migration SQL
 
 ```java
-import org.verydb.justdb.schema.*;
-import org.verydb.justdb.migration.SchemaMigrationService;
-import org.verydb.justdb.JustdbManager;
+import ai.justdb.justdb.schema.*;
+import ai.justdb.justdb.migration.SchemaMigrationService;
+import ai.justdb.justdb.JustdbManager;
 import java.util.List;
 
 public class MigrationSqlGeneration {
@@ -516,7 +516,7 @@ public class MigrationSqlGeneration {
 ### Table Scope Filtering
 
 ```java
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.schema.*;
 import java.util.List;
 import java.util.Map;
 
@@ -557,10 +557,10 @@ public class TableScopeFiltering {
 ### Complete Migration Process
 
 ```java
-import org.verydb.justdb.schema.*;
-import org.verydb.justdb.migration.SchemaMigrationService;
-import org.verydb.justdb.SchemaDeployer;
-import org.verydb.justdb.JustdbManager;
+import ai.justdb.justdb.schema.*;
+import ai.justdb.justdb.migration.SchemaMigrationService;
+import ai.justdb.justdb.SchemaDeployer;
+import ai.justdb.justdb.JustdbManager;
 import java.sql.Connection;
 import java.sql.DriverManager;
 

@@ -41,14 +41,14 @@
 ```
 justdb-parent/
 ├── justdb-core/              # 核心模块（保留 AI 接口）
-│   └── org.verydb.justdb
+│   └── ai.justdb.justdb
 │       └── ai/               # AI 接口定义（保留）
 │           ├── AiService.java
 │           ├── AiSchemaHistory.java
 │           └── Message.java
 │
 ├── justdb-ai/                # AI 实现模块（新建）
-│   └── org.verydb.justdb.ai
+│   └── ai.justdb.justdb.ai
 │       ├── agent/            # Agent 核心
 │       │   ├── JustdbAgent.java
 │       │   ├── AgentConfig.java
@@ -84,7 +84,7 @@ justdb-parent/
 │           └── AiSchemaManager.java
 │
 └── justdb-cli/               # CLI 集成
-    └── org.verydb.justdb.cli
+    └── ai.justdb.justdb.cli
         ├── interactive/
         │   ├── AiInteractiveSession.java
         │   └── ConversationDisplay.java
@@ -368,7 +368,7 @@ public class ConversationDisplay {
 
 ### 需要创建的新文件（justdb-ai 模块）
 ```
-justdb-ai/src/main/java/org/verydb/justdb/ai/
+justdb-ai/src/main/java/ai.justdb/justdb/ai/
 ├── agent/JustdbAgent.java
 ├── memory/ConversationMemory.java
 ├── memory/ShortTermMemory.java
@@ -391,7 +391,7 @@ justdb-ai/src/main/java/org/verydb/justdb/ai/
 
 ### CLI 集成新文件
 ```
-justdb-cli/src/main/java/org/verydb/justdb/cli/
+justdb-cli/src/main/java/ai.justdb/justdb/cli/
 ├── interactive/AiInteractiveSession.java
 ├── interactive/ConversationDisplay.java
 └── commands/AiCommand.java (简化)

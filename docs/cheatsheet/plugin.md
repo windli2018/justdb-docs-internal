@@ -281,7 +281,7 @@ Plugin（插件）是 JustDB 的核心扩展机制，支持自定义数据库适
 通过 JAR 包加载：
 
 ```
-META-INF/services/org.verydb.justdb.plugin.JustdbPlugin
+META-INF/services/ai.justdb.justdb.plugin.JustdbPlugin
 ```
 
 ## 注意事项

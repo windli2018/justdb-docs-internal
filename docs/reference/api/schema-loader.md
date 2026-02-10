@@ -47,7 +47,7 @@ public interface SchemaLocation {
 
 工厂类，用于从各种位置加载 Schema。
 
-**包路径**: `org.verydb.justdb.util.schema.SchemaLoaderFactory`
+**包路径**: `ai.justdb.justdb.util.schema.SchemaLoaderFactory`
 
 ### 核心方法
 
@@ -302,7 +302,7 @@ SchemaLoaderFactory.load("registry:my-schema", manager);
 
 配置 Schema 加载行为。
 
-**包路径**: `org.verydb.justdb.util.SchemaLoadConfig`
+**包路径**: `ai.justdb.justdb.util.SchemaLoadConfig`
 
 **核心属性**:
 
@@ -359,10 +359,10 @@ if (result.isSuccess()) {
 ### 基本加载
 
 ```java
-import org.verydb.justdb.JustdbManager;
-import org.verydb.justdb.util.schema.SchemaLoaderFactory;
-import org.verydb.justdb.cli.Loaded;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.JustdbManager;
+import ai.justdb.justdb.util.schema.SchemaLoaderFactory;
+import ai.justdb.justdb.cli.Loaded;
+import ai.justdb.justdb.schema.Justdb;
 
 public class BasicLoading {
     public static void main(String[] args) {
@@ -385,10 +385,10 @@ public class BasicLoading {
 ### 从多个来源加载
 
 ```java
-import org.verydb.justdb.JustdbManager;
-import org.verydb.justdb.util.schema.SchemaLoaderFactory;
-import org.verydb.justdb.cli.Loaded;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.JustdbManager;
+import ai.justdb.justdb.util.schema.SchemaLoaderFactory;
+import ai.justdb.justdb.cli.Loaded;
+import ai.justdb.justdb.schema.Justdb;
 import java.util.List;
 
 public class MultiSourceLoading {
@@ -428,10 +428,10 @@ public class MultiSourceLoading {
 ### 目录扫描
 
 ```java
-import org.verydb.justdb.JustdbManager;
-import org.verydb.justdb.util.schema.SchemaLoaderFactory;
-import org.verydb.justdb.cli.Loaded;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.JustdbManager;
+import ai.justdb.justdb.util.schema.SchemaLoaderFactory;
+import ai.justdb.justdb.cli.Loaded;
+import ai.justdb.justdb.schema.Justdb;
 import java.util.List;
 
 public class DirectoryScan {
@@ -461,10 +461,10 @@ public class DirectoryScan {
 ### 自定义加载器
 
 ```java
-import org.verydb.justdb.JustdbManager;
-import org.verydb.justdb.util.schema.SchemaLocation;
-import org.verydb.justdb.cli.Loaded;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.JustdbManager;
+import ai.justdb.justdb.util.schema.SchemaLocation;
+import ai.justdb.justdb.cli.Loaded;
+import ai.justdb.justdb.schema.Justdb;
 import java.util.Collections;
 
 public class CustomLoaderExample {
@@ -507,10 +507,10 @@ public class CustomLoaderExample {
 ### 格式转换
 
 ```java
-import org.verydb.justdb.JustdbManager;
-import org.verydb.justdb.util.SchemaLoader;
-import org.verydb.justdb.FormatFactory;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.JustdbManager;
+import ai.justdb.justdb.util.SchemaLoader;
+import ai.justdb.justdb.FormatFactory;
+import ai.justdb.justdb.schema.Justdb;
 import java.io.FileOutputStream;
 
 public class FormatConversion {
@@ -548,7 +548,7 @@ public class FormatConversion {
 ### 引用解析
 
 ```java
-import org.verydb.justdb.util.SchemaLoadConfig;
+import ai.justdb.justdb.util.SchemaLoadConfig;
 
 SchemaLoadConfig config = new SchemaLoadConfig();
 config.setResolveReferences(true);

@@ -17,7 +17,7 @@ Load and save schemas in various formats.
 #### Loading Schemas
 
 ```java
-import org.verydb.justdb.FormatFactory;
+import ai.justdb.justdb.FormatFactory;
 
 // From file
 Justdb schema = FormatFactory.loadFromFile("schema.yaml");
@@ -63,7 +63,7 @@ Deploy schemas to database.
 #### Basic Deployment
 
 ```java
-import org.verydb.justdb.SchemaDeployer;
+import ai.justdb.justdb.SchemaDeployer;
 import java.sql.Connection;
 
 try (Connection conn = DriverManager.getConnection(url, user, pass)) {
@@ -99,7 +99,7 @@ Handle incremental migrations.
 #### Basic Migration
 
 ```java
-import org.verydb.justdb.SchemaMigrationService;
+import ai.justdb.justdb.SchemaMigrationService;
 
 try (Connection conn = DriverManager.getConnection(url, user, pass)) {
     SchemaMigrationService service = new SchemaMigrationService(conn);
@@ -141,7 +141,7 @@ Generate SQL from schemas.
 #### Generate SQL
 
 ```java
-import org.verydb.justdb.generator.DBGenerator;
+import ai.justdb.justdb.generator.DBGenerator;
 
 // Create generator for specific database
 DBGenerator generator = new DBGenerator(
@@ -360,7 +360,7 @@ try {
 Manage plugins.
 
 ```java
-import org.verydb.justdb.plugin.PluginManager;
+import ai.justdb.justdb.plugin.PluginManager;
 
 // Get instance
 PluginManager pluginManager = PluginManager.getInstance();
@@ -408,7 +408,7 @@ boolean supportsSequences = adapter.supports("sequences");
 Validate schemas.
 
 ```java
-import org.verydb.justdb.validation.SchemaValidator;
+import ai.justdb.justdb.validation.SchemaValidator;
 
 SchemaValidator validator = new SchemaValidator();
 ValidationResult result = validator.validate(schema);

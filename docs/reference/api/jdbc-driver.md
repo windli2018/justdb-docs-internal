@@ -31,7 +31,7 @@ JustDB JDBC 驱动实现了 JDBC API 的核心功能，支持：
 - 事务管理（基础支持）
 - 多 Schema 支持
 
-**驱动类**: `org.verydb.justdb.jdbc.JustdbDriver`
+**驱动类**: `ai.justdb.justdb.jdbc.JustdbDriver`
 
 **JDBC URL 前缀**: `jdbc:justdb:`
 
@@ -412,10 +412,10 @@ Schema 注册表允许在内存中注册 Schema，然后通过 JDBC URL 引用�
 ### 注册 Schema
 
 ```java
-import org.verydb.justdb.jdbc.JustdbDriver;
-import org.verydb.justdb.schema.Justdb;
-import org.verydb.justdb.schema.Table;
-import org.verydb.justdb.schema.Column;
+import ai.justdb.justdb.jdbc.JustdbDriver;
+import ai.justdb.justdb.schema.Justdb;
+import ai.justdb.justdb.schema.Table;
+import ai.justdb.justdb.schema.Column;
 import java.sql.*;
 
 public class RegistryExample {

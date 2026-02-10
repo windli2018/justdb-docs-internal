@@ -190,7 +190,7 @@ public class Table extends QueryAble {
 
 - [Jackson Annotations](https://github.com/FasterXML/jackson-annotations)
 - [Schema 结构文档](../../design/schema-system/alias-system.md)
-- [CLAUDE.md - 编码规则](https://github.com/verydb/justdb/blob/main/CLAUDE.md)
+- [CLAUDE.md - 编码规则](https://github.com/justdb/justdb/blob/main/CLAUDE.md)
 
 ## 下一步
 

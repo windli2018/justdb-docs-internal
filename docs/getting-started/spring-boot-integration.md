@@ -22,7 +22,7 @@ JustDB 提供了开箱即用的 Spring Boot Starter，让数据库管理变得�
 
 ```xml
 <dependency>
-    <groupId>org.verydb.justdb</groupId>
+    <groupId>ai.justdb.justdb</groupId>
     <artifactId>justdb-spring-boot-starter</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -567,7 +567,7 @@ justdb:
 ```bash
 logging:
   level:
-    org.verydb.justdb: DEBUG
+    ai.justdb.justdb: DEBUG
 ```
 
 ### 连接问题

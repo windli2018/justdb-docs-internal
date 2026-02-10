@@ -61,7 +61,7 @@ For Java projects integrating JustDB:
 
 ```xml
 <dependency>
-    <groupId>org.verydb.justdb</groupId>
+    <groupId>ai.justdb.justdb</groupId>
     <artifactId>justdb-core</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -71,7 +71,7 @@ For Java projects integrating JustDB:
 
 ```xml
 <dependency>
-    <groupId>org.verydb.justdb</groupId>
+    <groupId>ai.justdb.justdb</groupId>
     <artifactId>justdb-spring-boot-starter</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -81,7 +81,7 @@ For Java projects integrating JustDB:
 
 ```xml
 <dependency>
-    <groupId>org.verydb.justdb</groupId>
+    <groupId>ai.justdb.justdb</groupId>
     <artifactId>justdb-cli</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -91,7 +91,7 @@ For Java projects integrating JustDB:
 
 ```xml
 <dependency>
-    <groupId>org.verydb.justdb</groupId>
+    <groupId>ai.justdb.justdb</groupId>
     <artifactId>justdb-ai</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -101,7 +101,7 @@ For Java projects integrating JustDB:
 
 ```xml
 <dependency>
-    <groupId>org.verydb.justdb</groupId>
+    <groupId>ai.justdb.justdb</groupId>
     <artifactId>justdb-excel</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -115,7 +115,7 @@ Download precompiled binaries from GitHub Releases page:
 
 ```bash
 # Download
-wget https://github.com/verydb/justdb/releases/download/v1.0.0/justdb-1.0.0-linux.tar.gz
+wget https://github.com/justdb/justdb/releases/download/v1.0.0/justdb-1.0.0-linux.tar.gz
 
 # Extract
 tar -xzf justdb-1.0.0-linux.tar.gz
@@ -143,7 +143,7 @@ justdb --version
 
 ```bash
 # Clone repository
-git clone https://github.com/verydb/justdb.git
+git clone https://github.com/justdb/justdb.git
 cd justdb
 
 # Build all modules
@@ -165,16 +165,16 @@ justdb-cli/target/justdb-cli-1.0.0.jar
 
 ```bash
 # Pull image
-docker pull verydb/justdb:1.0.0
+docker pull justdb/justdb:1.0.0
 
 # Run container
-docker run -v $(pwd)/schemas:/schemas verydb/justdb:1.0.0 migrate
+docker run -v $(pwd)/schemas:/schemas justdb/justdb:1.0.0 migrate
 
 # Using Docker Compose
 version: '3'
 services:
   justdb:
-    image: verydb/justdb:1.0.0
+    image: justdb/justdb:1.0.0
     volumes:
       - ./schemas:/schemas
       - ./config:/config
@@ -368,7 +368,7 @@ JustDB will automatically download supported database drivers, or you can config
 2. Clean local repository cache:
 
 ```bash
-rm -rf ~/.m2/repository/org/verydb
+rm -rf ~/.m2/repository/ai.justdb
 mvn clean install
 ```
 

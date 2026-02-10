@@ -45,24 +45,24 @@
 
 | 文件路径 | 说明 |
 |---------------------------------------------------------------------------------|------------------------------------------------------|
-| `justdb-core/src/main/java/org/verydb/justdb/data/config/IncludeRule.java` | 单个 Include 规则定义 |
-| `justdb-core/src/main/java/org/verydb/justdb/data/config/IncludeRuleMatcher.java` | 规则匹配器（优先级计算） |
-| `justdb-core/src/main/java/org/verydb/justdb/data/config/IncludeRuleToSchemaMapper.java` | Schema 映射器 |
-| `justdb-core/src/main/java/org/verydb/justdb/cli/mixins/Db2SchemaMixin.java` | db2schema 专用参数 Mixin |
+| `justdb-core/src/main/java/ai.justdb/justdb/data/config/IncludeRule.java` | 单个 Include 规则定义 |
+| `justdb-core/src/main/java/ai.justdb/justdb/data/config/IncludeRuleMatcher.java` | 规则匹配器（优先级计算） |
+| `justdb-core/src/main/java/ai.justdb/justdb/data/config/IncludeRuleToSchemaMapper.java` | Schema 映射器 |
+| `justdb-core/src/main/java/ai.justdb/justdb/cli/mixins/Db2SchemaMixin.java` | db2schema 专用参数 Mixin |
 
 ### 2.2 需要修改的文件
 
 | 文件路径 | 修改内容 |
 |---------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
-| `justdb-core/src/main/java/org/verydb/justdb/schema/Item.java` | 添加 author、remark、module 字段 |
-| `justdb-core/src/main/java/org/verydb/justdb/schema/Table.java` | 添加 sourcePattern 字段 |
-| `justdb-core/src/main/java/org/verydb/justdb/schema/Data.java` | 添加 sourcePattern 字段，使用 remark 替换 description |
-| `justdb-core/src/main/java/org/verydb/justdb/schema/CanonicalSchemaDiff.java` | 添加 TableDataFilterChange 类和 calculateTableDataFilterChanges 方法 |
-| `justdb-core/src/main/java/org/verydb/justdb/migration/SchemaMigrationService.java` | 处理 Table dataFilter 变化时的数据同步 |
-| `justdb-core/src/main/java/org/verydb/justdb/cli/JustdbConfiguration.java` | 添加 includeRules 配置支持 |
-| `justdb-core/src/main/java/org/verydb/justdb/cli/commands/Db2SchemaCommand.java` | 集成 IncludeRule 加载和应用逻辑 |
-| `justdb-core/src/main/java/org/verydb/justdb/generator/AbstractTemplateGenerator.java` | 添加 render/renderInline 方法支持自定义模板渲染 |
-| `justdb-core/src/main/java/org/verydb/justdb/templates/TemplateExecutor.java` | 添加 compile 方法支持 TemplateSource |
+| `justdb-core/src/main/java/ai.justdb/justdb/schema/Item.java` | 添加 author、remark、module 字段 |
+| `justdb-core/src/main/java/ai.justdb/justdb/schema/Table.java` | 添加 sourcePattern 字段 |
+| `justdb-core/src/main/java/ai.justdb/justdb/schema/Data.java` | 添加 sourcePattern 字段，使用 remark 替换 description |
+| `justdb-core/src/main/java/ai.justdb/justdb/schema/CanonicalSchemaDiff.java` | 添加 TableDataFilterChange 类和 calculateTableDataFilterChanges 方法 |
+| `justdb-core/src/main/java/ai.justdb/justdb/migration/SchemaMigrationService.java` | 处理 Table dataFilter 变化时的数据同步 |
+| `justdb-core/src/main/java/ai.justdb/justdb/cli/JustdbConfiguration.java` | 添加 includeRules 配置支持 |
+| `justdb-core/src/main/java/ai.justdb/justdb/cli/commands/Db2SchemaCommand.java` | 集成 IncludeRule 加载和应用逻辑 |
+| `justdb-core/src/main/java/ai.justdb/justdb/generator/AbstractTemplateGenerator.java` | 添加 render/renderInline 方法支持自定义模板渲染 |
+| `justdb-core/src/main/java/ai.justdb/justdb/templates/TemplateExecutor.java` | 添加 compile 方法支持 TemplateSource |
 
 ---------------------------
 
@@ -72,7 +72,7 @@
 
 #### 1.1 修改 Item.java
 
-**位置**：`justdb-core/src/main/java/org/verydb/justdb/schema/Item.java`
+**位置**：`justdb-core/src/main/java/ai.justdb/justdb/schema/Item.java`
 
 添加字段（继承到 Table、Data 等所有子类）：
 
@@ -104,7 +104,7 @@ private String module;
 
 #### 1.2 修改 Table.java
 
-**位置**：`justdb-core/src/main/java/org/verydb/justdb/schema/Table.java`
+**位置**：`justdb-core/src/main/java/ai.justdb/justdb/schema/Table.java`
 
 添加字段：
 
@@ -120,7 +120,7 @@ private String sourcePattern;
 
 #### 1.3 修改 Data.java
 
-**位置**：`justdb-core/src/main/java/org/verydb/justdb/schema/Data.java`
+**位置**：`justdb-core/src/main/java/ai.justdb/justdb/schema/Data.java`
 
 添加字段：
 
@@ -154,7 +154,7 @@ private Boolean temporary = false;
 
 #### 2.1 修改 AbstractTemplateGenerator.java
 
-**位置**：`justdb-core/src/main/java/org/verydb/justdb/generator/AbstractTemplateGenerator.java`
+**位置**：`justdb-core/src/main/java/ai.justdb/justdb/generator/AbstractTemplateGenerator.java`
 
 添加带 TemplateSource 的 render 方法：
 
@@ -225,7 +225,7 @@ public String renderInline(String templateContent, Object model, GeneralContextP
 
 #### 2.2 修改 TemplateExecutor.java
 
-**位置**：`justdb-core/src/main/java/org/verydb/justdb/templates/TemplateExecutor.java`
+**位置**：`justdb-core/src/main/java/ai.justdb/justdb/templates/TemplateExecutor.java`
 
 添加 compile 方法支持 TemplateSource：
 
@@ -249,10 +249,10 @@ public Template compile(TemplateSource source) throws IOException {
 - 优先级计算使用**截断法**（只计算匹配字符数，不计 pattern 本身长度）
 - 正则表达式使用 Java 内置 Pattern/Matcher
 
-**位置**：`justdb-core/src/main/java/org/verydb/justdb/data/config/IncludeRule.java`
+**位置**：`justdb-core/src/main/java/ai.justdb/justdb/data/config/IncludeRule.java`
 
 ```java
-package org.verydb.justdb.data.config;
+package ai.justdb.justdb.data.config;
 
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonAlias;
@@ -528,10 +528,10 @@ public class IncludeRule {
 
 #### 3.2 创建 IncludeRuleMatcher.java
 
-**位置**：`justdb-core/src/main/java/org/verydb/justdb/data/config/IncludeRuleMatcher.java`
+**位置**：`justdb-core/src/main/java/ai.justdb/justdb/data/config/IncludeRuleMatcher.java`
 
 ```java
-package org.verydb.justdb.data.config;
+package ai.justdb.justdb.data.config;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -608,13 +608,13 @@ public class IncludeRuleMatcher {
 
 #### 4.1 创建 IncludeRuleToSchemaMapper.java
 
-**位置**：`justdb-core/src/main/java/org/verydb/justdb/data/config/IncludeRuleToSchemaMapper.java`
+**位置**：`justdb-core/src/main/java/ai.justdb/justdb/data/config/IncludeRuleToSchemaMapper.java`
 
 ```java
-package org.verydb.justdb.data.config;
+package ai.justdb.justdb.data.config;
 
-import org.verydb.justdb.schema.*;
-import org.verydb.justdb.generator.DBGenerator;
+import ai.justdb.justdb.schema.*;
+import ai.justdb.justdb.generator.DBGenerator;
 import java.util.*;
 
 /**
@@ -744,15 +744,15 @@ public class IncludeRuleToSchemaMapper {
 
 #### 5.1 Data 节点分类导出
 
-**位置**：`justdb-core/src/main/java/org/verydb/justdb/data/export/IncludeRuleDataExtractor.java`
+**位置**：`justdb-core/src/main/java/ai.justdb/justdb/data/export/IncludeRuleDataExtractor.java`
 
 根据 dataFilter 类型生成不同的 Data 节点：
 
 ```java
-package org.verydb.justdb.data.export;
+package ai.justdb.justdb.data.export;
 
-import org.verydb.justdb.data.config.IncludeRule;
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.data.config.IncludeRule;
+import ai.justdb.justdb.schema.*;
 import java.util.*;
 
 /**
@@ -925,10 +925,10 @@ public class IncludeRuleDataExtractor {
 
 #### 5.1 创建 Db2SchemaMixin.java
 
-**位置**：`justdb-core/src/main/java/org/verydb/justdb/cli/mixins/Db2SchemaMixin.java`
+**位置**：`justdb-core/src/main/java/ai.justdb/justdb/cli/mixins/Db2SchemaMixin.java`
 
 ```java
-package org.verydb.justdb.cli.mixins;
+package ai.justdb.justdb.cli.mixins;
 
 import picocli.CommandLine.Option;
 import java.util.List;
@@ -1011,7 +1011,7 @@ public class Db2SchemaMixin extends TableFilterMixin {
 
 #### 6.1 修改 CanonicalSchemaDiff.java
 
-**位置**：`justdb-core/src/main/java/org/verydb/justdb/schema/CanonicalSchemaDiff.java`
+**位置**：`justdb-core/src/main/java/ai.justdb/justdb/schema/CanonicalSchemaDiff.java`
 
 在 `DataChange` 内部类之后添加 `TableDataFilterChange` 类：
 
@@ -1161,7 +1161,7 @@ private String quoteIdentifier(String name, String dialect) {
 
 #### 6.2 修改 SchemaMigrationService.java
 
-**位置**：`justdb-core/src/main/java/org/verydb/justdb/migration/SchemaMigrationService.java`
+**位置**：`justdb-core/src/main/java/ai.justdb/justdb/migration/SchemaMigrationService.java`
 
 在 `generateMigrationSql()` 方法中添加 Table dataFilter 变化处理：
 
@@ -1185,7 +1185,7 @@ if (!diff.getTableDataFilterChanges().isEmpty()) {
 
 #### 7.1 修改 Db2SchemaCommand.java
 
-**位置**：`justdb-core/src/main/java/org/verydb/justdb/cli/commands/Db2SchemaCommand.java`
+**位置**：`justdb-core/src/main/java/ai.justdb/justdb/cli/commands/Db2SchemaCommand.java`
 
 在 `executeDb2Schema` 方法中集成 IncludeRule 逻辑：
 
@@ -1440,7 +1440,7 @@ data:
 
 #### 5.2.1 CanonicalSchemaDiff 修改
 
-**位置**：`justdb-core/src/main/java/org/verydb/justdb/schema/CanonicalSchemaDiff.java`
+**位置**：`justdb-core/src/main/java/ai.justdb/justdb/schema/CanonicalSchemaDiff.java`
 
 在 `calculateDataChanges()` 方法中过滤临时数据：
 
@@ -1479,7 +1479,7 @@ private void calculateDataChanges() {
 
 #### 5.3.1 SchemaMigrationService 修改
 
-**位置**：`justdb-core/src/main/java/org/verydb/justdb/migration/SchemaMigrationService.java`
+**位置**：`justdb-core/src/main/java/ai.justdb/justdb/migration/SchemaMigrationService.java`
 
 在 `generateMigrationSql()` 方法中添加临时数据保护逻辑：
 

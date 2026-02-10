@@ -19,13 +19,13 @@ Pull Request (PR) 是贡献代码的主要方式。本指南介绍 PR 的完整�
 
 ### 1. Fork 项目
 
-如果你还没有 Fork，请先 Fork [JustDB 仓库](https://github.com/verydb/justdb)。
+如果你还没有 Fork，请先 Fork [JustDB 仓库](https://github.com/justdb/justdb)。
 
 ### 2. 保持 Fork 同步
 
 ```bash
 # 添加上游仓库（如果还没有）
-git remote add upstream https://github.com/verydb/justdb.git
+git remote add upstream https://github.com/justdb/justdb.git
 
 # 获取上游更改
 git fetch upstream

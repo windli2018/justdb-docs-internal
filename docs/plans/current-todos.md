@@ -408,7 +408,7 @@ description: JustDB 项目当前开发任务列表，按优先级组织
 
 ### Bug 修复
 
-- [ ] 查看 [GitHub Issues](https://github.com/verydb/justdb/issues)
+- [ ] 查看 [GitHub Issues](https://github.com/justdb/justdb/issues)
 - [ ] 提交 Pull Request
 - [ ] 参与代码审查
 
@@ -427,7 +427,7 @@ description: JustDB 项目当前开发任务列表，按优先级组织
 
 3. **开发实现**
    - Fork 项目并创建分支
-   - 遵循代码规范 (参见 [CLAUDE.md](https://github.com/verydb/justdb/blob/main/CLAUDE.md))
+   - 遵循代码规范 (参见 [CLAUDE.md](https://github.com/justdb/justdb/blob/main/CLAUDE.md))
    - 编写测试
 
 4. **提交 PR**
@@ -443,7 +443,7 @@ description: JustDB 项目当前开发任务列表，按优先级组织
 - **不写死 SQL**: 通过模板生成
 - **避免 ThreadLocal**: 使用依赖注入
 
-详细规范请参考 [CLAUDE.md](https://github.com/verydb/justdb/blob/main/CLAUDE.md)
+详细规范请参考 [CLAUDE.md](https://github.com/justdb/justdb/blob/main/CLAUDE.md)
 
 ### 获取帮助
 
@@ -455,7 +455,7 @@ description: JustDB 项目当前开发任务列表，按优先级组织
 
 - [产品路线图](./roadmap.md)
 - [历史计划](./historical-plans/)
-- [GitHub 项目](https://github.com/verydb/justdb)
+- [GitHub 项目](https://github.com/justdb/justdb)
 - [文档首页](../README.md)
 
 ---------------------------

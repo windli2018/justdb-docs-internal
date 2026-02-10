@@ -47,7 +47,7 @@ cat > pom.xml << 'EOF'
 
     <dependencies>
         <dependency>
-            <groupId>org.verydb.justdb</groupId>
+            <groupId>ai.justdb.justdb</groupId>
             <artifactId>justdb-core</artifactId>
             <version>1.0.0</version>
             <provided</provided>
@@ -64,7 +64,7 @@ EOF
 ```java
 package com.example.justdb;
 
-import org.verydb.justdb.adapter.*;
+import ai.justdb.justdb.adapter.*;
 
 public class MyDatabaseAdapter implements DatabaseAdapter {
 
@@ -108,7 +108,7 @@ public class MyDatabaseAdapter implements DatabaseAdapter {
 ```java
 package com.example.justdb;
 
-import org.verydb.justdb.adapter.*;
+import ai.justdb.justdb.adapter.*;
 
 public class MyTypeMapping implements TypeMapping {
 
@@ -150,7 +150,7 @@ public class MyTypeMapping implements TypeMapping {
 ```java
 package com.example.justdb;
 
-import org.verydb.justdb.plugin.*;
+import ai.justdb.justdb.plugin.*;
 
 public class MyPlugin implements JustdbPlugin {
 
@@ -180,7 +180,7 @@ public class MyPlugin implements JustdbPlugin {
 
 ### Step 4: Register Service
 
-Create `src/main/resources/META-INF/services/org.verydb.justdb.plugin.JustdbPlugin`:
+Create `src/main/resources/META-INF/services/ai.justdb.justdb.plugin.JustdbPlugin`:
 
 ```
 com.example.justdb.MyPlugin

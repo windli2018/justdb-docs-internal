@@ -15,7 +15,7 @@ JustDB CLI 是一个功能强大的命令行工具，用于管理数据库 Schem
 
 ```bash
 # 克隆仓库
-git clone https://github.com/verydb/justdb.git
+git clone https://github.com/justdb/justdb.git
 cd justdb
 
 # 构建项目
@@ -27,13 +27,13 @@ mvn clean package -DskipTests
 ### 使用 Docker
 
 ```bash
-docker pull verydb/justdb:latest
-docker run -it --rm verydb/justdb:latest --help
+docker pull justdb/justdb:latest
+docker run -it --rm justdb/justdb:latest --help
 ```
 
 ### 从发布版本下载
 
-从 [GitHub Releases](https://github.com/verydb/justdb/releases) 下载预编译的二进制文件。
+从 [GitHub Releases](https://github.com/justdb/justdb/releases) 下载预编译的二进制文件。
 
 ## 基本用法
 

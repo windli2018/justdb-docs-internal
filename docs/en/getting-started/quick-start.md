@@ -33,7 +33,7 @@ If not installed yet, please refer to [Installation Guide](./installation.html)
 
 ```xml
 <dependency>
-    <groupId>org.verydb.justdb</groupId>
+    <groupId>ai.justdb.justdb</groupId>
     <artifactId>justdb-core</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -41,9 +41,9 @@ If not installed yet, please refer to [Installation Guide](./installation.html)
 
 ```java
 // QuickStart.java
-import org.verydb.justdb.FormatFactory;
-import org.verydb.justdb.SchemaDeployer;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.FormatFactory;
+import ai.justdb.justdb.SchemaDeployer;
+import ai.justdb.justdb.schema.Justdb;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -68,7 +68,7 @@ public class QuickStart {
 
 ```bash
 # Download and install JustDB CLI
-wget https://github.com/verydb/justdb/releases/download/v1.0.0/justdb-1.0.0-linux.tar.gz
+wget https://github.com/justdb/justdb/releases/download/v1.0.0/justdb-1.0.0-linux.tar.gz
 tar -xzf justdb-1.0.0-linux.tar.gz
 export PATH=$PATH:$PWD/bin
 
@@ -80,7 +80,7 @@ justdb --version
 
 ```xml
 <dependency>
-    <groupId>org.verydb.justdb</groupId>
+    <groupId>ai.justdb.justdb</groupId>
     <artifactId>justdb-spring-boot-starter</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -350,6 +350,6 @@ Congratulations on completing the quick start! You can now:
 
 ## Get Help
 
-- **Documentation**: [https://verydb.github.io/justdb](https://verydb.github.io/justdb)
-- **GitHub**: [https://github.com/verydb/justdb](https://github.com/verydb/justdb)
-- **Issue Tracker**: [GitHub Issues](https://github.com/verydb/justdb/issues)
+- **Documentation**: [https://justdb.github.io/justdb](https://justdb.github.io/justdb)
+- **GitHub**: [https://github.com/justdb/justdb](https://github.com/justdb/justdb)
+- **Issue Tracker**: [GitHub Issues](https://github.com/justdb/justdb/issues)

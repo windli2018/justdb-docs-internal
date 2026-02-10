@@ -24,20 +24,20 @@ JustDB 提供了预构建的 Docker 镜像：
 
 ```bash
 # 拉取最新版本
-docker pull verydb/justdb:latest
+docker pull justdb/justdb:latest
 
 # 拉取指定版本
-docker pull verydb/justdb:1.0.0
+docker pull justdb/justdb:1.0.0
 
 # 拉取 Alpine 版本（更小的镜像）
-docker pull verydb/justdb:1.0.0-alpine
+docker pull justdb/justdb:1.0.0-alpine
 ```
 
 ### 从源码构建
 
 ```bash
 # 克隆仓库
-git clone https://github.com/verydb/justdb.git
+git clone https://github.com/justdb/justdb.git
 cd justdb
 
 # 构建镜像
@@ -107,7 +107,7 @@ services:
 
   # JustDB CLI
   justdb:
-    image: verydb/justdb:1.0.0
+    image: justdb/justdb:1.0.0
     container_name: justdb-cli
     volumes:
       - ./schemas:/schemas
@@ -169,7 +169,7 @@ services:
 
   # JustDB 迁移服务
   justdb-migrate:
-    image: verydb/justdb:1.0.0
+    image: justdb/justdb:1.0.0
     container_name: justdb-migrate
     volumes:
       - ./schemas:/schemas:ro
@@ -189,7 +189,7 @@ services:
 
   # JustDB 验证服务
   justdb-validate:
-    image: verydb/justdb:1.0.0
+    image: justdb/justdb:1.0.0
     container_name: justdb-validate
     volumes:
       - ./schemas:/schemas:ro
@@ -332,7 +332,7 @@ spec:
     spec:
       containers:
       - name: justdb
-        image: verydb/justdb:1.0.0
+        image: justdb/justdb:1.0.0
         command: ["justdb", "migrate"]
         env:
         - name: JUSTDB_DATABASE_URL
@@ -373,7 +373,7 @@ spec:
     spec:
       containers:
       - name: justdb
-        image: verydb/justdb:1.0.0
+        image: justdb/justdb:1.0.0
         command:
         - /bin/sh
         - -c
@@ -415,7 +415,7 @@ spec:
         spec:
           containers:
           - name: justdb
-            image: verydb/justdb:1.0.0
+            image: justdb/justdb:1.0.0
             command:
             - justdb
             - backup

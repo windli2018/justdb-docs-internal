@@ -45,7 +45,7 @@ JustdbPlugin
 外部插件通过 JAR 包提供，使用 Java ServiceLoader 发现：
 
 ```
-META-INF/services/org.verydb.justdb.plugin.JustdbPlugin
+META-INF/services/ai.justdb.justdb.plugin.JustdbPlugin
 ```
 
 ## 插件发现机制
@@ -102,7 +102,7 @@ cd justdb-myplugin
 ```xml
 <dependencies>
     <dependency>
-        <groupId>org.verydb.justdb</groupId>
+        <groupId>ai.justdb.justdb</groupId>
         <artifactId>justdb-core</artifactId>
         <version>1.0.0</version>
         <scope>provided</scope>
@@ -115,7 +115,7 @@ cd justdb-myplugin
 ```java
 package com.example.justdb;
 
-import org.verydb.justdb.plugin.*;
+import ai.justdb.justdb.plugin.*;
 
 public class MyDatabasePlugin extends JustdbPlugin {
     @Override
@@ -147,7 +147,7 @@ public class MyDatabasePlugin extends JustdbPlugin {
 
 ### 注册插件
 
-创建 `META-INF/services/org.verydb.justdb.plugin.JustdbPlugin`：
+创建 `META-INF/services/ai.justdb.justdb.plugin.JustdbPlugin`：
 
 ```
 com.example.justdb.MyDatabasePlugin

@@ -28,7 +28,7 @@ CanonicalSchemaDiff 是 JustDB 的核心差异计算组件，用于：
 - 生成差异 Schema 用于迁移
 - 支持数据变更检测
 
-**包路径**: `org.verydb.justdb.schema.CanonicalSchemaDiff`
+**包路径**: `ai.justdb.justdb.schema.CanonicalSchemaDiff`
 
 ### 核心特性
 
@@ -372,10 +372,10 @@ public List&lt;String&gt; generateTableDataFilterChangeSql(String dialect)
 ### 基本差异计算
 
 ```java
-import org.verydb.justdb.schema.*;
-import org.verydb.justdb.util.schema.SchemaLoaderFactory;
-import org.verydb.justdb.JustdbManager;
-import org.verydb.justdb.cli.Loaded;
+import ai.justdb.justdb.schema.*;
+import ai.justdb.justdb.util.schema.SchemaLoaderFactory;
+import ai.justdb.justdb.JustdbManager;
+import ai.justdb.justdb.cli.Loaded;
 import java.util.List;
 
 public class BasicDiff {
@@ -418,7 +418,7 @@ public class BasicDiff {
 ### 重命名检测
 
 ```java
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.schema.*;
 import java.util.Arrays;
 
 public class RenameDetection {
@@ -477,9 +477,9 @@ public class RenameDetection {
 ### 生成迁移 SQL
 
 ```java
-import org.verydb.justdb.schema.*;
-import org.verydb.justdb.migration.SchemaMigrationService;
-import org.verydb.justdb.JustdbManager;
+import ai.justdb.justdb.schema.*;
+import ai.justdb.justdb.migration.SchemaMigrationService;
+import ai.justdb.justdb.JustdbManager;
 import java.util.List;
 
 public class MigrationSqlGeneration {
@@ -516,7 +516,7 @@ public class MigrationSqlGeneration {
 ### 表范围过滤
 
 ```java
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.schema.*;
 import java.util.List;
 import java.util.Map;
 
@@ -557,10 +557,10 @@ public class TableScopeFiltering {
 ### 完整迁移流程
 
 ```java
-import org.verydb.justdb.schema.*;
-import org.verydb.justdb.migration.SchemaMigrationService;
-import org.verydb.justdb.SchemaDeployer;
-import org.verydb.justdb.JustdbManager;
+import ai.justdb.justdb.schema.*;
+import ai.justdb.justdb.migration.SchemaMigrationService;
+import ai.justdb.justdb.SchemaDeployer;
+import ai.justdb.justdb.JustdbManager;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -630,7 +630,7 @@ public class FullMigration {
 ### 数据变更检测
 
 ```java
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.schema.*;
 import java.util.List;
 
 public class DataChangeDetection {

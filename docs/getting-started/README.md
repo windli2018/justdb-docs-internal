@@ -235,9 +235,9 @@ name = "email"
 #### 方式一：使用 Java API
 
 ```java
-import org.verydb.justdb.FormatFactory;
-import org.verydb.justdb.SchemaDeployer;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.FormatFactory;
+import ai.justdb.justdb.SchemaDeployer;
+import ai.justdb.justdb.schema.Justdb;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -669,6 +669,6 @@ justdb ai "创建一个订单表"
 
 ## 获取帮助
 
-- **文档**: [https://verydb.github.io/justdb](https://verydb.github.io/justdb)
-- **GitHub**: [https://github.com/verydb/justdb](https://github.com/verydb/justdb)
-- **问题反馈**: [GitHub Issues](https://github.com/verydb/justdb/issues)
+- **文档**: [https://justdb.github.io/justdb](https://justdb.github.io/justdb)
+- **GitHub**: [https://github.com/justdb/justdb](https://github.com/justdb/justdb)
+- **问题反馈**: [GitHub Issues](https://github.com/justdb/justdb/issues)

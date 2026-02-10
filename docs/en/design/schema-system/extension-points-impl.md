@@ -591,14 +591,14 @@ CREATE TABLE user_roles (
 
 ### Phase 1: Create Virtual Column Resolver
 
-**New file**: `justdb-core/src/main/java/org/verydb/justdb/jdbc/virtual/VirtualColumnResolver.java`
+**New file**: `justdb-core/src/main/java/ai.justdb/justdb/jdbc/virtual/VirtualColumnResolver.java`
 
 ```java
-package org.verydb.justdb.jdbc.virtual;
+package ai.justdb.justdb.jdbc.virtual;
 
-import org.verydb.justdb.jdbc.JustdbDataSource;
-import org.verydb.justdb.schema.Column;
-import org.verydb.justdb.schema.Table;
+import ai.justdb.justdb.jdbc.JustdbDataSource;
+import ai.justdb.justdb.schema.Column;
+import ai.justdb.justdb.schema.Table;
 
 import java.util.Map;
 
@@ -663,7 +663,7 @@ public class VirtualColumnResolver {
 
 ### Phase 2: Integrate into SqlExecutor
 
-**Modify file**: `justdb-core/src/main/java/org/verydb/justdb/jdbc/SqlExecutor.java`
+**Modify file**: `justdb-core/src/main/java/ai.justdb/justdb/jdbc/SqlExecutor.java`
 
 **Key integration point**: `evaluateExprForRow()` method (around line 5253-5600)
 

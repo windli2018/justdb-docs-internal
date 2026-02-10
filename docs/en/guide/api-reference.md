@@ -25,7 +25,7 @@ Schema format factory, used for loading and saving schemas.
 #### Load Schema
 
 ```java
-import org.verydb.justdb.FormatFactory;
+import ai.justdb.justdb.FormatFactory;
 
 // Load from file
 Justdb schema = FormatFactory.loadFromFile("schema.yaml");
@@ -71,7 +71,7 @@ Schema deployer, used to deploy schema to database.
 #### Basic Deployment
 
 ```java
-import org.verydb.justdb.SchemaDeployer;
+import ai.justdb.justdb.SchemaDeployer;
 import java.sql.Connection;
 
 try (Connection conn = DriverManager.getConnection(url, user, pass)) {
@@ -107,7 +107,7 @@ Schema migration service for incremental migration.
 #### Basic Migration
 
 ```java
-import org.verydb.justdb.SchemaMigrationService;
+import ai.justdb.justdb.SchemaMigrationService;
 
 try (Connection conn = DriverManager.getConnection(url, user, pass)) {
     SchemaMigrationService service = new SchemaMigrationService(conn);
@@ -146,7 +146,7 @@ Database SQL generator.
 #### Generate SQL
 
 ```java
-import org.verydb.justdb.generator.DBGenerator;
+import ai.justdb.justdb.generator.DBGenerator;
 
 // Create generator
 DBGenerator generator = new DBGenerator(
@@ -275,7 +275,7 @@ constraint.setOnUpdate(ConstraintAction.RESTRICT);
 Schema diff object.
 
 ```java
-import org.verydb.justdb.diff.CanonicalSchemaDiff;
+import ai.justdb.justdb.diff.CanonicalSchemaDiff;
 
 // Calculate diff
 CanonicalSchemaDiff diff = SchemaDiffer.calculate(
@@ -308,7 +308,7 @@ for (TableDiff tableDiff : diff.getTableDiffs()) {
 Schema evolution manager.
 
 ```java
-import org.verydb.justdb.migration.SchemaEvolutionManager;
+import ai.justdb.justdb.migration.SchemaEvolutionManager;
 
 SchemaEvolutionManager manager = new SchemaEvolutionManager(conn);
 
@@ -326,7 +326,7 @@ manager.evolve(currentSchema, targetSchema);
 Plugin manager.
 
 ```java
-import org.verydb.justdb.plugin.PluginManager;
+import ai.justdb.justdb.plugin.PluginManager;
 
 // Get instance
 PluginManager pluginManager = PluginManager.getInstance();
@@ -409,9 +409,9 @@ String url = "jdbc:justdb:?config=justdb-config.yaml";
 ### Complete Example
 
 ```java
-import org.verydb.justdb.*;
-import org.verydb.justdb.migration.*;
-import org.verydb.justdb.generator.*;
+import ai.justdb.justdb.*;
+import ai.justdb.justdb.migration.*;
+import ai.justdb.justdb.generator.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -453,8 +453,8 @@ public class JustdbExample {
 ### Spring Boot Integration
 
 ```java
-import org.verydb.justdb.spring.JustdbProperties;
-import org.verydb.justdb.spring.SchemaMigrationService;
+import ai.justdb.justdb.spring.JustdbProperties;
+import ai.justdb.justdb.spring.SchemaMigrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -489,10 +489,10 @@ public class Application {
 
 For detailed API documentation, refer to:
 
-- **[Online JavaDoc](https://verydb.github.io/justdb/apidocs/)**
-- **[Core API](https://verydb.github.io/justdb/apidocs/org/verydb/justdb/core/package-summary.html)**
-- **[Generator API](https://verydb.github.io/justdb/apidocs/org/verydb/justdb/generator/package-summary.html)**
-- **[Migration API](https://verydb.github.io/justdb/apidocs/org/verydb/justdb/migration/package-summary.html)**
+- **[Online JavaDoc](https://justdb.github.io/justdb/apidocs/)**
+- **[Core API](https://justdb.github.io/justdb/apidocs/ai.justdb/justdb/core/package-summary.html)**
+- **[Generator API](https://justdb.github.io/justdb/apidocs/ai.justdb/justdb/generator/package-summary.html)**
+- **[Migration API](https://justdb.github.io/justdb/apidocs/ai.justdb/justdb/migration/package-summary.html)**
 
 ## Error Handling
 

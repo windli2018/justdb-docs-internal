@@ -14,8 +14,8 @@ JustDB AI 迁移助手提供智能的数据库 Schema 迁移建议，包括风�
 ### 基础用法
 
 ```java
-import org.verydb.justdb.ai.AIAssistant;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.ai.AIAssistant;
+import ai.justdb.justdb.schema.Justdb;
 
 // 创建当前 Schema 和目标 Schema
 Justdb currentSchema = loadSchema("current-schema.yaml");
@@ -60,7 +60,7 @@ Warnings:
 AI 迁移助手会自动分析迁移过程中的潜在风险：
 
 ```java
-import org.verydb.justdb.ai.AiSchemaManager;
+import ai.justdb.justdb.ai.AiSchemaManager;
 
 AiSchemaManager aiManager = new AiSchemaManager();
 aiManager.initialize(config);
@@ -192,10 +192,10 @@ SELECT id, bio, avatar_url FROM users WHERE bio IS NOT NULL;
 ### 完整迁移流程
 
 ```java
-import org.verydb.justdb.ai.AiSchemaManager;
-import org.verydb.justdb.cli.config.AiConfig;
-import org.verydb.justdb.schema.Justdb;
-import org.verydb.justdb.migration.SchemaMigrationService;
+import ai.justdb.justdb.ai.AiSchemaManager;
+import ai.justdb.justdb.cli.config.AiConfig;
+import ai.justdb.justdb.schema.Justdb;
+import ai.justdb.justdb.migration.SchemaMigrationService;
 
 public class AiMigrationExample {
 

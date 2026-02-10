@@ -86,10 +86,10 @@ justdb-mysql-protocol/
     └── MySQLSession.java         # 会话管理
 
 justdb-core/
-├── src/main/java/org/verydb/justdb/jdbc/
+├── src/main/java/ai.justdb/justdb/jdbc/
 │   ├── VirtualTableProvider.java  # 虚拟表提供者接口
 │   └── BuiltinVirtualTables.java # 内置虚拟表工厂类
-└── src/test/java/org/verydb/justdb/jdbc/
+└── src/test/java/ai.justdb/justdb/jdbc/
     ├── VirtualTableTest.java       # 虚拟表单元测试（5个）
     ├── VirtualTableVerify.java     # 独立验证类
     ├── BuiltinVirtualTablesTest.java # 辅助方法单元测试（6个）
@@ -269,7 +269,7 @@ justdb-core/
 
 ```
 justdb-mysql-protocol/
-├── src/main/java/org/verydb/justdb/mysql/
+├── src/main/java/ai.justdb/justdb/mysql/
 │   ├── MySQLServer.java              [服务器入口]
 │   ├── MySQLServerConfig.java        [配置类]
 │   ├── codec/
@@ -296,10 +296,10 @@ justdb-mysql-protocol/
 - `pom.xml` - 添加 justdb-mysql-protocol 模块
 
 **修改现有 JDBC 组件（仅 1 个文件）：**
-- `justdb-core/src/main/java/org/verydb/justdb/jdbc/JustdbDataSource.java` [添加虚拟表支持]
+- `justdb-core/src/main/java/ai.justdb/justdb/jdbc/JustdbDataSource.java` [添加虚拟表支持]
 
 **新增 JDBC 组件（仅 1 个文件）：**
-- `justdb-core/src/main/java/org/verydb/justdb/jdbc/VirtualTableProvider.java` [虚拟表提供者接口]
+- `justdb-core/src/main/java/ai.justdb/justdb/jdbc/VirtualTableProvider.java` [虚拟表提供者接口]
 
 ---------------------------
 
@@ -455,10 +455,10 @@ public class ShowCommandHandler {
 **VirtualTableProvider.java**（新增，`jdbc/` 包下）
 
 ```java
-package org.verydb.justdb.jdbc;
+package ai.justdb.justdb.jdbc;
 
-import org.verydb.justdb.schema.Justdb;
-import org.verydb.justdb.schema.Table;
+import ai.justdb.justdb.schema.Justdb;
+import ai.justdb.justdb.schema.Table;
 import java.util.Map;
 
 /**
@@ -484,10 +484,10 @@ public interface VirtualTableProvider {
 **VirtualTableResult.java**（新增，`jdbc/` 包下）
 
 ```java
-package org.verydb.justdb.jdbc;
+package ai.justdb.justdb.jdbc;
 
-import org.verydb.justdb.schema.Table;
-import org.verydb.justdb.schema.Data;
+import ai.justdb.justdb.schema.Table;
+import ai.justdb.justdb.schema.Data;
 
 /**
  * Virtual table result - 虚拟表结果
@@ -836,10 +836,10 @@ Connection conn = DriverManager.getConnection(url, "user", "password");
 #### VirtualTableProvider.java（新增）
 
 ```java
-package org.verydb.justdb.jdbc;
+package ai.justdb.justdb.jdbc;
 
-import org.verydb.justdb.schema.Justdb;
-import org.verydb.justdb.schema.Table;
+import ai.justdb.justdb.schema.Justdb;
+import ai.justdb.justdb.schema.Table;
 import java.util.Map;
 
 /**
@@ -956,7 +956,7 @@ dataSource.setVirtualTableProvider(builtinProvider);
 ### 11.5 包结构（极简）
 
 ```
-org.verydb.justdb.jdbc/
+ai.justdb.justdb.jdbc/
 └── VirtualTableProvider.java   # 虚拟表提供者接口（函数式）
 ```
 
@@ -1116,14 +1116,14 @@ $ mvn clean compile -pl justdb-core -DskipTests
 [INFO] BUILD SUCCESS
 
 # VirtualTableProvider.class 存在
-$ ls target/classes/org/verydb/justdb/jdbc/Virtual*.class
+$ ls target/classes/ai.justdb/justdb/jdbc/Virtual*.class
 VirtualTableProvider.class
 
 # JustdbDataSource 包含虚拟表方法
-$ javap -cp target/classes org.verydb.justdb.jdbc.JustdbDataSource | grep -i virtual
-private org.verydb.justdb.jdbc.VirtualTableProvider virtualTableProvider;
-  public void setVirtualTableProvider(org.verydb.justdb.jdbc.VirtualTableProvider);
-  public org.verydb.justdb.jdbc.VirtualTableProvider getVirtualTableProvider();
+$ javap -cp target/classes ai.justdb.justdb.jdbc.JustdbDataSource | grep -i virtual
+private ai.justdb.justdb.jdbc.VirtualTableProvider virtualTableProvider;
+  public void setVirtualTableProvider(ai.justdb.justdb.jdbc.VirtualTableProvider);
+  public ai.justdb.justdb.jdbc.VirtualTableProvider getVirtualTableProvider();
 ```
 
 ### 12.2 功能验证
@@ -1238,10 +1238,10 @@ for (Row row : tablesData.getRows()) {
 ```bash
 $ mvn test -pl justdb-core -Dtest=VirtualTableTest,BuiltinVirtualTablesTest
 ...
-Running org.verydb.justdb.jdbc.VirtualTableTest
+Running ai.justdb.justdb.jdbc.VirtualTableTest
 Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
 
-Running org.verydb.justdb.jdbc.BuiltinVirtualTablesTest
+Running ai.justdb.justdb.jdbc.BuiltinVirtualTablesTest
 Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
 
 Results:
@@ -1309,7 +1309,7 @@ BUILD SUCCESS
 
 ### BuiltinVirtualTables 实现详情
 
-**文件路径**: `justdb-core/src/main/java/org/verydb/justdb/jdbc/BuiltinVirtualTables.java`
+**文件路径**: `justdb-core/src/main/java/ai.justdb/justdb/jdbc/BuiltinVirtualTables.java`
 
 **公共方法**:
 ```java
@@ -1529,8 +1529,8 @@ if (virtualTable != null) {
 
     // 检查虚拟表是否有附加数据
     Object virtualData = virtualTable.getUnknownAttrs().get("__virtual_data__");
-    if (virtualData instanceof org.verydb.justdb.schema.Data) {
-        org.verydb.justdb.schema.Data data = (org.verydb.justdb.schema.Data) virtualData;
+    if (virtualData instanceof ai.justdb.justdb.schema.Data) {
+        ai.justdb.justdb.schema.Data data = (ai.justdb.justdb.schema.Data) virtualData;
         vd.addDataNode(data);  // 加载数据到 TableData
     }
 
@@ -1545,6 +1545,6 @@ if (virtualTable != null) {
 
 ```
 justdb-core/
-└── src/test/java/org/verydb/justdb/jdbc/
+└── src/test/java/ai.justdb/justdb/jdbc/
     └── VirtualTableSqlExecutorIntegrationTest.java  # 集成测试（13个测试用例）
 ```

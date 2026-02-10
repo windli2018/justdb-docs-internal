@@ -877,14 +877,14 @@ UPDATE user_roles SET username='nonexistent' WHERE id=1;
 
 ### Phase 1: 创建虚拟列解析器
 
-**新建文件**：`justdb-core/src/main/java/org/verydb/justdb/jdbc/virtual/VirtualColumnResolver.java`
+**新建文件**：`justdb-core/src/main/java/ai.justdb/justdb/jdbc/virtual/VirtualColumnResolver.java`
 
 ```java
-package org.verydb.justdb.jdbc.virtual;
+package ai.justdb.justdb.jdbc.virtual;
 
-import org.verydb.justdb.jdbc.JustdbDataSource;
-import org.verydb.justdb.schema.Column;
-import org.verydb.justdb.schema.Table;
+import ai.justdb.justdb.jdbc.JustdbDataSource;
+import ai.justdb.justdb.schema.Column;
+import ai.justdb.justdb.schema.Table;
 
 import java.util.Map;
 
@@ -952,7 +952,7 @@ public class VirtualColumnResolver {
 
 ### Phase 2: 集成到 SqlExecutor
 
-**修改文件**：`justdb-core/src/main/java/org/verydb/justdb/jdbc/SqlExecutor.java`
+**修改文件**：`justdb-core/src/main/java/ai.justdb/justdb/jdbc/SqlExecutor.java`
 
 **关键集成点**：`evaluateExprForRow()` 方法（约 5253-5600 行）
 
@@ -1008,10 +1008,10 @@ public int executeUpdate(String sql) throws SQLException {
 **说明**：利用现有上下文机制，无需添加枚举或修改 DBGenerator 构造函数
 
 **修改文件**：
-- `justdb-core/src/main/java/org/verydb/justdb/generator/GeneralContextParams.java` - 添加 `computedColumn` 字段
-- `justdb-core/src/main/java/org/verydb/justdb/templates/TemplateExecutor.java` - 传递 computedColumn 到模板上下文（已有 additionalParams 机制）
-- `justdb-core/src/main/java/org/verydb/justdb/cli/MigrateCommand.java` - 添加 `--computed-column` 参数
-- `justdb-core/src/main/java/org/verydb/justdb/cli/ValidateCommand.java` - 添加 `--computed-column` 参数
+- `justdb-core/src/main/java/ai.justdb/justdb/generator/GeneralContextParams.java` - 添加 `computedColumn` 字段
+- `justdb-core/src/main/java/ai.justdb/justdb/templates/TemplateExecutor.java` - 传递 computedColumn 到模板上下文（已有 additionalParams 机制）
+- `justdb-core/src/main/java/ai.justdb/justdb/cli/MigrateCommand.java` - 添加 `--computed-column` 参数
+- `justdb-core/src/main/java/ai.justdb/justdb/cli/ValidateCommand.java` - 添加 `--computed-column` 参数
 
 **GeneralContextParams 扩展**：
 
@@ -1161,7 +1161,7 @@ public class ValidateCommand extends BaseCommand implements Callable<Integer> {
 
 ### Phase 5: ORM 生成过滤
 
-**修改文件**：`justdb-core/src/main/java/org/verydb/justdb/generator/JavaGenerator.java`
+**修改文件**：`justdb-core/src/main/java/ai.justdb/justdb/generator/JavaGenerator.java`
 
 ```java
 // 在生成实体类字段时，过滤虚拟列

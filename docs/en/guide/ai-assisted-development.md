@@ -70,7 +70,7 @@ You can define schemas using XML, YAML, JSON, SQL, TOML, or Markdown - whichever
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<Justdb xmlns="http://www.verydb.org/justdb">
+<Justdb xmlns="http://www.justdb.ai/justdb">
     <Table name="orders" comment="Order table">
         <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
         <Column name="order_no" type="VARCHAR(32)" nullable="false" unique="true"/>
@@ -341,7 +341,7 @@ ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM orders");
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<Justdb xmlns="http://www.verydb.org/justdb">
+<Justdb xmlns="http://www.justdb.ai/justdb">
     <Table name="users">
         <Column name="id" type="BIGINT" primaryKey="true"/>
         <Column name="email" type="VARCHAR(100)"/>
@@ -452,7 +452,7 @@ JustDB supports virtual columns for dynamically computing values based on other 
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<Justdb xmlns="http://www.verydb.org/justdb">
+<Justdb xmlns="http://www.justdb.ai/justdb">
     <Table name="products">
         <Column name="id" type="BIGINT" primaryKey="true"/>
         <Column name="name" type="VARCHAR(100)"/>
@@ -639,7 +639,7 @@ JustdbConnection conn = new JustdbConnection(dataSource);
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<Justdb xmlns="http://www.verydb.org/justdb">
+<Justdb xmlns="http://www.justdb.ai/justdb">
     <!-- Schema file is both code and documentation -->
     <Table name="orders" comment="Order table - stores user order information">
         <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"

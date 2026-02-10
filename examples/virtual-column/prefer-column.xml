@@ -8,7 +8,7 @@
   - Providing fallback values for unsupported expressions
   - Customizing DDL output per database
 -->
-<Justdb xmlns="http://www.verydb.org/schema/v1">
+<Justdb xmlns="http://www.justdb.ai/schema/v1">
 
   <!-- Example 1: Using preferColumn for virtual column fallback -->
   <Table name="users">

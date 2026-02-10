@@ -235,9 +235,9 @@ name = "email"
 #### Option 1: Using Java API
 
 ```java
-import org.verydb.justdb.FormatFactory;
-import org.verydb.justdb.SchemaDeployer;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.FormatFactory;
+import ai.justdb.justdb.SchemaDeployer;
+import ai.justdb.justdb.schema.Justdb;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -669,6 +669,6 @@ justdb ai "Create an order table"
 
 ## Get Help
 
-- **Documentation**: [https://verydb.github.io/justdb](https://verydb.github.io/justdb)
-- **GitHub**: [https://github.com/verydb/justdb](https://github.com/verydb/justdb)
-- **Issue Tracker**: [GitHub Issues](https://github.com/verydb/justdb/issues)
+- **Documentation**: [https://justdb.github.io/justdb](https://justdb.github.io/justdb)
+- **GitHub**: [https://github.com/justdb/justdb](https://github.com/justdb/justdb)
+- **Issue Tracker**: [GitHub Issues](https://github.com/justdb/justdb/issues)

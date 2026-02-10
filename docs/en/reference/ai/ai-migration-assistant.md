@@ -14,8 +14,8 @@ JustDB AI migration assistant provides intelligent database Schema migration rec
 ### Basic Usage
 
 ```java
-import org.verydb.justdb.ai.AIAssistant;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.ai.AIAssistant;
+import ai.justdb.justdb.schema.Justdb;
 
 // Create current Schema and target Schema
 Justdb currentSchema = loadSchema("current-schema.yaml");
@@ -60,7 +60,7 @@ Warnings:
 The AI migration assistant automatically analyzes potential risks during the migration process:
 
 ```java
-import org.verydb.justdb.ai.AiSchemaManager;
+import ai.justdb.justdb.ai.AiSchemaManager;
 
 AiSchemaManager aiManager = new AiSchemaManager();
 aiManager.initialize(config);
@@ -192,10 +192,10 @@ SELECT id, bio, avatar_url FROM users WHERE bio IS NOT NULL;
 ### Complete Migration Workflow
 
 ```java
-import org.verydb.justdb.ai.AiSchemaManager;
-import org.verydb.justdb.cli.config.AiConfig;
-import org.verydb.justdb.schema.Justdb;
-import org.verydb.justdb.migration.SchemaMigrationService;
+import ai.justdb.justdb.ai.AiSchemaManager;
+import ai.justdb.justdb.cli.config.AiConfig;
+import ai.justdb.justdb.schema.Justdb;
+import ai.justdb.justdb.migration.SchemaMigrationService;
 
 public class AiMigrationExample {
 

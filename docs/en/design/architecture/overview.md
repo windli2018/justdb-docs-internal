@@ -383,6 +383,6 @@ Two tracking mechanisms:
 
 ## Related Resources
 
-- **Source code**: https://github.com/verydb/justdb
+- **Source code**: https://github.com/justdb/justdb
 - **Documentation**: docs/ directory
 - **Issue tracking**: GitHub Issues

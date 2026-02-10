@@ -23,7 +23,7 @@ Learn how to use JustDB in Spring Boot projects for automated database migration
 ```xml
 <!-- pom.xml -->
 <dependency>
-    <groupId>org.verydb.justdb</groupId>
+    <groupId>ai.justdb.justdb</groupId>
     <artifactId>justdb-spring-boot-starter</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -490,8 +490,8 @@ public class MigrationExceptionHandler {
 # application.yml
 logging:
   level:
-    org.verydb.justdb: DEBUG
-    org.verydb.justdb.migration: INFO
+    ai.justdb.justdb: DEBUG
+    ai.justdb.justdb.migration: INFO
 
 management:
   endpoints:

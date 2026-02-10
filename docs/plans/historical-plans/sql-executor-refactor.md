@@ -5,7 +5,7 @@
 ### 1.1 现状分析
 
 **当前规模**：
-- 文件：`justdb-core/src/main/java/org/verydb/justdb/jdbc/SqlExecutor.java`
+- 文件：`justdb-core/src/main/java/ai.justdb/justdb/jdbc/SqlExecutor.java`
 - 代码行数：**8252 行**（持续增长中）
 - 方法数量：~200 个私有/公共方法
 - 职责数量：6+ 个核心职责
@@ -73,9 +73,9 @@ SqlExecutor (8252 行)
 
 **接口定义**：
 ```java
-package org.verydb.justdb.jdbc.executor;
+package ai.justdb.justdb.jdbc.executor;
 
-import org.verydb.justdb.jdbc.JustdbDataSource;
+import ai.justdb.justdb.jdbc.JustdbDataSource;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -142,9 +142,9 @@ public interface QueryProcessor {
 
 **接口定义**：
 ```java
-package org.verydb.justdb.jdbc.executor;
+package ai.justdb.justdb.jdbc.executor;
 
-import org.verydb.justdb.jdbc.JustdbDataSource;
+import ai.justdb.justdb.jdbc.JustdbDataSource;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -222,9 +222,9 @@ public interface MutationProcessor {
 
 **接口定义**：
 ```java
-package org.verydb.justdb.jdbc.executor;
+package ai.justdb.justdb.jdbc.executor;
 
-import org.verydb.justdb.jdbc.JustdbDataSource;
+import ai.justdb.justdb.jdbc.JustdbDataSource;
 import java.sql.SQLException;
 
 /**
@@ -307,9 +307,9 @@ public interface DdlProcessor {
 
 **接口定义**：
 ```java
-package org.verydb.justdb.jdbc.executor;
+package ai.justdb.justdb.jdbc.executor;
 
-import org.verydb.justdb.jdbc.JustdbDataSource;
+import ai.justdb.justdb.jdbc.JustdbDataSource;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -406,9 +406,9 @@ public interface ExpressionEngine {
 
 **接口定义**：
 ```java
-package org.verydb.justdb.jdbc.executor;
+package ai.justdb.justdb.jdbc.executor;
 
-import org.verydb.justdb.jdbc.JustdbDataSource;
+import ai.justdb.justdb.jdbc.JustdbDataSource;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -489,9 +489,9 @@ public interface ResultSetProcessor {
 
 **接口定义**：
 ```java
-package org.verydb.justdb.jdbc.executor;
+package ai.justdb.justdb.jdbc.executor;
 
-import org.verydb.justdb.jdbc.JustdbDataSource;
+import ai.justdb.justdb.jdbc.JustdbDataSource;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -535,7 +535,7 @@ public interface MetadataProcessor {
 ### 3.1 重构后的目录结构
 
 ```
-justdb-core/src/main/java/org/verydb/justdb/jdbc/
+justdb-core/src/main/java/ai.justdb/justdb/jdbc/
 ├── SqlExecutor.java                    [统一入口，~200 行]
 └── executor/
     ├── QueryProcessor.java             [接口，~100 行]
@@ -555,10 +555,10 @@ justdb-core/src/main/java/org/verydb/justdb/jdbc/
 ### 3.2 新 SqlExecutor 结构（重构后）
 
 ```java
-package org.verydb.justdb.jdbc;
+package ai.justdb.justdb.jdbc;
 
-import org.verydb.justdb.jdbc.executor.*;
-import org.verydb.justdb.function.FunctionRegistry;
+import ai.justdb.justdb.jdbc.executor.*;
+import ai.justdb.justdb.function.FunctionRegistry;
 
 /**
  * SQL Executor - unified entry point for SQL execution
@@ -643,7 +643,7 @@ public class SqlExecutor {
 ├────────────────────────────────────────────────────────────┤
 │ ✓ 定义 6 个 Processor 接口                                  │
 │ ✓ 设计依赖注入框架                                          │
-│ ✓ 创建包结构 org.verydb.justdb.jdbc.executor                │
+│ ✓ 创建包结构 ai.justdb.justdb.jdbc.executor                │
 │ ✓ 编写接口文档                                              │
 └────────────────────────────────────────────────────────────┘
                             ↓
@@ -919,11 +919,11 @@ main (stable)
 
 1. **FunctionRegistry 独立模块**
    - 当前作为 SqlExecutor 内部类
-   - 可独立为 `org.verydb.justdb.function` 包
+   - 可独立为 `ai.justdb.justdb.function` 包
 
 2. **VirtualTable 支持分离**
    - 当前集成在 SqlExecutor 中
-   - 可独立为 `org.verydb.justdb.jdbc.virtual` 包
+   - 可独立为 `ai.justdb.justdb.jdbc.virtual` 包
 
 3. **SQL 解析器抽象**
    - 当前直接依赖 Druid Parser

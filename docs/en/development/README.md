@@ -60,7 +60,7 @@ Guide for contributing to JustDB, developing plugins, and understanding the code
 
 ```bash
 # Clone repository
-git clone https://github.com/verydb/justdb.git
+git clone https://github.com/justdb/justdb.git
 cd justdb
 
 # Build project
@@ -95,7 +95,7 @@ git push origin feature/my-feature
 justdb/
 ├── justdb-core/              # Core library
 │   ├── src/main/java/
-│   │   └── org/verydb/justdb/
+│   │   └── ai.justdb/justdb/
 │   │       ├── schema/       # Schema model
 │   │       ├── adapter/      # Database adapters
 │   │       ├── plugin/       # Plugin system
@@ -198,7 +198,7 @@ mvn verify
 ```java
 package com.example.justdb;
 
-import org.verydb.justdb.plugin.*;
+import ai.justdb.justdb.plugin.*;
 
 public class MyPlugin extends JustdbPlugin {
     @Override
@@ -220,7 +220,7 @@ public class MyPlugin extends JustdbPlugin {
 
 ### Register Plugin
 
-Create `META-INF/services/org.verydb.justdb.plugin.JustdbPlugin`:
+Create `META-INF/services/ai.justdb.justdb.plugin.JustdbPlugin`:
 
 ```
 com.example.justdb.MyPlugin
@@ -262,12 +262,12 @@ refactor: simplify plugin loading logic
 
 ### Documentation
 
-- [JustDB Documentation](https://verydb.github.io/justdb)
+- [JustDB Documentation](https://justdb.github.io/justdb)
 
 ### Community
 
-- [GitHub Issues](https://github.com/verydb/justdb/issues)
-- [GitHub Discussions](https://github.com/verydb/justdb/discussions)
+- [GitHub Issues](https://github.com/justdb/justdb/issues)
+- [GitHub Discussions](https://github.com/justdb/justdb/discussions)
 
 ## Navigation
 

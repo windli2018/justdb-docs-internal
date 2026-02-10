@@ -47,7 +47,7 @@ public interface SchemaLocation {
 
 Factory class for loading Schema from various locations.
 
-**Package Path**: `org.verydb.justdb.util.schema.SchemaLoaderFactory`
+**Package Path**: `ai.justdb.justdb.util.schema.SchemaLoaderFactory`
 
 ### Core Methods
 
@@ -302,7 +302,7 @@ SchemaLoaderFactory.load("registry:my-schema", manager);
 
 Configures Schema loading behavior.
 
-**Package Path**: `org.verydb.justdb.util.SchemaLoadConfig`
+**Package Path**: `ai.justdb.justdb.util.SchemaLoadConfig`
 
 **Core Properties**:
 
@@ -359,10 +359,10 @@ if (result.isSuccess()) {
 ### Basic Loading
 
 ```java
-import org.verydb.justdb.JustdbManager;
-import org.verydb.justdb.util.schema.SchemaLoaderFactory;
-import org.verydb.justdb.cli.Loaded;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.JustdbManager;
+import ai.justdb.justdb.util.schema.SchemaLoaderFactory;
+import ai.justdb.justdb.cli.Loaded;
+import ai.justdb.justdb.schema.Justdb;
 
 public class BasicLoading {
     public static void main(String[] args) {
@@ -385,10 +385,10 @@ public class BasicLoading {
 ### Loading from Multiple Sources
 
 ```java
-import org.verydb.justdb.JustdbManager;
-import org.verydb.justdb.util.schema.SchemaLoaderFactory;
-import org.verydb.justdb.cli.Loaded;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.JustdbManager;
+import ai.justdb.justdb.util.schema.SchemaLoaderFactory;
+import ai.justdb.justdb.cli.Loaded;
+import ai.justdb.justdb.schema.Justdb;
 import java.util.List;
 
 public class MultiSourceLoading {
@@ -428,10 +428,10 @@ public class MultiSourceLoading {
 ### Directory Scanning
 
 ```java
-import org.verydb.justdb.JustdbManager;
-import org.verydb.justdb.util.schema.SchemaLoaderFactory;
-import org.verydb.justdb.cli.Loaded;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.JustdbManager;
+import ai.justdb.justdb.util.schema.SchemaLoaderFactory;
+import ai.justdb.justdb.cli.Loaded;
+import ai.justdb.justdb.schema.Justdb;
 import java.util.List;
 
 public class DirectoryScan {
@@ -461,10 +461,10 @@ public class DirectoryScan {
 ### Custom Loader
 
 ```java
-import org.verydb.justdb.JustdbManager;
-import org.verydb.justdb.util.schema.SchemaLocation;
-import org.verydb.justdb.cli.Loaded;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.JustdbManager;
+import ai.justdb.justdb.util.schema.SchemaLocation;
+import ai.justdb.justdb.cli.Loaded;
+import ai.justdb.justdb.schema.Justdb;
 import java.util.Collections;
 
 public class CustomLoaderExample {
@@ -507,10 +507,10 @@ public class CustomLoaderExample {
 ### Format Conversion
 
 ```java
-import org.verydb.justdb.JustdbManager;
-import org.verydb.justdb.util.SchemaLoader;
-import org.verydb.justdb.FormatFactory;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.JustdbManager;
+import ai.justdb.justdb.util.SchemaLoader;
+import ai.justdb.justdb.FormatFactory;
+import ai.justdb.justdb.schema.Justdb;
 import java.io.FileOutputStream;
 
 public class FormatConversion {
@@ -548,7 +548,7 @@ public class FormatConversion {
 ### Reference Resolution
 
 ```java
-import org.verydb.justdb.util.SchemaLoadConfig;
+import ai.justdb.justdb.util.SchemaLoadConfig;
 
 SchemaLoadConfig config = new SchemaLoadConfig();
 config.setResolveReferences(true);

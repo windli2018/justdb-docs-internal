@@ -46,7 +46,7 @@ jdbc:justdb:classpath:/schema.yaml
 
 ```java
 // Load driver
-Class.forName("org.verydb.justdb.jdbc.JustdbDriver");
+Class.forName("ai.justdb.justdb.jdbc.JustdbDriver");
 
 // Connect to in-memory database
 Connection conn = DriverManager.getConnection(

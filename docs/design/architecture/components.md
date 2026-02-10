@@ -481,7 +481,7 @@ public interface JustdbPlugin {
 META-INF/default-plugins.xml
 
 // 2. 外部插件
-META-INF/services/org.verydb.justdb.plugin.JustdbPlugin
+META-INF/services/ai.justdb.justdb.plugin.JustdbPlugin
 
 // 3. 用户插件
 justdb.plugins=/path/to/plugins

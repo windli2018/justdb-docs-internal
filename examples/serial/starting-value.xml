@@ -5,7 +5,7 @@
   This example demonstrates how to set custom starting values
   and increment steps for auto-increment columns.
 -->
-<Justdb xmlns="http://www.verydb.org/schema/v1">
+<Justdb xmlns="http://www.justdb.ai/schema/v1">
 
   <!-- MySQL: Starting value via ALTER TABLE (manual) -->
   <Database id="mysql-custom" type="mysql">

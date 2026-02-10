@@ -7,7 +7,7 @@ export default hopeTheme({
   hostname: "https://justdb.ai",
   author: {
     name: "JustDB Team",
-    url: "https://github.com/verydb/justdb",
+    url: "https://github.com/justdb/justdb",
   },
 
   // 使用新配置方式
@@ -19,7 +19,7 @@ export default hopeTheme({
 
   favicon: "/favicon.ico",
 
-  repo: "verydb/justdb",
+  repo: "justdb/justdb",
 
   docsDir: "docs",
 

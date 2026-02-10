@@ -242,8 +242,8 @@ justdb convert -f xlsx -t xml schema.xlsx > schema.xml
 ### Java API
 
 ```java
-import org.verydb.justdb.loader.SchemaLoader;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.loader.SchemaLoader;
+import ai.justdb.justdb.schema.Justdb;
 
 // Load Excel file
 Loaded&lt;Justdb&gt; loaded = SchemaLoader.loadFromFile("schema.xlsx");
@@ -276,8 +276,8 @@ justdb db2schema -o schema.xlsx
 ### Java API
 
 ```java
-import org.verydb.justdb.excel.WriteToExcel;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.excel.WriteToExcel;
+import ai.justdb.justdb.schema.Justdb;
 import java.io.File;
 
 // Create Schema

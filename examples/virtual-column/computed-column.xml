@@ -7,7 +7,7 @@
   - Expression-based columns
   - Database-specific virtual columns
 -->
-<Justdb xmlns="http://www.verydb.org/schema/v1">
+<Justdb xmlns="http://www.justdb.ai/schema/v1">
 
   <!-- MySQL: Generated columns (STORED vs VIRTUAL) -->
   <Database id="mysql-demo" type="mysql">

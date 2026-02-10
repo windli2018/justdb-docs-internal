@@ -5,7 +5,7 @@
   This example demonstrates the basic usage of serial/auto-increment columns
   across different database types.
 -->
-<Justdb xmlns="http://www.verydb.org/schema/v1">
+<Justdb xmlns="http://www.justdb.ai/schema/v1">
 
   <!-- MySQL: AUTO_INCREMENT -->
   <Database id="mysql-demo" type="mysql">

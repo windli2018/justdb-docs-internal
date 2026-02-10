@@ -144,7 +144,7 @@ jdbc:justdb:memory:/schema.yaml?dbtype=mysql&dryrun=false
 **使用示例**：
 ```java
 // 加载驱动
-Class.forName("org.verydb.justdb.jdbc.JustdbDriver");
+Class.forName("ai.justdb.justdb.jdbc.JustdbDriver");
 
 // 创建连接
 Connection conn = DriverManager.getConnection(

@@ -183,9 +183,9 @@ Support `information_schema` system table queries with a lightweight virtual tab
 **VirtualTableProvider.java**
 
 ```java
-package org.verydb.justdb.jdbc;
+package ai.justdb.justdb.jdbc;
 
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.schema.Justdb;
 import java.util.Map;
 
 /**

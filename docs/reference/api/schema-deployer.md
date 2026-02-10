@@ -27,7 +27,7 @@ SchemaDeployer 是 JustDB 的核心部署组件，负责：
 - 管理迁移历史
 - 验证 Schema 状态
 
-**包路径**: `org.verydb.justdb.SchemaDeployer`
+**包路径**: `ai.justdb.justdb.SchemaDeployer`
 
 ### 核心特性
 
@@ -393,8 +393,8 @@ try {
 ### 基本部署
 
 ```java
-import org.verydb.justdb.SchemaDeployer;
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.SchemaDeployer;
+import ai.justdb.justdb.schema.*;
 import java.sql.*;
 import java.util.Arrays;
 
@@ -440,8 +440,8 @@ public class BasicDeployment {
 ### 增量部署
 
 ```java
-import org.verydb.justdb.SchemaDeployer;
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.SchemaDeployer;
+import ai.justdb.justdb.schema.*;
 import java.sql.*;
 
 public class IncrementalDeployment {
@@ -480,8 +480,8 @@ public class IncrementalDeployment {
 ### 版本化部署
 
 ```java
-import org.verydb.justdb.SchemaDeployer;
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.SchemaDeployer;
+import ai.justdb.justdb.schema.*;
 import java.sql.*;
 
 public class VersionedDeployment {
@@ -526,8 +526,8 @@ public class VersionedDeployment {
 ### SQL 生成模式
 
 ```java
-import org.verydb.justdb.SchemaDeployer;
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.SchemaDeployer;
+import ai.justdb.justdb.schema.*;
 import java.util.*;
 
 public class SqlGeneration {
@@ -556,9 +556,9 @@ public class SqlGeneration {
 ### Schema 验证
 
 ```java
-import org.verydb.justdb.SchemaDeployer;
-import org.verydb.justdb.SchemaDeployer.SchemaVerificationResult;
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.SchemaDeployer;
+import ai.justdb.justdb.SchemaDeployer.SchemaVerificationResult;
+import ai.justdb.justdb.schema.*;
 import java.sql.*;
 
 public class SchemaVerification {
@@ -602,8 +602,8 @@ public class SchemaVerification {
 ### 多数据库支持
 
 ```java
-import org.verydb.justdb.SchemaDeployer;
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.SchemaDeployer;
+import ai.justdb.justdb.schema.*;
 import java.util.*;
 
 public class MultiDatabaseSupport {

@@ -27,7 +27,7 @@ SchemaDeployer is the core deployment component of JustDB, responsible for:
 - Managing migration history
 - Verifying Schema status
 
-**Package Path**: `org.verydb.justdb.SchemaDeployer`
+**Package Path**: `ai.justdb.justdb.SchemaDeployer`
 
 ### Core Features
 
@@ -393,8 +393,8 @@ try {
 ### Basic Deployment
 
 ```java
-import org.verydb.justdb.SchemaDeployer;
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.SchemaDeployer;
+import ai.justdb.justdb.schema.*;
 import java.sql.*;
 import java.util.Arrays;
 
@@ -440,8 +440,8 @@ public class BasicDeployment {
 ### Incremental Deployment
 
 ```java
-import org.verydb.justdb.SchemaDeployer;
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.SchemaDeployer;
+import ai.justdb.justdb.schema.*;
 import java.sql.*;
 
 public class IncrementalDeployment {
@@ -480,8 +480,8 @@ public class IncrementalDeployment {
 ### Versioned Deployment
 
 ```java
-import org.verydb.justdb.SchemaDeployer;
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.SchemaDeployer;
+import ai.justdb.justdb.schema.*;
 import java.sql.*;
 
 public class VersionedDeployment {
@@ -526,8 +526,8 @@ public class VersionedDeployment {
 ### SQL Generation Mode
 
 ```java
-import org.verydb.justdb.SchemaDeployer;
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.SchemaDeployer;
+import ai.justdb.justdb.schema.*;
 import java.util.*;
 
 public class SqlGeneration {
@@ -556,9 +556,9 @@ public class SqlGeneration {
 ### Schema Verification
 
 ```java
-import org.verydb.justdb.SchemaDeployer;
-import org.verydb.justdb.SchemaDeployer.SchemaVerificationResult;
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.SchemaDeployer;
+import ai.justdb.justdb.SchemaDeployer.SchemaVerificationResult;
+import ai.justdb.justdb.schema.*;
 import java.sql.*;
 
 public class SchemaVerification {
@@ -602,8 +602,8 @@ public class SchemaVerification {
 ### Multi-Database Support
 
 ```java
-import org.verydb.justdb.SchemaDeployer;
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.SchemaDeployer;
+import ai.justdb.justdb.schema.*;
 import java.util.*;
 
 public class MultiDatabaseSupport {

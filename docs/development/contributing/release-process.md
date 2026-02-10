@@ -124,10 +124,10 @@ GitHub Actions 会自动：
 
 ```bash
 # 验证 Maven Central 可用
-mvn dependency:get -Dartifact=org.verydb.justdb:justdb-core:1.0.0
+mvn dependency:get -Dartifact=ai.justdb.justdb:justdb-core:1.0.0
 
 # 验证 GitHub Release
-# 访问: https://github.com/verydb/justdb/releases
+# 访问: https://github.com/justdb/justdb/releases
 ```
 
 ## 发布后任务

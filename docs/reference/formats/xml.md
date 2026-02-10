@@ -229,7 +229,7 @@ public class Justdb {
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<justdb:Justdb xmlns:justdb="http://www.verydb.org/justdb"
+<justdb:Justdb xmlns:justdb="http://www.justdb.ai/justdb"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               id="myapp"
               namespace="com.example">

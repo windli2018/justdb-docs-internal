@@ -207,7 +207,7 @@ public class MySqlPlugin implements JustdbPlugin {
 
 **位置**：JAR 包的 `META-INF/services/`
 
-**配置文件**：`META-INF/services/org.verydb.justdb.plugin.JustdbPlugin`
+**配置文件**：`META-INF/services/ai.justdb.justdb.plugin.JustdbPlugin`
 
 **内容**：
 ```
@@ -689,7 +689,7 @@ public class MyDatabasePlugin implements JustdbPlugin {
 <project>
     <dependencies>
         <dependency>
-            <groupId>org.verydb</groupId>
+            <groupId>ai.justdb</groupId>
             <artifactId>justdb-core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -715,7 +715,7 @@ public class MyDatabasePlugin implements JustdbPlugin {
 
 **步骤 3**：注册插件
 
-创建文件：`META-INF/services/org.verydb.justdb.plugin.JustdbPlugin`
+创建文件：`META-INF/services/ai.justdb.justdb.plugin.JustdbPlugin`
 
 ```
 com.example.justdb.MyDatabasePlugin

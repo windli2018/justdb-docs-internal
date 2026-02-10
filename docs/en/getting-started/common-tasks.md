@@ -512,7 +512,7 @@ jobs:
 
       - name: Setup JustDB
         run: |
-          wget https://github.com/verydb/justdb/releases/latest/download/justdb.tar.gz
+          wget https://github.com/justdb/justdb/releases/latest/download/justdb.tar.gz
           tar -xzf justdb.tar.gz
 
       - name: Migrate database

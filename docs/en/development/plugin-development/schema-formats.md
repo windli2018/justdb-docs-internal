@@ -173,8 +173,8 @@ Map<String, Object> result = HandlebarsReverseParser.parse(template, input);
 
 ## 文件位置
 
-- **实现文件**：`/home/wind/workspace/justdb/justdb-core/src/main/java/org/verydb/justdb/tools/HandlebarsReverseParser.java`
-- **测试文件**：`/home/wind/workspace/justdb/justdb-core/src/test/java/org/verydb/justdb/tools/HandlebarsReverseParserTest.java`
+- **实现文件**：`/home/wind/workspace/justdb/justdb-core/src/main/java/ai.justdb/justdb/tools/HandlebarsReverseParser.java`
+- **测试文件**：`/home/wind/workspace/justdb/justdb-core/src/test/java/ai.justdb/justdb/tools/HandlebarsReverseParserTest.java`
 
 ## 后续改进方向
 

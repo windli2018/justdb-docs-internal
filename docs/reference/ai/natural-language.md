@@ -141,9 +141,9 @@ ai:
 ### 1. 基础用法
 
 ```java
-import org.verydb.justdb.ai.AiSchemaManager;
-import org.verydb.justdb.cli.config.AiConfig;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.ai.AiSchemaManager;
+import ai.justdb.justdb.cli.config.AiConfig;
+import ai.justdb.justdb.schema.Justdb;
 
 // 创建 AI Schema 管理器
 AiSchemaManager aiManager = new AiSchemaManager();

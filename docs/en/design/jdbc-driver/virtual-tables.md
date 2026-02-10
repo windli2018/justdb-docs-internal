@@ -7,9 +7,9 @@ JustDB JDBC driver supports virtual tables for system metadata queries, particul
 ## Virtual Table Provider Interface
 
 ```java
-package org.verydb.justdb.jdbc;
+package ai.justdb.justdb.jdbc;
 
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.schema.Justdb;
 import java.util.Map;
 
 /**

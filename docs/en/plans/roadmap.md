@@ -248,7 +248,7 @@ timeline
 
 我们欢迎社区反馈！如果您有任何建议或想法，请：
 
-1. 在 [GitHub Issues](https://github.com/verydb/justdb/issues) 提交
+1. 在 [GitHub Issues](https://github.com/justdb/justdb/issues) 提交
 2. 参与讨论现有功能请求
 3. 投票影响优先级
 

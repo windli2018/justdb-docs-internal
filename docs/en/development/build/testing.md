@@ -81,7 +81,7 @@ mvn test -Dtest=ItemScopesTest
 mvn test -Dtest=ItemScopesTest#testTableScopesDeserialization
 
 # 运行特定包下的所有测试
-mvn test -Dtest=org.verydb.justdb.schema.*
+mvn test -Dtest=ai.justdb.justdb.schema.*
 ```
 
 ## Testcontainers 使用

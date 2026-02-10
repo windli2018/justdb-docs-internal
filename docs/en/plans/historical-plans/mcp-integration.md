@@ -29,12 +29,12 @@
 justdb-mcp/
 ├── pom.xml                          # Maven 配置
 ├── justdb-mcp-api/                  # API 模块
-│   └── src/main/java/org/verydb/justdb/mcp/api/
+│   └── src/main/java/ai.justdb/justdb/mcp/api/
 │       ├── McpConfig.java           # MCP 配置类
 │       ├── McpTool.java             # Tool 接口
 │       └── McpService.java          # 服务接口
 ├── justdb-mcp-core/                 # 核心实现模块
-│   └── src/main/java/org/verydb/justdb/mcp/core/
+│   └── src/main/java/ai.justdb/justdb/mcp/core/
 │       ├── server/                  # MCP 服务器
 │       │   ├── JustdbMcpServer.java # MCP 服务器主类
 │       │   └── McpServerLauncher.java
@@ -52,10 +52,10 @@ justdb-mcp/
 │       └── handler/                 # 请求处理
 │           └── ToolInvocationHandler.java
 ├── justdb-mcp-cli/                  # CLI 启动模块
-│   └── src/main/java/org/verydb/justdb/mcp/cli/
+│   └── src/main/java/ai.justdb/justdb/mcp/cli/
 │       └── McpCommand.java          # `justdb mcp` 命令
 └── justdb-mcp-integration-tests/    # 集成测试
-    └── src/test/java/org/verydb/justdb/mcp/
+    └── src/test/java/ai.justdb/justdb/mcp/
         └── McpServerIntegrationTest.java
 ```
 
@@ -129,10 +129,10 @@ mcp:
 
 ### Step 2: 实现 MCP API 模块 (justdb-mcp-api)
 
-**文件**: `justdb-mcp-api/src/main/java/org/verydb/justdb/mcp/api/McpConfig.java`
+**文件**: `justdb-mcp-api/src/main/java/ai.justdb/justdb/mcp/api/McpConfig.java`
 
 ```java
-package org.verydb.justdb.mcp.api;
+package ai.justdb.justdb.mcp.api;
 
 import lombok.Data;
 import java.util.List;
@@ -186,15 +186,15 @@ public class McpConfig {
     <version>0.15.0</version>
 </dependency>
 <dependency>
-    <groupId>org.verydb.justdb</groupId>
+    <groupId>ai.justdb.justdb</groupId>
     <artifactId>justdb-core</artifactId>
 </dependency>
 ```
 
-**文件**: `justdb-mcp-core/src/main/java/org/verydb/justdb/mcp/core/server/JustdbMcpServer.java`
+**文件**: `justdb-mcp-core/src/main/java/ai.justdb/justdb/mcp/core/server/JustdbMcpServer.java`
 
 ```java
-package org.verydb.justdb.mcp.core.server;
+package ai.justdb.justdb.mcp.core.server;
 
 import io.modelcontextprotocol.sdk.server.McpSyncServer;
 import io.modelcontextprotocol.sdk.server.McpServer;
@@ -202,9 +202,9 @@ import io.modelcontextprotocol.sdk.transport.stdio.StdioServerTransportProvider;
 import io.modelcontextprotocol.sdk.json.JacksonMcpJsonMapper;
 import io.modelcontextprotocol.sdk.schema.McpSchema;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.verydb.justdb.JustdbManager;
-import org.verydb.justdb.mcp.api.McpConfig;
-import org.verydb.justdb.mcp.core.tools.*;
+import ai.justdb.justdb.JustdbManager;
+import ai.justdb.justdb.mcp.api.McpConfig;
+import ai.justdb.justdb.mcp.core.tools.*;
 
 import java.util.List;
 
@@ -290,19 +290,19 @@ public class JustdbMcpServer {
 
 ### Step 4: 实现 MCP Tools
 
-**文件**: `justdb-mcp-core/src/main/java/org/verydb/justdb/mcp/core/tools/SchemaReadTool.java`
+**文件**: `justdb-mcp-core/src/main/java/ai.justdb/justdb/mcp/core/tools/SchemaReadTool.java`
 
 ```java
-package org.verydb.justdb.mcp.core.tools;
+package ai.justdb.justdb.mcp.core.tools;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.sdk.schema.McpSchema;
 import io.modelcontextprotocol.sdk.server.McpServerFeatures;
-import org.verydb.justdb.JustdbManager;
-import org.verydb.justdb.FormatFactory;
-import org.verydb.justdb.mcp.api.McpConfig;
-import org.verydb.justdb.schema.Justdb;
-import org.verydb.justdb.util.SchemaLoaderFactory;
+import ai.justdb.justdb.JustdbManager;
+import ai.justdb.justdb.FormatFactory;
+import ai.justdb.justdb.mcp.api.McpConfig;
+import ai.justdb.justdb.schema.Justdb;
+import ai.justdb.justdb.util.SchemaLoaderFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -412,16 +412,16 @@ public class SchemaReadTool {
 
 ### Step 5: 实现 CLI 命令
 
-**文件**: `justdb-mcp-cli/src/main/java/org/verydb/justdb/mcp/cli/McpCommand.java`
+**文件**: `justdb-mcp-cli/src/main/java/ai.justdb/justdb/mcp/cli/McpCommand.java`
 
 ```java
-package org.verydb.justdb.mcp.cli;
+package ai.justdb.justdb.mcp.cli;
 
-import org.verydb.justdb.JustdbManager;
-import org.verydb.justdb.cli.BaseCommand;
-import org.verydb.justdb.cli.CliContext;
-import org.verydb.justdb.mcp.api.McpConfig;
-import org.verydb.justdb.mcp.core.server.JustdbMcpServer;
+import ai.justdb.justdb.JustdbManager;
+import ai.justdb.justdb.cli.BaseCommand;
+import ai.justdb.justdb.cli.CliContext;
+import ai.justdb.justdb.mcp.api.McpConfig;
+import ai.justdb.justdb.mcp.core.server.JustdbMcpServer;
 import picocli.CommandLine;
 import picocli.CommandLine.Option;
 
@@ -505,7 +505,7 @@ public class McpCommand extends BaseCommand implements Callable<Integer> {
 
 ### Step 6: 集成到 JustDBCli
 
-**文件**: `justdb-core/src/main/java/org/verydb/justdb/cli/JustDBCli.java`
+**文件**: `justdb-core/src/main/java/ai.justdb/justdb/cli/JustDBCli.java`
 
 在 `JustDBCli` 中添加 MCP 命令注册：
 
@@ -548,25 +548,25 @@ public class McpCommand extends BaseCommand implements Callable<Integer> {
 
 1. `/home/wind/workspace/justdb/justdb-mcp/pom.xml`
 2. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-api/pom.xml`
-3. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-api/src/main/java/org/verydb/justdb/mcp/api/McpConfig.java`
+3. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-api/src/main/java/ai.justdb/justdb/mcp/api/McpConfig.java`
 4. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/pom.xml`
-5. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/src/main/java/org/verydb/justdb/mcp/core/server/JustdbMcpServer.java`
-6. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/src/main/java/org/verydb/justdb/mcp/core/tools/SchemaReadTool.java`
-7. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/src/main/java/org/verydb/justdb/mcp/core/tools/SchemaModifyTool.java`
-8. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/src/main/java/org/verydb/justdb/mcp/core/tools/SchemaConvertTool.java`
-9. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/src/main/java/org/verydb/justdb/mcp/core/tools/SchemaExportTool.java`
-10. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/src/main/java/org/verydb/justdb/mcp/core/tools/SchemaValidateTool.java`
-11. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/src/main/java/org/verydb/justdb/mcp/core/tools/SchemaMigrateTool.java`
-12. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/src/main/java/org/verydb/justdb/mcp/core/tools/Db2SchemaTool.java`
-13. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/src/main/java/org/verydb/justdb/mcp/core/tools/AiHistoryTool.java`
+5. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/src/main/java/ai.justdb/justdb/mcp/core/server/JustdbMcpServer.java`
+6. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/src/main/java/ai.justdb/justdb/mcp/core/tools/SchemaReadTool.java`
+7. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/src/main/java/ai.justdb/justdb/mcp/core/tools/SchemaModifyTool.java`
+8. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/src/main/java/ai.justdb/justdb/mcp/core/tools/SchemaConvertTool.java`
+9. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/src/main/java/ai.justdb/justdb/mcp/core/tools/SchemaExportTool.java`
+10. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/src/main/java/ai.justdb/justdb/mcp/core/tools/SchemaValidateTool.java`
+11. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/src/main/java/ai.justdb/justdb/mcp/core/tools/SchemaMigrateTool.java`
+12. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/src/main/java/ai.justdb/justdb/mcp/core/tools/Db2SchemaTool.java`
+13. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-core/src/main/java/ai.justdb/justdb/mcp/core/tools/AiHistoryTool.java`
 14. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-cli/pom.xml`
-15. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-cli/src/main/java/org/verydb/justdb/mcp/cli/McpCommand.java`
+15. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-cli/src/main/java/ai.justdb/justdb/mcp/cli/McpCommand.java`
 16. `/home/wind/workspace/justdb/justdb-mcp/justdb-mcp-integration-tests/pom.xml`
 
 ### 修改文件
 
 1. `/home/wind/workspace/justdb/pom.xml` - 添加模块引用
-2. `/home/wind/workspace/justdb/justdb-core/src/main/java/org/verydb/justdb/cli/JustDBCli.java` - 注册 McpCommand
+2. `/home/wind/workspace/justdb/justdb-core/src/main/java/ai.justdb/justdb/cli/JustDBCli.java` - 注册 McpCommand
 
 ---------------------------
 

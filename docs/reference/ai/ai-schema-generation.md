@@ -14,9 +14,9 @@ JustDB AI 可以从业务需求描述自动生成完整的数据库 Schema，包
 ### 基础用法
 
 ```java
-import org.verydb.justdb.ai.AiSchemaManager;
-import org.verydb.justdb.cli.config.AiConfig;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.ai.AiSchemaManager;
+import ai.justdb.justdb.cli.config.AiConfig;
+import ai.justdb.justdb.schema.Justdb;
 
 // 创建 AI Schema 管理器
 AiSchemaManager aiManager = new AiSchemaManager();
@@ -234,11 +234,11 @@ Justdb schema = aiManager.processNaturalLanguageRequest(description, null);
 ### 完整示例：博客系统
 
 ```java
-import org.verydb.justdb.ai.AiSchemaManager;
-import org.verydb.justdb.cli.config.AiConfig;
-import org.verydb.justdb.schema.Justdb;
-import org.verydb.justdb.schema.Table;
-import org.verydb.justdb.schema.Column;
+import ai.justdb.justdb.ai.AiSchemaManager;
+import ai.justdb.justdb.cli.config.AiConfig;
+import ai.justdb.justdb.schema.Justdb;
+import ai.justdb.justdb.schema.Table;
+import ai.justdb.justdb.schema.Column;
 
 public class BlogSchemaGenerator {
 
@@ -307,7 +307,7 @@ public class BlogSchemaGenerator {
         }
 
         // 使用 SchemaAnalyzer 进行分析
-        String analysis = org.verydb.justdb.ai.SchemaAnalyzer.analyzeSchema(blogSchema);
+        String analysis = ai.justdb.justdb.ai.SchemaAnalyzer.analyzeSchema(blogSchema);
         System.out.println("\n=== Schema Analysis ===");
         System.out.println(analysis);
     }
@@ -360,7 +360,7 @@ Justdb ecommerceSchema = aiManager.processNaturalLanguageRequest(
 ### 使用 SchemaAnalyzer
 
 ```java
-import org.verydb.justdb.ai.SchemaAnalyzer;
+import ai.justdb.justdb.ai.SchemaAnalyzer;
 
 // 分析 Schema
 String analysis = SchemaAnalyzer.analyzeSchema(schema);

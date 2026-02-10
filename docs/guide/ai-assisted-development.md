@@ -69,7 +69,7 @@ flowchart TB
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<Justdb xmlns="http://www.verydb.org/justdb">
+<Justdb xmlns="http://www.justdb.ai/justdb">
     <Table name="orders" comment="订单表">
         <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
         <Column name="order_no" type="VARCHAR(32)" nullable="false" unique="true"/>
@@ -340,7 +340,7 @@ ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM orders");
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<Justdb xmlns="http://www.verydb.org/justdb">
+<Justdb xmlns="http://www.justdb.ai/justdb">
     <Table name="users">
         <Column name="id" type="BIGINT" primaryKey="true"/>
         <Column name="email" type="VARCHAR(100)"/>
@@ -451,7 +451,7 @@ JustDB 支持虚拟列，可以根据其他列动态计算值：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<Justdb xmlns="http://www.verydb.org/justdb">
+<Justdb xmlns="http://www.justdb.ai/justdb">
     <Table name="products">
         <Column name="id" type="BIGINT" primaryKey="true"/>
         <Column name="name" type="VARCHAR(100)"/>
@@ -638,7 +638,7 @@ JustdbConnection conn = new JustdbConnection(dataSource);
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<Justdb xmlns="http://www.verydb.org/justdb">
+<Justdb xmlns="http://www.justdb.ai/justdb">
     <!-- Schema 文件既是代码，也是文档 -->
     <Table name="orders" comment="订单表 - 存储用户订单信息">
         <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"
@@ -963,7 +963,7 @@ JustDB 支持虚拟列，可以根据其他列动态计算值：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<Justdb xmlns="http://www.verydb.org/justdb">
+<Justdb xmlns="http://www.justdb.ai/justdb">
     <Table name="products">
         <Column name="id" type="BIGINT" primaryKey="true"/>
         <Column name="name" type="VARCHAR(100)"/>
@@ -1162,7 +1162,7 @@ JustdbConnection conn = new JustdbConnection(dataSource);
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<Justdb xmlns="http://www.verydb.org/justdb">
+<Justdb xmlns="http://www.justdb.ai/justdb">
     <!-- Schema 文件既是代码，也是文档 -->
     <Table name="orders" comment="订单表 - 存储用户订单信息">
         <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"

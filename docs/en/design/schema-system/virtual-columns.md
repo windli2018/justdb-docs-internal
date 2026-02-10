@@ -216,7 +216,7 @@ Following JustDB's template system design:
 
 ### 4.1 Column Class Extension
 
-Virtual column related fields in `org.verydb.justdb.schema.Column`:
+Virtual column related fields in `ai.justdb.justdb.schema.Column`:
 
 ```java
 /**

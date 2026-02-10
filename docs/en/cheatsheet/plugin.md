@@ -286,7 +286,7 @@ Plugin is JustDB's core extension mechanism, supporting custom database adapters
 Load via JAR:
 
 ```
-META-INF/services/org.verydb.justdb.plugin.JustdbPlugin
+META-INF/services/ai.justdb.justdb.plugin.JustdbPlugin
 ```
 
 ## Important Notes

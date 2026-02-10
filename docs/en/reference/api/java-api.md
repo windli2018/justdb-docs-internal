@@ -22,7 +22,7 @@ JustDB provides a complete Java API for defining, loading, generating, and deplo
 
 `Justdb` is the root element of Schema definition, containing all database objects.
 
-**Package Path**: `org.verydb.justdb.schema.Justdb`
+**Package Path**: `ai.justdb.justdb.schema.Justdb`
 
 **Core Properties**:
 
@@ -40,9 +40,9 @@ JustDB provides a complete Java API for defining, loading, generating, and deplo
 **Code Example**:
 
 ```java
-import org.verydb.justdb.schema.Justdb;
-import org.verydb.justdb.schema.Table;
-import org.verydb.justdb.schema.Column;
+import ai.justdb.justdb.schema.Justdb;
+import ai.justdb.justdb.schema.Table;
+import ai.justdb.justdb.schema.Column;
 import java.util.Arrays;
 
 // Create Schema
@@ -61,7 +61,7 @@ justdb.setTables(Arrays.asList(usersTable));
 
 `Table` represents a database table, inherits from `QueryAble`, supports columns, indexes, constraints and other child elements.
 
-**Package Path**: `org.verydb.justdb.schema.Table`
+**Package Path**: `ai.justdb.justdb.schema.Table`
 
 **Core Properties**:
 
@@ -108,7 +108,7 @@ table.setDataFilterCondition("status = 'active'");
 
 `Column` represents a column in a table, supports all standard data types and constraints.
 
-**Package Path**: `org.verydb.justdb.schema.Column`
+**Package Path**: `ai.justdb.justdb.schema.Column`
 
 **Core Properties**:
 
@@ -165,7 +165,7 @@ emailColumn.setComment("Email address");
 
 `Index` represents a table index.
 
-**Package Path**: `org.verydb.justdb.schema.Index`
+**Package Path**: `ai.justdb.justdb.schema.Index`
 
 **Core Properties**:
 
@@ -200,7 +200,7 @@ compositeIndex.setColumns(Arrays.asList("email", "status"));
 
 `Constraint` represents table constraints, including primary key, foreign key, unique constraint, check constraint, etc.
 
-**Package Path**: `org.verydb.justdb.schema.Constraint`
+**Package Path**: `ai.justdb.justdb.schema.Constraint`
 
 **Core Properties**:
 
@@ -253,7 +253,7 @@ check.setCheckExpression("age >= 18");
 
 `Sequence` represents a database sequence.
 
-**Package Path**: `org.verydb.justdb.schema.Sequence`
+**Package Path**: `ai.justdb.justdb.schema.Sequence`
 
 **Core Properties**:
 
@@ -288,7 +288,7 @@ sequence.setCycle(false);
 
 Factory class for loading Schema from various sources.
 
-**Package Path**: `org.verydb.justdb.util.schema.SchemaLoaderFactory`
+**Package Path**: `ai.justdb.justdb.util.schema.SchemaLoaderFactory`
 
 **Supported Location Protocols**:
 
@@ -329,7 +329,7 @@ List<Loaded&gt;<Justdb>> results = SchemaLoaderFactory.loadAll("./schemas", null
 
 Encapsulates Schema loading result.
 
-**Package Path**: `org.verydb.justdb.cli.Loaded`
+**Package Path**: `ai.justdb.justdb.cli.Loaded`
 
 **Methods**:
 
@@ -346,7 +346,7 @@ public Exception getError()       // Get error information
 
 SQL generator, generates database-specific SQL based on Schema.
 
-**Package Path**: `org.verydb.justdb.generator.DBGenerator`
+**Package Path**: `ai.justdb.justdb.generator.DBGenerator`
 
 **Constructor**:
 
@@ -408,9 +408,9 @@ String addColumnSql = generator.generateAddColumn(table, column);
 ### Complete Schema Definition
 
 ```java
-import org.verydb.justdb.schema.*;
-import org.verydb.justdb.JustdbManager;
-import org.verydb.justdb.generator.DBGenerator;
+import ai.justdb.justdb.schema.*;
+import ai.justdb.justdb.JustdbManager;
+import ai.justdb.justdb.generator.DBGenerator;
 import java.util.Arrays;
 
 public class SchemaExample {
@@ -535,7 +535,7 @@ public class SchemaExample {
 ### Dynamic Schema Building
 
 ```java
-import org.verydb.justdb.schema.*;
+import ai.justdb.justdb.schema.*;
 import java.util.*;
 
 public class DynamicSchemaBuilder {

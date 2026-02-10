@@ -48,7 +48,7 @@ JustDB 是一个创新的**所见即所得数据库开发套件**，开发者只
 
 ## 快速链接
 
-- [项目主页](https://github.com/verydb/justdb)
+- [项目主页](https://github.com/justdb/justdb)
 - [文档首页](../README.md)
 - [快速开始](../getting-started/quick-start.md)
 - [API 参考](../reference/)
@@ -65,5 +65,5 @@ JustDB 是一个创新的**所见即所得数据库开发套件**，开发者只
 
 ## 联系方式
 
-- GitHub Issues: [https://github.com/verydb/justdb/issues](https://github.com/verydb/justdb/issues)
+- GitHub Issues: [https://github.com/justdb/justdb/issues](https://github.com/justdb/justdb/issues)
 - 官网: [https://justdb.ai](https://justdb.ai) (计划中)

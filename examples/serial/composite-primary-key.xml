@@ -5,7 +5,7 @@
   This example demonstrates using auto-increment columns
   with composite primary keys.
 -->
-<Justdb xmlns="http://www.verydb.org/schema/v1">
+<Justdb xmlns="http://www.justdb.ai/schema/v1">
 
   <!-- Order items table with composite PK -->
   <Table name="order_items">

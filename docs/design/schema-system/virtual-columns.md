@@ -213,7 +213,7 @@ Virtual Column（虚拟列）支持使用可读标识符来维护关联表数据
 
 ### 4.1 Column 类扩展
 
-虚拟列相关字段定义在 `org.verydb.justdb.schema.Column`：
+虚拟列相关字段定义在 `ai.justdb.justdb.schema.Column`：
 
 ```java
 /**

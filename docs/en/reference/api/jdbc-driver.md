@@ -31,7 +31,7 @@ JustDB JDBC driver implements core JDBC API functionality, supporting:
 - Transaction management (basic support)
 - Multi-Schema support
 
-**Driver Class**: `org.verydb.justdb.jdbc.JustdbDriver`
+**Driver Class**: `ai.justdb.justdb.jdbc.JustdbDriver`
 
 **JDBC URL Prefix**: `jdbc:justdb:`
 
@@ -412,10 +412,10 @@ Schema registry allows registering Schemas in memory, then referencing them thro
 ### Register Schema
 
 ```java
-import org.verydb.justdb.jdbc.JustdbDriver;
-import org.verydb.justdb.schema.Justdb;
-import org.verydb.justdb.schema.Table;
-import org.verydb.justdb.schema.Column;
+import ai.justdb.justdb.jdbc.JustdbDriver;
+import ai.justdb.justdb.schema.Justdb;
+import ai.justdb.justdb.schema.Table;
+import ai.justdb.justdb.schema.Column;
 import java.sql.*;
 
 public class RegistryExample {

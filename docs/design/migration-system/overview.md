@@ -994,14 +994,14 @@ justdb migrate up --migrate-include-tables="users*,dict*,config*"
 
 | 文件路径 | 说明 |
 |---------------------------------------------------------------------------------|------------------------------------------------------|
-| `justdb-core/src/main/java/org/verydb/justdb/schema/CanonicalSchemaDiff.java` | 核心实现 |
-| `justdb-core/src/main/java/org/verydb/justdb/schema/Data.java` | Data 节点定义 |
-| `justdb-core/src/main/java/org/verydb/justdb/schema/TableScopes.java` | tableScopes 定义 |
-| `justdb-core/src/main/java/org/verydb/justdb/migration/SchemaMigrationService.java` | 迁移服务 |
-| `justdb-core/src/main/java/org/verydb/justdb/cli/commands/MigrateCommand.java` | 命令行接口 |
-| `justdb-core/src/main/java/org/verydb/justdb/jdbc/JustdbDataSource.java` | RowCondition SQL 生成 |
-| `justdb-core/src/main/java/org/verydb/justdb/cli/JustdbConfiguration.java` | 配置支持 |
-| `justdb-core/src/main/java/org/verydb/justdb/validation/DataConditionValidator.java` | 条件验证器（新增） |
+| `justdb-core/src/main/java/ai.justdb/justdb/schema/CanonicalSchemaDiff.java` | 核心实现 |
+| `justdb-core/src/main/java/ai.justdb/justdb/schema/Data.java` | Data 节点定义 |
+| `justdb-core/src/main/java/ai.justdb/justdb/schema/TableScopes.java` | tableScopes 定义 |
+| `justdb-core/src/main/java/ai.justdb/justdb/migration/SchemaMigrationService.java` | 迁移服务 |
+| `justdb-core/src/main/java/ai.justdb/justdb/cli/commands/MigrateCommand.java` | 命令行接口 |
+| `justdb-core/src/main/java/ai.justdb/justdb/jdbc/JustdbDataSource.java` | RowCondition SQL 生成 |
+| `justdb-core/src/main/java/ai.justdb/justdb/cli/JustdbConfiguration.java` | 配置支持 |
+| `justdb-core/src/main/java/ai.justdb/justdb/validation/DataConditionValidator.java` | 条件验证器（新增） |
 
 ### B. 相关文档
 

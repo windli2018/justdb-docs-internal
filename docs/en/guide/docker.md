@@ -24,20 +24,20 @@ JustDB provides pre-built Docker images:
 
 ```bash
 # Pull latest version
-docker pull verydb/justdb:latest
+docker pull justdb/justdb:latest
 
 # Pull specific version
-docker pull verydb/justdb:1.0.0
+docker pull justdb/justdb:1.0.0
 
 # Pull Alpine version (smaller image)
-docker pull verydb/justdb:1.0.0-alpine
+docker pull justdb/justdb:1.0.0-alpine
 ```
 
 ### Build from Source
 
 ```bash
 # Clone repository
-git clone https://github.com/verydb/justdb.git
+git clone https://github.com/justdb/justdb.git
 cd justdb
 
 # Build image
@@ -107,7 +107,7 @@ services:
 
   # JustDB CLI
   justdb:
-    image: verydb/justdb:1.0.0
+    image: justdb/justdb:1.0.0
     container_name: justdb-cli
     volumes:
       - ./schemas:/schemas
@@ -169,7 +169,7 @@ services:
 
   # JustDB migration service
   justdb-migrate:
-    image: verydb/justdb:1.0.0
+    image: justdb/justdb:1.0.0
     container_name: justdb-migrate
     volumes:
       - ./schemas:/schemas:ro
@@ -189,7 +189,7 @@ services:
 
   # JustDB validation service
   justdb-validate:
-    image: verydb/justdb:1.0.0
+    image: justdb/justdb:1.0.0
     container_name: justdb-validate
     volumes:
       - ./schemas:/schemas:ro
@@ -332,7 +332,7 @@ spec:
     spec:
       containers:
       - name: justdb
-        image: verydb/justdb:1.0.0
+        image: justdb/justdb:1.0.0
         command: ["justdb", "migrate"]
         env:
         - name: JUSTDB_DATABASE_URL
@@ -373,7 +373,7 @@ spec:
     spec:
       containers:
       - name: justdb
-        image: verydb/justdb:1.0.0
+        image: justdb/justdb:1.0.0
         command:
           - /bin/sh
           - -c
@@ -413,7 +413,7 @@ spec:
     spec:
       containers:
       - name: justdb
-        image: verydb/justdb:1.0.0
+        image: justdb/justdb:1.0.0
         command:
           - justdb
           - backup

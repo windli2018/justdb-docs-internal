@@ -42,7 +42,7 @@ Sequence is a database object used to generate unique numeric values. JustDB pro
 ### XML Format
 
 ```xml
-<Justdb xmlns="http://www.verydb.org/schema">
+<Justdb xmlns="http://www.justdb.ai/schema">
     <!-- Basic sequence -->
     <Sequence name="seq_user_id"
               comment="User ID sequence"

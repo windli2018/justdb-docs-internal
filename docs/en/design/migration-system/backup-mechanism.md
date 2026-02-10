@@ -158,10 +158,10 @@ backupProviders:
 
 ## 6. ServiceLoader Configuration
 
-**File**: `justdb-core/src/main/resources/META-INF/services/org.verydb.justdb.backup.SchemaBackupProvider`
+**File**: `justdb-core/src/main/resources/META-INF/services/ai.justdb.justdb.backup.SchemaBackupProvider`
 
 ```
-org.verydb.justdb.backup.filesystem.FileSystemSchemaBackupProvider
+ai.justdb.justdb.backup.filesystem.FileSystemSchemaBackupProvider
 ```
 
 ## 7. File List

@@ -47,11 +47,11 @@ mvn -version
 
 ```bash
 # 使用 HTTPS 克隆
-git clone https://github.com/verydb/justdb.git
+git clone https://github.com/justdb/justdb.git
 cd justdb
 
 # 或使用 SSH 克隆（需要配置 SSH 密钥）
-git clone git@github.com:verydb/justdb.git
+git clone git@github.com:justdb/justdb.git
 cd justdb
 ```
 
@@ -193,7 +193,7 @@ mvn clean install -Dmaven.repo.local=/path/to/local/repo
 **解决方案**:
 ```bash
 # 清理并重新下载依赖
-rm -rf ~/.m2/repository/org/verydb
+rm -rf ~/.m2/repository/org/justdb
 mvn clean install -U
 ```
 

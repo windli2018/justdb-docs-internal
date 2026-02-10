@@ -25,7 +25,7 @@ Schema 格式工厂，用于加载和保存 Schema。
 #### 加载 Schema
 
 ```java
-import org.verydb.justdb.FormatFactory;
+import ai.justdb.justdb.FormatFactory;
 
 // 从文件加载
 Justdb schema = FormatFactory.loadFromFile("schema.yaml");
@@ -71,7 +71,7 @@ Schema 部署器，用于将 Schema 部署到数据库。
 #### 基本部署
 
 ```java
-import org.verydb.justdb.SchemaDeployer;
+import ai.justdb.justdb.SchemaDeployer;
 import java.sql.Connection;
 
 try (Connection conn = DriverManager.getConnection(url, user, pass)) {
@@ -107,7 +107,7 @@ Schema 迁移服务，用于增量迁移。
 #### 基本迁移
 
 ```java
-import org.verydb.justdb.SchemaMigrationService;
+import ai.justdb.justdb.SchemaMigrationService;
 
 try (Connection conn = DriverManager.getConnection(url, user, pass)) {
     SchemaMigrationService service = new SchemaMigrationService(conn);
@@ -146,7 +146,7 @@ service.setBaselineOnMigrate(true);
 #### 生成 SQL
 
 ```java
-import org.verydb.justdb.generator.DBGenerator;
+import ai.justdb.justdb.generator.DBGenerator;
 
 // 创建生成器
 DBGenerator generator = new DBGenerator(
@@ -275,7 +275,7 @@ constraint.setOnUpdate(ConstraintAction.RESTRICT);
 Schema 差异对象。
 
 ```java
-import org.verydb.justdb.diff.CanonicalSchemaDiff;
+import ai.justdb.justdb.diff.CanonicalSchemaDiff;
 
 // 计算差异
 CanonicalSchemaDiff diff = SchemaDiffer.calculate(
@@ -308,7 +308,7 @@ for (TableDiff tableDiff : diff.getTableDiffs()) {
 Schema 演进管理器。
 
 ```java
-import org.verydb.justdb.migration.SchemaEvolutionManager;
+import ai.justdb.justdb.migration.SchemaEvolutionManager;
 
 SchemaEvolutionManager manager = new SchemaEvolutionManager(conn);
 
@@ -326,7 +326,7 @@ manager.evolve(currentSchema, targetSchema);
 插件管理器。
 
 ```java
-import org.verydb.justdb.plugin.PluginManager;
+import ai.justdb.justdb.plugin.PluginManager;
 
 // 获取实例
 PluginManager pluginManager = PluginManager.getInstance();
@@ -409,9 +409,9 @@ String url = "jdbc:justdb:?config=justdb-config.yaml";
 ### 完整示例
 
 ```java
-import org.verydb.justdb.*;
-import org.verydb.justdb.migration.*;
-import org.verydb.justdb.generator.*;
+import ai.justdb.justdb.*;
+import ai.justdb.justdb.migration.*;
+import ai.justdb.justdb.generator.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -453,8 +453,8 @@ public class JustdbExample {
 ### Spring Boot 集成
 
 ```java
-import org.verydb.justdb.spring.JustdbProperties;
-import org.verydb.justdb.spring.SchemaMigrationService;
+import ai.justdb.justdb.spring.JustdbProperties;
+import ai.justdb.justdb.spring.SchemaMigrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -489,10 +489,10 @@ public class Application {
 
 详细的 API 文档请参考：
 
-- **[在线 JavaDoc](https://verydb.github.io/justdb/apidocs/)**
-- **[核心 API](https://verydb.github.io/justdb/apidocs/org/verydb/justdb/core/package-summary.html)**
-- **[生成器 API](https://verydb.github.io/justdb/apidocs/org/verydb/justdb/generator/package-summary.html)**
-- **[迁移 API](https://verydb.github.io/justdb/apidocs/org/verydb/justdb/migration/package-summary.html)**
+- **[在线 JavaDoc](https://justdb.github.io/justdb/apidocs/)**
+- **[核心 API](https://justdb.github.io/justdb/apidocs/ai.justdb/justdb/core/package-summary.html)**
+- **[生成器 API](https://justdb.github.io/justdb/apidocs/ai.justdb/justdb/generator/package-summary.html)**
+- **[迁移 API](https://justdb.github.io/justdb/apidocs/ai.justdb/justdb/migration/package-summary.html)**
 
 ## 错误处理
 

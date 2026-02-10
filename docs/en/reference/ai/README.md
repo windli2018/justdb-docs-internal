@@ -123,8 +123,8 @@ ai:
 Generate schemas from natural language:
 
 ```java
-import org.verydb.justdb.ai.AISchemaGenerator;
-import org.verydb.justdb.ai.OpenAIProvider;
+import ai.justdb.justdb.ai.AISchemaGenerator;
+import ai.justdb.justdb.ai.OpenAIProvider;
 
 AISchemaGenerator generator = new AISchemaGenerator(
     new OpenAIProvider("sk-...")
@@ -139,7 +139,7 @@ Justdb schema = generator.generate(prompt);
 Plan migrations with AI assistance:
 
 ```java
-import org.verydb.justdb.ai.AIMigrationPlanner;
+import ai.justdb.justdb.ai.AIMigrationPlanner;
 
 AIMigrationPlanner planner = new AIMigrationPlanner(aiProvider);
 
@@ -157,7 +157,7 @@ System.out.println(plan.getSteps());
 Optimize schemas with AI:
 
 ```java
-import org.verydb.justdb.ai.AIOptimizer;
+import ai.justdb.justdb.ai.AIOptimizer;
 
 AIOptimizer optimizer = new AIOptimizer(aiProvider);
 

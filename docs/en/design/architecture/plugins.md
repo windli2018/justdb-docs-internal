@@ -219,7 +219,7 @@ manager.loadBuiltInPlugins();
 Discovered via ServiceLoader:
 
 ```
-META-INF/services/org.verydb.justdb.plugin.JustdbPlugin
+META-INF/services/ai.justdb.justdb.plugin.JustdbPlugin
 ```
 
 ```
@@ -316,7 +316,7 @@ public class MyPlugin implements JustdbPlugin {
 
 ### Step 2: Register Plugin
 
-Create `META-INF/services/org.verydb.justdb.plugin.JustdbPlugin`:
+Create `META-INF/services/ai.justdb.justdb.plugin.JustdbPlugin`:
 
 ```
 com.example.MyPlugin

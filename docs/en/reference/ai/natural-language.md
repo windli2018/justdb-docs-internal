@@ -141,9 +141,9 @@ ai:
 ### 1. Basic Usage
 
 ```java
-import org.verydb.justdb.ai.AiSchemaManager;
-import org.verydb.justdb.cli.config.AiConfig;
-import org.verydb.justdb.schema.Justdb;
+import ai.justdb.justdb.ai.AiSchemaManager;
+import ai.justdb.justdb.cli.config.AiConfig;
+import ai.justdb.justdb.schema.Justdb;
 
 // Create AI Schema manager
 AiSchemaManager aiManager = new AiSchemaManager();

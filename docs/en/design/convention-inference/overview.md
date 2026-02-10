@@ -137,9 +137,9 @@ Convention inference is executed at the following stages of the schema loading p
 
 | Class | Path | Description |
 |---|------|------|
-| `ConventionInferrer` | `org.verydb.justdb.util.ConventionInferrer` | Convention inference processor |
-| `ConventionInferenceResult` | `org.verydb.justdb.util.ConventionInferenceResult` | Inference result class |
-| `SchemaLoader` | `org.verydb.justdb.util.SchemaLoader` | Schema loader (integrated inference) |
+| `ConventionInferrer` | `ai.justdb.justdb.util.ConventionInferrer` | Convention inference processor |
+| `ConventionInferenceResult` | `ai.justdb.justdb.util.ConventionInferenceResult` | Inference result class |
+| `SchemaLoader` | `ai.justdb.justdb.util.SchemaLoader` | Schema loader (integrated inference) |
 
 ### Log Example
 

@@ -74,7 +74,7 @@ tag:
 package com.example.justdb.helper;
 
 import com.github.jknack.handlebars.Options;
-import org.verydb.justdb.templates.TemplateHelper;
+import ai.justdb.justdb.templates.TemplateHelper;
 
 public class CustomTemplateHelper extends TemplateHelper {
 

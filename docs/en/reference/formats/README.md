@@ -359,7 +359,7 @@ JustDB supports JSON5 extended syntax:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<justdb:Justdb xmlns:justdb="http://www.verydb.org/justdb"
+<justdb:Justdb xmlns:justdb="http://www.justdb.ai/justdb"
                id="myapp"
                namespace="com.example">
   <justdb:Table name="users"/>

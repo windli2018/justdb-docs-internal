@@ -288,7 +288,7 @@ public class MyService {
 | 方法 | camelCase | `loadSchema`, `generateSql` |
 | 变量 | camelCase | `tableName`, `columnList` |
 | 常量 | UPPER_SNAKE_CASE | `DEFAULT_SCHEMA`, `MAX_LENGTH` |
-| 包 | 小写点分隔 | `org.verydb.justdb.schema` |
+| 包 | 小写点分隔 | `ai.justdb.justdb.schema` |
 
 ### 代码格式
 

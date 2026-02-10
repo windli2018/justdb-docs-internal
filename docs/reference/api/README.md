@@ -120,7 +120,7 @@ List<ColumnChange&gt;> columnChanges = diff.getColumnChanges();
 
 ```java
 // 注册驱动（自动注册）
-// Class.forName("org.verydb.justdb.jdbc.JustdbDriver");
+// Class.forName("ai.justdb.justdb.jdbc.JustdbDriver");
 
 // 创建连接
 Connection connection = DriverManager.getConnection(
@@ -149,7 +149,7 @@ Schema 对象支持 XML 和 JSON/YAML/TOML 等多种格式的序列化和反序�
 ## 包结构
 
 ```
-org.verydb.justdb/
+ai.justdb.justdb/
 ├── schema/           # Schema 模型定义
 │   ├── Justdb.java
 │   ├── Table.java

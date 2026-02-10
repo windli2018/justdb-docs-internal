@@ -192,7 +192,7 @@ email VARCHAR(100) NOT NULL
 ```java
 TemplateHelper helper = new TemplateHelper();
 helper.setName("eq");
-helper.setFunction("org.verydb.justdb.template.helper.EqualityHelper.eq");
+helper.setFunction("ai.justdb.justdb.template.helper.EqualityHelper.eq");
 
 pluginManager.registerHelper(helper);
 ```

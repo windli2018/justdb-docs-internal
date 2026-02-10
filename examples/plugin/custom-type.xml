@@ -5,7 +5,7 @@
   This example demonstrates how to create a JustDB plugin
   that defines custom type mappings and database adapters.
 -->
-<plugin xmlns="http://www.verydb.org/plugin/v1"
+<plugin xmlns="http://www.justdb.ai/plugin/v1"
         id="custom-types"
         name="Custom Type Support"
         version="1.0.0"
