@@ -12,7 +12,7 @@
 ## 快速开始
 
 ```xml
-&lt;!-- 推荐配置：两者兼得（最佳体验） --&gt;
+<!-- 推荐配置：两者兼得（最佳体验） -->
 <Column name="username"
          type="VARCHAR(255)"
          virtual="true"
@@ -86,20 +86,20 @@ CREATE TABLE user_roles (
 **问题**：当需要预制数据到系统时，使用 ID 导致数据难以理解
 
 ```xml
-&lt;!-- Schema 中定义 --&gt;
-&lt;Table name="user_roles"&gt;
-    &lt;Column name="user_id" type="BIGINT"/&gt;
-    &lt;Column name="role_id" type="BIGINT"/&gt;
-&lt;/Table&gt;
+<!-- Schema 中定义 -->
+<Table name="user_roles">
+    <Column name="user_id" type="BIGINT"/>
+    <Column name="role_id" type="BIGINT"/>
+</Table>
 
-&lt;!-- Data 预制：难以理解 --&gt;
-&lt;Data table="user_roles"&gt;
-    &lt;!-- 开发者需要手动维护映射：alice=1, admin=1, bob=2, viewer=2 --&gt;
-    &lt;Row user_id="1" role_id="1"/&gt;  &lt;!-- alice 是 admin? --&gt;
-    &lt;Row user_id="1" role_id="2"/&gt;  &lt;!-- alice 是 viewer? --&gt;
-    &lt;Row user_id="2" role_id="1"/&gt;  &lt;!-- bob 是 admin? --&gt;
-    &lt;Row user_id="2" role_id="2"/&gt;  &lt;!-- bob 是 viewer? --&gt;
-&lt;/Data&gt;
+<!-- Data 预制：难以理解 -->
+<Data table="user_roles">
+    <!-- 开发者需要手动维护映射：alice=1, admin=1, bob=2, viewer=2 -->
+    <Row user_id="1" role_id="1"/>  <!-- alice 是 admin? -->
+    <Row user_id="1" role_id="2"/>  <!-- alice 是 viewer? -->
+    <Row user_id="2" role_id="1"/>  <!-- bob 是 admin? -->
+    <Row user_id="2" role_id="2"/>  <!-- bob 是 viewer? -->
+</Data>
 ```
 
 **痛点**：
@@ -152,10 +152,10 @@ SELECT username, rolename FROM user_roles WHERE user_id = 1;
 ### 2.1 方案 1: SQL 注释 + 文档
 
 ```xml
-&lt;Data table="user_roles"&gt;
-    &lt;!-- alice has admin role --&gt;
-    &lt;Row user_id="1" role_id="1"/&gt;
-&lt;/Data&gt;
+<Data table="user_roles">
+    <!-- alice has admin role -->
+    <Row user_id="1" role_id="1"/>
+</Data>
 ```
 
 | 优点 | 缺点 |
@@ -277,7 +277,7 @@ AS (SELECT username FROM users WHERE id = user_id) STORED;
 ### 3.4 组合使用（推荐）
 
 ```xml
-&lt;!-- 两者兼得：DDL 包含 + 预制时解析 + 运行时查询 --&gt;
+<!-- 两者兼得：DDL 包含 + 预制时解析 + 运行时查询 -->
 <Column name="username"
          type="VARCHAR(255)"
          virtual="true"
@@ -320,14 +320,14 @@ public boolean isPreferColumn() {
 ### 4.3 XML/JSON 使用示例
 
 ```xml
-&lt;!-- 推荐：使用 canonical 名称 --&gt;
-&lt;Column name="username" preferColumn="true" from="users.username" on="user_id"/&gt;
+<!-- 推荐：使用 canonical 名称 -->
+<Column name="username" preferColumn="true" from="users.username" on="user_id"/>
 
-&lt;!-- 兼容：旧格式继续支持 --&gt;
-&lt;Column name="username" prefercolumn="true" from="users.username" on="user_id"/&gt;
+<!-- 兼容：旧格式继续支持 -->
+<Column name="username" prefercolumn="true" from="users.username" on="user_id"/>
 
-&lt;!-- 兼容：拼写错误自动纠正 --&gt;
-&lt;Column name="username" preferedColumn="true" from="users.username" on="user_id"/&gt;
+<!-- 兼容：拼写错误自动纠正 -->
+<Column name="username" preferedColumn="true" from="users.username" on="user_id"/>
 ```
 
 ---------------------------
@@ -366,11 +366,11 @@ public boolean isPreferColumn() {
 - 其他情况（无 virtual 属性、`virtual="false"`、有 type 等）→ 物理列
 
 ```xml
-&lt;!-- 物理列：有 type，DDL 包含 --&gt;
-&lt;Column name="user_id" type="BIGINT"/&gt;
+<!-- 物理列：有 type，DDL 包含 -->
+<Column name="user_id" type="BIGINT"/>
 
-&lt;!-- 虚拟列：virtual=true，DDL 不包含，运行时解析 --&gt;
-&lt;Column name="username" virtual="true" from="users.username" on="user_id"/&gt;
+<!-- 虚拟列：virtual=true，DDL 不包含，运行时解析 -->
+<Column name="username" virtual="true" from="users.username" on="user_id"/>
 ```
 
 ### 6.2 属性说明
@@ -406,10 +406,10 @@ justdb migrate --computed-column never
 
 **方式 2: CLI 配置文件**
 ```xml
-&lt;!-- justdb-config.xml --&gt;
-&lt;Configuration&gt;
-    &lt;Migrate computedColumn="auto"/&gt;
-&lt;/Configuration&gt;
+<!-- justdb-config.xml -->
+<Configuration>
+    <Migrate computedColumn="auto"/>
+</Configuration>
 ```
 
 **方式 3: 代码配置**
@@ -436,7 +436,7 @@ public class MigrateCommand extends BaseCommand {
 
 **选项 1: `auto`（推荐，默认）**
 ```xml
-&lt;Migrate computedColumn="auto"/&gt;
+<Migrate computedColumn="auto"/>
 ```
 - MySQL 8.0+/PostgreSQL 12+: 生成 `AS (SELECT ...) STORED` 计算列
 - MySQL 5.7/PostgreSQL 11-: 不生成，运行时解析
@@ -444,7 +444,7 @@ public class MigrateCommand extends BaseCommand {
 
 **选项 2: `always`（强制生成）**
 ```xml
-&lt;Migrate computedColumn="always"/&gt;
+<Migrate computedColumn="always"/>
 ```
 - MySQL 8.0+: 生成 `AS (SELECT ...) STORED`
 - MySQL 5.7: 生成物理列 `VARCHAR(255)`，需 app 通过触发器或其他机制填补数据
@@ -452,7 +452,7 @@ public class MigrateCommand extends BaseCommand {
 
 **选项 3: `never`（从不生成）**
 ```xml
-&lt;Migrate computedColumn="never"/&gt;
+<Migrate computedColumn="never"/>
 ```
 - 所有数据库：不生成，始终运行时解析
 - 适用场景：完全依赖 JustDB JDBC Driver 的双向补正能力
@@ -460,11 +460,11 @@ public class MigrateCommand extends BaseCommand {
 #### DDL 生成示例
 
 ```xml
-&lt;!-- Schema --&gt;
-&lt;Table name="user_roles"&gt;
-    &lt;Column name="user_id" type="BIGINT"/&gt;
-    &lt;Column name="username" virtual="true" type="VARCHAR(255)" from="users.username" on="user_id"/&gt;
-&lt;/Table&gt;
+<!-- Schema -->
+<Table name="user_roles">
+    <Column name="user_id" type="BIGINT"/>
+    <Column name="username" virtual="true" type="VARCHAR(255)" from="users.username" on="user_id"/>
+</Table>
 ```
 
 **不同配置下的 DDL 生成结果**：
@@ -514,9 +514,9 @@ CREATE TABLE user_roles (
 计算列生成逻辑通过模板变量控制：
 
 ```xml
-&lt;!-- default-plugins.xml --&gt;
-&lt;template id="column-spec" name="column-spec" type="SQL" category="db"&gt;
-  &lt;content&gt;{{#if this.virtual}}
+<!-- default-plugins.xml -->
+<template id="column-spec" name="column-spec" type="SQL" category="db">
+  <content>{{#if this.virtual}}
     {{#if @root.computedColumn.always}}
       {{> computed-column-spec}}
     {{else if @root.computedColumn.auto}}
@@ -526,8 +526,8 @@ CREATE TABLE user_roles (
     {{/if}}
   {{else}}
     {{name}} {{type}}
-  {{/if}}&lt;/content&gt;
-&lt;/template&gt;
+  {{/if}}</content>
+</template>
 ```
 
 #### 与 SQL Translate 的集成
@@ -552,20 +552,20 @@ SQL Translate 模块
 ### 6.4 组合场景
 
 ```xml
-&lt;!-- 场景 1: 纯虚拟列（仅运行时查询） --&gt;
-&lt;Column name="username" virtual="true" from="users.username" on="user_id"/&gt;
-&lt;!-- DDL 不包含，仅运行时查询支持 --&gt;
+<!-- 场景 1: 纯虚拟列（仅运行时查询） -->
+<Column name="username" virtual="true" from="users.username" on="user_id"/>
+<!-- DDL 不包含，仅运行时查询支持 -->
 
-&lt;!-- 场景 2: 虚拟列 + 可读列（两者兼得，推荐） --&gt;
-&lt;Column name="username" type="VARCHAR(255)" virtual="true" preferColumn="true" from="users.username" on="user_id"/&gt;
-&lt;!-- DDL 包含生成列，预制时支持解析，运行时支持查询 --&gt;
+<!-- 场景 2: 虚拟列 + 可读列（两者兼得，推荐） -->
+<Column name="username" type="VARCHAR(255)" virtual="true" preferColumn="true" from="users.username" on="user_id"/>
+<!-- DDL 包含生成列，预制时支持解析，运行时支持查询 -->
 
-&lt;!-- 场景 3: 用户自主冗余存储 + 系统协助解析 --&gt;
-&lt;Column name="user_id" type="BIGINT" noMigrate="true"/&gt;
-&lt;Column name="username" type="VARCHAR(50)" preferColumn="true" from="users.username" on="user_id"/&gt;
-&lt;!-- username 是物理列（有 type），DDL 包含 --&gt;
-&lt;!-- 预制时：username='alice' → 自动解析并填充 user_id=1 --&gt;
-&lt;!-- 结果：两列都有值（user_id=1, username='alice'）--&gt;
+<!-- 场景 3: 用户自主冗余存储 + 系统协助解析 -->
+<Column name="user_id" type="BIGINT" noMigrate="true"/>
+<Column name="username" type="VARCHAR(50)" preferColumn="true" from="users.username" on="user_id"/>
+<!-- username 是物理列（有 type），DDL 包含 -->
+<!-- 预制时：username='alice' → 自动解析并填充 user_id=1 -->
+<!-- 结果：两列都有值（user_id=1, username='alice'）-->
 ```
 
 ---------------------------
@@ -590,7 +590,7 @@ SQL Translate 模块
 **使用场景**：自增 ID、序列值等在不同环境（dev/staging/prod）中可能不同的列
 
 ```xml
-&lt;Column name="user_id" type="BIGINT" noMigrate="true"/&gt;
+<Column name="user_id" type="BIGINT" noMigrate="true"/>
 ```
 
 **行为规则**：
@@ -608,8 +608,8 @@ SQL Translate 模块
 │                       Schema 部署阶段                              │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                      │
-│  输入: &lt;Data table="user_roles"&gt;                                  │
-│          &lt;Row user_id="999" username="alice" preferColumn=true/&gt;     │
+│  输入: <Data table="user_roles">                                  │
+│          <Row user_id="999" username="alice" preferColumn=true/>     │
 │        (user_id 是 noMigrate 列，username 是 preferColumn)          │
 │         │                                                            │
 │         ▼                                                            │
@@ -617,7 +617,7 @@ SQL Translate 模块
 │    1. 检查 preferColumn 标记                                        │
 │    2. 查询数据库: username='alice' → id=1                             │
 │    3. 检查 noMigrate: user_id=999 被忽略，使用解析的 id=1              │
-│    4. 转换结果: &lt;Row user_id="1"/&gt;                                   │
+│    4. 转换结果: <Row user_id="1"/>                                   │
 │         │                                                            │
 │         ▼                                                            │
 │  INSERT INTO user_roles (user_id) VALUES (1)                       │
@@ -904,7 +904,7 @@ public class VirtualColumnResolver {
      * Resolve virtual column value for a given row.
      * 解析虚拟列值（用于 SELECT）
      */
-    public Object resolveVirtualColumn(Table table, Column column, Map&lt;String, Object&gt; row) {
+    public Object resolveVirtualColumn(Table table, Column column, Map<String, Object> row) {
         if (!column.isVirtual()) {
             return null;
         }
@@ -967,7 +967,7 @@ public SqlExecutor(JustdbConnection connection) {
 }
 
 // 修改 evaluateExprForRow 方法
-private Object evaluateExprForRow(SQLExpr expr, Map&lt;String, Object&gt; row) {
+private Object evaluateExprForRow(SQLExpr expr, Map<String, Object> row) {
     // NEW: 检查是否是虚拟列引用
     if (expr instanceof SQLIdentifierExpr) {
         String columnName = ((SQLIdentifierExpr) expr).getName();
@@ -1066,7 +1066,7 @@ if (idempotentParams != null) {
 
     // 已有：additionalParams 处理
     if (idempotentParams.getAdditionalParams() != null) {
-        for (Map.Entry&lt;String, Object&gt; entry : idempotentParams.getAdditionalParams().entrySet()) {
+        for (Map.Entry<String, Object> entry : idempotentParams.getAdditionalParams().entrySet()) {
             builder.put(entry.getKey(), entry.getValue());
         }
     }
@@ -1079,7 +1079,7 @@ if (idempotentParams != null) {
 // MigrateCommand.java
 @CommandLine.Command(name = "migrate", mixinStandardHelpOptions = true,
         description = "Apply schema changes to database")
-public class MigrateCommand extends BaseCommand implements Callable&lt;Integer&gt; {
+public class MigrateCommand extends BaseCommand implements Callable<Integer> {
 
     // ...existing mixins and fields...
 
@@ -1106,7 +1106,7 @@ public class MigrateCommand extends BaseCommand implements Callable&lt;Integer&g
         );
 
         // 生成 DDL
-        List&lt;String&gt; ddl = generator.generateCreateTable(table, contextParams);
+        List<String> ddl = generator.generateCreateTable(table, contextParams);
         // ...
     }
 }
@@ -1114,7 +1114,7 @@ public class MigrateCommand extends BaseCommand implements Callable&lt;Integer&g
 // ValidateCommand.java - 同样支持
 @CommandLine.Command(name = "validate", mixinStandardHelpOptions = true,
         description = "Validate database schema")
-public class ValidateCommand extends BaseCommand implements Callable&lt;Integer&gt; {
+public class ValidateCommand extends BaseCommand implements Callable<Integer> {
 
     @Option(names = {"--computed-column"},
             defaultValue = "auto",
@@ -1139,9 +1139,9 @@ public class ValidateCommand extends BaseCommand implements Callable&lt;Integer&
 **模板中使用**（通过 @root.computedColumn 访问）：
 
 ```xml
-&lt;!-- default-plugins.xml --&gt;
-&lt;template id="column-spec" name="column-spec" type="SQL" category="db"&gt;
-  &lt;content&gt;{{#if this.virtual}}
+<!-- default-plugins.xml -->
+<template id="column-spec" name="column-spec" type="SQL" category="db">
+  <content>{{#if this.virtual}}
     {{#if (eq @root.computedColumn "always")}}
       {{#if this.type}}
         {{name}} {{type}} AS (SELECT {{this.from}} FROM {{this.from.table}} WHERE {{this.from.table}}.id = {{this.on}}) STORED,
@@ -1155,8 +1155,8 @@ public class ValidateCommand extends BaseCommand implements Callable&lt;Integer&
     {{/if}}
   {{else}}
     {{name}} {{type}}{{#unless @last}},{{/unless}}
-  {{/if}}&lt;/content&gt;
-&lt;/template&gt;
+  {{/if}}</content>
+</template>
 ```
 
 ### Phase 5: ORM 生成过滤
@@ -1211,12 +1211,12 @@ protected void generateEntityClassFields(Table table, JavaWriter writer) {
 
 **default-plugins.xml** - DDL 模板已过滤虚拟列:
 ```xml
-&lt;template id="columns" name="columns" type="SQL" category="db"&gt;
-  &lt;content&gt;{{#each this.columns}}
+<template id="columns" name="columns" type="SQL" category="db">
+  <content>{{#each this.columns}}
 {{#unless this.virtual}}
   {{> column}}{{>comma-unless @last}}
-{{/unless}}{{/each}}&lt;/content&gt;
-&lt;/template&gt;
+{{/unless}}{{/each}}</content>
+</template>
 ```
 
 ---------------------------
@@ -1236,7 +1236,7 @@ public void testResolveVirtualColumn() {
     JustdbDataSource dataSource = createMockDataSource();
 
     VirtualColumnResolver resolver = new VirtualColumnResolver(dataSource);
-    Map&lt;String, Object&gt; row = Map.of("user_id", 1L);
+    Map<String, Object> row = Map.of("user_id", 1L);
 
     Object result = resolver.resolveVirtualColumn(userRoles,
         userRoles.getColumn("username"), row);
@@ -1253,23 +1253,23 @@ public void testResolveVirtualColumn() {
 @Test
 public void testSelectWithVirtualColumn() throws SQLException {
     String schemaXml = """
-        &lt;Justdb&gt;
-            &lt;Table name="users"&gt;
-                &lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
-                &lt;Column name="username" type="VARCHAR(50)"/&gt;
-            &lt;/Table&gt;
-            &lt;Table name="user_roles"&gt;
-                &lt;Column name="user_id" type="BIGINT"/&gt;
-                &lt;Column name="username" virtual="true" from="users.username" on="user_id"/&gt;
-            &lt;/Table&gt;
-            &lt;Data table="users"&gt;
-                &lt;Row id="1" username="alice"/&gt;
-                &lt;Row id="2" username="bob"/&gt;
-            &lt;/Data&gt;
-            &lt;Data table="user_roles"&gt;
-                &lt;Row user_id="1"/&gt;
-            &lt;/Data&gt;
-        &lt;/Justdb&gt;
+        <Justdb>
+            <Table name="users">
+                <Column name="id" type="BIGINT" primaryKey="true"/>
+                <Column name="username" type="VARCHAR(50)"/>
+            </Table>
+            <Table name="user_roles">
+                <Column name="user_id" type="BIGINT"/>
+                <Column name="username" virtual="true" from="users.username" on="user_id"/>
+            </Table>
+            <Data table="users">
+                <Row id="1" username="alice"/>
+                <Row id="2" username="bob"/>
+            </Data>
+            <Data table="user_roles">
+                <Row user_id="1"/>
+            </Data>
+        </Justdb>
         """;
 
     // 通过 JustDB JDBC Driver 加载 Schema
@@ -1292,20 +1292,20 @@ public void testSelectWithVirtualColumn() throws SQLException {
 @Test
 public void testInsertWithVirtualColumn() throws SQLException {
     String schemaXml = """
-        &lt;Justdb&gt;
-            &lt;Table name="users"&gt;
-                &lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
-                &lt;Column name="username" type="VARCHAR(50)"/&gt;
-            &lt;/Table&gt;
-            &lt;Table name="user_roles"&gt;
-                &lt;Column name="user_id" type="BIGINT"/&gt;
+        <Justdb>
+            <Table name="users">
+                <Column name="id" type="BIGINT" primaryKey="true"/>
+                <Column name="username" type="VARCHAR(50)"/>
+            </Table>
+            <Table name="user_roles">
+                <Column name="user_id" type="BIGINT"/>
                 <Column name="username" virtual="true" preferColumn="true"
                          from="users.username" on="user_id"/>
-            &lt;/Table&gt;
-            &lt;Data table="users"&gt;
-                &lt;Row id="1" username="alice"/&gt;
-            &lt;/Data&gt;
-        &lt;/Justdb&gt;
+            </Table>
+            <Data table="users">
+                <Row id="1" username="alice"/>
+            </Data>
+        </Justdb>
         """;
 
     JustdbDataSource dataSource = new JustdbDataSource();
@@ -1333,25 +1333,25 @@ public void testInsertWithVirtualColumn() throws SQLException {
 @Test
 public void testUpdateWithVirtualColumn() throws SQLException {
     String schemaXml = """
-        &lt;Justdb&gt;
-            &lt;Table name="users"&gt;
-                &lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
-                &lt;Column name="username" type="VARCHAR(50)"/&gt;
-            &lt;/Table&gt;
-            &lt;Table name="user_roles"&gt;
-                &lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
-                &lt;Column name="user_id" type="BIGINT"/&gt;
+        <Justdb>
+            <Table name="users">
+                <Column name="id" type="BIGINT" primaryKey="true"/>
+                <Column name="username" type="VARCHAR(50)"/>
+            </Table>
+            <Table name="user_roles">
+                <Column name="id" type="BIGINT" primaryKey="true"/>
+                <Column name="user_id" type="BIGINT"/>
                 <Column name="username" virtual="true" preferColumn="true"
                          from="users.username" on="user_id"/>
-            &lt;/Table&gt;
-            &lt;Data table="users"&gt;
-                &lt;Row id="1" username="alice"/&gt;
-                &lt;Row id="2" username="bob"/&gt;
-            &lt;/Data&gt;
-            &lt;Data table="user_roles"&gt;
-                &lt;Row id="1" user_id="1"/&gt;
-            &lt;/Data&gt;
-        &lt;/Justdb&gt;
+            </Table>
+            <Data table="users">
+                <Row id="1" username="alice"/>
+                <Row id="2" username="bob"/>
+            </Data>
+            <Data table="user_roles">
+                <Row id="1" user_id="1"/>
+            </Data>
+        </Justdb>
         """;
 
     JustdbDataSource dataSource = new JustdbDataSource();
@@ -1380,24 +1380,24 @@ public void testUpdateWithVirtualColumn() throws SQLException {
 @Test
 public void testWhereClauseWithVirtualColumn() throws SQLException {
     String schemaXml = """
-        &lt;Justdb&gt;
-            &lt;Table name="users"&gt;
-                &lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
-                &lt;Column name="username" type="VARCHAR(50)"/&gt;
-            &lt;/Table&gt;
-            &lt;Table name="user_roles"&gt;
-                &lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
-                &lt;Column name="user_id" type="BIGINT"/&gt;
-                &lt;Column name="active" type="BOOLEAN"/&gt;
-                &lt;Column name="username" virtual="true" from="users.username" on="user_id"/&gt;
-            &lt;/Table&gt;
-            &lt;Data table="users"&gt;
-                &lt;Row id="1" username="alice"/&gt;
-            &lt;/Data&gt;
-            &lt;Data table="user_roles"&gt;
-                &lt;Row id="1" user_id="1" active="false"/&gt;
-            &lt;/Data&gt;
-        &lt;/Justdb&gt;
+        <Justdb>
+            <Table name="users">
+                <Column name="id" type="BIGINT" primaryKey="true"/>
+                <Column name="username" type="VARCHAR(50)"/>
+            </Table>
+            <Table name="user_roles">
+                <Column name="id" type="BIGINT" primaryKey="true"/>
+                <Column name="user_id" type="BIGINT"/>
+                <Column name="active" type="BOOLEAN"/>
+                <Column name="username" virtual="true" from="users.username" on="user_id"/>
+            </Table>
+            <Data table="users">
+                <Row id="1" username="alice"/>
+            </Data>
+            <Data table="user_roles">
+                <Row id="1" user_id="1" active="false"/>
+            </Data>
+        </Justdb>
         """;
 
     JustdbDataSource dataSource = new JustdbDataSource();
@@ -1421,12 +1421,12 @@ public void testWhereClauseWithVirtualColumn() throws SQLException {
         assertTrue(rs.getBoolean("active"));
     }
 }
-                &lt;Column name="username" virtual="true" from="users.username" on="user_id"/&gt;
-            &lt;/Table&gt;
-            &lt;Data table="users"&gt;
-                &lt;Row id="1" username="alice"/&gt;
-            &lt;/Data&gt;
-        &lt;/Justdb&gt;
+                <Column name="username" virtual="true" from="users.username" on="user_id"/>
+            </Table>
+            <Data table="users">
+                <Row id="1" username="alice"/>
+            </Data>
+        </Justdb>
         """;
 
     SqlExecutor executor = createSqlExecutor(schemaXml);
@@ -1459,27 +1459,27 @@ mvn test -Dtest=VirtualColumnIntegrationTest
 ### A.1 场景 1: 两者兼得（推荐）
 
 ```xml
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;Justdb name="example"&gt;
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb name="example">
 
-    &lt;!-- 主表 --&gt;
-    &lt;Table name="users"&gt;
-        &lt;Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
-        &lt;Column name="username" type="VARCHAR(50)" nullable="false"/&gt;
-    &lt;/Table&gt;
+    <!-- 主表 -->
+    <Table name="users">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+        <Column name="username" type="VARCHAR(50)" nullable="false"/>
+    </Table>
 
-    &lt;Table name="roles"&gt;
-        &lt;Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
-        &lt;Column name="rolename" type="VARCHAR(50)" nullable="false"/&gt;
-    &lt;/Table&gt;
+    <Table name="roles">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+        <Column name="rolename" type="VARCHAR(50)" nullable="false"/>
+    </Table>
 
-    &lt;!-- 关联表：只存储 ID --&gt;
-    &lt;Table name="user_roles"&gt;
-        &lt;Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
-        &lt;Column name="user_id" type="BIGINT" noMigrate="true"/&gt;
-        &lt;Column name="role_id" type="BIGINT" noMigrate="true"/&gt;
+    <!-- 关联表：只存储 ID -->
+    <Table name="user_roles">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+        <Column name="user_id" type="BIGINT" noMigrate="true"/>
+        <Column name="role_id" type="BIGINT" noMigrate="true"/>
 
-        &lt;!-- 虚拟列 + 可读列：DDL 包含，预制时也支持，运行时也支持 --&gt;
+        <!-- 虚拟列 + 可读列：DDL 包含，预制时也支持，运行时也支持 -->
         <Column name="username"
                 type="VARCHAR(255)"
                 virtual="true"
@@ -1492,25 +1492,25 @@ mvn test -Dtest=VirtualColumnIntegrationTest
                 preferColumn="true"
                 from="roles.rolename"
                 on="role_id"/>
-    &lt;/Table&gt;
+    </Table>
 
-    &lt;!-- 预制数据：使用可读值 --&gt;
-    &lt;Data table="users"&gt;
-        &lt;Row username="alice"/&gt;
-        &lt;Row username="bob"/&gt;
-    &lt;/Data&gt;
+    <!-- 预制数据：使用可读值 -->
+    <Data table="users">
+        <Row username="alice"/>
+        <Row username="bob"/>
+    </Data>
 
-    &lt;Data table="roles"&gt;
-        &lt;Row rolename="admin"/&gt;
-        &lt;Row rolename="viewer"/&gt;
-    &lt;/Data&gt;
+    <Data table="roles">
+        <Row rolename="admin"/>
+        <Row rolename="viewer"/>
+    </Data>
 
-    &lt;Data table="user_roles"&gt;
-        &lt;Row username="alice" rolename="admin"/&gt;
-        &lt;Row username="bob" rolename="viewer"/&gt;
-    &lt;/Data&gt;
+    <Data table="user_roles">
+        <Row username="alice" rolename="admin"/>
+        <Row username="bob" rolename="viewer"/>
+    </Data>
 
-&lt;/Justdb&gt;
+</Justdb>
 ```
 
 **生成的 DDL**（`computedColumn="auto"` + MySQL 8.0+）：

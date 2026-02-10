@@ -63,8 +63,9 @@ JustDB Schema is a declarative framework for describing database structures, sup
 - Support database-specific extensions via plugin system
 - Open inheritance hierarchy
 
-#### 4. Backward Compatibility
-- Support legacy field names via `@JsonAlias`
+#### 4. Broad Compatibility
+- Support multiple naming formats via `@JsonAlias`: backward compatible, AI compatible, human compatible
+- Formats are doors to convenience, not limitations
 - Provide smooth migration paths
 
 ## Type Hierarchy

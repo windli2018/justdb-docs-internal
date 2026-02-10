@@ -32,11 +32,11 @@ tag:
 ### 方式一：Maven 依赖
 
 ```xml
-&lt;dependency&gt;
-    &lt;groupId&gt;org.verydb.justdb&lt;/groupId&gt;
-    &lt;artifactId&gt;justdb-core&lt;/artifactId&gt;
-    &lt;version&gt;1.0.0&lt;/version&gt;
-&lt;/dependency&gt;
+<dependency>
+    <groupId>org.verydb.justdb</groupId>
+    <artifactId>justdb-core</artifactId>
+    <version>1.0.0</version>
+</dependency>
 ```
 
 ```java
@@ -79,11 +79,11 @@ justdb --version
 ### 方式三：Spring Boot
 
 ```xml
-&lt;dependency&gt;
-    &lt;groupId&gt;org.verydb.justdb&lt;/groupId&gt;
-    &lt;artifactId&gt;justdb-spring-boot-starter&lt;/artifactId&gt;
-    &lt;version&gt;1.0.0&lt;/version&gt;
-&lt;/dependency&gt;
+<dependency>
+    <groupId>org.verydb.justdb</groupId>
+    <artifactId>justdb-spring-boot-starter</artifactId>
+    <version>1.0.0</version>
+</dependency>
 ```
 
 ```yaml
@@ -226,8 +226,17 @@ justdb
 
 JustDB 支持多种格式，你可以选择最适合的：
 
-<CodeGroup>
-<CodeGroupItem title="YAML"&gt;
+::: code-tabs
+@tab XML
+```xml
+<Justdb>
+  <Table name="users">
+    <Column name="id" type="BIGINT" primaryKey="true"/>
+  </Table>
+</Justdb>
+```
+
+@tab YAML
 ```yaml
 Table:
   - name: users
@@ -236,9 +245,8 @@ Table:
         type: BIGINT
         primaryKey: true
 ```
-</CodeGroupItem>
 
-<CodeGroupItem title="JSON"&gt;
+@tab JSON
 ```json
 {
   "Table": [
@@ -255,18 +263,33 @@ Table:
   ]
 }
 ```
-</CodeGroupItem>
 
-<CodeGroupItem title="XML"&gt;
-```xml
-&lt;Justdb&gt;
-  &lt;Table name="users"&gt;
-    &lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
-  &lt;/Table&gt;
-&lt;/Justdb&gt;
+@tab SQL
+```sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY
+);
 ```
-</CodeGroupItem>
-</CodeGroup>
+
+@tab TOML
+```toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+```
+
+@tab Properties
+```properties
+table.users.name=users
+table.users.column.id.name=id
+table.users.column.id.type=BIGINT
+table.users.column.id.primaryKey=true
+```
+:::
 
 格式转换：
 

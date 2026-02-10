@@ -14,7 +14,69 @@ tag:
 
 # 什么是 JustDB
 
-JustDB 是一个创新的**所见即所得（WYSIWYG）数据库开发套件**，它革命性地改变了传统数据库开发的方式。通过声明式 Schema 定义和智能差异计算，让数据库开发变得简单、高效、可靠。
+JustDB 是一个创新的**多语言数据库开发平台**，它革命性地改变了传统数据库开发的方式。通过声明式 Schema 定义和智能差异计算，让数据库开发变得简单、高效、可靠。
+
+## 多语言生态
+
+JustDB 通过多种方式支持广泛的编程语言：
+
+| 访问方式 | 支持的语言 | 状态 |
+|---------|-----------|------|
+| **CLI 命令行** | 所有语言 | ✅ 已实现 |
+| **JDBC 驱动** | Java、Kotlin、Scala、Groovy | ✅ 已实现 |
+| **ORM 模型生成** | Java、Python、TypeScript、Go | ✅ 已实现 |
+| **远程服务** | 所有支持 HTTP 的语言 | ✅ 已实现 |
+| **MySQL 协议服务** | 所有支持 MySQL 的语言 | ✅ 已实现 |
+| **MCP 服务** | AI 应用（Claude、Cursor 等） | ✅ 已实现 |
+
+### 命令行接口（CLI）
+
+JustDB CLI 可从任何语言的脚本或构建工具调用：
+
+```bash
+# Shell 脚本
+justdb migrate
+
+# Python 脚本
+subprocess.run(["justdb", "migrate"])
+
+# Node.js
+child_process.exec("justdb migrate")
+
+# Go
+exec.Command("justdb", "migrate").Run()
+```
+
+### JDBC 驱动
+
+JVM 语言可直接使用 JustDB JDBC 驱动：
+
+```java
+// Java
+Connection conn = DriverManager.getConnection("jdbc:justdb:schema.yaml");
+
+// Kotlin
+val conn = DriverManager.getConnection("jdbc:justdb:schema.yaml")
+
+// Scala
+val conn = DriverManager.getConnection("jdbc:justdb:schema.yaml")
+
+// Groovy
+def conn = DriverManager.getConnection("jdbc:justdb:schema.yaml")
+```
+
+### ORM 模型生成
+
+JustDB 可以为多种语言生成 ORM 模型：
+
+- **Java**: JPA/Hibernate、MyBatis
+- **Python**: SQLAlchemy、Django
+- **TypeScript**: Prisma、TypeORM
+- **Go**: GORM、sqlx
+
+::: tip 多语言团队
+对于多语言团队，JustDB 提供统一的 Schema 定义，然后为每种语言生成对应的 ORM 模型，确保数据库结构的一致性。
+:::
 
 ## 核心理念
 
@@ -224,6 +286,36 @@ nullable = true
 defaultValueComputed = "CURRENT_TIMESTAMP"
 comment = "创建时间"
 ```
+
+@tab Properties
+```properties
+namespace=com.example
+
+table.users.id=users
+table.users.name=用户表
+table.users.comment=存储系统用户信息
+
+table.users.column.id.name=id
+table.users.column.id.type=BIGINT
+table.users.column.id.primaryKey=true
+table.users.column.id.autoIncrement=true
+table.users.column.id.comment=用户ID，主键自增
+
+table.users.column.username.name=username
+table.users.column.username.type=VARCHAR(50)
+table.users.column.username.nullable=false
+table.users.column.username.comment=用户名，不能为空
+
+table.users.column.email.name=email
+table.users.column.email.type=VARCHAR(100)
+table.users.column.email.comment=邮箱地址
+
+table.users.column.created_at.name=created_at
+table.users.column.created_at.type=TIMESTAMP
+table.users.column.created_at.nullable=false
+table.users.column.created_at.defaultValueComputed=CURRENT_TIMESTAMP
+table.users.column.created_at.comment=创建时间
+```
 :::
 
 ### 2. 智能差异计算
@@ -305,6 +397,22 @@ type = "VARCHAR(500)"
 name = "created_at"
 type = "TIMESTAMP"
 ```
+
+@tab Properties
+```properties
+# 修改后 - 添加了 avatar 字段
+table.users.column.id.name=id
+table.users.column.id.type=BIGINT
+table.users.column.id.primaryKey=true
+table.users.column.username.name=username
+table.users.column.username.type=VARCHAR(50)
+table.users.column.email.name=email
+table.users.column.email.type=VARCHAR(100)
+table.users.column.avatar.name=avatar      # 新增
+table.users.column.avatar.type=VARCHAR(500) # 新增
+table.users.column.created_at.name=created_at
+table.users.column.created_at.type=TIMESTAMP
+```
 :::
 
 JustDB 自动生成并执行：
@@ -372,6 +480,14 @@ name = "id"
 type = "BIGINT"
 primaryKey = true
 ```
+
+@tab Properties
+```properties
+table.users.name=users
+table.users.column.id.name=id
+table.users.column.id.type=BIGINT
+table.users.column.id.primaryKey=true
+```
 :::
 
 ### 4. AI 集成
@@ -428,6 +544,87 @@ public class Application {
 }
 ```
 
+### 7. 多语言 ORM 模型生成
+
+JustDB 支持为多种编程语言和框架生成 ORM 模型：
+
+::: code-tabs
+@tab Java
+```bash
+# 生成 JPA/Hibernate 实体
+justdb schema2orm --input schema.xml --type jpa-entity --output src/main/java/
+
+# 生成 MyBatis Bean
+justdb schema2orm --input schema.xml --type mybatis-bean --output src/main/java/
+```
+
+@tab Python
+```bash
+# 生成 SQLAlchemy 模型
+justdb schema2orm --input schema.xml --type sqlalchemy --output models.py
+
+# 生成 Django 模型
+justdb schema2orm --input schema.xml --type django --output models.py
+```
+
+@tab TypeScript
+```bash
+# 生成 Prisma Schema
+justdb schema2orm --input schema.xml --type prisma --output schema.prisma
+
+# 生成 TypeORM 实体
+justdb schema2orm --input schema.xml --type typeorm --output entities/
+```
+
+@tab Go
+```bash
+# 生成 GORM 模型
+justdb schema2orm --input schema.xml --type gorm --output models.go
+
+# 生成 sqlx 模型
+justdb schema2orm --input schema.xml --type sqlx --output models.go
+```
+:::
+
+**支持的 ORM 框架：**
+
+| 语言 | 框架 |
+|------|------|
+| Java | JPA/Hibernate、MyBatis |
+| Python | SQLAlchemy、Django |
+| TypeScript | Prisma、TypeORM |
+| Go | GORM、sqlx |
+
+### 8. ORM 导入
+
+JustDB 不仅生成 ORM 模型，还支持从现有 ORM 项目导入 Schema：
+
+```bash
+# 从 Prisma 导入
+justdb orm2schema --input prisma/schema.prisma --orm prisma --output schema.yaml
+
+# 从 SQLAlchemy 导入
+justdb orm2schema --input models/ --orm sqlalchemy --output schema.yaml
+
+# 从 GORM 导入
+justdb orm2schema --input models.go --orm gorm --output schema.yaml
+```
+
+### 9. Atlas 集成
+
+JustDB 可与 Atlas ORM 导入工具配合使用：
+
+```bash
+# 1. 使用 Atlas 生成 DDL
+atlas schema diff --from "ent://schema" --to "mysql://localhost/db" --format '{{ sql . }}' > schema.sql
+
+# 2. 创建临时数据库并导入 DDL
+mysql -u root -p temp_db < schema.sql
+
+# 3. 使用 JustDB 提取 Schema
+justdb db2schema --db-url "jdbc:mysql://localhost:3306/temp_db" --output schema.yaml
+```
+
 ## 应用场景
 
 ### 1. 敏捷开发
@@ -446,7 +643,7 @@ justdb migrate
 
 ### 2. 数据库文档化
 
-Schema 即文档，文档即 Schema。YAML 文件本身就是最好的数据库文档：
+Schema 即文档，文档即 Schema。Schema 文件本身就是最好的数据库文档：
 
 ```yaml
 Table:
@@ -609,9 +806,55 @@ public class MyDatabaseAdapter extends DatabaseAdapter {
 }
 ```
 
-### 4. 向后兼容
+### 4. 格式人机双友好
 
-JustDB 承诺保持 API 的向后兼容性，保护您的投资。
+JustDB 的 Schema 格式设计同时考虑了人类和 AI 的可读性：
+
+**对人类友好：**
+- YAML 格式简洁直观，易于阅读和编写
+- XML 格式结构清晰，适合企业级项目
+- JSON 格式适合 API 和自动化工具
+- 注释和文档内联在 Schema 中
+
+**对 AI 友好：**
+- 结构化数据易于 LLM 解析和理解
+- 明确的类型和约束信息减少歧义
+- 关系定义清晰（外键、索引等）
+- 可以通过 MCP 服务直接提供给 AI 工具
+
+**示例：AI 可以直接理解这段 YAML**
+
+```yaml
+Table:
+  - name: users
+    comment: 用户表
+    Column:
+      - name: id
+        type: BIGINT
+        primaryKey: true
+        autoIncrement: true
+        comment: 用户ID
+      - name: orders
+        type: BIGINT
+        nullable: false
+        comment: 订单ID（外键）
+```
+
+AI 可以准确理解：
+- 表名是 `users`
+- 有两个字段：`id`（主键）和 `orders`（外键）
+- `orders` 字段关联到其他表（需要定义关系）
+
+### 5. 广泛兼容
+
+**别名系统：格式是方便之门，不是限制**
+
+JustDB 的别名系统支持多种命名格式，让不同背景的用户都能方便使用：
+
+- **向后兼容**：保护您的投资，旧版本 Schema 继续工作
+- **向 AI 兼容**：任何 AI、盲写，都能兼容
+- **向人类兼容**：不同编程背景的开发者都能用熟悉的格式
+- **规范输出**：统一使用规范命名，保证一致性
 
 ## 下一步
 

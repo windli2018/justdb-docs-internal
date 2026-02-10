@@ -138,6 +138,25 @@ name = "username"
 # Run migration directly
 # justdb migrate
 ```
+
+@tab Properties
+```properties
+table.users.name=users
+table.users.column.id.name=id
+table.users.column.id.type=BIGINT
+table.users.column.id.primaryKey=true
+table.users.column.id.autoIncrement=true
+table.users.column.username.name=username
+table.users.column.username.type=VARCHAR(50)
+table.users.column.username.nullable=false
+table.users.column.email.name=email
+table.users.column.email.type=VARCHAR(100)
+table.users.index.idx_username.unique=true
+table.users.index.idx_username.columns=username
+
+# Run migration directly
+# justdb migrate
+```
 :::
 
 **Atlas - GitOps-focused schema management:**
@@ -191,6 +210,8 @@ CREATE UNIQUE INDEX idx_username ON users(username);
 - ✅ **Java Ecosystem**: Deep integration with Java/JVM ecosystem
 - ✅ **Template System**: Flexible template engine for custom SQL generation
 - ✅ **Open Source**: Fully open source, no enterprise paywall
+- ✅ **ORM Import**: Support importing from multiple ORM frameworks (orm2schema command)
+- ✅ **Atlas Integration**: Can work with Atlas ORM import tools
 
 **Atlas Advantages**:
 - ✅ **GitOps Native**: Designed specifically for GitOps/CI-CD workflows
@@ -198,7 +219,7 @@ CREATE UNIQUE INDEX idx_username ON users(username);
 - ✅ **Multi-language Friendly**: Works with SQL/HCL from any language project
 - ✅ **Linting Validation**: Powerful schema change validation
 - ✅ **Atlas Cloud**: Enterprise-grade platform (paid)
-- ✅ **ORM Integration**: Auto-generate migrations from ORMs (Ent/GORM)
+- ✅ **ORM Integration**: Built-in ORM import (Ent/GORM/Prisma, etc.)
 
 **Atlas Disadvantages**:
 - ❌ **Proprietary HCL Format**: Requires learning Atlas HCL DSL, adds learning curve

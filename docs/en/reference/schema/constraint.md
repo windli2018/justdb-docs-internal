@@ -23,12 +23,12 @@ Constraints are used to ensure data integrity and consistency in the database. J
 | `name` | String | Yes | Constraint name |
 | `tableName` | String | Yes* | Owner table name (*required for global constraints) |
 | `type` | ConstraintType | Yes | Constraint type |
-| `columns` | List&lt;String&gt; | Yes | Constraint columns |
+| `columns` | List<String> | Yes | Constraint columns |
 | `referencedTable` | String | No | Foreign key referenced table |
 | `referencedColumn` | String | No | Foreign key referenced column |
 | `checkExpression` | String | No | Check constraint expression |
 | `comment` | String | No | Constraint comment |
-| `dbms` | List&lt;String&gt; | No | Applicable database list |
+| `dbms` | List<String> | No | Applicable database list |
 
 ## Constraint Types
 

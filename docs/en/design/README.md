@@ -108,9 +108,9 @@ All schema changes are tracked and reversible.
 SQL is generated through templates, not hardcoded.
 
 ```xml
-&lt;template id="create-table" type="SQL" category="db"&gt;
-  &lt;content&gt;CREATE TABLE {{name}} (...)&lt;/content&gt;
-&lt;/template&gt;
+<template id="create-table" type="SQL" category="db">
+  <content>CREATE TABLE {{name}} (...)</content>
+</template>
 ```
 
 ### 5. Plugin Extensibility

@@ -13,14 +13,19 @@ tags:
 
 ## Overview
 
-JustDB Schema's alias system supports multiple naming formats via `@JsonAlias` annotations, maintaining backward compatibility while providing unified canonical naming.
+JustDB Schema's alias system supports multiple naming formats via `@JsonAlias` annotations.
+
+> **Formats Are Not Tools to Limit Users, Formats Are Doors to User Convenience**
+
+The alias system makes it convenient for users from different backgrounds: backward compatibility with old versions, AI-friendly with multiple formats, human-friendly with familiar naming conventions.
 
 ## Design Goals
 
-1. **Backward Compatibility**: Support legacy field names
-2. **Flexible Input**: Accept multiple naming styles
-3. **Canonical Output**: Use unified canonical naming (camelCase, plural form)
-4. **SQL Standards**: Prefer SQL standard terminology
+1. **Backward Compatibility**: Support legacy field names, protect user investment
+2. **AI Compatibility**: Any AI, blind writing, all compatible
+3. **Human Compatibility**: Developers with different programming backgrounds can use familiar formats
+4. **Canonical Output**: Use unified canonical naming (camelCase, plural form)
+5. **SQL Standards**: Prefer SQL standard terminology
 
 ## Core Naming Conventions
 

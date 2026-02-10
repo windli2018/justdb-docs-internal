@@ -40,7 +40,8 @@ tag:
 | **Java 生态** | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
 | **类型安全** | 部分 | ❌ | ❌ | ❌ | ✅ | ✅ |
 | **学习成本** | 低 | 中 | 中 | 高 | 中 | 中 |
-| **多语言平台** | JVM | JVM | JVM | Go 核心 | Python | TypeScript |
+| **多语言平台** | CLI/JDBC/ORM | JVM | JVM | Go 核心 | Python | TypeScript |
+| **多语言访问** | CLI/远程服务/MySQL/MCP | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 \* Atlas 是现代声明式数据库迁移工具，支持 GitOps 工作流
 † SQLAlchemy 和 Prisma 分别是 Python 和 TypeScript/JavaScript 生态的工具
@@ -53,7 +54,7 @@ tag:
 | **MySQL 协议** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ 标准协议，通用工具 |
 | **虚拟列** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ 动态计算列 |
 | **Watch 监控** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ 实时变化监控 |
-| **本地 AI** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ 数据不外流 |
+| **本地 或云端 AI** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ 数据不外流 |
 | **多格式** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ 8 种格式支持 |
 
 ::: tip JustDB 独特价值
@@ -62,8 +63,8 @@ tag:
 1. **JDBC 驱动** - 离线开发、快速测试，无需启动数据库
 2. **MySQL 协议** - 使用 MySQL Workbench、DBeaver 等通用工具
 3. **虚拟列** - 简化业务逻辑，提高查询性能
-4. **Watch 监控** - 数据同步、缓存失效、审计日志
-5. **本地 AI** - 企业数据安全，满足合规要求
+4. **Watch 监控** - 修改 Schema 自动同步生成脚本和 ORM 对象，自动 migrate 到数据库
+5. **本地 或云端 AI** - 企业数据安全，满足合规要求
 :::
 
 ## 详细对比
@@ -133,7 +134,7 @@ TypeScript/Node.js 生态的现代 ORM，类型安全优先。
 
 **详细分析**：
 
-- **JustDB（低）**：YAML 格式直观，Fluent API 符合 Java 开发习惯
+- **JustDB（低）**：YAML 格式直观，Fluent API 符合 Java 开发习惯，支持多种语言格式
 - **Flyway（低）**：纯 SQL，无新概念学习
 - **Liquibase（中）**：需学习 changeSet 和抽象 SQL 语法
 - **Atlas（高）**：需学习 HCL DSL（HashiCorp Configuration Language），对非 Go 开发者有门槛
@@ -144,7 +145,7 @@ TypeScript/Node.js 生态的现代 ORM，类型安全优先。
 
 | 维度 | JustDB | 其他工具 |
 |:---|:---|:---|
-| **数据掌控** | ✅ 本地 AI，数据自主 | ❌ 云端 AI，数据外流 |
+| **数据掌控** | ✅ 本地 或云端 AI，数据自主 | ❌ 云端 AI，数据外流 |
 | **确定性** | ✅ 声明式 Schema，单一事实源 | ⚠️ 命令式脚本，需人工协调 |
 | **AI 不确定性应对** | ✅ Schema 即文档，AI 可审计 | ⚠️ 分散的 SQL 文件，难审计 |
 | **人机协作** | ✅ 自然语言操作 + 代码审查 | ❌ 纯人工或纯 AI |
@@ -157,23 +158,23 @@ JustDB 通过以下方式实现：
 
 1. **单一事实源**：Schema 文件是唯一真实来源，AI 修改有迹可循
 2. **声明式定义**：描述"想要什么"而非"如何做"，AI 更容易理解和验证
-3. **版本控制友好**：YAML 格式的 diff 清晰，Code Review 更有效
-4. **本地 AI 支持**：数据不离开企业环境，满足合规要求
+3. **版本控制友好**：Schema 格式的 diff 清晰，Code Review 更有效
+4. **本地 或云端 AI 支持**：数据不离开企业环境，满足合规要求
 
 ### 成本总结
 
 | 场景 | 推荐工具 | 理由 |
 |:---|:---:|:---|
 | **快速上手** | JustDB / Flyway | 低学习成本，文档完善 |
-| **AI 辅助开发** | JustDB | 本地 AI + 自然语言操作 |
+| **AI 辅助开发** | JustDB | 本地 或云端 AI + 自然语言操作 |
 | **企业合规** | JustDB / Liquibase | 数据自主，审计友好 |
-| **跨语言团队** | Atlas / JustDB | 多语言支持，但 Atlas 学习成本高 |
+| **跨语言团队** | JustDB / Atlas | 多语言支持，但 Atlas 学习成本高 |
 
 ## 多语言平台支持
 
 | 工具 | 核心语言 | 跨平台支持 | 备注 |
 |:---|:---:|:---:|:---|
-| **JustDB** | Java | ✅ JVM 全平台 | Kotlin / Scala / Groovy |
+| **JustDB** | Java | ✅ **JVM 全平台** | **JustDB = Java 开发，兼容全平台** |
 | **Flyway** | Java | ✅ JVM 全平台 | 同上 |
 | **Liquibase** | Java | ✅ JVM 全平台 | 同上 |
 | **Atlas** | Go | ✅ 全语言 | CLI 工具，无语言绑定 |
@@ -182,10 +183,25 @@ JustDB 通过以下方式实现：
 
 **平台选择建议**：
 
-- **Java/Kotlin 项目**：JustDB / Flyway / Liquibase
-- **Python 项目**：SQLAlchemy
-- **Node.js 项目**：Prisma / Atlas
-- **多语言微服务**：JustDB（JVM 服务）+ Atlas（非 JVM 服务）
+::: tip JustDB 全平台
+**JustDB 是 Java 开发的最佳选择，兼容全平台：**
+
+**开发语言：** Java
+**运行平台：** Windows / Linux / macOS / Docker
+**JVM 语言支持：** Java / Kotlin / Scala / Groovy / Clojure / JRuby / Jython
+
+**核心优势：**
+- 一次开发，到处运行
+- JDBC 驱动让所有 JVM 语言都能使用
+- Schema 文件独立于语言，可以跨项目共享
+- CLI 工具可在任何平台上运行
+:::
+
+- **Java/Kotlin/Scala/Groovy 项目**：JustDB（首选）/ Flyway / Liquibase
+- **Python 项目**：JustDB（生成 SQLAlchemy）/ SQLAlchemy
+- **Node.js 项目**：JustDB（生成 Prisma）/ Prisma
+- **Go 项目**：JustDB（生成 GORM）/ GORM
+- **多语言微服务**：JustDB 统一管理所有服务的 Schema
 
 ## 选择指南
 
@@ -194,10 +210,10 @@ JustDB 通过以下方式实现：
 | 项目类型 | 推荐工具 | 原因 |
 |:---|:---:|:---|
 | **Java Web 应用** | JustDB | 原生 Java，JDBC 驱动 |
-| **Python Web 应用** | SQLAlchemy | Python 生态，ORM 集成 |
-| **Node.js 应用** | Prisma | TypeScript 优先 |
+| **Python Web 应用** | JustDB + SQLAlchemy | Python 生态，ORM 集成 |
+| **Node.js 应用** | JustDB + Prisma | TypeScript 优先 |
 | **微服务架构** | JustDB / Atlas | 轻量级，独立部署 |
-| **企业级应用** | Liquibase / Atlas Cloud | 成熟稳定，企业功能 |
+| **企业级应用** | JustDB + Flyway / Liquibase / Atlas Cloud | 成熟稳定，企业功能 |
 | **简单项目** | JustDB | 简单易用，快速上手 |
 
 ### 按需求选择
@@ -210,10 +226,10 @@ JustDB 通过以下方式实现：
 | **ORM 集成** | Prisma / SQLAlchemy |
 | **多格式支持** | JustDB |
 | **AI 集成** | JustDB |
-| **企业级功能** | Liquibase / Atlas Cloud / Flyway Teams |
+| **企业级功能** | JustDB + Flyway / Liquibase / Atlas Cloud / Flyway Teams |
 | **精细 SQL 控制** | Flyway |
 | **快速迭代** | JustDB |
-| **GitOps 工作流** | Atlas |
+| **GitOps 工作流** | JustDB / Atlas |
 
 ## 总结
 
@@ -224,33 +240,86 @@ JustDB 在以下方面具有独特优势：
 1. **声明式优先**：真正意义上的声明式 Schema 定义
 2. **智能差异**：自动计算和执行 Schema 变更
 3. **多格式支持**：原生支持 8 种数据格式
-4. **AI 集成**：自然语言操作数据库
-5. **JDBC 驱动**：独特的内存数据库驱动
-6. **文档化**：Schema 即文档的理念
-7. **低学习成本**：YAML 格式直观，文档完善
-8. **数据自主**：本地 AI，数据不出企业
+4. **格式人机双友好**：YAML/XML/JSON 等格式对人类和 AI 都易读易写
+5. **AI 集成**：自然语言操作数据库
+6. **JDBC 驱动**：独特的内存数据库驱动
+7. **文档化**：Schema 即文档的理念
+8. **低学习成本**：Schema 格式直观，支持多种格式，总有你熟悉的，文档完善
+9. **数据自主**：本地 或云端 AI，数据不出企业
+10. **MCP 服务**：让 AI 更懂数据库，让人类更懂 AI 对数据库做了什么
+
+::: tip MCP 服务独特价值
+JustDB MCP 服务连接了 AI 和数据库：
+
+**让 AI 更懂数据库：**
+- AI 可以直接读取 Schema 结构
+- AI 理解表关系、约束、索引
+- AI 生成符合数据库设计的查询
+- AI 验证 Schema 变更的影响
+
+**让人类更懂 AI 对数据库做了什么：**
+- 所有 AI 操作都有明确的 Schema 上下文
+- 可以追踪 AI 生成的 SQL 语句
+- MCP 工具提供透明的操作日志
+- 人类可以审查和回滚 AI 的变更
+:::
 
 ### 选择建议
 
-::: tip 选择 JustDB 如果
-- 你使用 Java 或 JVM 语言（Kotlin/Scala/Groovy）
-- 你需要快速迭代数据库 Schema
-- 你重视数据库文档化
-- 你希望在多个数据库间保持一致
-- 你想用自然语言操作数据库
-- 你需要 JDBC 驱动进行离线开发
-- 你关注 AI 时代的数据自主性
-- 你需要灵活的模板系统自定义 SQL
-- 你希望 Schema 文件即代码，易于 Code Review
+::: tip 选择 JustDB
+**什么情况下都可以选择 JustDB**
+
+JustDB 不是要替代任何工具，而是给你一个尝试的机会。用了就有好处，代价很低：
+
+**多语言项目**
+- JustDB 支持生成各种 ORM 模型（Java、Python、TypeScript、Go）
+- 提供 MySQL 协议，任何语言的 MySQL 客户端都能连接
+- CLI 命令行可从任何语言调用
+- 支持 watch 模式，修改 Schema 自动同步生成脚本和 ORM 对象，自动 migrate 到数据库
+
+**现有项目迁移**
+- 可从现有数据库逆向生成 Schema
+- 提供完整的迁移路径
+
+**短生命周期项目**
+- Schema 格式简单直观，支持多种格式，总有你熟悉的
+- Schema 文件本身就是数据库文档
+- 无需学习复杂的 SQL 脚本管理
+
+**AI 时代**
+- MCP 服务让 AI 更懂数据库
+- 自然语言操作数据库
+- 本地 或云端 AI 保证数据安全
+
+**给对方一个机会**
+你不需要放弃现有的工具，只需要：
+1. 用 JustDB 管理你的 Schema
+2. 享受自动差异、文档化、多格式支持
+3. 用你喜欢的方式连接和操作数据库
+
+试试看，你会发现：**用了就有好处**。
 :::
 
-::: tip 选择其他工具如果
-- **Python 生态**：选择 SQLAlchemy，其类型提示和 ORM 集成更深度
-- **Node.js/TypeScript**：选择 Prisma，其类型生成和查询 API 更现代化
-- **非 JVM 语言**：选择对应语言的工具（Go、Ruby、PHP 等）
-- **现有团队习惯**：团队已熟悉 Flyway/Liquibase，迁移成本高
-- **特定平台需求**：需要 Terraform 原生集成（选择 Atlas）
-- **纯命令式偏好**：团队更习惯编写和管理 SQL 脚本文件
+::: tip 选择其他工具
+**什么情况下选择其他工具？**
+
+**只有两种情况需要考虑其他工具：**
+
+1. **项目已经使用其他工具，且无法改变**
+   - 团队已经深度集成 Flyway/Liquibase
+   - 迁移成本确实高于长期收益
+   - 建议：新项目用 JustDB，老项目保持现状
+
+2. **项目生命周期非常短（< 1 周）**
+   - 一次性脚本或临时项目
+   - 手写 SQL 更快
+   - 建议：如果可能，也用 JustDB，方便后续扩展
+
+**注意：即使是这些情况，JustDB 也可能带来价值**
+
+- 短期项目可能变长期，JustDB 的 Schema 文件可以复用
+- 现有项目可以部分迁移，从新表开始使用 JustDB
+- JustDB 的文档化能力对任何项目都有价值
 :::
 
 ## 下一步

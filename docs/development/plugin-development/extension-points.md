@@ -542,16 +542,16 @@ import java.util.stream.Collectors;
  */
 public class IncludeRuleMatcher {
 
-    private final List&lt;IncludeRule&gt; rules;
+    private final List<IncludeRule> rules;
 
-    public IncludeRuleMatcher(List&lt;IncludeRule&gt; rules) {
-        this.rules = rules != null ? rules : new ArrayList&lt;&gt;();
+    public IncludeRuleMatcher(List<IncludeRule> rules) {
+        this.rules = rules != null ? rules : new ArrayList<>();
     }
 
     /**
      * Find all matching rules sorted by priority (highest first)
      */
-    public List&lt;IncludeRule&gt; findAllMatches(String tableName) {
+    public List<IncludeRule> findAllMatches(String tableName) {
         return rules.stream()
             .filter(rule -> rule.isEnabled() && rule.matches(tableName))
             .sorted((a, b) -> {
@@ -565,7 +565,7 @@ public class IncludeRuleMatcher {
     /**
      * Get highest priority matching rule
      */
-    public Optional&lt;IncludeRule&gt; findBestMatch(String tableName) {
+    public Optional<IncludeRule> findBestMatch(String tableName) {
         return findAllMatches(tableName).stream().findFirst();
     }
 
@@ -574,8 +574,8 @@ public class IncludeRuleMatcher {
      * Deduplicates by dataFilter, keeps first occurrence
      * All same-priority rules with unique dataFilter are kept
      */
-    public List&lt;IncludeRule&gt; findSamePriorityMatches(String tableName) {
-        List&lt;IncludeRule&gt; matches = findAllMatches(tableName);
+    public List<IncludeRule> findSamePriorityMatches(String tableName) {
+        List<IncludeRule> matches = findAllMatches(tableName);
         if (matches.isEmpty()) {
             return matches;
         }
@@ -583,12 +583,12 @@ public class IncludeRuleMatcher {
         int highestPriority = matches.get(0).calculateMatchPriority(tableName);
 
         // Filter by highest priority
-        List&lt;IncludeRule&gt; samePriority = matches.stream()
+        List<IncludeRule> samePriority = matches.stream()
             .filter(r -> r.calculateMatchPriority(tableName) == highestPriority)
             .collect(Collectors.toList());
 
         // Deduplicate by dataFilter, keep first occurrence
-        Map&lt;String, IncludeRule&gt; uniqueRules = new LinkedHashMap&lt;&gt;();
+        Map<String, IncludeRule> uniqueRules = new LinkedHashMap<>();
         for (IncludeRule rule : samePriority) {
             String df = rule.getDataFilter();
             if (df == null) df = "";
@@ -597,7 +597,7 @@ public class IncludeRuleMatcher {
             }
         }
 
-        return new ArrayList&lt;&gt;(uniqueRules.values());
+        return new ArrayList<>(uniqueRules.values());
     }
 }
 ```
@@ -769,10 +769,10 @@ public class IncludeRuleDataExtractor {
      * @param rule IncludeRule with dataFilter configuration
      * @return List of Data nodes (main data + temp data if applicable)
      */
-    public List&lt;Data&gt; extractData(Connection connection, Table table, IncludeRule rule)
+    public List<Data> extractData(Connection connection, Table table, IncludeRule rule)
             throws SQLException {
 
-        List&lt;Data&gt; dataNodes = new ArrayList&lt;&gt;();
+        List<Data> dataNodes = new ArrayList<>();
         IncludeRule.DataFilterType filterType = rule.detectDataFilterType();
 
         switch (filterType) {
@@ -811,7 +811,7 @@ public class IncludeRuleDataExtractor {
         data.setTable(table.getName());
         data.setTableRef(table);
         data.setSourcePattern(rule.getPattern());
-        data.setRows(new ArrayList&lt;&gt;());
+        data.setRows(new ArrayList<>());
         // Set author, remark, module from rule
         if (rule.getAuthor() != null) data.setAuthor(rule.getAuthor());
         if (rule.getRemark() != null) data.setRemark(rule.getRemark());
@@ -886,7 +886,7 @@ public class IncludeRuleDataExtractor {
     private Data executeQuery(Connection connection, Table table, String sql, IncludeRule rule)
             throws SQLException {
         // Execute query and build rows
-        List&lt;Row&gt; rows = new ArrayList&lt;&gt;();
+        List<Row> rows = new ArrayList<>();
         // TODO: Implement actual query execution
 
         Data data = new Data();
@@ -946,7 +946,7 @@ public class Db2SchemaMixin extends TableFilterMixin {
      */
     @Option(names = {"-I", "--include"},
             description = "Include rule (pattern&key=value format)")
-    private List&lt;String&gt; includeRules;
+    private List<String> includeRules;
 
     /**
      * Data filter rule (simplified format)
@@ -955,11 +955,11 @@ public class Db2SchemaMixin extends TableFilterMixin {
      */
     @Option(names = {"-d", "--data-filter"},
             description = "Data filter rule (pattern=dataFilter)")
-    private List&lt;String&gt; dataFilterRules;
+    private List<String> dataFilterRules;
 
     // Getters
-    public List&lt;String&gt; getIncludeRules() { return includeRules; }
-    public List&lt;String&gt; getDataFilterRules() { return dataFilterRules; }
+    public List<String> getIncludeRules() { return includeRules; }
+    public List<String> getDataFilterRules() { return dataFilterRules; }
 
     /**
      * Parse include rule string to IncludeRule object
@@ -1036,9 +1036,9 @@ public static class TableDataFilterChange {
     public ChangeType getChangeType() { return changeType; }
 }
 
-private List&lt;TableDataFilterChange&gt; tableDataFilterChanges = new ArrayList&lt;&gt;();
+private List<TableDataFilterChange> tableDataFilterChanges = new ArrayList<>();
 
-public List&lt;TableDataFilterChange&gt; getTableDataFilterChanges() {
+public List<TableDataFilterChange> getTableDataFilterChanges() {
     return tableDataFilterChanges;
 }
 ```
@@ -1069,8 +1069,8 @@ private void calculateTableDataFilterChanges() {
         return;
     }
 
-    Map&lt;String, Table&gt; currentTables = mapTablesByName(currentSchema);
-    Map&lt;String, Table&gt; targetTables = mapTablesByName(targetSchema);
+    Map<String, Table> currentTables = mapTablesByName(currentSchema);
+    Map<String, Table> targetTables = mapTablesByName(targetSchema);
 
     for (Table targetTable : targetSchema.getTables()) {
         String tableName = targetTable.getName();
@@ -1112,8 +1112,8 @@ private void calculateTableDataFilterChanges() {
  * Generate SQL for Table dataFilter changes
  * Strategy: Delete rows with deleted=false, then re-import from DB
  */
-public List&lt;String&gt; generateTableDataFilterChangeSql(String dialect) {
-    List&lt;String&gt; sqlStatements = new ArrayList&lt;&gt;();
+public List<String> generateTableDataFilterChangeSql(String dialect) {
+    List<String> sqlStatements = new ArrayList<>();
 
     for (TableDataFilterChange change : tableDataFilterChanges) {
         Table table = change.getCurrentTable();
@@ -1168,13 +1168,13 @@ private String quoteIdentifier(String name, String dialect) {
 ```java
 // Process data changes (condition-based data migration)
 if (!diff.getDataChanges().isEmpty()) {
-    List&lt;String&gt; dataChangeSql = diff.generateDataChangeSql(dialect);
+    List<String> dataChangeSql = diff.generateDataChangeSql(dialect);
     sqlStatements.addAll(dataChangeSql);
 }
 
 // NEW: Process Table dataFilter changes
 if (!diff.getTableDataFilterChanges().isEmpty()) {
-    List&lt;String&gt; tableDataFilterSql = diff.generateTableDataFilterChangeSql(dialect);
+    List<String> tableDataFilterSql = diff.generateTableDataFilterChangeSql(dialect);
     sqlStatements.addAll(tableDataFilterSql);
 }
 ```
@@ -1202,7 +1202,7 @@ private void executeDb2Schema(JustdbConfiguration config) {
         Justdb schema = extractor.extractSchema(connection, extractConfig);
 
         // ===== NEW: Load and apply Include rules =====
-        List&lt;IncludeRule&gt; includeRules = loadIncludeRules(config, db2SchemaMixin);
+        List<IncludeRule> includeRules = loadIncludeRules(config, db2SchemaMixin);
         if (!includeRules.isEmpty()) {
             DBGenerator dbGenerator = new DBGenerator(
                 getJustdbManager().getPluginManager(),
@@ -1214,12 +1214,12 @@ private void executeDb2Schema(JustdbConfiguration config) {
                 dbConfig.getType()
             );
 
-            List&lt;Data&gt; dataList = new ArrayList&lt;&gt;();
+            List<Data> dataList = new ArrayList<>();
 
             // Apply rules to each table
             for (Table table : schema.getTables()) {
                 // Get same-priority matching rules
-                List&lt;IncludeRule&gt; samePriorityRules =
+                List<IncludeRule> samePriorityRules =
                     matcher.findSamePriorityMatches(table.getName());
 
                 if (!samePriorityRules.isEmpty()) {
@@ -1256,13 +1256,13 @@ private void executeDb2Schema(JustdbConfiguration config) {
 /**
  * Load Include rules from configuration and command line
  */
-private List&lt;IncludeRule&gt; loadIncludeRules(JustdbConfiguration config,
+private List<IncludeRule> loadIncludeRules(JustdbConfiguration config,
                                             Db2SchemaMixin db2SchemaMixin) {
-    List&lt;IncludeRule&gt; rules = new ArrayList&lt;&gt;();
+    List<IncludeRule> rules = new ArrayList<>();
 
     // Load from config file (-c parameter)
     if (config.getIncludeRules() != null) {
-        for (Map&lt;String, Object&gt; ruleMap : config.getIncludeRules()) {
+        for (Map<String, Object> ruleMap : config.getIncludeRules()) {
             IncludeRule rule = mapToIncludeRule(ruleMap);
             if (rule != null) {
                 rules.add(rule);
@@ -1294,7 +1294,7 @@ private List&lt;IncludeRule&gt; loadIncludeRules(JustdbConfiguration config,
     return rules;
 }
 
-private IncludeRule mapToIncludeRule(Map&lt;String, Object&gt; map) {
+private IncludeRule mapToIncludeRule(Map<String, Object> map) {
     try {
         com.fasterxml.jackson.databind.ObjectMapper mapper =
             new com.fasterxml.jackson.databind.ObjectMapper();
@@ -1455,11 +1455,11 @@ private void calculateDataChanges() {
     }
 
     // Filter out temporary data nodes
-    List&lt;Data&gt; currentData = currentSchema.getData().stream()
+    List<Data> currentData = currentSchema.getData().stream()
         .filter(d -> Boolean.FALSE.equals(d.isTemporary()))
         .collect(Collectors.toList());
 
-    List&lt;Data&gt; targetData = targetSchema.getData().stream()
+    List<Data> targetData = targetSchema.getData().stream()
         .filter(d -> Boolean.FALSE.equals(d.isTemporary()))
         .collect(Collectors.toList());
 
@@ -1488,12 +1488,12 @@ private void calculateDataChanges() {
  * Generate migration SQL from schema diff
  * Temporary data is preserved during migration
  */
-public List&lt;String&gt; generateMigrationSql(CanonicalSchemaDiff diff) {
+public List<String> generateMigrationSql(CanonicalSchemaDiff diff) {
     // ... existing table/column/index/constraint SQL generation ...
 
     // Process data changes (only non-temporary data)
     if (!diff.getDataChanges().isEmpty()) {
-        List&lt;String&gt; dataChangeSql = diff.generateDataChangeSql(dialect);
+        List<String> dataChangeSql = diff.generateDataChangeSql(dialect);
 
         // Add comment about temporary data preservation
         dataChangeSql.add(0, "-- Temporary data nodes are preserved during migration");

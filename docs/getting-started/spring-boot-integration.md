@@ -21,11 +21,11 @@ JustDB 提供了开箱即用的 Spring Boot Starter，让数据库管理变得�
 ### 添加依赖
 
 ```xml
-&lt;dependency&gt;
-    &lt;groupId&gt;org.verydb.justdb&lt;/groupId&gt;
-    &lt;artifactId&gt;justdb-spring-boot-starter&lt;/artifactId&gt;
-    &lt;version&gt;1.0.0&lt;/version&gt;
-&lt;/dependency&gt;
+<dependency>
+    <groupId>org.verydb.justdb</groupId>
+    <artifactId>justdb-spring-boot-starter</artifactId>
+    <version>1.0.0</version>
+</dependency>
 ```
 
 ### 配置文件
@@ -271,12 +271,12 @@ public class DatabaseMigrationRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         // 加载 Schema
-        List&lt;Loaded<Justdb&gt;> schemas = SchemaLoader.loadFromClasspath(
+        List<Loaded<Justdb>> schemas = SchemaLoader.loadFromClasspath(
             "justdb", justdbManager
         );
 
         // 执行迁移
-        for (Loaded&lt;Justdb&gt; loaded : schemas) {
+        for (Loaded<Justdb> loaded : schemas) {
             schemaDeployer.deploy(loaded.getValue());
         }
     }

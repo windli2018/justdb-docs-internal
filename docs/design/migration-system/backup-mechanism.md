@@ -44,7 +44,7 @@ public interface SchemaBackupProvider {
      * @param schemaId Schema identifier
      * @return List of backup metadata
      */
-    List&lt;BackupMetadata&gt; listBackups(String schemaId) throws BackupException;
+    List<BackupMetadata> listBackups(String schemaId) throws BackupException;
 
     /**
      * Get provider name
@@ -202,8 +202,8 @@ public interface BackupEncryptionService {
 
 ```java
 public class SchemaBackupManager {
-    private final List&lt;BackupConfig&gt; backupConfigs;
-    private final List&lt;SchemaBackupProvider&gt; providers;
+    private final List<BackupConfig> backupConfigs;
+    private final List<SchemaBackupProvider> providers;
 
     /**
      * Backup schema using available providers
@@ -230,15 +230,15 @@ public class SchemaBackupManager {
 
 ```java
 // Add field
-private List&lt;BackupConfig&gt; backupProviders = new ArrayList&lt;&gt;();
+private List<BackupConfig> backupProviders = new ArrayList<>();
 
 // Add to merge() method
 if (other.backupProviders != null && !other.backupProviders.isEmpty()) {
-    this.backupProviders = new ArrayList&lt;&gt;(other.backupProviders);
+    this.backupProviders = new ArrayList<>(other.backupProviders);
 }
 
 // Add method for parsing backup configs from command line
-public void addBackupConfigsFromCommandLine(List&lt;String&gt; backupConfigs);
+public void addBackupConfigsFromCommandLine(List<String> backupConfigs);
 ```
 
 ### 3.2 MigrateCommand 集成

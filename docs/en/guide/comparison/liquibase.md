@@ -107,6 +107,18 @@ unique = true
 [[Table.Index.IndexColumn]]
 name = "username"
 ```
+
+@tab Properties
+```properties
+table.users.name=users
+table.users.column.id.name=id
+table.users.column.id.type=BIGINT
+table.users.column.id.primaryKey=true
+table.users.column.username.name=username
+table.users.column.username.type=VARCHAR(50)
+table.users.index.idx_username.unique=true
+table.users.index.idx_username.columns=username
+```
 :::
 
 **Liquibase - Imperative changeSets:**

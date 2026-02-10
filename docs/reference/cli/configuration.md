@@ -136,19 +136,19 @@ output.dir=./output
 ### XML 格式
 
 ```xml
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;config&gt;
-    &lt;databases&gt;
-        &lt;database&gt;
-            &lt;name&gt;production&lt;/name&gt;
-            &lt;type&gt;mysql&lt;/type&gt;
-            &lt;driver&gt;com.mysql.cj.jdbc.Driver&lt;/driver&gt;
-            &lt;jdbcUrl&gt;jdbc:mysql://localhost:3306/mydb&lt;/jdbcUrl&gt;
-            &lt;username&gt;root&lt;/username&gt;
-            &lt;password&gt;password&lt;/password&gt;
-        &lt;/database&gt;
-    &lt;/databases&gt;
-&lt;/config&gt;
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <databases>
+        <database>
+            <name>production</name>
+            <type>mysql</type>
+            <driver>com.mysql.cj.jdbc.Driver</driver>
+            <jdbcUrl>jdbc:mysql://localhost:3306/mydb</jdbcUrl>
+            <username>root</username>
+            <password>password</password>
+        </database>
+    </databases>
+</config>
 ```
 
 ### TOML 格式

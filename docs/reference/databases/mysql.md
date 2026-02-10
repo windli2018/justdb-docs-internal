@@ -16,11 +16,11 @@ JustDB 提供完整的 MySQL 数据库支持，包括 MySQL 5.x 和 MySQL 8.x �
 ### JDBC 驱动
 
 ```xml
-&lt;dependency&gt;
-    &lt;groupId&gt;com.mysql&lt;/groupId&gt;
-    &lt;artifactId&gt;mysql-connector-j&lt;/artifactId&gt;
-    &lt;version&gt;8.2.0&lt;/version&gt;
-&lt;/dependency&gt;
+<dependency>
+    <groupId>com.mysql</groupId>
+    <artifactId>mysql-connector-j</artifactId>
+    <version>8.2.0</version>
+</dependency>
 ```
 
 ### 连接字符串
@@ -68,15 +68,15 @@ databases:
 
 **XML:**
 ```xml
-&lt;databases&gt;
-  &lt;database id="production"&gt;
-    &lt;url&gt;jdbc:mysql://localhost:3306/mydb&lt;/url&gt;
-    &lt;driver&gt;com.mysql.cj.jdbc.Driver&lt;/driver&gt;
-    &lt;username&gt;root&lt;/username&gt;
-    &lt;password&gt;secret&lt;/password&gt;
-    &lt;dialect&gt;mysql&lt;/dialect&gt;
-  &lt;/database&gt;
-&lt;/databases&gt;
+<databases>
+  <database id="production">
+    <url>jdbc:mysql://localhost:3306/mydb</url>
+    <driver>com.mysql.cj.jdbc.Driver</driver>
+    <username>root</username>
+    <password>secret</password>
+    <dialect>mysql</dialect>
+  </database>
+</databases>
 ```
 
 ## 数据类型映射

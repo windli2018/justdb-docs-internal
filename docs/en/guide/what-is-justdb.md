@@ -14,7 +14,69 @@ tag:
 
 # What is JustDB
 
-JustDB is an innovative **What You See Is What You Get (WYSIWYG) database development suite** that revolutionizes traditional database development. Through declarative Schema definition and intelligent diff calculation, database development becomes simple, efficient, and reliable.
+JustDB is an innovative **multi-language database development platform** that revolutionizes traditional database development. Through declarative Schema definition and intelligent diff calculation, database development becomes simple, efficient, and reliable.
+
+## Multi-Language Ecosystem
+
+JustDB supports a wide range of programming languages through multiple access methods:
+
+| Access Method | Supported Languages | Status |
+|--------------|-------------------|--------|
+| **CLI** | All languages | ✅ Implemented |
+| **JDBC Driver** | Java, Kotlin, Scala, Groovy | ✅ Implemented |
+| **ORM Model Generation** | Java, Python, TypeScript, Go | ✅ Implemented |
+| **Remote Service** | All HTTP-supported languages | ✅ Implemented |
+| **MySQL Protocol Service** | All MySQL-supported languages | ✅ Implemented |
+| **MCP Service** | AI Apps (Claude, Cursor, etc.) | ✅ Implemented |
+
+### Command Line Interface (CLI)
+
+JustDB CLI can be called from scripts or build tools in any language:
+
+```bash
+# Shell script
+justdb migrate
+
+# Python script
+subprocess.run(["justdb", "migrate"])
+
+# Node.js
+child_process.exec("justdb migrate")
+
+# Go
+exec.Command("justdb", "migrate").Run()
+```
+
+### JDBC Driver
+
+JVM languages can use JustDB JDBC driver directly:
+
+```java
+// Java
+Connection conn = DriverManager.getConnection("jdbc:justdb:schema.yaml");
+
+// Kotlin
+val conn = DriverManager.getConnection("jdbc:justdb:schema.yaml")
+
+// Scala
+val conn = DriverManager.getConnection("jdbc:justdb:schema.yaml")
+
+// Groovy
+def conn = DriverManager.getConnection("jdbc:justdb:schema.yaml")
+```
+
+### ORM Model Generation
+
+JustDB can generate ORM models for multiple languages:
+
+- **Java**: JPA/Hibernate, MyBatis
+- **Python**: SQLAlchemy, Django
+- **TypeScript**: Prisma, TypeORM
+- **Go**: GORM, sqlx
+
+::: tip Multi-Language Teams
+For multi-language teams, JustDB provides a unified Schema definition, then generates corresponding ORM models for each language, ensuring database structure consistency.
+:::
 
 ## Core Philosophy
 
@@ -224,6 +286,36 @@ nullable = true
 defaultValueComputed = "CURRENT_TIMESTAMP"
 comment = "Creation time"
 ```
+
+@tab Properties
+```properties
+namespace=com.example
+
+table.users.id=users
+table.users.name=User Table
+table.users.comment=Store system user information
+
+table.users.column.id.name=id
+table.users.column.id.type=BIGINT
+table.users.column.id.primaryKey=true
+table.users.column.id.autoIncrement=true
+table.users.column.id.comment=User ID, primary key auto-increment
+
+table.users.column.username.name=username
+table.users.column.username.type=VARCHAR(50)
+table.users.column.username.nullable=false
+table.users.column.username.comment=Username, cannot be null
+
+table.users.column.email.name=email
+table.users.column.email.type=VARCHAR(100)
+table.users.column.email.comment=Email address
+
+table.users.column.created_at.name=created_at
+table.users.column.created_at.type=TIMESTAMP
+table.users.column.created_at.nullable=false
+table.users.column.created_at.defaultValueComputed=CURRENT_TIMESTAMP
+table.users.column.created_at.comment=Creation time
+```
 :::
 
 ### 2. Intelligent Diff Calculation
@@ -305,6 +397,22 @@ type = "TIMESTAMP"
 
 ALTER TABLE users ADD COLUMN avatar VARCHAR(500) COMMENT 'User avatar';
 ```
+
+@tab Properties
+```properties
+# Modified - added avatar field
+table.users.column.id.name=id
+table.users.column.id.type=BIGINT
+table.users.column.id.primaryKey=true
+table.users.column.username.name=username
+table.users.column.username.type=VARCHAR(50)
+table.users.column.email.name=email
+table.users.column.email.type=VARCHAR(100)
+table.users.column.avatar.name=avatar      # New
+table.users.column.avatar.type=VARCHAR(500) # New
+table.users.column.created_at.name=created_at
+table.users.column.created_at.type=TIMESTAMP
+```
 :::
 
 JustDB automatically generates and executes:
@@ -372,6 +480,14 @@ CREATE TABLE users (
     id BIGINT PRIMARY KEY
 );
 ```
+
+@tab Properties
+```properties
+table.users.name=users
+table.users.column.id.name=id
+table.users.column.id.type=BIGINT
+table.users.column.id.primaryKey=true
+```
 :::
 
 ### 4. AI Integration
@@ -428,6 +544,87 @@ public class Application {
 }
 ```
 
+### 7. Multi-Language ORM Model Generation
+
+JustDB supports generating ORM models for multiple programming languages and frameworks:
+
+::: code-tabs
+@tab Java
+```bash
+# Generate JPA/Hibernate entities
+justdb schema2orm --input schema.xml --type jpa-entity --output src/main/java/
+
+# Generate MyBatis beans
+justdb schema2orm --input schema.xml --type mybatis-bean --output src/main/java/
+```
+
+@tab Python
+```bash
+# Generate SQLAlchemy models
+justdb schema2orm --input schema.xml --type sqlalchemy --output models.py
+
+# Generate Django models
+justdb schema2orm --input schema.xml --type django --output models.py
+```
+
+@tab TypeScript
+```bash
+# Generate Prisma schema
+justdb schema2orm --input schema.xml --type prisma --output schema.prisma
+
+# Generate TypeORM entities
+justdb schema2orm --input schema.xml --type typeorm --output entities/
+```
+
+@tab Go
+```bash
+# Generate GORM models
+justdb schema2orm --input schema.xml --type gorm --output models.go
+
+# Generate sqlx models
+justdb schema2orm --input schema.xml --type sqlx --output models.go
+```
+:::
+
+**Supported ORM Frameworks:**
+
+| Language | Frameworks |
+|----------|-----------|
+| Java | JPA/Hibernate, MyBatis |
+| Python | SQLAlchemy, Django |
+| TypeScript | Prisma, TypeORM |
+| Go | GORM, sqlx |
+
+### 8. ORM Import
+
+JustDB not only generates ORM models, but also supports importing Schema from existing ORM projects:
+
+```bash
+# Import from Prisma
+justdb orm2schema --input prisma/schema.prisma --orm prisma --output schema.yaml
+
+# Import from SQLAlchemy
+justdb orm2schema --input models/ --orm sqlalchemy --output schema.yaml
+
+# Import from GORM
+justdb orm2schema --input models.go --orm gorm --output schema.yaml
+```
+
+### 9. Atlas Integration
+
+JustDB can work with Atlas ORM import tools:
+
+```bash
+# 1. Use Atlas to generate DDL
+atlas schema diff --from "ent://schema" --to "mysql://localhost/db" --format '{{ sql . }}' > schema.sql
+
+# 2. Create temporary database and import DDL
+mysql -u root -p temp_db < schema.sql
+
+# 3. Use JustDB to extract schema
+justdb db2schema --db-url "jdbc:mysql://localhost:3306/temp_db" --output schema.yaml
+```
+
 ## Use Cases
 
 ### 1. Agile Development
@@ -446,7 +643,7 @@ justdb migrate
 
 ### 2. Database Documentation
 
-Schema is documentation, documentation is Schema. The YAML file itself is the best database documentation:
+Schema is documentation, documentation is Schema. The Schema file itself is the best database documentation:
 
 ```yaml
 Table:
@@ -609,9 +806,55 @@ public class MyDatabaseAdapter extends DatabaseAdapter {
 }
 ```
 
-### 4. Backward Compatibility
+### 4. Human-AI Friendly Formats
 
-JustDB commits to maintaining API backward compatibility, protecting your investment.
+JustDB's Schema format design considers readability for both humans and AI:
+
+**Human-Friendly:**
+- YAML format is concise and intuitive, easy to read and write
+- XML format has clear structure, suitable for enterprise projects
+- JSON format fits APIs and automation tools
+- Comments and documentation are inline in Schema
+
+**AI-Friendly:**
+- Structured data is easy for LLMs to parse and understand
+- Explicit types and constraints reduce ambiguity
+- Relationship definitions are clear (foreign keys, indexes, etc.)
+- Can be directly provided to AI tools via MCP service
+
+**Example: AI can directly understand this YAML**
+
+```yaml
+Table:
+  - name: users
+    comment: User table
+    Column:
+      - name: id
+        type: BIGINT
+        primaryKey: true
+        autoIncrement: true
+        comment: User ID
+      - name: orders
+        type: BIGINT
+        nullable: false
+        comment: Order ID (foreign key)
+```
+
+AI can accurately understand:
+- Table name is `users`
+- Has two fields: `id` (primary key) and `orders` (foreign key)
+- The `orders` field relates to another table (relationship needs to be defined)
+
+### 5. Broad Compatibility
+
+**Alias System: Formats Are Doors to Convenience, Not Limitations**
+
+JustDB's alias system supports multiple naming formats, making it convenient for users from different backgrounds:
+
+- **Backward Compatibility**: Protect your investment, old version schemas continue to work
+- **AI Compatibility**: Any AI, blind writing, all compatible
+- **Human Compatibility**: Developers with different programming backgrounds can use familiar formats
+- **Canonical Output**: Unified canonical naming ensures consistency
 
 ## Next Steps
 

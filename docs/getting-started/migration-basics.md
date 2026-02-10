@@ -22,7 +22,7 @@ tag:
 
 ```mermaid
 flowchart LR
-    A[定义目标 Schema] --> B[JustDB 提取&lt;br/&gt;当前数据库状态]
+    A[定义目标 Schema] --> B[JustDB 提取<br/>当前数据库状态]
     B --> C[计算差异 Diff]
     C --> D[生成 SQL]
     D --> E[执行变更]
@@ -247,7 +247,7 @@ Table:
 justdb migrate --safe-drop
 
 # 删除操作会重命名而不是直接删除
-# users -> users_deleted_&lt;timestamp&gt;
+# users -> users_deleted_<timestamp>
 ```
 
 ### 确认删除
@@ -276,7 +276,7 @@ justdb history
 justdb history -n 10
 
 # 查看特定迁移详情
-justdb history &lt;migration-id&gt;
+justdb history <migration-id>
 ```
 
 ### 历史记录示例

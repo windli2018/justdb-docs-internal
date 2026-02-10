@@ -162,26 +162,26 @@ mvn clean install -Dmaven.repo.local=/path/to/local/repo
 配置 `~/.m2/settings.xml` 以设置镜像和认证：
 
 ```xml
-&lt;settings&gt;
-    &lt;!-- 阿里云镜像（中国用户推荐） --&gt;
-    &lt;mirrors&gt;
-        &lt;mirror&gt;
-            &lt;id&gt;aliyun&lt;/id&gt;
-            &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
-            &lt;name&gt;Aliyun Maven Mirror&lt;/name&gt;
-            &lt;url&gt;https://maven.aliyun.com/repository/public&lt;/url&gt;
-        &lt;/mirror&gt;
-    &lt;/mirrors&gt;
+<settings>
+    <!-- 阿里云镜像（中国用户推荐） -->
+    <mirrors>
+        <mirror>
+            <id>aliyun</id>
+            <mirrorOf>central</mirrorOf>
+            <name>Aliyun Maven Mirror</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </mirror>
+    </mirrors>
 
-    &lt;!-- 凭证配置（如需发布） --&gt;
-    &lt;servers&gt;
-        &lt;server&gt;
-            &lt;id&gt;ossrh&lt;/id&gt;
-            &lt;username&gt;your-username&lt;/username&gt;
-            &lt;password&gt;your-password&lt;/password&gt;
-        &lt;/server&gt;
-    &lt;/servers&gt;
-&lt;/settings&gt;
+    <!-- 凭证配置（如需发布） -->
+    <servers>
+        <server>
+            <id>ossrh</id>
+            <username>your-username</username>
+            <password>your-password</password>
+        </server>
+    </servers>
+</settings>
 ```
 
 ## 常见问题

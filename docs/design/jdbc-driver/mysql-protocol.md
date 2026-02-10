@@ -346,7 +346,7 @@ public class MySQLSession {
 
 ```java
 @ChannelHandler.Sharable
-public class ComQueryHandler extends SimpleChannelInboundHandler&lt;QueryCommandPacket&gt; {
+public class ComQueryHandler extends SimpleChannelInboundHandler<QueryCommandPacket> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, QueryCommandPacket packet) {
         MySQLSession session = ctx.channel().attr(AttributeKey.valueOf("session")).get();
@@ -464,8 +464,8 @@ import java.util.Map;
 /**
  * Virtual table provider - 虚拟表提供者（函数式接口）
  *
- * &lt;p&gt;虚拟表 Provider 根据 SQL 上下文和 schema 对象，动态计算虚拟表数据，
- * 封装成 Table 和 Data 对象返回，SqlExecutor 可以直接使用。&lt;/p&gt;
+ * <p>虚拟表 Provider 根据 SQL 上下文和 schema 对象，动态计算虚拟表数据，
+ * 封装成 Table 和 Data 对象返回，SqlExecutor 可以直接使用。</p>
  */
 @FunctionalInterface
 public interface VirtualTableProvider {
@@ -477,7 +477,7 @@ public interface VirtualTableProvider {
      * @param context SQL 执行上下文（包含原始 SQL、参数等）
      * @return VirtualTableResult 包含 Table 和 Data，null 表示不支持此表名
      */
-    VirtualTableResult get(Justdb justdb, String tableName, Map&lt;String, Object&gt; context);
+    VirtualTableResult get(Justdb justdb, String tableName, Map<String, Object> context);
 }
 ```
 
@@ -492,8 +492,8 @@ import org.verydb.justdb.schema.Data;
 /**
  * Virtual table result - 虚拟表结果
  *
- * &lt;p&gt;封装虚拟表的 Table 定义和 Data 数据，
- * SqlExecutor 可以直接将其作为真实表使用。&lt;/p&gt;
+ * <p>封装虚拟表的 Table 定义和 Data 数据，
+ * SqlExecutor 可以直接将其作为真实表使用。</p>
  */
 public class VirtualTableResult {
     private final Table table;
@@ -717,7 +717,7 @@ dataSource.setVirtualTableProvider(builtinProvider);
 
 // 正常使用，虚拟表会自动工作
 SqlExecutor executor = new SqlExecutor(dataSource, connection);
-List&lt;Map&lt;String, Object&gt;&gt; result = executor.executeSelect("SELECT * FROM TABLES");
+List<Map<String, Object>> result = executor.executeSelect("SELECT * FROM TABLES");
 ```
 
 ### 7.8 关键文件清单
@@ -796,19 +796,19 @@ Connection conn = DriverManager.getConnection(url, "user", "password");
 ### 10.3 Maven 依赖
 
 ```xml
-&lt;!-- Netty --&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;io.netty&lt;/groupId&gt;
-    &lt;artifactId&gt;netty-all&lt;/artifactId&gt;
-    &lt;version&gt;4.1.100.Final&lt;/version&gt;
-&lt;/dependency&gt;
+<!-- Netty -->
+<dependency>
+    <groupId>io.netty</groupId>
+    <artifactId>netty-all</artifactId>
+    <version>4.1.100.Final</version>
+</dependency>
 
-&lt;!-- MySQL Protocol Codec --&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;com.github.mheath&lt;/groupId&gt;
-    &lt;artifactId&gt;netty-mysql-codec&lt;/artifactId&gt;
-    &lt;version&gt;1.0.0-alpha&lt;/version&gt;
-&lt;/dependency&gt;
+<!-- MySQL Protocol Codec -->
+<dependency>
+    <groupId>com.github.mheath</groupId>
+    <artifactId>netty-mysql-codec</artifactId>
+    <version>1.0.0-alpha</version>
+</dependency>
 ```
 
 ### 10.4 参考资源
@@ -854,7 +854,7 @@ public interface VirtualTableProvider {
      * @param context 上下文
      * @return Table 定义，null 表示不支持此表名
      */
-    Table get(Justdb justdb, String tableName, Map&lt;String, Object&gt; context);
+    Table get(Justdb justdb, String tableName, Map<String, Object> context);
 }
 ```
 
@@ -866,8 +866,8 @@ public interface VirtualTableProvider {
 public class JustdbDataSource {
 
     private final Justdb justdb;
-    private final Map&lt;String, TableData&gt; tables;
-    private final Map&lt;String, Sequence&gt; sequences;
+    private final Map<String, TableData> tables;
+    private final Map<String, Sequence> sequences;
     private final AtomicLong transactionId;
 
     // 新增：虚拟表 Provider（可设置，默认为空）
@@ -875,8 +875,8 @@ public class JustdbDataSource {
 
     public JustdbDataSource(Justdb justdb) {
         this.justdb = justdb;
-        this.tables = new ConcurrentHashMap&lt;&gt;();
-        this.sequences = new ConcurrentHashMap&lt;&gt;();
+        this.tables = new ConcurrentHashMap<>();
+        this.sequences = new ConcurrentHashMap<>();
         this.transactionId = new AtomicLong(0);
         this.virtualTableProvider = null;  // 默认无虚拟表
 
@@ -986,7 +986,7 @@ dataSource.setVirtualTableProvider((j, name, ctx) -> {
 
 // 正常使用，虚拟表会自动工作
 SqlExecutor executor = new SqlExecutor(dataSource, connection);
-List&lt;Map&lt;String, Object&gt;&gt; result = executor.executeSelect("SELECT * FROM TABLES");
+List<Map<String, Object>> result = executor.executeSelect("SELECT * FROM TABLES");
 ```
 
 ### 11.7 实施步骤
@@ -1087,7 +1087,7 @@ void testQueryVirtualTable() {
     SqlExecutor executor = new SqlExecutor(dataSource, connection);
 
     // 查询虚拟表 TABLES
-    List&lt;Map&lt;String, Object&gt;&gt; result = executor.executeSelect(
+    List<Map<String, Object>> result = executor.executeSelect(
         "SELECT TABLE_NAME FROM TABLES"
     );
 
@@ -1131,7 +1131,7 @@ private org.verydb.justdb.jdbc.VirtualTableProvider virtualTableProvider;
 **VirtualTableProvider 接口**：
 - ✅ 函数式接口（`@FunctionalInterface`）
 - ✅ 返回 `Table` 定义
-- ✅ 参数：`Justdb justdb`, `String tableName`, `Map&lt;String, Object&gt; context`
+- ✅ 参数：`Justdb justdb`, `String tableName`, `Map<String, Object> context`
 - ✅ 返回 `null` 表示不支持该表名
 
 **JustdbDataSource 集成**：

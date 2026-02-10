@@ -9,11 +9,67 @@ tag:
   - sql
   - format
   - reverse-engineering
+  - jdbc-driver
+  - mysql-protocol
 ---
 
 # SQL 格式
 
-JustDB 支持从现有数据库的 DDL 语句中提取 Schema 定义（逆向工程）。
+JustDB 通过两项关键技术提供全面的 SQL 支持：
+
+## 1. JustDB JDBC 驱动
+
+JustDB 提供完整的 JDBC 4.2 兼容驱动，支持标准数据库连接：
+
+### 核心特性
+- **标准 JDBC 接口**：完全符合 JDBC 4.2 规范
+- **连接管理**：强大的连接处理和连接池支持
+- **语句执行**：支持 Statement、PreparedStatement 和 CallableStatement
+- **结果集处理**：完整的 ResultSet 实现，包含元数据支持
+- **事务管理**：ACID 事务支持，支持提交/回滚操作
+- **批处理操作**：高效的批量处理能力
+
+### 使用示例
+```java
+// 注册并使用 JustDB JDBC 驱动
+String url = "jdbc:justdb:file://path/to/schema.yaml";
+Properties props = new Properties();
+props.setProperty("user", "username");
+props.setProperty("password", "password");
+
+Connection conn = DriverManager.getConnection(url, props);
+Statement stmt = conn.createStatement();
+ResultSet rs = stmt.executeQuery("SELECT * FROM users");
+```
+
+## 2. JustDB MySQL 协议服务器
+
+JustDB 实现了 MySQL Wire Protocol 兼容性，允许标准 MySQL 客户端无缝连接：
+
+### 核心特性
+- **MySQL 协议兼容**：完整支持 MySQL 5.7+ 协议
+- **标准端口**：运行在 33206 端口（与 MySQL 不冲突）
+- **客户端兼容**：支持 MySQL CLI、JDBC 驱动和 GUI 工具
+- **虚拟表支持**：内置 `information_schema` 支持元数据查询
+- **身份验证**：MySQL 原生密码认证
+- **SSL/TLS 支持**：安全连接（计划增强功能）
+
+### 使用示例
+```bash
+# 启动 MySQL 协议服务器
+java -jar justdb-mysql-protocol-1.0.0.jar --port 33206 --schema schema.yaml
+
+# 使用 MySQL 客户端连接
+mysql -h localhost -P 33206 -u user -p
+
+# 在应用程序中使用 MySQL JDBC 驱动连接
+String url = "jdbc:mysql://localhost:33206/mydb";
+Connection conn = DriverManager.getConnection(url, "user", "password");
+```
+
+## 逆向工程能力
+
+JustDB 支持从现有数据库的 DDL 语句中提取 Schema 定义：
 
 ## 逆向工程
 

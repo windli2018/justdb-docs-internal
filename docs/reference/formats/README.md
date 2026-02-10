@@ -18,12 +18,12 @@ JustDB 支持多种 Schema 定义格式，你可以根据项目需求选择最�
 
 | 格式 | 文件扩展名 | 人类可读 | 配置友好 | 注释支持 | 推荐场景 |
 |------|-----------|---------|---------|---------|---------|
-| **YAML** | .yaml, .yml | ✓✓✓ | ✓✓✓ | ✓ | 推荐使用，最佳可读性 |
-| **JSON** | .json | ✓✓ | ✓✓ | - | API 集成，机器处理 |
-| **XML** | .xml | ✓ | ✓✓ | ✓ | 企业应用，现有系统 |
+| **XML** | .xml | ✓✓✓ | ✓✓ | ✓ | 推荐使用，结构最清晰 |
+| **SQL** | .sql | ✓✓ | ✓✓ | ✓ | 技术人员首选，直观易懂 |
+| **YAML** | .yaml, .yml | ✓ | ✓✓ | ✓ | 配置文件，缩进需注意 |
+| **JSON** | .json | ✓ | ✓✓ | - | API 集成，机器处理 |
 | **TOML** | .toml | ✓✓ | ✓✓ | ✓ | 配置文件 |
 | **Properties** | .properties | ✓ | ✓ | ✓ | 简单配置 |
-| **SQL** | .sql | - | - | ✓ | 逆向工程 |
 | **Markdown** | .md | ✓✓✓ | - | ✓ | 文档化 Schema |
 | **Excel** | .xlsx | ✓✓ | ✓✓ | - | 非技术人员编辑 |
 
@@ -31,8 +31,16 @@ JustDB 支持多种 Schema 定义格式，你可以根据项目需求选择最�
 
 ### 可读性对比
 
-<CodeGroup>
-<CodeGroupItem title="YAML"&gt;
+::: code-tabs
+@tab XML
+```xml
+<Table name="users" comment="用户表">
+  <Column name="id" type="BIGINT" primaryKey="true"/>
+  <Column name="username" type="VARCHAR(50)"/>
+</Table>
+```
+
+@tab YAML
 ```yaml
 Table:
   - name: users
@@ -44,9 +52,8 @@ Table:
       - name: username
         type: VARCHAR(50)
 ```
-</CodeGroupItem>
 
-<CodeGroupItem title="JSON"&gt;
+@tab JSON
 ```json
 {
   "Table": [
@@ -68,45 +75,60 @@ Table:
   ]
 }
 ```
-</CodeGroupItem>
 
-<CodeGroupItem title="XML"&gt;
-```xml
-&lt;Table name="users" comment="用户表"&gt;
-  &lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
-  &lt;Column name="username" type="VARCHAR(50)"/&gt;
-&lt;/Table&gt;
+@tab SQL
+```sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY,
+    username VARCHAR(50)
+) COMMENT '用户表';
 ```
-</CodeGroupItem>
-</CodeGroup>
+
+@tab TOML
+```toml
+[[Table]]
+name = "users"
+comment = "用户表"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+```
+:::
 
 ### 功能对比
 
-| 功能 | XML | YAML | JSON | TOML | Properties |
-|------|-----|------|------|------|-----------|
-| 注释 | ✓ | ✓ | ✗ | ✓ | ✓ |
-| 多文档 | - | ✓ | - | - | - |
-| 引用 | ✓ | ✓ | ✓ | ✓ | - |
-| 别名支持 | ✓ | ✓ | ✓ | ✓ | ✓ |
-| 类型丰富度 | ✓✓ | ✓✓ | ✓✓ | ✓ | ✓ |
-| 结构清晰度 | ✓✓✓ | ✓✓ | ✓ | ✓✓ | ✓ |
+| 功能 | XML | SQL | YAML | JSON | TOML | Properties |
+|------|-----|-----|------|------|------|-----------|
+| 注释支持 | ✓ | ✓ | ✓ | ✗ | ✓ | ✓ |
+| 结构清晰度 | ✓✓✓ | ✓✓ | ✓ | ✓ | ✓✓ | ✓ |
+| 缩进敏感性 | 低 | 低 | 高 | 高 | 中 | 低 |
+| 学习成本 | 中 | 低 | 中 | 低 | 低 | 低 |
+| 工具支持 | ✓✓✓ | ✓✓✓ | ✓✓ | ✓✓✓ | ✓✓ | ✓ |
+| 企业级应用 | ✓✓✓ | ✓✓ | ✓ | ✓ | ✓ | ✓ |
 
 ## 格式选择建议
 
 ### 推荐使用 XML
 
 **优势**：
-- 结构清晰，不易出错
-- 强类型验证
-- Schema 验证（XSD）
-- 企业级标准
-- 工具支持完善
+- 结构最清晰，层次分明，不易出错
+- 强类型验证，标签闭合明确
+- Schema 验证（XSD）支持完善
+- 企业级标准，工具支持丰富
+- 缩进不敏感，易于理解和维护
 
 **适用场景**：
-- 新项目（推荐）
+- 新项目（强烈推荐）
 - 企业级应用
-- 需要严格类型检查
-- 团队协作
+- 需要严格结构验证
+- 团队协作开发
+- 长期维护项目
 
 ```xml
 <!-- 推荐：使用 XML -->
@@ -118,20 +140,49 @@ Table:
 </Justdb>
 ```
 
+### 技术人员首选：使用 SQL
+
+**优势**：
+- 对数据库开发人员最直观易懂
+- 直接对应实际DDL语句
+- 无需学习新的语法结构
+- 便于调试和验证
+- 与现有数据库工具无缝集成
+
+**适用场景**：
+- 数据库专家和DBA
+- 需要直接与数据库交互
+- 现有SQL资产的逆向工程
+- 快速原型开发
+- 技术验证场景
+
+```sql
+-- 技术人员首选：使用 SQL
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL
+) COMMENT '用户表';
+```
+
 ### 使用 YAML
 
 **优势**：
-- 最佳可读性
+- 语法相对简洁
 - 支持注释
-- 语法简洁
-- 广泛支持
+- 配置文件常用格式
+
+**注意事项**：
+- 缩进敏感，容易出错
+- 嵌套层次深时难以阅读
+- 缺少明确的结束标记
 
 **适用场景**：
-- 需要人工编辑
-- 团队协作
-- 配置文件
+- 简单配置场景
+- DevOps配置文件
+- 对缩进敏感度要求不高的项目
 
 ```yaml
+# 注意缩进！
 id: myapp
 namespace: com.example
 Table:
@@ -145,27 +196,18 @@ Table:
 
 **优势**：
 - 广泛的工具支持
-- API 友好
-- 适合机器处理
+- API友好的标准格式
+- 适合程序自动生成
+
+**限制**：
+- 不支持注释
+- 缩进敏感
+- 语法相对冗长
 
 **适用场景**：
-- API 集成
+- API集成
 - 自动化处理
-- 配置即代码
-
-```json
-{
-  "id": "myapp",
-  "Table": [
-    {
-      "name": "users",
-      "Column": [
-        {"name": "id", "type": "BIGINT"}
-      ]
-    }
-  ]
-}
-```
+- 程序间数据交换
 
 ### 使用 TOML
 
@@ -316,19 +358,17 @@ JustDB 支持 JSON5 扩展语法：
 ### XML 命名空间
 
 ```xml
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<?xml version="1.0" encoding="UTF-8"?>
 <justdb:Justdb xmlns:justdb="http://www.verydb.org/justdb"
                id="myapp"
                namespace="com.example">
-  &lt;justdb:Table name="users"/&gt;
-&lt;/justdb:Justdb&gt;
+  <justdb:Table name="users"/>
+</justdb:Justdb>
 ```
 
 ## 完整示例
 
 ### 同一 Schema 的多种格式
-
-&lt;tabs&gt;
 
 #### YAML 格式
 
@@ -438,32 +478,130 @@ Table:
 #### XML 格式
 
 ```xml
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;Justdb id="ecommerce" namespace="com.example.ecommerce"&gt;
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb id="ecommerce" namespace="com.example.ecommerce">
 
-  &lt;!-- 全局列定义 --&gt;
+  <!-- 全局列定义 -->
   <Column id="global_id" name="id" type="BIGINT"
           primaryKey="true" autoIncrement="true"/>
 
   <Column id="global_created_at" name="created_at" type="TIMESTAMP"
           nullable="false" defaultValueComputed="CURRENT_TIMESTAMP"/>
 
-  &lt;!-- 用户表 --&gt;
-  &lt;Table name="users" comment="用户表"&gt;
-    &lt;Column id="col_users_id" referenceId="global_id" name="id"/&gt;
-    &lt;Column name="username" type="VARCHAR(50)" nullable="false"/&gt;
-    &lt;Column name="email" type="VARCHAR(100)"/&gt;
-    &lt;Column id="col_users_created_at" referenceId="global_created_at" name="created_at"/&gt;
+  <!-- 用户表 -->
+  <Table name="users" comment="用户表">
+    <Column id="col_users_id" referenceId="global_id" name="id"/>
+    <Column name="username" type="VARCHAR(50)" nullable="false"/>
+    <Column name="email" type="VARCHAR(100)"/>
+    <Column id="col_users_created_at" referenceId="global_created_at" name="created_at"/>
 
-    &lt;Index name="idx_users_username" unique="true"&gt;
-      &lt;columns&gt;username&lt;/columns&gt;
-    &lt;/Index&gt;
-  &lt;/Table&gt;
+    <Index name="idx_users_username" unique="true">
+      <columns>username</columns>
+    </Index>
+  </Table>
 
-&lt;/Justdb&gt;
+</Justdb>
 ```
 
-&lt;/tabs&gt;
+#### SQL 格式
+
+```sql
+-- JustDB SQL 格式示例
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '用户ID',
+    username VARCHAR(50) NOT NULL COMMENT '用户名',
+    email VARCHAR(100) COMMENT '邮箱地址',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
+) COMMENT '用户表';
+
+CREATE INDEX idx_users_username ON users(username);
+```
+
+#### TOML 格式
+
+```toml
+id = "ecommerce"
+namespace = "com.example.ecommerce"
+
+# 全局列定义
+[[Column]]
+id = "global_id"
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+
+[[Column]]
+id = "global_created_at"
+name = "created_at"
+type = "TIMESTAMP"
+nullable = false
+defaultValueComputed = "CURRENT_TIMESTAMP"
+
+# 用户表
+[[Table]]
+name = "users"
+comment = "用户表"
+
+[[Table.Column]]
+id = "col_users_id"
+referenceId = "global_id"
+name = "id"
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+nullable = false
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+
+[[Table.Column]]
+id = "col_users_created_at"
+referenceId = "global_created_at"
+name = "created_at"
+
+[[Table.Index]]
+name = "idx_users_username"
+unique = true
+columns = ["username"]
+```
+
+#### Properties 格式
+
+```properties
+# 全局列定义
+column.global_id.name=id
+column.global_id.type=BIGINT
+column.global_id.primaryKey=true
+column.global_id.autoIncrement=true
+
+column.global_created_at.name=created_at
+column.global_created_at.type=TIMESTAMP
+column.global_created_at.nullable=false
+column.global_created_at.defaultValueComputed=CURRENT_TIMESTAMP
+
+# 用户表
+table.users.name=users
+table.users.comment=用户表
+
+table.users.column.col_users_id.referenceId=global_id
+table.users.column.col_users_id.name=id
+
+table.users.column.username.name=username
+table.users.column.username.type=VARCHAR(50)
+table.users.column.username.nullable=false
+
+table.users.column.email.name=email
+table.users.column.email.type=VARCHAR(100)
+
+table.users.column.col_users_created_at.referenceId=global_created_at
+table.users.column.col_users_created_at.name=created_at
+
+table.users.index.idx_users_username.unique=true
+table.users.index.idx_users_username.columns=username
+```
 
 ## 相关文档
 

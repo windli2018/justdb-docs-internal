@@ -74,7 +74,7 @@ jdbc:mysql://{{host}}{{#if port}}:{{port}}{{/if}}/{{#if database}}{{database}}{{
 // AST 节点类型
 private static abstract class TemplateNode {
     abstract String generateRegex();
-    abstract int extractValue(Matcher matcher, int groupIndex, Map&lt;String, Object&gt; result);
+    abstract int extractValue(Matcher matcher, int groupIndex, Map<String, Object> result);
 }
 
 // 字面量节点
@@ -133,7 +133,7 @@ private static class EachNode extends TemplateNode
 String template = "jdbc:mysql://{{host}}:{{port}}/{{database}}";
 String input = "jdbc:mysql://localhost:3306/mydb";
 
-Map&lt;String, Object&gt; result = HandlebarsReverseParser.parse(template, input);
+Map<String, Object> result = HandlebarsReverseParser.parse(template, input);
 // 结果：{host: "localhost", port: "3306", database: "mydb"}
 ```
 :::
@@ -145,7 +145,7 @@ Map&lt;String, Object&gt; result = HandlebarsReverseParser.parse(template, input
 String template = "jdbc:mysql://{{host}}{{#if port}}:{{port}}{{/if}}/{{database}}";
 String input = "jdbc:mysql://localhost/mydb";
 
-Map&lt;String, Object&gt; result = HandlebarsReverseParser.parse(template, input);
+Map<String, Object> result = HandlebarsReverseParser.parse(template, input);
 // 结果：{host: "localhost", database: "mydb"}
 ```
 :::
@@ -157,7 +157,7 @@ Map&lt;String, Object&gt; result = HandlebarsReverseParser.parse(template, input
 String template = "jdbc:postgresql://{{host}}:{{port}}/{{database}}{{#if params}}?{{/if}}{{#each params}}{{name}}={{value}}{{#unless @last}}&{{/unless}}{{/each}}";
 String input = "jdbc:postgresql://localhost:5432/mydb?param1=value1&param2=value2";
 
-Map&lt;String, Object&gt; result = HandlebarsReverseParser.parse(template, input);
+Map<String, Object> result = HandlebarsReverseParser.parse(template, input);
 // 结果：
 // {
 //   host: "localhost",

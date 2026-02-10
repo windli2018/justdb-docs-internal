@@ -123,7 +123,7 @@ mcp:
 
 ### Step 1: 创建模块结构
 
-1. 在根 pom.xml 添加 `&lt;module&gt;justdb-mcp&lt;/module&gt;`
+1. 在根 pom.xml 添加 `<module>justdb-mcp</module>`
 2. 创建 justdb-mcp/pom.xml
 3. 创建子模块 pom.xml 文件
 
@@ -148,21 +148,21 @@ public class McpConfig {
     private String transport = "stdio";
     private SecurityConfig security = new SecurityConfig();
     private ToolsConfig tools = new ToolsConfig();
-    private List&lt;DatabaseConfig&gt; databases = new ArrayList&lt;&gt;();
+    private List<DatabaseConfig> databases = new ArrayList<>();
 
     @Data
     public static class SecurityConfig {
         private boolean allowRealDatabase = false;
-        private List&lt;String&gt; allowedPaths = new ArrayList&lt;&gt;();
-        private List&lt;String&gt; blockedPaths = Arrays.asList("/etc", "/sys", "/proc");
+        private List<String> allowedPaths = new ArrayList<>();
+        private List<String> blockedPaths = Arrays.asList("/etc", "/sys", "/proc");
     }
 
     @Data
     public static class ToolsConfig {
-        private List&lt;String&gt; enabled = Arrays.asList(
+        private List<String> enabled = Arrays.asList(
             "read_schema", "convert_schema", "export_schema", "validate_schema", "ai_history"
         );
-        private Map&lt;String, String&gt; requiresPermission = new HashMap&lt;&gt;();
+        private Map<String, String> requiresPermission = new HashMap<>();
     }
 
     @Data
@@ -180,15 +180,15 @@ public class McpConfig {
 
 **依赖配置** (pom.xml):
 ```xml
-&lt;dependency&gt;
-    &lt;groupId&gt;io.modelcontextprotocol.sdk&lt;/groupId&gt;
-    &lt;artifactId&gt;mcp&lt;/artifactId&gt;
-    &lt;version&gt;0.15.0&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.verydb.justdb&lt;/groupId&gt;
-    &lt;artifactId&gt;justdb-core&lt;/artifactId&gt;
-&lt;/dependency&gt;
+<dependency>
+    <groupId>io.modelcontextprotocol.sdk</groupId>
+    <artifactId>mcp</artifactId>
+    <version>0.15.0</version>
+</dependency>
+<dependency>
+    <groupId>org.verydb.justdb</groupId>
+    <artifactId>justdb-core</artifactId>
+</dependency>
 ```
 
 **文件**: `justdb-mcp-core/src/main/java/org/verydb/justdb/mcp/core/server/JustdbMcpServer.java`
@@ -235,7 +235,7 @@ public class JustdbMcpServer {
             .build();
 
         // Create tool specifications
-        List&lt;McpServerFeatures.SyncToolSpecification&gt; tools = createTools();
+        List<McpServerFeatures.SyncToolSpecification> tools = createTools();
 
         this.server = McpServer.sync(transportProvider)
             .serverInfo(config.getName(), config.getVersion())
@@ -246,8 +246,8 @@ public class JustdbMcpServer {
         return server;
     }
 
-    private List&lt;McpServerFeatures.SyncToolSpecification&gt; createTools() {
-        List&lt;McpServerFeatures.SyncToolSpecification&gt; tools = new ArrayList&lt;&gt;();
+    private List<McpServerFeatures.SyncToolSpecification> createTools() {
+        List<McpServerFeatures.SyncToolSpecification> tools = new ArrayList<>();
 
         // Only add enabled tools
         McpConfig.ToolsConfig toolsConfig = config.getTools();
@@ -360,7 +360,7 @@ public class SchemaReadTool {
                     }
 
                     // Load schema
-                    Loaded&lt;Justdb&gt; loaded = SchemaLoaderFactory.load(path, justdbManager);
+                    Loaded<Justdb> loaded = SchemaLoaderFactory.load(path, justdbManager);
                     Justdb schema = loaded.getData();
 
                     // Convert to JSON
@@ -433,7 +433,7 @@ import java.util.concurrent.Callable;
  * 启动 MCP 服务器的命令
  */
 @CommandLine.Command(name = "mcp", description = "Start JustDB MCP server")
-public class McpCommand extends BaseCommand implements Callable&lt;Integer&gt; {
+public class McpCommand extends BaseCommand implements Callable<Integer> {
 
     @Option(names = {"--config", "-c"}, description = "MCP config file")
     private String configFile;
@@ -534,10 +534,10 @@ public class McpCommand extends BaseCommand implements Callable&lt;Integer&gt; {
 
 ### Step 7: 更新根 pom.xml
 
-在 `/home/wind/workspace/justdb/pom.xml` 的 `&lt;modules&gt;` 中添加：
+在 `/home/wind/workspace/justdb/pom.xml` 的 `<modules>` 中添加：
 
 ```xml
-&lt;module&gt;justdb-mcp&lt;/module&gt;
+<module>justdb-mcp</module>
 ```
 
 ---------------------------

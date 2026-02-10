@@ -88,34 +88,34 @@ public interface QueryProcessor {
     /**
      * Process UNION query
      */
-    List&lt;Map&lt;String, Object&gt;&gt; processUnion(
+    List<Map<String, Object>> processUnion(
         com.alibaba.druid.sql.ast.statement.SQLUnionQuery unionQuery
     ) throws SQLException;
 
     /**
      * Process WITH clause (CTE) query
      */
-    List&lt;Map&lt;String, Object&gt;&gt; processWithClause(String sql) throws SQLException;
+    List<Map<String, Object>> processWithClause(String sql) throws SQLException;
 
     /**
      * Process JOIN query
      */
-    List&lt;Map&lt;String, Object&gt;&gt; processJoin(
+    List<Map<String, Object>> processJoin(
         com.alibaba.druid.sql.ast.SQLJoinTableSource joinSource,
-        List&lt;Map&lt;String, Object&gt;&gt; leftRows
+        List<Map<String, Object>> leftRows
     ) throws SQLException;
 
     /**
      * Process FROM subquery
      */
-    List&lt;Map&lt;String, Object&gt;&gt; processFromSubquery(
+    List<Map<String, Object>> processFromSubquery(
         com.alibaba.druid.sql.ast.statement.SQLSelectQueryBlock queryBlock
     ) throws SQLException;
 
     /**
      * Process SELECT INTO
      */
-    List&lt;Map&lt;String, Object&gt;&gt; processSelectInto(String sql) throws SQLException;
+    List<Map<String, Object>> processSelectInto(String sql) throws SQLException;
 }
 ```
 
@@ -192,7 +192,7 @@ public interface MutationProcessor {
     /**
      * Process INSERT/UPDATE/DELETE with RETURNING clause
      */
-    List&lt;Map&lt;String, Object&gt;&gt; processMutationWithReturning(String sql) throws SQLException;
+    List<Map<String, Object>> processMutationWithReturning(String sql) throws SQLException;
 }
 ```
 
@@ -328,7 +328,7 @@ public interface ExpressionEngine {
      */
     Object evaluate(
         com.alibaba.druid.sql.ast.SQLExpr expr,
-        Map&lt;String, Object&gt; row
+        Map<String, Object> row
     ) throws SQLException;
 
     /**
@@ -341,7 +341,7 @@ public interface ExpressionEngine {
      */
     Object evaluateBinaryOp(
         com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr expr,
-        Map&lt;String, Object&gt; row
+        Map<String, Object> row
     ) throws SQLException;
 
     /**
@@ -349,12 +349,12 @@ public interface ExpressionEngine {
      */
     boolean evaluateCondition(
         com.alibaba.druid.sql.ast.SQLExpr conditionExpr,
-        Map&lt;String, Object&gt; row
+        Map<String, Object> row
     ) throws SQLException;
 
     /**
      * Compare two values
-     * @return negative if v1 &lt; v2, 0 if equal, positive if v1 &gt; v2
+     * @return negative if v1 < v2, 0 if equal, positive if v1 > v2
      */
     int compare(Object v1, Object v2);
 
@@ -378,7 +378,7 @@ public interface ExpressionEngine {
      */
     Object evaluateFunction(
         com.alibaba.druid.sql.ast.expr.SQLMethodInvokeExpr functionExpr,
-        Map&lt;String, Object&gt; row
+        Map<String, Object> row
     ) throws SQLException;
 }
 ```
@@ -421,47 +421,47 @@ public interface ResultSetProcessor {
     /**
      * Apply projection to rows
      */
-    List&lt;Map&lt;String, Object&gt;&gt; project(
-        List&lt;Map&lt;String, Object&gt;&gt; rows,
+    List<Map<String, Object>> project(
+        List<Map<String, Object>> rows,
         com.alibaba.druid.sql.ast.statement.SQLSelectQueryBlock queryBlock
     ) throws SQLException;
 
     /**
      * Apply aggregation to rows
      */
-    List&lt;Map&lt;String, Object&gt;&gt; aggregate(
-        List&lt;Map&lt;String, Object&gt;&gt; rows,
+    List<Map<String, Object>> aggregate(
+        List<Map<String, Object>> rows,
         com.alibaba.druid.sql.ast.statement.SQLSelectQueryBlock queryBlock
     ) throws SQLException;
 
     /**
      * Apply window functions to rows
      */
-    List&lt;Map&lt;String, Object&gt;&gt; applyWindowFunctions(
-        List&lt;Map&lt;String, Object&gt;&gt; rows,
+    List<Map<String, Object>> applyWindowFunctions(
+        List<Map<String, Object>> rows,
         com.alibaba.druid.sql.ast.statement.SQLSelectQueryBlock queryBlock
     ) throws SQLException;
 
     /**
      * Apply ORDER BY and LIMIT to rows
      */
-    List&lt;Map&lt;String, Object&gt;&gt; sortAndLimit(
-        List&lt;Map&lt;String, Object&gt;&gt; rows,
+    List<Map<String, Object>> sortAndLimit(
+        List<Map<String, Object>> rows,
         com.alibaba.druid.sql.ast.statement.SQLSelectQueryBlock queryBlock
     ) throws SQLException;
 
     /**
      * Apply DISTINCT to rows
      */
-    List&lt;Map&lt;String, Object&gt;&gt; distinct(
-        List&lt;Map&lt;String, Object&gt;&gt; rows,
+    List<Map<String, Object>> distinct(
+        List<Map<String, Object>> rows,
         com.alibaba.druid.sql.ast.statement.SQLSelectQueryBlock queryBlock
     ) throws SQLException;
 
     /**
      * Build table alias map from query block
      */
-    Map&lt;String, String&gt; buildTableAliasMap(
+    Map<String, String> buildTableAliasMap(
         com.alibaba.druid.sql.ast.statement.SQLSelectQueryBlock queryBlock
     );
 }
@@ -504,17 +504,17 @@ public interface MetadataProcessor {
     /**
      * Process SHOW statement
      */
-    List&lt;Map&lt;String, Object&gt;&gt; processShow(String sql) throws SQLException;
+    List<Map<String, Object>> processShow(String sql) throws SQLException;
 
     /**
      * Process EXPLAIN statement
      */
-    List&lt;Map&lt;String, Object&gt;&gt; processExplain(String sql) throws SQLException;
+    List<Map<String, Object>> processExplain(String sql) throws SQLException;
 
     /**
      * Process system variable query
      */
-    List&lt;Map&lt;String, Object&gt;&gt; processSystemVariableQuery(String sql) throws SQLException;
+    List<Map<String, Object>> processSystemVariableQuery(String sql) throws SQLException;
 
     /**
      * Process transaction command (BEGIN/COMMIT/ROLLBACK/SAVEPOINT)

@@ -1,88 +1,472 @@
 ---
 icon: file-code
-title: Format Reference
-order: 2
+title: Format Support Overview
+order: 11
+category:
+  - Reference
+  - Format Support
+tag:
+  - formats
+  - serialization
 ---
 
-# Format Reference
+# Format Support Overview
 
-JustDB supports multiple schema serialization formats for different use cases.
+JustDB supports multiple Schema definition formats, allowing you to choose the most suitable format based on project requirements. All formats support complete Schema definition functionality and can be converted between each other.
 
 ## Supported Formats
 
-| Format | Extension | Read | Write | Use Case |
-|--------|-----------|------|-------|----------|
-| YAML | `.yaml` | ✅ | ✅ | Human-readable, recommended |
-| JSON | `.json` | ✅ | ✅ | Machine-readable, API integration |
-| XML | `.xml` | ✅ | ✅ | Enterprise, IDE support |
-| TOML | `.toml` | ✅ | ✅ | Configuration files |
-| Properties | `.properties` | ✅ | ✅ | Simple key-value pairs |
-| SQL | `.sql` | ❌ | ✅ | Export database schemas |
+| Format | Extensions | Human Readable | Config Friendly | Comments | Recommended Use Cases |
+|--------|------------|----------------|-----------------|----------|----------------------|
+| **XML** | .xml | ✓✓✓ | ✓✓ | ✓ | Recommended, clearest structure |
+| **SQL** | .sql | ✓✓ | ✓✓ | ✓ | Developer preferred, intuitive |
+| **YAML** | .yaml, .yml | ✓ | ✓✓ | ✓ | Configuration files, indentation matters |
+| **JSON** | .json | ✓ | ✓✓ | - | API integration, machine processing |
+| **TOML** | .toml | ✓✓ | ✓✓ | ✓ | Configuration files |
+| **Properties** | .properties | ✓ | ✓ | ✓ | Simple configuration |
+| **Markdown** | .md | ✓✓✓ | - | ✓ | Schema documentation |
+| **Excel** | .xlsx | ✓✓ | ✓✓ | - | Non-technical user editing |
 
-## YAML Format
+## Format Comparison
 
-**Recommended** - Most readable and supports comments.
+### Readability Comparison
 
-### Example
+::: code-tabs
+@tab XML
+```xml
+<Table name="users" comment="User table">
+  <Column name="id" type="BIGINT" primaryKey="true"/>
+  <Column name="username" type="VARCHAR(50)"/>
+</Table>
+```
 
+@tab YAML
 ```yaml
-namespace: com.example
-
 Table:
   - name: users
-    comment: User accounts
+    comment: User table
     Column:
       - name: id
         type: BIGINT
         primaryKey: true
-        autoIncrement: true
       - name: username
         type: VARCHAR(50)
-        nullable: false
-        unique: true
-    Index:
-      - name: idx_username
-        columns: [username]
-        unique: true
 ```
 
-### Loading
-
-```java
-Justdb schema = FormatFactory.loadFromFile("schema.yaml");
-```
-
-### Saving
-
-```java
-FormatFactory.saveToFile(schema, "output.yaml");
-```
-
-## JSON Format
-
-Machine-readable, good for APIs and automation.
-
-### Example
-
+@tab JSON
 ```json
 {
-  "id": "myapp",
-  "namespace": "com.example",
   "Table": [
     {
       "name": "users",
-      "comment": "User accounts",
+      "comment": "User table",
       "Column": [
         {
           "name": "id",
           "type": "BIGINT",
-          "primaryKey": true,
-          "autoIncrement": true
+          "primaryKey": true
+        },
+        {
+          "name": "username",
+          "type": "VARCHAR(50)"
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY,
+    username VARCHAR(50)
+) COMMENT 'User table';
+```
+
+@tab TOML
+```toml
+[[Table]]
+name = "users"
+comment = "User table"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+```
+:::
+
+### Feature Comparison
+
+| Feature | XML | SQL | YAML | JSON | TOML | Properties |
+|---------|-----|-----|------|------|------|------------|
+| Comment Support | ✓ | ✓ | ✓ | ✗ | ✓ | ✓ |
+| Structure Clarity | ✓✓✓ | ✓✓ | ✓ | ✓ | ✓✓ | ✓ |
+| Indentation Sensitivity | Low | Low | High | High | Medium | Low |
+| Learning Cost | Medium | Low | Medium | Low | Low | Low |
+| Tool Support | ✓✓✓ | ✓✓✓ | ✓✓ | ✓✓✓ | ✓✓ | ✓ |
+| Enterprise Use | ✓✓✓ | ✓✓ | ✓ | ✓ | ✓ | ✓ |
+
+## Format Selection Recommendations
+
+### Recommended: Use XML
+
+**Advantages**:
+- Clearest structure with explicit hierarchy, less error-prone
+- Strong type validation with explicit tag closing
+- Comprehensive Schema validation (XSD) support
+- Enterprise standard with rich tool support
+- Indentation-insensitive, easy to understand and maintain
+
+**Use Cases**:
+- New projects (strongly recommended)
+- Enterprise applications
+- Strict structural validation required
+- Team collaboration development
+- Long-term maintenance projects
+
+```xml
+<!-- Recommended: Use XML -->
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb id="formats-readme" namespace="com.example">
+    <Table name="users">
+        <Column name="id" type="BIGINT"/>
+    </Table>
+</Justdb>
+```
+
+### Developer Preferred: Use SQL
+
+**Advantages**:
+- Most intuitive and understandable for database developers
+- Direct correspondence to actual DDL statements
+- No need to learn new syntax structures
+- Easy for debugging and validation
+- Seamless integration with existing database tools
+
+**Use Cases**:
+- Database experts and DBAs
+- Direct database interaction required
+- Reverse engineering of existing SQL assets
+- Rapid prototype development
+- Technical validation scenarios
+
+```sql
+-- Developer preferred: Use SQL
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL
+) COMMENT 'User table';
+```
+
+### Use YAML
+
+**Advantages**:
+- Relatively clean syntax
+- Comment support
+- Common configuration file format
+
+**Considerations**:
+- Indentation-sensitive, prone to errors
+- Difficult to read with deep nesting
+- Lacks explicit end markers
+
+**Use Cases**:
+- Simple configuration scenarios
+- DevOps configuration files
+- Projects with low indentation sensitivity requirements
+
+```yaml
+# Mind the indentation!
+id: myapp
+namespace: com.example
+Table:
+  - name: users
+    Column:
+      - name: id
+        type: BIGINT
+```
+
+### Use JSON
+
+**Advantages**:
+- Extensive tool support
+- API-friendly standard format
+- Suitable for programmatic generation
+
+**Limitations**:
+- No comment support
+- Indentation-sensitive
+- Relatively verbose syntax
+
+**Use Cases**:
+- API integration
+- Automated processing
+- Program-to-program data exchange
+
+### Use TOML
+
+**Advantages**:
+- Configuration friendly
+- Clean syntax
+- Time/date support
+
+**Use Cases**:
+- Application configuration
+- Small projects
+
+```toml
+id = "myapp"
+namespace = "com.example"
+
+[[Table]]
+name = "users"
+comment = "User table"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+```
+
+## Format Conversion
+
+JustDB supports conversion between formats:
+
+```bash
+# XML to YAML
+justdb convert -f xml -t yaml schema.xml > schema.yaml
+
+# XML to JSON
+justdb convert -f xml -t json schema.xml > schema.json
+
+# JSON to XML
+justdb convert -f json -t xml schema.json > schema.xml
+
+# YAML to XML
+justdb convert -f yaml -t xml schema.yaml > schema.xml
+```
+
+### Programmatic Conversion
+
+```java
+// Load YAML
+Justdb schema = FormatFactory.loadFromFile("schema.yaml");
+
+// Save as JSON
+FormatFactory.saveToFile(schema, "schema.json", Format.JSON);
+
+// Save as XML
+FormatFactory.saveToFile(schema, "schema.xml", Format.XML);
+```
+
+## Alias Support
+
+All formats support field aliases for backward compatibility:
+
+```yaml
+# YAML using aliases
+Table:
+  - name: users
+    # All of the following are valid:
+    Column:         # Standard name
+    # columns:      # Alias
+    # Columns:      # Alias
+      - name: id
+        type: BIGINT
+        # All of the following are valid:
+        primaryKey: true    # Standard name
+        # primary_key: true # Alias
+        # pk: true          # Alias
+```
+
+```json
+{
+  "Table": [{
+    "name": "users",
+    "Column": [{
+      "name": "id",
+      "type": "BIGINT",
+      "primaryKey": true
+    }]
+  }]
+}
+```
+
+## Multi-Format Mixing
+
+Multiple formats can be used in one project:
+
+```yaml
+# Main Schema (YAML)
+id: formats-readme
+namespace: com.example
+
+# Import schemas from other formats
+Import:
+  - file: legacy-users.xml
+  - file: additional-tables.json
+```
+
+## Format-Specific Features
+
+### YAML Multi-Document
+
+```yaml
+# Document 1: Base Schema
+---
+id: formats-readme
+namespace: com.example
+Table:
+  - name: users
+
+# Document 2: Extended Schema
+---
+id: formats-readme-extensions
+namespace: com.example
+Table:
+  - name: orders
+```
+
+### JSON5 Support
+
+JustDB supports JSON5 extended syntax:
+
+```json
+{
+  // Comment support
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true  // Trailing comma support
+        }
+      ]
+    }
+  ]
+}
+```
+
+### XML Namespaces
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<justdb:Justdb xmlns:justdb="http://www.verydb.org/justdb"
+               id="myapp"
+               namespace="com.example">
+  <justdb:Table name="users"/>
+</justdb:Justdb>
+```
+
+## Complete Examples
+
+### Same Schema in Multiple Formats
+
+#### YAML Format
+
+```yaml
+id: ecommerce
+namespace: com.example.ecommerce
+
+# Global column definitions
+Column:
+  - id: global_id
+    name: id
+    type: BIGINT
+    primaryKey: true
+    autoIncrement: true
+
+  - id: global_created_at
+    name: created_at
+    type: TIMESTAMP
+    nullable: false
+    defaultValueComputed: CURRENT_TIMESTAMP
+
+# Users table
+Table:
+  - name: users
+    comment: User table
+    Column:
+      - id: col_users_id
+        referenceId: global_id
+        name: id
+
+      - name: username
+        type: VARCHAR(50)
+        nullable: false
+
+      - name: email
+        type: VARCHAR(100)
+
+      - id: col_users_created_at
+        referenceId: global_created_at
+        name: created_at
+
+    Index:
+      - name: idx_users_username
+        columns: [username]
+        unique: true
+```
+
+#### JSON Format
+
+```json
+{
+  "id": "ecommerce",
+  "namespace": "com.example.ecommerce",
+  "Column": [
+    {
+      "id": "global_id",
+      "name": "id",
+      "type": "BIGINT",
+      "primaryKey": true,
+      "autoIncrement": true
+    },
+    {
+      "id": "global_created_at",
+      "name": "created_at",
+      "type": "TIMESTAMP",
+      "nullable": false,
+      "defaultValueComputed": "CURRENT_TIMESTAMP"
+    }
+  ],
+  "Table": [
+    {
+      "name": "users",
+      "comment": "User table",
+      "Column": [
+        {
+          "id": "col_users_id",
+          "referenceId": "global_id",
+          "name": "id"
         },
         {
           "name": "username",
           "type": "VARCHAR(50)",
-          "nullable": false,
+          "nullable": false
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(100)"
+        },
+        {
+          "id": "col_users_created_at",
+          "referenceId": "global_created_at",
+          "name": "created_at"
+        }
+      ],
+      "Index": [
+        {
+          "name": "idx_users_username",
+          "columns": ["username"],
           "unique": true
         }
       ]
@@ -91,159 +475,41 @@ Machine-readable, good for APIs and automation.
 }
 ```
 
-### Loading
-
-```java
-Justdb schema = FormatFactory.loadFromFile("schema.json");
-```
-
-## XML Format
-
-Enterprise-friendly, supports XSD validation.
-
-### Example
+#### XML Format
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<Justdb id="myapp" namespace="com.example">
-  <Table name="users" comment="User accounts">
-    <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
-    <Column name="username" type="VARCHAR(50)" nullable="false" unique="true"/>
-    <Index name="idx_username" columns="username" unique="true"/>
+<Justdb id="ecommerce" namespace="com.example.ecommerce">
+
+  <!-- Global column definitions -->
+  <Column id="global_id" name="id" type="BIGINT"
+          primaryKey="true" autoIncrement="true"/>
+
+  <Column id="global_created_at" name="created_at" type="TIMESTAMP"
+          nullable="false" defaultValueComputed="CURRENT_TIMESTAMP"/>
+
+  <!-- Users table -->
+  <Table name="users" comment="User table">
+    <Column id="col_users_id" referenceId="global_id" name="id"/>
+    <Column name="username" type="VARCHAR(50)" nullable="false"/>
+    <Column name="email" type="VARCHAR(100)"/>
+    <Column id="col_users_created_at" referenceId="global_created_at" name="created_at"/>
+
+    <Index name="idx_users_username" unique="true">
+      <columns>username</columns>
+    </Index>
   </Table>
+
 </Justdb>
 ```
 
-### Loading
+## Related Documentation
 
-```java
-Justdb schema = FormatFactory.loadFromFile("schema.xml");
-```
-
-## TOML Format
-
-Clean configuration format.
-
-### Example
-
-```toml
-id = "myapp"
-namespace = "com.example"
-
-[[Table]]
-name = "users"
-comment = "User accounts"
-
-[[Table.Column]]
-name = "id"
-type = "BIGINT"
-primaryKey = true
-autoIncrement = true
-
-[[Table.Column]]
-name = "username"
-type = "VARCHAR(50)"
-nullable = false
-unique = true
-```
-
-### Loading
-
-```java
-Justdb schema = FormatFactory.loadFromFile("schema.toml");
-```
-
-## Properties Format
-
-Simple key-value notation (limited support).
-
-### Example
-
-```properties
-# Tables
-table.users.name=users
-table.users.comment=User accounts
-
-# Columns
-table.users.column.0.name=id
-table.users.column.0.type=BIGINT
-table.users.column.0.primaryKey=true
-table.users.column.0.autoIncrement=true
-
-table.users.column.1.name=username
-table.users.column.1.type=VARCHAR(50)
-table.users.column.1.nullable=false
-```
-
-### Loading
-
-```java
-Justdb schema = FormatFactory.loadFromFile("schema.properties");
-```
-
-## Format Conversion
-
-Convert between formats:
-
-```bash
-justdb convert -f yaml -t json schema.yaml > schema.json
-justdb convert -f json -t yaml schema.json > schema.yaml
-justdb convert -f xml -t json schema.xml > schema.json
-```
-
-### Java API
-
-```java
-// Load from YAML
-Justdb schema = FormatFactory.loadFromFile("schema.yaml");
-
-// Save as JSON
-FormatFactory.saveToFile(schema, "schema.json", "json");
-
-// Save as XML
-FormatFactory.saveToFile(schema, "schema.xml", "xml");
-```
-
-## Choosing a Format
-
-### Use YAML when:
-- ✅ Writing schemas manually
-- ✅ Need comments
-- ✅ Want readability
-- ✅ Using version control
-
-### Use JSON when:
-- ✅ Generating schemas programmatically
-- ✅ Integrating with APIs
-- ✅ Processing with tools
-- ✅ Machine consumption
-
-### Use XML when:
-- ✅ Enterprise environments
-- ✅ Need XSD validation
-- ✅ IDE tooling support
-- ✅ Existing XML workflows
-
-### Use TOML when:
-- ✅ Configuration-driven
-- ✅ Want clean syntax
-- ✅ No nesting needed
-
-### Use Properties when:
-- ✅ Simple, flat schemas
-- ✅ Java properties conventions
-- ✅ Existing .properties files
-
-## Best Practices
-
-1. **Use YAML** for development and version control
-2. **Commit YAML** to repositories for readability
-3. **Generate JSON/XML** for build processes
-4. **Validate schemas** before deployment
-5. **Use consistent formatting**
-
-## Next Steps
-
-- **[Quick Start](/getting-started/)** - Get started with schemas
-- **[CLI Reference](/reference/cli/)** - Command-line tools
-- **[API Reference](/reference/api/)** - Programmatic access
+- [YAML Format](./yaml.md)
+- [JSON Format](./json.md)
+- [XML Format](./xml.md)
+- [TOML Format](./toml.md)
+- [Properties Format](./properties.md)
+- [SQL Format](./sql.md)
+- [Markdown Format](./markdown.md)
+- [Excel Format](./excel.md)

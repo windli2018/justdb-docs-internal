@@ -18,11 +18,11 @@ JustDB 提供 Oracle 数据库支持，包括 Oracle 11g 及以上版本。
 ### JDBC 驱动
 
 ```xml
-&lt;dependency&gt;
-    &lt;groupId&gt;com.oracle.database.jdbc&lt;/groupId&gt;
-    &lt;artifactId&gt;ojdbc11&lt;/artifactId&gt;
-    &lt;version&gt;23.2.0.0&lt;/version&gt;
-&lt;/dependency&gt;
+<dependency>
+    <groupId>com.oracle.database.jdbc</groupId>
+    <artifactId>ojdbc11</artifactId>
+    <version>23.2.0.0</version>
+</dependency>
 ```
 
 ### 连接字符串
@@ -75,15 +75,15 @@ databases:
 
 **XML:**
 ```xml
-&lt;databases&gt;
-  &lt;database id="production"&gt;
-    &lt;url&gt;jdbc:oracle:thin:@localhost:1521/orcl&lt;/url&gt;
-    &lt;driver&gt;oracle.jdbc.OracleDriver&lt;/driver&gt;
-    &lt;username&gt;system&lt;/username&gt;
-    &lt;password&gt;oracle&lt;/password&gt;
-    &lt;dialect&gt;oracle&lt;/dialect&gt;
-  &lt;/database&gt;
-&lt;/databases&gt;
+<databases>
+  <database id="production">
+    <url>jdbc:oracle:thin:@localhost:1521/orcl</url>
+    <driver>oracle.jdbc.OracleDriver</driver>
+    <username>system</username>
+    <password>oracle</password>
+    <dialect>oracle</dialect>
+  </database>
+</databases>
 ```
 
 ## 数据类型映射

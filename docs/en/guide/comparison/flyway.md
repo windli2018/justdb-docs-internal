@@ -113,6 +113,21 @@ type = "VARCHAR(100)"
 # To modify, just update the file
 # JustDB automatically calculates the diff
 ```
+
+@tab Properties
+```properties
+table.users.name=users
+table.users.column.id.name=id
+table.users.column.id.type=BIGINT
+table.users.column.id.primaryKey=true
+table.users.column.username.name=username
+table.users.column.username.type=VARCHAR(50)
+table.users.column.email.name=email
+table.users.column.email.type=VARCHAR(100)
+
+# To modify, just update the file
+# JustDB automatically calculates the diff
+```
 :::
 
 **Flyway - Imperative SQL migration scripts:**

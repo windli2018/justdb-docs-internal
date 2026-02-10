@@ -4,7 +4,7 @@ JustDB 支持 100+ 数据库，涵盖传统关系型数据库、国产数据库�
 
 ## 按字母索引
 
-&lt;DatabaseIndex /&gt;
+<DatabaseIndex />
 
 ## 数据库分类
 
@@ -171,15 +171,15 @@ databases:
 ### XML 配置
 
 ```xml
-&lt;databases&gt;
-  &lt;database id="production"&gt;
-    &lt;url&gt;jdbc:oracle:thin:@localhost:1521:orcl&lt;/url&gt;
-    &lt;driver&gt;oracle.jdbc.OracleDriver&lt;/driver&gt;
-    &lt;username&gt;system&lt;/username&gt;
-    &lt;password&gt;oracle&lt;/password&gt;
-    &lt;dialect&gt;oracle&lt;/dialect&gt;
-  &lt;/database&gt;
-&lt;/databases&gt;
+<databases>
+  <database id="production">
+    <url>jdbc:oracle:thin:@localhost:1521:orcl</url>
+    <driver>oracle.jdbc.OracleDriver</driver>
+    <username>system</username>
+    <password>oracle</password>
+    <dialect>oracle</dialect>
+  </database>
+</databases>
 ```
 
 ## 相关文档

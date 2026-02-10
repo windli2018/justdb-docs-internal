@@ -23,12 +23,12 @@ tag:
 | `name` | String | 是 | 约束名称 |
 | `tableName` | String | 是* | 所属表名（*全局约束时必填） |
 | `type` | ConstraintType | 是 | 约束类型 |
-| `columns` | List&lt;String&gt; | 是 | 约束列 |
+| `columns` | List<String> | 是 | 约束列 |
 | `referencedTable` | String | 否 | 外键引用表 |
 | `referencedColumn` | String | 否 | 外键引用列 |
 | `checkExpression` | String | 否 | 检查约束表达式 |
 | `comment` | String | 否 | 约束注释 |
-| `dbms` | List&lt;String&gt; | 否 | 适用数据库列表 |
+| `dbms` | List<String> | 否 | 适用数据库列表 |
 
 ## 约束类型
 

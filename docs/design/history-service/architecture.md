@@ -87,7 +87,7 @@
 │  │  │  │ execution_time INT      | 执行时间（毫秒）               │  │  │ │
 │  │  │  │ success BOOLEAN         | 是否成功                       │  │  │ │
 │  │  │  └─────────────────────────────────────────────────────────────┘  │  │ │
-│  │  │  索引: idx_&lt;table&gt;_version, idx_&lt;table&gt;_success, idx_&lt;table&gt;_installed_on │  │ │
+│  │  │  索引: idx_<table>_version, idx_<table>_success, idx_<table>_installed_on │  │ │
 │  │  └─────────────────────────────────────────────────────────────────┘  │ │
 │  │                                                                       │ │
 │  │  ┌─────────────────────────────────────────────────────────────────┐  │ │
@@ -106,7 +106,7 @@
 │  │  │  │ success BOOLEAN         | 是否成功                       │  │  │ │
 │  │  │  │ status_code VARCHAR(50)  | 状态码（SUCCESS/ERROR）       │  │  │ │
 │  │  │  └─────────────────────────────────────────────────────────────┘  │  │ │
-│  │  │  索引: idx_&lt;table&gt;_obj_name, idx_&lt;table&gt;_obj_version, idx_&lt;table&gt;_obj_status │ │ │
+│  │  │  索引: idx_<table>_obj_name, idx_<table>_obj_version, idx_<table>_obj_status │ │ │
 │  │  └─────────────────────────────────────────────────────────────────┘  │ │
 │  └───────────────────────────────────────────────────────────────────────┘ │
 │                                                                             │
@@ -321,7 +321,7 @@ public SchemaHistoryManager(SchemaHistoryRepository schemaHistoryRepository) {
 
 // 3. 基于 PluginManager 的构造函数（支持扩展）
 public SchemaHistoryManager(PluginManager pluginManager, String repositoryId, Object... params) {
-    Class&lt;? extends SchemaHistoryRepository&gt; repoClass = pluginManager.getSchemaHistoryRepository(repositoryId);
+    Class<? extends SchemaHistoryRepository> repoClass = pluginManager.getSchemaHistoryRepository(repositoryId);
     if (repoClass == null) {
         throw new IllegalArgumentException("SchemaHistoryRepository not found for ID: " + repositoryId);
     }
@@ -378,7 +378,7 @@ public boolean isVersionApplied(String version) {
 }
 
 // 获取已应用的版本列表
-public List&lt;String&gt; getAppliedVersions() {
+public List<String> getAppliedVersions() {
     return schemaHistoryRepository.getAppliedVersions();
 }
 
@@ -388,12 +388,12 @@ public String getLatestAppliedVersion() {
 }
 
 // 获取版本的所有对象变更
-public List&lt;SchemaObjectHistory&gt; getObjectChangesByVersion(String version) {
+public List<SchemaObjectHistory> getObjectChangesByVersion(String version) {
     return schemaHistoryRepository.getObjectChangesByVersion(version);
 }
 
 // 获取所有 History 记录
-public List&lt;SchemaHistory&gt; getAllHistory() {
+public List<SchemaHistory> getAllHistory() {
     return schemaHistoryRepository.findAll();
 }
 
@@ -636,7 +636,7 @@ public boolean validateHistory() {
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  存储位置: 文件系统                                                        │
-│  - ~/.justdb/&lt;project-name&gt;/YYYYMMDD-HHmmss-tag.json                   │
+│  - ~/.justdb/<project-name>/YYYYMMDD-HHmmss-tag.json                   │
 │                                                                             │
 │  示例:                                                                     │
 │  - ~/.justdb/myapp/20240207-143000-initial.json                          │
@@ -823,7 +823,7 @@ public boolean isVersionApplied(String version) {
  * @param version 版本号
  * @return 对象变更列表
  */
-public List&lt;SchemaObjectHistory&gt; getObjectChangesByVersion(String version) {
+public List<SchemaObjectHistory> getObjectChangesByVersion(String version) {
     try {
         return objectHistoryRepository.findBySchemaVersion(version);
     } catch (Exception e) {
@@ -831,8 +831,8 @@ public List&lt;SchemaObjectHistory&gt; getObjectChangesByVersion(String version)
     }
 }
 
-public List&lt;SchemaObjectHistory&gt; findBySchemaVersion(String schemaVersion) {
-    List&lt;SchemaObjectHistory&gt; changes = new ArrayList&lt;&gt;();
+public List<SchemaObjectHistory> findBySchemaVersion(String schemaVersion) {
+    List<SchemaObjectHistory> changes = new ArrayList<>();
     String selectSql = String.format(
         "SELECT id, object_type, object_name, schema_version, description, ddl_statement, " +
         "checksum, installed_by, installed_on, execution_time, success, status_code " +

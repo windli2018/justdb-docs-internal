@@ -49,7 +49,7 @@ JustDB Schema Extractor 是一个模块化、可扩展的数据库 schema 反向
 
 ```java
 public interface TableExtractor {
-    List&lt;Table&gt; extractTables(Connection connection, ExtractConfig config) throws SQLException;
+    List<Table> extractTables(Connection connection, ExtractConfig config) throws SQLException;
     default boolean supports(String dialect) { return true; }
 }
 ```
@@ -58,7 +58,7 @@ public interface TableExtractor {
 
 ```java
 public interface ColumnExtractor {
-    List&lt;Column&gt; extractColumns(Connection connection, String tableName, String schema) throws SQLException;
+    List<Column> extractColumns(Connection connection, String tableName, String schema) throws SQLException;
     default boolean supports(String dialect) { return true; }
 }
 ```
@@ -73,7 +73,7 @@ public interface PrimaryKeyExtractor {
         String getKeyName();
     }
 
-    List&lt;PrimaryKeyColumn&gt; extractPrimaryKeys(Connection connection, String tableName, String schema) throws SQLException;
+    List<PrimaryKeyColumn> extractPrimaryKeys(Connection connection, String tableName, String schema) throws SQLException;
     default boolean supports(String dialect) { return true; }
 }
 ```
@@ -91,7 +91,7 @@ public interface IndexExtractor {
         boolean isPrimary();
     }
 
-    List&lt;IndexInfo&gt; extractIndexes(Connection connection, String tableName, String schema) throws SQLException;
+    List<IndexInfo> extractIndexes(Connection connection, String tableName, String schema) throws SQLException;
     default boolean supports(String dialect) { return true; }
 }
 ```
@@ -108,7 +108,7 @@ public interface ForeignKeyExtractor {
         int getSequence();
     }
 
-    List&lt;ForeignKey&gt; extractForeignKeys(Connection connection, String tableName, String schema) throws SQLException;
+    List<ForeignKey> extractForeignKeys(Connection connection, String tableName, String schema) throws SQLException;
     default boolean supports(String dialect) { return true; }
 }
 ```
@@ -117,7 +117,7 @@ public interface ForeignKeyExtractor {
 
 ```java
 public interface ViewExtractor {
-    List&lt;View&gt; extractViews(Connection connection, String schema) throws SQLException;
+    List<View> extractViews(Connection connection, String schema) throws SQLException;
     String getViewDefinition(Connection connection, String viewName, String schema) throws SQLException;
     default boolean supports(String dialect) { return true; }
 }
@@ -149,7 +149,7 @@ public interface SequenceExtractor {
         Boolean isCycle();
     }
 
-    List&lt;Sequence&gt; extractSequences(Connection connection, String schema) throws SQLException;
+    List<Sequence> extractSequences(Connection connection, String schema) throws SQLException;
     default boolean supports(String dialect) {
         return !"mysql".equals(dialect) && !"tidb".equals(dialect);
     }
@@ -171,19 +171,19 @@ Justdb schema = extractor.extractSchema(connection, config);
 在 `META-INF/justdb/mydb-extractors.xml` 中定义：
 
 ```xml
-&lt;plugins&gt;
-  &lt;plugin id="mydb-extractors"&gt;
-    &lt;extractors&gt;
-      &lt;extractor id="extract-tables" dialect="mydb"&gt;
-        &lt;sql&gt;
+<plugins>
+  <plugin id="mydb-extractors">
+    <extractors>
+      <extractor id="extract-tables" dialect="mydb">
+        <sql>
           SELECT table_name, table_schema
           FROM information_schema.tables
           WHERE table_type = 'BASE TABLE'
-        &lt;/sql&gt;
-      &lt;/extractor&gt;
-    &lt;/extractors&gt;
-  &lt;/plugin&gt;
-&lt;/plugins&gt;
+        </sql>
+      </extractor>
+    </extractors>
+  </plugin>
+</plugins>
 ```
 
 ### 方式 3: 实现单个接口
@@ -191,7 +191,7 @@ Justdb schema = extractor.extractSchema(connection, config);
 ```java
 public class MyIndexExtractor implements IndexExtractor {
     @Override
-    public List&lt;IndexInfo&gt; extractIndexes(Connection conn, String table, String schema) {
+    public List<IndexInfo> extractIndexes(Connection conn, String table, String schema) {
         // 使用 SQL 模板或直接查询
     }
 
@@ -251,25 +251,25 @@ MyDatabaseExtractor.register("mydb");
 ### 模板参数绑定
 
 ```xml
-&lt;extractor id="extract-columns" dialect="postgresql"&gt;
-  &lt;sql&gt;
+<extractor id="extract-columns" dialect="postgresql">
+  <sql>
     SELECT column_name, data_type
     FROM information_schema.columns
     WHERE table_name = {{tableName}}
       {{#if schema}}AND table_schema = {{schema}}{{/if}}
     ORDER BY ordinal_position
-  &lt;/sql&gt;
-&lt;/extractor&gt;
+  </sql>
+</extractor>
 ```
 
 调用时传入参数：
 
 ```java
-Map&lt;String, Object&gt; bindings = new HashMap&lt;&gt;();
+Map<String, Object> bindings = new HashMap<>();
 bindings.put("tableName", "users");
 bindings.put("schema", "public");
 
-List&lt;Map&lt;String, Object&gt;&gt; results = extractor.queryForMaps(conn, "extract-columns", bindings);
+List<Map<String, Object>> results = extractor.queryForMaps(conn, "extract-columns", bindings);
 ```
 
 ## 支持的数据库
@@ -310,7 +310,7 @@ public interface TriggerExtractor {
         String getBody();
     }
 
-    List&lt;Trigger&gt; extractTriggers(Connection connection, String tableName, String schema) throws SQLException;
+    List<Trigger> extractTriggers(Connection connection, String tableName, String schema) throws SQLException;
     default boolean supports(String dialect) { return true; }
 }
 

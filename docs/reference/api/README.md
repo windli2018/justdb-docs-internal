@@ -83,11 +83,11 @@ justdb.setTables(Arrays.asList(usersTable));
 ```java
 // 从文件加载
 JustdbManager manager = JustdbManager.getInstance();
-Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("schema.json", manager);
+Loaded<Justdb> result = SchemaLoaderFactory.load("schema.json", manager);
 Justdb justdb = result.getData();
 
 // 从类路径加载
-Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("classpath:schema.xml", manager);
+Loaded<Justdb> result = SchemaLoaderFactory.load("classpath:schema.xml", manager);
 ```
 
 ### 3. 部署 Schema
@@ -112,8 +112,8 @@ CanonicalSchemaDiff diff = new CanonicalSchemaDiff(currentSchema, targetSchema);
 diff.calculateAll();
 
 // 获取变更
-List&lt;TableChange&gt; tableChanges = diff.getTableChanges();
-List&lt;ColumnChange&gt; columnChanges = diff.getColumnChanges();
+List<TableChange> tableChanges = diff.getTableChanges();
+List<ColumnChange> columnChanges = diff.getColumnChanges();
 ```
 
 ### 5. 使用 JDBC 驱动

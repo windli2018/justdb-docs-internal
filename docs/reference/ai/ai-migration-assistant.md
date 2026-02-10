@@ -227,7 +227,7 @@ public class AiMigrationExample {
             JustdbManager.getInstance()
         );
 
-        List&lt;String&gt; scripts = migrationService.generateMigrationScripts(
+        List<String> scripts = migrationService.generateMigrationScripts(
             targetSchema,
             "mysql"
         );
@@ -361,7 +361,7 @@ Justdb migratedSchema = executeMigration(currentSchema, targetSchema);
 historyManager.saveSnapshot(migratedSchema, "post-migration");
 
 // 查看历史
-List&lt;SchemaSnapshot&gt; snapshots = historyManager.getSnapshots();
+List<SchemaSnapshot> snapshots = historyManager.getSnapshots();
 for (SchemaSnapshot snapshot : snapshots) {
     System.out.println(snapshot.getTag() + ": " +
         snapshot.getTimestamp());
@@ -512,7 +512,7 @@ try {
 
 ```java
 // 验证数据一致性
-List&lt;String&gt; inconsistencies = checkDataConsistency(
+List<String> inconsistencies = checkDataConsistency(
     currentSchema,
     targetSchema
 );

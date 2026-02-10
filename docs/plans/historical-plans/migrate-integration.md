@@ -264,7 +264,7 @@ JustDB 当前存在两套独立的 migrate 方案：
 |------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|
 | **DbSchemaExtractor** | 从真实数据库抽取当前 schema | Connection, ExtractOptions | Justdb |
 | **DiffService** | 计算 schema 之间的差异 | currentSchema, targetSchema | CanonicalSchemaDiff |
-| **SqlGenerator** | 从 diff 生成 SQL | CanonicalSchemaDiff, dialect, options | List\&lt;String\&gt; |
+| **SqlGenerator** | 从 diff 生成 SQL | CanonicalSchemaDiff, dialect, options | List\<String\> |
 | **HistoryRecorder** | 记录和查询 History | version, diff, sqlStatements | - |
 | **UnifiedMigrationService** | 协调所有组件 | MigrationContext | MigrationResult |
 
@@ -378,7 +378,7 @@ JustDB 当前存在两套独立的 migrate 方案：
 │  │      //    └── 基于 history_objects 表移除已应用的变更                  │ │
 │  │                                                                       │ │
 │  │      // 4. 生成 SQL                                                   │ │
-│  │      List&lt;String&gt; sql = generateSql(diff, dialect);                    │ │
+│  │      List<String> sql = generateSql(diff, dialect);                    │ │
 │  │                                                                       │ │
 │  │      // 5. 执行 SQL                                                   │ │
 │  │      executeSql(sql, connection);                                     │ │
@@ -460,7 +460,7 @@ public class UnifiedMigrationService {
         }
 
         // 4. 生成 SQL
-        List&lt;String&gt; sqlStatements = sqlGenerator.generateMigrationSql(
+        List<String> sqlStatements = sqlGenerator.generateMigrationSql(
             diff,
             context.getDialect(),
             context.getSqlGenerationOptions()
@@ -687,11 +687,11 @@ public class SqlGenerator {
      * 整合 DiffCommand.generateSql() 和 SchemaMigrationService.generateMigrationSql()
      * 的重复逻辑
      */
-    public List&lt;String&gt; generateMigrationSql(CanonicalSchemaDiff diff,
+    public List<String> generateMigrationSql(CanonicalSchemaDiff diff,
                                             String dialect,
                                             SqlGenerationOptions options) {
         DBGenerator dbGenerator = new DBGenerator(pluginManager, dialect);
-        List&lt;String&gt; sqlStatements = new ArrayList&lt;&gt;();
+        List<String> sqlStatements = new ArrayList<>();
 
         // 1. 处理 sequences
         sqlStatements.addAll(generateSequenceSql(diff, dbGenerator));
@@ -708,9 +708,9 @@ public class SqlGenerator {
         return sqlStatements;
     }
 
-    private List&lt;String&gt; generateSequenceSql(CanonicalSchemaDiff diff,
+    private List<String> generateSequenceSql(CanonicalSchemaDiff diff,
                                             DBGenerator dbGenerator) {
-        List&lt;String&gt; sql = new ArrayList&lt;&gt;();
+        List<String> sql = new ArrayList<>();
         if (diff.getSequences() != null) {
             for (Sequence sequence : diff.getSequences()) {
                 if (sequence.getChangeType() == null) continue;
@@ -733,10 +733,10 @@ public class SqlGenerator {
         return sql;
     }
 
-    private List&lt;String&gt; generateTableSql(CanonicalSchemaDiff diff,
+    private List<String> generateTableSql(CanonicalSchemaDiff diff,
                                          DBGenerator dbGenerator,
                                          SqlGenerationOptions options) {
-        List&lt;String&gt; sql = new ArrayList&lt;&gt;();
+        List<String> sql = new ArrayList<>();
         // 抽取 DiffCommand 和 SchemaMigrationService 中的表处理逻辑
         // ...
         return sql;
@@ -768,7 +768,7 @@ public class HistoryRecorder {
      * 记录迁移
      */
     public void recordMigration(String version, String description,
-                               List&lt;String&gt; sqlStatements,
+                               List<String> sqlStatements,
                                CanonicalSchemaDiff diff) {
         long startTime = System.currentTimeMillis();
 
@@ -823,12 +823,12 @@ public class HistoryRecorder {
         );
 
         // 获取所有已应用的对象变更
-        List&lt;SchemaObjectHistory&gt; appliedObjects =
+        List<SchemaObjectHistory> appliedObjects =
             historyManager.getAllObjectChanges();
 
         // 构建已应用对象的集合
-        Set&lt;String&gt; appliedTableChanges = new HashSet&lt;&gt;();
-        Set&lt;String&gt; appliedColumnChanges = new HashSet&lt;&gt;();
+        Set<String> appliedTableChanges = new HashSet<>();
+        Set<String> appliedColumnChanges = new HashSet<>();
         // ...
 
         for (SchemaObjectHistory history : appliedObjects) {
@@ -910,7 +910,7 @@ public class DbSchemaExtractor {
     /**
      * 从数据库抽取特定表的 schema
      */
-    public Justdb extractTables(Connection connection, List&lt;String&gt; tableNames) {
+    public Justdb extractTables(Connection connection, List<String> tableNames) {
         ExtractOptions options = new ExtractOptions();
         options.setTableScopes(toTableScopes(tableNames));
         return extract(connection, options);
@@ -1009,7 +1009,7 @@ MigrationContext context = MigrationContext.builder()
 MigrationResult result = service.migrate(context);
 
 // 输出 SQL
-List&lt;String&gt; sqlStatements = result.getSqlStatements();
+List<String> sqlStatements = result.getSqlStatements();
 for (String sql : sqlStatements) {
     System.out.println(sql);
 }

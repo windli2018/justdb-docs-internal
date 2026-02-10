@@ -18,14 +18,16 @@ tag:
 |:---|:---|:---|
 | **语言** | Java | Python |
 | **设计理念** | 声明式文件 | 代码定义 |
-| **Schema 定义** | XML/YAML/JSON/TOML | Python 类 |
+| **Schema 定义** | XML/YAML/JSON/SQL/TOML/Properties | Python 类 |
 | **类型安全** | 部分 | ✅ |
-| **ORM 集成** | ❌ | ✅ |
+| **ORM 模型生成** | ✅ (可生成 SQLAlchemy/Django 模型) | 内置 |
 
 ## 代码对比
 
+**JustDB - 多格式声明式 Schema：**
+
 ::: code-tabs
-@tab JustDB (XML)
+@tab XML
 ```xml
 <!-- schema.xml -->
 <Justdb>
@@ -37,7 +39,7 @@ tag:
 </Justdb>
 ```
 
-@tab JustDB (YAML)
+@tab YAML
 ```yaml
 # schema.yaml
 Table:
@@ -54,7 +56,7 @@ Table:
         type: VARCHAR(100)
 ```
 
-@tab JustDB (JSON)
+@tab JSON
 ```json
 {
   "Table": [
@@ -70,7 +72,17 @@ Table:
 }
 ```
 
-@tab JustDB (TOML)
+@tab SQL
+```sql
+-- schema.sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100)
+);
+```
+
+@tab TOML
 ```toml
 [[Table]]
 name = "users"
@@ -91,7 +103,25 @@ name = "email"
 type = "VARCHAR(100)"
 ```
 
-@tab SQLAlchemy
+@tab Properties
+```properties
+table.users.name=users
+table.users.column.id.name=id
+table.users.column.id.type=BIGINT
+table.users.column.id.primaryKey=true
+table.users.column.id.autoIncrement=true
+table.users.column.username.name=username
+table.users.column.username.type=VARCHAR(50)
+table.users.column.username.nullable=false
+table.users.column.email.name=email
+table.users.column.email.type=VARCHAR(100)
+```
+:::
+
+**SQLAlchemy - Python ORM 与代码定义的 Schema：**
+
+::: code-tabs
+@tab Python
 ```python
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
@@ -117,6 +147,8 @@ Base.metadata.create_all(engine)
 - ✅ 语言无关：可用于任何 JVM 语言
 - ✅ 文件格式：易于版本控制和审查
 - ✅ 多数据库：支持 30+ 数据库
+- ✅ 多语言 ORM 生成：可生成 JPA、MyBatis、SQLAlchemy、Django、Prisma、GORM 模型
+- ✅ ORM 导入：支持从 SQLAlchemy、Django、GORM 等 ORM 导入（orm2schema 命令）
 - ✅ AI 集成：自然语言操作
 - ✅ JDBC 驱动：标准 JDBC 接口
 

@@ -108,7 +108,7 @@ public class JustdbAgent {
     private final TokenManager tokenManager;
 
     public AiResponse processRequest(AiRequest request);
-    public List&lt;ConversationMessage&gt; getHistory();
+    public List<ConversationMessage> getHistory();
     public void reset();
 }
 ```
@@ -124,14 +124,14 @@ public class ConversationMemory {
 
     public void add(AiRequest request, AiResponse response);
     public void compress();  // 压缩旧消息到长期记忆
-    public List&lt;ConversationMessage&gt; searchRelevant(String query, int topK);
-    public List&lt;ConversationMessage&gt; getFullContext();
+    public List<ConversationMessage> searchRelevant(String query, int topK);
+    public List<ConversationMessage> getFullContext();
 }
 
 // ShortTermMemory - FIFO 队列
 public class ShortTermMemory {
     private final int capacity;  // 默认 20 条消息
-    private final LinkedList&lt;ConversationMessage&gt; messages;
+    private final LinkedList<ConversationMessage> messages;
 }
 
 // LongTermMemory - 向量检索
@@ -139,13 +139,13 @@ public class LongTermMemory {
     private final EmbeddingService embeddingService;
     private final VectorStore vectorStore;
 
-    public void store(List&lt;Summary&gt; summaries);
-    public List&lt;ConversationMessage&gt; semanticSearch(String query, int topK);
+    public void store(List<Summary> summaries);
+    public List<ConversationMessage> semanticSearch(String query, int topK);
 }
 
 // MemoryCompressor - 记忆压缩器
 public class MemoryCompressor {
-    public List&lt;Summary&gt; summarize(List&lt;ConversationMessage&gt; messages);
+    public List<Summary> summarize(List<ConversationMessage> messages);
 }
 ```
 
@@ -162,7 +162,7 @@ public class TokenManager {
 
 public class TokenCounter {
     public int count(AiRequest request);
-    public int count(List&lt;ConversationMessage&gt; messages);
+    public int count(List<ConversationMessage> messages);
 }
 ```
 
@@ -171,7 +171,7 @@ public class TokenCounter {
 ```java
 public interface AiProvider {
     AiResponse execute(AgentContext context);
-    String summarize(List&lt;ConversationMessage&gt; messages);  // 用于记忆压缩
+    String summarize(List<ConversationMessage> messages);  // 用于记忆压缩
     int getContextWindowSize();
 }
 
@@ -203,7 +203,7 @@ public class QueryTool implements Tool {
 }
 
 public class ToolRegistry {
-    private final Map&lt;String, Tool&gt; tools;
+    private final Map<String, Tool> tools;
     public String generateToolDescriptions();  // 用于 System Prompt
 }
 ```
@@ -270,10 +270,10 @@ public class AiInteractiveSession {
 
 public class ConversationDisplay {
     public void showThinking();
-    public void showToolCalls(List&lt;ToolCall&gt; calls);
+    public void showToolCalls(List<ToolCall> calls);
     public void showResponse(AiResponse response);
-    public void showInterviewQuestions(List&lt;String&gt; questions);
-    public void showHistory(List&lt;ConversationMessage&gt; history);
+    public void showInterviewQuestions(List<String> questions);
+    public void showHistory(List<ConversationMessage> history);
 }
 ```
 

@@ -304,7 +304,8 @@ Justdb (根容器)
 
 - `referenceId` (规范) → 别名: `refId`, `ref-id`, `ref_id`
 - `formerNames` (规范) → 别名: `oldNames`, `oldName`, `formerName`, `previousNames`
-- `referencedTable` (规范) → 别名: `foreignTable`
+- `beforeDrops` (规范) → 别名: `beforeRemoves`, `beforeDrop` - 使用 SQL DROP 术语
+- `beforeAlters` (规范) → 别名: `beforeModifies`, `beforeAlter` - 使用 SQL ALTER 术语
 
 ### Schema 演进追踪
 
@@ -332,8 +333,9 @@ Justdb (根容器)
 - 通过插件系统支持数据库特定扩展
 - 开放的继承层次结构
 
-### 4. 向后兼容 (Backward Compatibility)
-- 通过 `@JsonAlias` 支持旧字段名
+### 4. 广泛兼容 (Broad Compatibility)
+- 通过 `@JsonAlias` 支持多种命名格式：向后兼容、向 AI 兼容、向人类兼容
+- 格式是方便之门，不是限制
 - 保留已弃用功能的兼容层
 
 ---------------------------

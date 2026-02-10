@@ -39,7 +39,7 @@ public interface ISchemaLoader {
 ```java
 public interface SchemaLocation {
     boolean supports(String location);
-    List&lt;Loaded<Justdb&gt;> load(String location, List&lt;String&gt; fileTypes, JustdbManager manager);
+    List<Loaded<Justdb>> load(String location, List<String> fileTypes, JustdbManager manager);
 }
 ```
 
@@ -56,14 +56,14 @@ public interface SchemaLocation {
 从指定位置加载单个 Schema。
 
 ```java
-public static Loaded&lt;Justdb&gt; load(String location, JustdbManager manager)
+public static Loaded<Justdb> load(String location, JustdbManager manager)
 ```
 
 **参数**:
 - `location` - Schema 位置（文件路径、URL 等）
 - `manager` - JustdbManager 实例
 
-**返回**: `Loaded&lt;Justdb&gt;` - 封装加载结果
+**返回**: `Loaded<Justdb>` - 封装加载结果
 
 **示例**:
 
@@ -71,7 +71,7 @@ public static Loaded&lt;Justdb&gt; load(String location, JustdbManager manager)
 JustdbManager manager = JustdbManager.getInstance();
 
 // 从文件加载
-Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("schema.json", manager);
+Loaded<Justdb> result = SchemaLoaderFactory.load("schema.json", manager);
 if (result.isSuccess()) {
     Justdb justdb = result.getData();
 }
@@ -82,7 +82,7 @@ if (result.isSuccess()) {
 从指定位置加载多个 Schema（支持目录扫描）。
 
 ```java
-public static List&lt;Loaded<Justdb&gt;> loadAll(String location, List&lt;String&gt; fileTypes, JustdbManager manager)
+public static List<Loaded<Justdb>> loadAll(String location, List<String> fileTypes, JustdbManager manager)
 ```
 
 **参数**:
@@ -90,7 +90,7 @@ public static List&lt;Loaded<Justdb&gt;> loadAll(String location, List&lt;String
 - `fileTypes` - 文件类型过滤（null 表示默认类型）
 - `manager` - JustdbManager 实例
 
-**返回**: `List&lt;Loaded<Justdb&gt;>` - 加载结果列表
+**返回**: `List<Loaded<Justdb>>` - 加载结果列表
 
 **默认文件类型**: xml, json, yaml, yml, toml, sql
 
@@ -98,10 +98,10 @@ public static List&lt;Loaded<Justdb&gt;> loadAll(String location, List&lt;String
 
 ```java
 // 加载目录中的所有 Schema
-List&lt;Loaded<Justdb&gt;> results = SchemaLoaderFactory.loadAll("./schemas", null, manager);
+List<Loaded<Justdb>> results = SchemaLoaderFactory.loadAll("./schemas", null, manager);
 
 // 只加载 JSON 文件
-List&lt;Loaded<Justdb&gt;> results = SchemaLoaderFactory.loadAll(
+List<Loaded<Justdb>> results = SchemaLoaderFactory.loadAll(
     "./schemas",
     Arrays.asList("json"),
     manager
@@ -121,7 +121,7 @@ public static void registerHandler(SchemaLocation handler)
 获取所有已注册的处理器。
 
 ```java
-public static List&lt;SchemaLocation&gt; getHandlers()
+public static List<SchemaLocation> getHandlers()
 ```
 
 ## 支持的格式
@@ -158,13 +158,13 @@ JustDB 支持多种 Schema 定义格式，通过文件扩展名自动识别。
 ### XML (.xml)
 
 ```xml
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;Justdb namespace="com.example"&gt;
-  &lt;Table name="users" comment="用户表"&gt;
-    &lt;Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
-    &lt;Column name="username" type="VARCHAR(50)" nullable="false"/&gt;
-  &lt;/Table&gt;
-&lt;/Justdb&gt;
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb namespace="com.example">
+  <Table name="users" comment="用户表">
+    <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+    <Column name="username" type="VARCHAR(50)" nullable="false"/>
+  </Table>
+</Justdb>
 ```
 
 ### YAML (.yaml, .yml)
@@ -328,10 +328,10 @@ Justdb justdb = loader.load(registry, "schema.json", config);
 
 ### 加载结果
 
-**Loaded\&lt;Justdb&gt;** - 封装加载结果
+**Loaded\<Justdb>** - 封装加载结果
 
 ```java
-public class Loaded&lt;T&gt; {
+public class Loaded<T> {
     public boolean isSuccess();        // 是否成功
     public T getData();               // 获取数据
     public String getLocation();       // 获取位置
@@ -343,7 +343,7 @@ public class Loaded&lt;T&gt; {
 **使用示例**:
 
 ```java
-Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("schema.json", manager);
+Loaded<Justdb> result = SchemaLoaderFactory.load("schema.json", manager);
 
 if (result.isSuccess()) {
     Justdb justdb = result.getData();
@@ -369,7 +369,7 @@ public class BasicLoading {
         JustdbManager manager = JustdbManager.getInstance();
 
         // 从文件加载
-        Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("schema.json", manager);
+        Loaded<Justdb> result = SchemaLoaderFactory.load("schema.json", manager);
 
         if (result.isSuccess()) {
             Justdb justdb = result.getData();
@@ -396,25 +396,25 @@ public class MultiSourceLoading {
         JustdbManager manager = JustdbManager.getInstance();
 
         // 从文件加载
-        Loaded&lt;Justdb&gt; fileResult = SchemaLoaderFactory.load("./schema.json", manager);
+        Loaded<Justdb> fileResult = SchemaLoaderFactory.load("./schema.json", manager);
         printResult("File", fileResult);
 
         // 从类路径加载
-        Loaded&lt;Justdb&gt; classpathResult = SchemaLoaderFactory.load(
+        Loaded<Justdb> classpathResult = SchemaLoaderFactory.load(
             "classpath:default-schema.xml",
             manager
         );
         printResult("Classpath", classpathResult);
 
         // 从 HTTP 加载
-        Loaded&lt;Justdb&gt; httpResult = SchemaLoaderFactory.load(
+        Loaded<Justdb> httpResult = SchemaLoaderFactory.load(
             "https://example.com/schema.json",
             manager
         );
         printResult("HTTP", httpResult);
     }
 
-    private static void printResult(String source, Loaded&lt;Justdb&gt; result) {
+    private static void printResult(String source, Loaded<Justdb> result) {
         if (result.isSuccess()) {
             Justdb justdb = result.getData();
             System.out.println(source + " loaded: " + justdb.getTables().size() + " tables");
@@ -439,7 +439,7 @@ public class DirectoryScan {
         JustdbManager manager = JustdbManager.getInstance();
 
         // 扫描目录中的所有 Schema 文件
-        List&lt;Loaded<Justdb&gt;> results = SchemaLoaderFactory.loadAll(
+        List<Loaded<Justdb>> results = SchemaLoaderFactory.loadAll(
             "./schemas",
             null,  // 使用默认文件类型
             manager
@@ -447,7 +447,7 @@ public class DirectoryScan {
 
         System.out.println("Found " + results.size() + " schemas:");
 
-        for (Loaded&lt;Justdb&gt; result : results) {
+        for (Loaded<Justdb> result : results) {
             if (result.isSuccess()) {
                 Justdb justdb = result.getData();
                 System.out.println("  - " + justdb.getId() + " (" +
@@ -477,7 +477,7 @@ public class CustomLoaderExample {
             }
 
             @Override
-            public List&lt;Loaded<Justdb&gt;> load(String location, List&lt;String&gt; fileTypes,
+            public List<Loaded<Justdb>> load(String location, List<String> fileTypes,
                                             JustdbManager manager) {
                 // 自定义加载逻辑
                 Justdb justdb = loadFromCustomSource(location);
@@ -495,7 +495,7 @@ public class CustomLoaderExample {
 
         // 使用自定义加载器
         JustdbManager manager = JustdbManager.getInstance();
-        Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("custom:my-schema", manager);
+        Loaded<Justdb> result = SchemaLoaderFactory.load("custom:my-schema", manager);
 
         if (result.isSuccess()) {
             System.out.println("Loaded using custom loader");
@@ -574,11 +574,11 @@ config.setValidate(true);
 
 ```java
 // 加载基础 Schema
-Loaded&lt;Justdb&gt; baseResult = SchemaLoaderFactory.load("base-schema.json", manager);
+Loaded<Justdb> baseResult = SchemaLoaderFactory.load("base-schema.json", manager);
 Justdb baseSchema = baseResult.getData();
 
 // 加载扩展 Schema
-Loaded&lt;Justdb&gt; extResult = SchemaLoaderFactory.load("extension-schema.json", manager);
+Loaded<Justdb> extResult = SchemaLoaderFactory.load("extension-schema.json", manager);
 Justdb extSchema = extResult.getData();
 
 // 合并 Schema

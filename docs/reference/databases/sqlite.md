@@ -15,11 +15,11 @@ JustDB 提供完整的 SQLite 数据库支持，适用于嵌入式场景和移�
 ### JDBC 驱动
 
 ```xml
-&lt;dependency&gt;
-    &lt;groupId&gt;org.xerial&lt;/groupId&gt;
-    &lt;artifactId&gt;sqlite-jdbc&lt;/artifactId&gt;
-    &lt;version&gt;3.42.0.0&lt;/version&gt;
-&lt;/dependency&gt;
+<dependency>
+    <groupId>org.xerial</groupId>
+    <artifactId>sqlite-jdbc</artifactId>
+    <version>3.42.0.0</version>
+</dependency>
 ```
 
 ### 连接字符串
@@ -68,15 +68,15 @@ databases:
 
 **XML:**
 ```xml
-&lt;databases&gt;
-  &lt;database id="production"&gt;
-    &lt;url&gt;jdbc:sqlite:./data/mydb.db&lt;/url&gt;
-    &lt;driver&gt;org.sqlite.JDBC&lt;/driver&gt;
-    &lt;username&gt;&lt;/username&gt;
-    &lt;password&gt;&lt;/password&gt;
-    &lt;dialect&gt;sqlite&lt;/dialect&gt;
-  &lt;/database&gt;
-&lt;/databases&gt;
+<databases>
+  <database id="production">
+    <url>jdbc:sqlite:./data/mydb.db</url>
+    <driver>org.sqlite.JDBC</driver>
+    <username></username>
+    <password></password>
+    <dialect>sqlite</dialect>
+  </database>
+</databases>
 ```
 
 ## 数据类型映射

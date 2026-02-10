@@ -17,23 +17,23 @@ tag:
 
 ### 基础徽章
 
-&lt;Badge text="提示" type="tip" /&gt;
-&lt;Badge text="警告" type="warning" /&gt;
-&lt;Badge text="危险" type="danger" /&gt;
-&lt;Badge text="信息" type="info" /&gt;
-&lt;Badge text="注意" type="note" /&gt;
+<Badge text="提示" type="tip" />
+<Badge text="警告" type="warning" />
+<Badge text="危险" type="danger" />
+<Badge text="信息" type="info" />
+<Badge text="注意" type="note" />
 
 ### 自定义颜色
 
-&lt;Badge text="VuePress" color="blue" /&gt;
-&lt;Badge text="Hope 主题" color="green" /&gt;
-&lt;Badge text="v2.0" color="orange" /&gt;
+<Badge text="VuePress" color="blue" />
+<Badge text="Hope 主题" color="green" />
+<Badge text="v2.0" color="orange" />
 
 ### 垂直对齐
 
-- 文本 &lt;Badge text="重要" vertical="middle" /&gt;
-- 文本 &lt;Badge text="新功能" type="tip" vertical="top" /&gt;
-- 文本 &lt;Badge text="已弃用" type="warning" vertical="bottom" /&gt;
+- 文本 <Badge text="重要" vertical="middle" />
+- 文本 <Badge text="新功能" type="tip" vertical="top" />
+- 文本 <Badge text="已弃用" type="warning" vertical="bottom" />
 
 ## VPCard 卡片
 
@@ -59,7 +59,7 @@ tag:
 
 ### 卡片组合
 
-&lt;div class="vp-card-group"&gt;
+<div class="vp-card-group">
   <VPCard
     title="快速开始"
     desc="5分钟上手 VuePress"
@@ -78,7 +78,7 @@ tag:
     logo="❓"
     link="/faqs/"
   />
-&lt;/div&gt;
+</div>
 
 ## 容器
 

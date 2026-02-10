@@ -26,7 +26,7 @@ Implement a **dual-field alias system** using Jackson `@JsonAlias` annotations:
 
 - **Field names**: camelCase
 - **Collections**: plural form
-- **SQL terminology**: preferred (e.g., `referencedTable` not `foreignTable`)
+- **SQL terminology**: preferred (e.g., `beforeDrops` uses DROP not Remove, `beforeAlters` uses ALTER not Modify)
 
 ### Implementation
 

@@ -37,8 +37,11 @@ tag:
 
 #### 1. 声明式 vs 命令式
 
-::: code-tabs
-@tab JustDB (声明式)
+##### JustDB - 声明式方法
+
+JustDB 支持多种格式，选择最适合您工作流程的格式：
+
+**YAML 格式**（推荐用于大多数项目）
 ```yaml
 # 只需描述期望的状态
 Table:
@@ -47,18 +50,107 @@ Table:
       - name: id
         type: BIGINT
         primaryKey: true
+        autoIncrement: true
       - name: username
         type: VARCHAR(50)
+        nullable: false
       - name: email
         type: VARCHAR(100)
+```
+
+**XML 格式**（企业级应用）
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb id="mydb" namespace="com.example">
+    <Table name="users">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+        <Column name="username" type="VARCHAR(50)" nullable="false"/>
+        <Column name="email" type="VARCHAR(100)"/>
+    </Table>
+</Justdb>
+```
+
+**JSON 格式**（API 和配置）
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true,
+          "autoIncrement": true
+        },
+        {
+          "name": "username",
+          "type": "VARCHAR(50)",
+          "nullable": false
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(100)"
+        }
+      ]
+    }
+  ]
+}
+```
+
+**SQL 格式**（传统数据库兼容）
+```sql
+-- JustDB 也支持 SQL 格式的 Schema 定义
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '用户ID',
+    username VARCHAR(50) NOT NULL COMMENT '用户名',
+    email VARCHAR(100) COMMENT '邮箱地址'
+) COMMENT '用户表';
+```
+
+**TOML 格式**（现代应用）
+```toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+nullable = false
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+```
+
+**Properties 格式**（Java 应用）
+```properties
+table.users.name=users
+table.users.column.id.name=id
+table.users.column.id.type=BIGINT
+table.users.column.id.primaryKey=true
+table.users.column.id.autoIncrement=true
+table.users.column.username.name=username
+table.users.column.username.type=VARCHAR(50)
+table.users.column.username.nullable=false
+table.users.column.email.name=email
+table.users.column.email.type=VARCHAR(100)
 ```
 
 **优势**：
 - 简洁直观，易于理解
 - 自动处理变更计算
 - 避免人为错误
+- 多种格式支持，适应不同场景
 
-@tab Flyway (命令式)
+##### Flyway - 命令式方法
+
 ```sql
 -- V1__create_users_table.sql
 CREATE TABLE users (
@@ -77,7 +169,8 @@ ALTER TABLE users ADD COLUMN phone VARCHAR(20);
 - 容易出现语法错误
 - 修改已有变更困难
 
-@tab Liquibase (命令式)
+##### Liquibase - 命令式方法
+
 ```xml
 <changeSet id="1" author="john">
     <createTable tableName="users">
@@ -100,7 +193,6 @@ ALTER TABLE users ADD COLUMN phone VARCHAR(20);
 - XML 配置繁琐
 - 需要管理 changeSet ID
 - 修改已有 changeSet 会出错
-:::
 
 #### 2. 智能差异计算
 
@@ -151,8 +243,11 @@ flowchart TB
 
 #### 3. Schema 即文档
 
-::: code-tabs
-@tab JustDB
+##### JustDB - Schema 自带文档
+
+JustDB Schema 文件本身就是与数据库保持同步的活跃文档：
+
+**YAML 格式**（人类友好）
 ```yaml
 # Schema 文件本身就是最好的文档
 Table:
@@ -168,19 +263,82 @@ Table:
         type: VARCHAR(50)
         nullable: false
         comment: 用户名，不能为空
+      - name: email
+        type: VARCHAR(100)
+        comment: 邮箱地址
+```
+
+**XML 格式**（企业级）
+```xml
+<!-- 带内联文档的 Schema -->
+<Justdb id="mydb" namespace="com.example">
+    <Table id="users" name="用户表" comment="存储系统用户信息">
+        <Column name="id" type="BIGINT" primaryKey="true"
+                comment="用户ID，主键自增"/>
+        <Column name="username" type="VARCHAR(50)" nullable="false"
+                comment="用户名，不能为空"/>
+        <Column name="email" type="VARCHAR(100)"
+                comment="邮箱地址"/>
+    </Table>
+</Justdb>
+```
+
+**SQL 格式**（数据库原生）
+```sql
+-- JustDB SQL 格式包含 COMMENT 语法
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '用户ID，主键自增',
+    username VARCHAR(50) NOT NULL COMMENT '用户名，不能为空',
+    email VARCHAR(100) COMMENT '邮箱地址'
+) COMMENT '用户表';
+```
+
+**JSON 格式**（API 友好）
+```json
+{
+  "Table": [
+    {
+      "id": "users",
+      "name": "用户表",
+      "comment": "存储系统用户信息",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true,
+          "comment": "用户ID，主键自增"
+        },
+        {
+          "name": "username",
+          "type": "VARCHAR(50)",
+          "nullable": false,
+          "comment": "用户名，不能为空"
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(100)",
+          "comment": "邮箱地址"
+        }
+      ]
+    }
+  ]
+}
 ```
 
 **优势**：
 - Schema 和文档始终保持同步
 - 支持 Markdown 格式导出
 - 可以生成可视化的 ER 图
+- 丰富的注释和文档支持
 
-@tab 传统方式
+##### 传统方式 - 单独维护文档
+
 ```sql
--- SQL 脚本
+-- SQL 脚本缺乏自文档能力
 CREATE TABLE users (
     id BIGINT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100)
 );
 
 -- 需要单独维护文档（如 Confluence、Wiki）
@@ -191,7 +349,6 @@ CREATE TABLE users (
 - 需要单独维护数据库文档
 - 文档与数据库容易不同步
 - 查看文档需要切换到其他工具
-:::
 
 #### 4. 多格式支持
 

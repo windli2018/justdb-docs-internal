@@ -21,7 +21,7 @@ Column (Column) is the basic building block of a table, defining data type, cons
 | `id` | String | No | Unique identifier for reference |
 | `name` | String | Yes | Column name |
 | `referenceId` | String | No | Reference to another column's id |
-| `formerNames` | List\&lt;String\&gt; | No | List of former names for rename tracking |
+| `formerNames` | List\<String\> | No | List of former names for rename tracking |
 | `type` | String | Yes | Data type |
 | `nullable` | Boolean | No | Whether nullable (default true) |
 | `defaultValue` | String | No | Default value |
@@ -32,7 +32,7 @@ Column (Column) is the basic building block of a table, defining data type, cons
 | `primaryKeyName` | String | No | Primary key constraint name |
 | `comment` | String | No | Database comment |
 | `remark` | String | No | JustDB remark |
-| `dbms` | List\&lt;String\&gt; | No | Applicable database list |
+| `dbms` | List\<String\> | No | Applicable database list |
 
 ## Data Types
 

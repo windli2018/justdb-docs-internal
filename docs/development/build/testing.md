@@ -113,7 +113,7 @@ docker ps
 class MySQLMigrationTest {
 
     @Container
-    static MySQLContainer&lt;?&gt; mysql = new MySQLContainer&lt;&gt;("mysql:8.0")
+    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0")
             .withDatabaseName("testdb")
             .withUsername("test")
             .withPassword("test");
@@ -241,7 +241,7 @@ class SchemaDeploymentIntegrationTest {
         Justdb schema = loadTestSchema();
 
         // When
-        List&lt;String&gt; sql = migrationService.generateMigrationSql(schema);
+        List<String> sql = migrationService.generateMigrationSql(schema);
 
         // Then
         assertThat(sql).isNotEmpty();

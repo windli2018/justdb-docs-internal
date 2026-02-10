@@ -63,8 +63,9 @@ JustDB Schema 是一个用于描述数据库结构的声明式框架，支持多
 - 通过插件系统支持数据库特定扩展
 - 开放的继承层次结构
 
-#### 4. 向后兼容 (Backward Compatibility)
-- 通过 `@JsonAlias` 支持旧字段名
+#### 4. 广泛兼容 (Broad Compatibility)
+- 通过 `@JsonAlias` 支持多种命名格式：向后兼容、向 AI 兼容、向人类兼容
+- 格式是方便之门，不是限制
 - 提供平滑的迁移路径
 
 ## 类型层次结构
@@ -147,66 +148,66 @@ Justdb (namespace)
 ## 完整 Schema 示例
 
 ```xml
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;Justdb id="ecommerce-schema" namespace="com.example.ecommerce"&gt;
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb id="ecommerce-schema" namespace="com.example.ecommerce">
 
-    &lt;!-- 全局列定义 --&gt;
-    &lt;Column id="global_id" name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
-    &lt;Column id="global_created_at" name="created_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/&gt;
-    &lt;Column id="global_updated_at" name="updated_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/&gt;
+    <!-- 全局列定义 -->
+    <Column id="global_id" name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+    <Column id="global_created_at" name="created_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/>
+    <Column id="global_updated_at" name="updated_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/>
 
-    &lt;!-- 用户表 --&gt;
-    &lt;Table id="table_users" name="users" comment="用户表"&gt;
-        &lt;Column id="col_users_id" referenceId="global_id" name="id"/&gt;
-        &lt;Column id="col_users_username" name="username" type="VARCHAR(50)" nullable="false"/&gt;
-        &lt;Column id="col_users_email" name="email" type="VARCHAR(100)" nullable="false"/&gt;
-        &lt;Column id="col_users_created_at" referenceId="global_created_at" name="created_at"/&gt;
-        &lt;Column id="col_users_updated_at" referenceId="global_updated_at" name="updated_at"/&gt;
+    <!-- 用户表 -->
+    <Table id="table_users" name="users" comment="用户表">
+        <Column id="col_users_id" referenceId="global_id" name="id"/>
+        <Column id="col_users_username" name="username" type="VARCHAR(50)" nullable="false"/>
+        <Column id="col_users_email" name="email" type="VARCHAR(100)" nullable="false"/>
+        <Column id="col_users_created_at" referenceId="global_created_at" name="created_at"/>
+        <Column id="col_users_updated_at" referenceId="global_updated_at" name="updated_at"/>
 
-        &lt;!-- 唯一索引 --&gt;
-        &lt;Index id="idx_users_username" name="idx_users_username" unique="true" columns="username"/&gt;
-        &lt;Index id="idx_users_email" name="idx_users_email" unique="true" columns="email"/&gt;
+        <!-- 唯一索引 -->
+        <Index id="idx_users_username" name="idx_users_username" unique="true" columns="username"/>
+        <Index id="idx_users_email" name="idx_users_email" unique="true" columns="email"/>
 
-        &lt;!-- PostgreSQL 专用创建索引钩子 --&gt;
-        &lt;afterCreates&gt;
-            &lt;ConditionalSqlScript dbms="postgresql"&gt;
+        <!-- PostgreSQL 专用创建索引钩子 -->
+        <afterCreates>
+            <ConditionalSqlScript dbms="postgresql">
                 CREATE INDEX CONCURRENTLY idx_users_created_at ON users(created_at);
-            &lt;/ConditionalSqlScript&gt;
-        &lt;/afterCreates&gt;
-    &lt;/Table&gt;
+            </ConditionalSqlScript>
+        </afterCreates>
+    </Table>
 
-    &lt;!-- 订单表 --&gt;
-    &lt;Table id="table_orders" name="orders" comment="订单表"&gt;
-        &lt;Column id="col_orders_id" referenceId="global_id" name="id"/&gt;
-        &lt;Column id="col_orders_user_id" name="user_id" type="BIGINT" nullable="false"/&gt;
-        &lt;Column id="col_orders_status" name="status" type="VARCHAR(20)" defaultValue="'pending'"/&gt;
-        &lt;Column id="col_orders_total_amount" name="total_amount" type="DECIMAL(10,2)" defaultValue="0.00"/&gt;
-        &lt;Column id="col_orders_created_at" referenceId="global_created_at" name="created_at"/&gt;
-        &lt;Column id="col_orders_updated_at" referenceId="global_updated_at" name="updated_at"/&gt;
+    <!-- 订单表 -->
+    <Table id="table_orders" name="orders" comment="订单表">
+        <Column id="col_orders_id" referenceId="global_id" name="id"/>
+        <Column id="col_orders_user_id" name="user_id" type="BIGINT" nullable="false"/>
+        <Column id="col_orders_status" name="status" type="VARCHAR(20)" defaultValue="'pending'"/>
+        <Column id="col_orders_total_amount" name="total_amount" type="DECIMAL(10,2)" defaultValue="0.00"/>
+        <Column id="col_orders_created_at" referenceId="global_created_at" name="created_at"/>
+        <Column id="col_orders_updated_at" referenceId="global_updated_at" name="updated_at"/>
 
-        &lt;!-- 外键约束 --&gt;
+        <!-- 外键约束 -->
         <Constraint id="fk_orders_user_id" name="fk_orders_user_id" type="FOREIGN_KEY"
                     referencedTable="users" referencedColumn="id">
             user_id
-        &lt;/Constraint&gt;
+        </Constraint>
 
-        &lt;!-- 状态索引 --&gt;
-        &lt;Index id="idx_orders_status" name="idx_orders_status" columns="status"/&gt;
-    &lt;/Table&gt;
+        <!-- 状态索引 -->
+        <Index id="idx_orders_status" name="idx_orders_status" columns="status"/>
+    </Table>
 
-    &lt;!-- 数据导出定义 --&gt;
+    <!-- 数据导出定义 -->
     <Data id="data_users" name="users" table="users" dataExportStrategy="PARTIAL_DATA"
           maxExportRecords="1000" exportOrderField="created_at" exportOrderAsc="false">
-        &lt;dataFilterCondition&gt;status = 'active'&lt;/dataFilterCondition&gt;
-    &lt;/Data&gt;
+        <dataFilterCondition>status = 'active'</dataFilterCondition>
+    </Data>
 
-    &lt;!-- 表范围过滤器 --&gt;
-    &lt;tableScopes&gt;
-        &lt;includes&gt;users*, orders*&lt;/includes&gt;
-        &lt;excludes&gt;*_temp, *_bak&lt;/excludes&gt;
-    &lt;/tableScopes&gt;
+    <!-- 表范围过滤器 -->
+    <tableScopes>
+        <includes>users*, orders*</includes>
+        <excludes>*_temp, *_bak</excludes>
+    </tableScopes>
 
-&lt;/Justdb&gt;
+</Justdb>
 ```
 
 ## 相关文档

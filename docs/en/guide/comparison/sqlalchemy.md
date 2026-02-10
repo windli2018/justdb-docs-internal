@@ -18,9 +18,9 @@ tag:
 |:---|:---|:---|
 | **Language** | Java | Python |
 | **Design Philosophy** | Declarative file | Code definition |
-| **Schema Definition** | XML/YAML/JSON/SQL/TOML | Python classes |
+| **Schema Definition** | XML/YAML/JSON/SQL/TOML/Properties | Python classes |
 | **Type Safety** | Partial | ✅ |
-| **ORM Integration** | ❌ | ✅ |
+| **ORM Model Generation** | ✅ (SQLAlchemy/Django models) | Built-in |
 
 ## Code Comparison
 
@@ -102,6 +102,20 @@ nullable = false
 name = "email"
 type = "VARCHAR(100)"
 ```
+
+@tab Properties
+```properties
+table.users.name=users
+table.users.column.id.name=id
+table.users.column.id.type=BIGINT
+table.users.column.id.primaryKey=true
+table.users.column.id.autoIncrement=true
+table.users.column.username.name=username
+table.users.column.username.type=VARCHAR(50)
+table.users.column.username.nullable=false
+table.users.column.email.name=email
+table.users.column.email.type=VARCHAR(100)
+```
 :::
 
 **SQLAlchemy - Python ORM with code-defined schema:**
@@ -133,6 +147,8 @@ Base.metadata.create_all(engine)
 - ✅ Language agnostic: Works with any JVM language
 - ✅ File format: Easy version control and review
 - ✅ Multi-database: Supports 30+ databases
+- ✅ Multi-language ORM generation: Generates JPA, MyBatis, SQLAlchemy, Django, Prisma, GORM models
+- ✅ ORM Import: Import from SQLAlchemy, Django, GORM, and other ORMs (orm2schema command)
 - ✅ AI Integration: Natural language operations
 - ✅ JDBC Driver: Standard JDBC interface
 

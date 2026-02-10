@@ -18,9 +18,9 @@ tag:
 |:---|:---|:---|
 | **Language** | Java | TypeScript/Node.js |
 | **Design Philosophy** | Declarative file | Declarative file |
-| **Schema Definition** | XML/YAML/JSON/SQL/TOML | Custom DSL |
-| **Type Generation** | ❌ | ✅ |
-| **ORM Integration** | ❌ | ✅ |
+| **Schema Definition** | XML/YAML/JSON/SQL/TOML/Properties | Custom DSL |
+| **Type Generation** | ✅ (Java/Python/TS/Go) | ✅ (TypeScript) |
+| **ORM Integration** | ✅ (JPA/MyBatis/SQLAlchemy/Django/GORM) | ✅ (Prisma) |
 
 ## Code Comparison
 
@@ -100,6 +100,19 @@ type = "VARCHAR(50)"
 name = "email"
 type = "VARCHAR(100)"
 ```
+
+@tab Properties
+```properties
+table.users.name=users
+table.users.column.id.name=id
+table.users.column.id.type=BIGINT
+table.users.column.id.primaryKey=true
+table.users.column.id.autoIncrement=true
+table.users.column.username.name=username
+table.users.column.username.type=VARCHAR(50)
+table.users.column.email.name=email
+table.users.column.email.type=VARCHAR(100)
+```
 :::
 
 **Prisma - TypeScript/Node.js ORM with custom DSL:**
@@ -129,6 +142,9 @@ model Post {
 **JustDB Advantages**:
 - ✅ Multi-format: Supports 8 input formats
 - ✅ Multi-database: Supports 30+ databases
+- ✅ Multi-language: Supports Java, Python, TypeScript, Go
+- ✅ ORM Generation: Generates JPA, MyBatis, SQLAlchemy, Django, GORM models
+- ✅ ORM Import: Import from Prisma, SQLAlchemy, GORM, and other ORMs (orm2schema)
 - ✅ AI Integration: Natural language operations
 - ✅ JDBC Driver: Standard JDBC interface
 - ✅ Documentation: Schema as documentation

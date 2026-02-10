@@ -37,8 +37,11 @@ Traditional database migration tools (like Flyway, Liquibase) use an **imperativ
 
 #### 1. Declarative vs Imperative
 
-::: code-tabs
-@tab JustDB (Declarative)
+##### JustDB - Declarative Approach
+
+JustDB supports multiple formats - choose the one that fits your workflow:
+
+**YAML Format** (Recommended for most projects)
 ```yaml
 # Just describe the desired state
 Table:
@@ -47,18 +50,107 @@ Table:
       - name: id
         type: BIGINT
         primaryKey: true
+        autoIncrement: true
       - name: username
         type: VARCHAR(50)
+        nullable: false
       - name: email
         type: VARCHAR(100)
+```
+
+**XML Format** (Enterprise applications)
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb id="mydb" namespace="com.example">
+    <Table name="users">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+        <Column name="username" type="VARCHAR(50)" nullable="false"/>
+        <Column name="email" type="VARCHAR(100)"/>
+    </Table>
+</Justdb>
+```
+
+**JSON Format** (API and configuration)
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true,
+          "autoIncrement": true
+        },
+        {
+          "name": "username",
+          "type": "VARCHAR(50)",
+          "nullable": false
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(100)"
+        }
+      ]
+    }
+  ]
+}
+```
+
+**SQL Format** (Traditional database compatibility)
+```sql
+-- JustDB also supports SQL format Schema definition
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT 'User ID',
+    username VARCHAR(50) NOT NULL COMMENT 'Username',
+    email VARCHAR(100) COMMENT 'Email address'
+) COMMENT 'User table';
+```
+
+**TOML Format** (Modern applications)
+```toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+nullable = false
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+```
+
+**Properties Format** (Java applications)
+```properties
+table.users.name=users
+table.users.column.id.name=id
+table.users.column.id.type=BIGINT
+table.users.column.id.primaryKey=true
+table.users.column.id.autoIncrement=true
+table.users.column.username.name=username
+table.users.column.username.type=VARCHAR(50)
+table.users.column.username.nullable=false
+table.users.column.email.name=email
+table.users.column.email.type=VARCHAR(100)
 ```
 
 **Advantages**:
 - Concise and intuitive, easy to understand
 - Automatically handles change calculation
 - Avoids human errors
+- Multiple format support for different use cases
 
-@tab Flyway (Imperative)
+##### Flyway - Imperative Approach
+
 ```sql
 -- V1__create_users_table.sql
 CREATE TABLE users (
@@ -77,7 +169,8 @@ ALTER TABLE users ADD COLUMN phone VARCHAR(20);
 - Prone to syntax errors
 - Difficult to modify existing changes
 
-@tab Liquibase (Imperative)
+##### Liquibase - Imperative Approach
+
 ```xml
 <changeSet id="1" author="john">
     <createTable tableName="users">
@@ -100,7 +193,6 @@ ALTER TABLE users ADD COLUMN phone VARCHAR(20);
 - Verbose XML configuration
 - Need to manage changeSet IDs
 - Modifying existing changeSet causes errors
-:::
 
 #### 2. Intelligent Diff Calculation
 
@@ -151,8 +243,11 @@ flowchart TB
 
 #### 3. Schema as Documentation
 
-::: code-tabs
-@tab JustDB
+##### JustDB - Schema is Self-Documenting
+
+JustDB Schema files serve as living documentation that stays in sync with your database:
+
+**YAML Format** (Human-friendly)
 ```yaml
 # Schema file itself is the best documentation
 Table:
@@ -168,19 +263,82 @@ Table:
         type: VARCHAR(50)
         nullable: false
         comment: Username, cannot be null
+      - name: email
+        type: VARCHAR(100)
+        comment: Email address
+```
+
+**XML Format** (Enterprise-grade)
+```xml
+<!-- Schema with inline documentation -->
+<Justdb id="mydb" namespace="com.example">
+    <Table id="users" name="User Table" comment="Store system user information">
+        <Column name="id" type="BIGINT" primaryKey="true"
+                comment="User ID, primary key auto-increment"/>
+        <Column name="username" type="VARCHAR(50)" nullable="false"
+                comment="Username, cannot be null"/>
+        <Column name="email" type="VARCHAR(100)"
+                comment="Email address"/>
+    </Table>
+</Justdb>
+```
+
+**SQL Format** (Database-native)
+```sql
+-- JustDB SQL format includes COMMENT syntax
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT 'User ID, primary key auto-increment',
+    username VARCHAR(50) NOT NULL COMMENT 'Username, cannot be null',
+    email VARCHAR(100) COMMENT 'Email address'
+) COMMENT 'User table';
+```
+
+**JSON Format** (API-friendly)
+```json
+{
+  "Table": [
+    {
+      "id": "users",
+      "name": "User Table",
+      "comment": "Store system user information",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true,
+          "comment": "User ID, primary key auto-increment"
+        },
+        {
+          "name": "username",
+          "type": "VARCHAR(50)",
+          "nullable": false,
+          "comment": "Username, cannot be null"
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(100)",
+          "comment": "Email address"
+        }
+      ]
+    }
+  ]
+}
 ```
 
 **Advantages**:
 - Schema and documentation always stay in sync
 - Supports Markdown format export
 - Can generate visual ER diagrams
+- Rich comments and documentation support
 
-@tab Traditional Approach
+##### Traditional Approach - Separate Documentation
+
 ```sql
--- SQL scripts
+-- SQL scripts lack self-documentation
 CREATE TABLE users (
     id BIGINT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100)
 );
 
 -- Need to maintain separate documentation (e.g., Confluence, Wiki)
@@ -191,7 +349,6 @@ CREATE TABLE users (
 - Need to maintain separate database documentation
 - Documentation easily becomes out of sync with database
 - Need to switch to other tools to view documentation
-:::
 
 #### 4. Multi-Format Support
 

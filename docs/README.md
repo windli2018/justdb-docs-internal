@@ -138,6 +138,17 @@ Table:
 }
 ```
 
+@tab SQL
+```sql
+-- schema.sql
+-- JustDB 也支持 SQL 格式的 Schema 定义
+
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '用户ID，主键自增',
+    username VARCHAR(255) NOT NULL COMMENT '用户名，不能为空'
+) COMMENT '用户表';
+```
+
 @tab TOML
 ```toml
 id = "mydb"

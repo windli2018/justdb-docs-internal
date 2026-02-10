@@ -33,11 +33,11 @@ JustDB 通过 PostgreSQL 协议支持以下衍生数据库：
 ### JDBC 驱动
 
 ```xml
-&lt;dependency&gt;
-    &lt;groupId&gt;org.postgresql&lt;/groupId&gt;
-    &lt;artifactId&gt;postgresql&lt;/artifactId&gt;
-    &lt;version&gt;42.7.2&lt;/version&gt;
-&lt;/dependency&gt;
+<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>42.7.2</version>
+</dependency>
 ```
 
 ### 连接字符串
@@ -82,15 +82,15 @@ databases:
 
 **XML:**
 ```xml
-&lt;databases&gt;
-  &lt;database id="production"&gt;
-    &lt;url&gt;jdbc:postgresql://localhost:5432/mydb&lt;/url&gt;
-    &lt;driver&gt;org.postgresql.Driver&lt;/driver&gt;
-    &lt;username&gt;postgres&lt;/username&gt;
-    &lt;password&gt;secret&lt;/password&gt;
-    &lt;dialect&gt;postgresql&lt;/dialect&gt;
-  &lt;/database&gt;
-&lt;/databases&gt;
+<databases>
+  <database id="production">
+    <url>jdbc:postgresql://localhost:5432/mydb</url>
+    <driver>org.postgresql.Driver</driver>
+    <username>postgres</username>
+    <password>secret</password>
+    <dialect>postgresql</dialect>
+  </database>
+</databases>
 ```
 
 ## 数据类型映射

@@ -21,12 +21,12 @@ Table is the core object in a database, used for storing and managing data. Just
 | `id` | String | No | Unique identifier for reference |
 | `name` | String | Yes | Table name |
 | `referenceId` | String | No | Reference to another table's id |
-| `formerNames` | List&lt;String&gt; | No | List of former names for rename tracking |
+| `formerNames` | List<String> | No | List of former names for rename tracking |
 | `comment` | String | No | Database comment (written to database) |
 | `remark` | String | No | JustDB remark (not written to database) |
 | `author` | String | No | Author information |
 | `version` | String | No | Version information |
-| `dbms` | List&lt;String&gt; | No | Applicable database list |
+| `dbms` | List<String> | No | Applicable database list |
 
 ## Basic Examples
 

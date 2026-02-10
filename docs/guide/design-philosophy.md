@@ -69,7 +69,7 @@ Table:
 ::: tip 规范命名
 - Schema 字段使用 `camelCase`
 - 集合字段使用复数形式 `formerNames`
-- SQL 术语优先 `referencedTable` 而非 `foreignTable`
+- SQL 术语优先：`beforeDrops` 使用 DROP 而非 Remove，`beforeAlters` 使用 ALTER 而非 Modify
 - 生命周期钩子统一前缀 `beforeCreates`, `afterCreates`
 :::
 
@@ -185,16 +185,16 @@ public class MyDatabaseAdapter extends DatabaseAdapter {
 **模板系统**
 
 ```xml
-&lt;!-- 自定义 SQL 模板 --&gt;
-&lt;template id="create-table" type="SQL" category="db"&gt;
-  &lt;content&gt;
+<!-- 自定义 SQL 模板 -->
+<template id="create-table" type="SQL" category="db">
+  <content>
     CREATE TABLE {{name}} (
       {{#each columns}}
       {{name}} {{type}}{{#unless @last}},{{/unless}}
       {{/each}}
     );
-  &lt;/content&gt;
-&lt;/template&gt;
+  </content>
+</template>
 ```
 
 **扩展点系统**
@@ -211,11 +211,15 @@ ExtensionPoint point = ExtensionPoint.builder()
     .build();
 ```
 
-### 6. 向后兼容 (Backward Compatibility)
+### 6. 广泛兼容 (Broad Compatibility)
 
-保护用户投资，确保 API 稳定：
+**格式不是限制用户的工具，格式是用户方便之门**
 
-**别名系统**
+别名系统让不同背景的用户都能方便使用：
+
+- **向后兼容**：保护用户投资，旧版本 Schema 继续工作
+- **向 AI 兼容**：任何 AI、盲写，都能兼容
+- **向人类兼容**：不同编程背景的开发者都能用熟悉的格式
 
 ```java
 @JsonAlias({"refId", "ref-id", "ref_id"})
@@ -313,14 +317,14 @@ SchemaDiff diff = SchemaDiff.calculate(current, target);
 **对扩展开放，对修改关闭**
 
 ```xml
-&lt;!-- 无需修改核心代码，通过插件扩展 --&gt;
-&lt;plugin id="mysql"&gt;
-  &lt;templates&gt;
-    &lt;template id="create-table" ...&gt;
-      &lt;!-- MySQL 特定的 CREATE TABLE 模板 --&gt;
-    &lt;/template&gt;
-  &lt;/templates&gt;
-&lt;/plugin&gt;
+<!-- 无需修改核心代码，通过插件扩展 -->
+<plugin id="mysql">
+  <templates>
+    <template id="create-table" ...>
+      <!-- MySQL 特定的 CREATE TABLE 模板 -->
+    </template>
+  </templates>
+</plugin>
 ```
 
 ## 用户体验设计
@@ -430,37 +434,37 @@ $ justdb migrate --dry-run
 JustDB 核心模块保持最小依赖：
 
 ```xml
-&lt;!-- 核心模块依赖最小 --&gt;
-&lt;dependencies&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;
-        &lt;artifactId&gt;jackson-databind&lt;/artifactId&gt;
-    &lt;/dependency&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;com.github.jknack&lt;/groupId&gt;
-        &lt;artifactId&gt;handlebars&lt;/artifactId&gt;
-    &lt;/dependency&gt;
-    &lt;!-- 少量核心依赖 --&gt;
-&lt;/dependencies&gt;
+<!-- 核心模块依赖最小 -->
+<dependencies>
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.github.jknack</groupId>
+        <artifactId>handlebars</artifactId>
+    </dependency>
+    <!-- 少量核心依赖 -->
+</dependencies>
 ```
 
 ### 可选模块化
 
 ```xml
-&lt;!-- 核心功能 --&gt;
-&lt;dependency&gt;
-    &lt;artifactId&gt;justdb-core&lt;/artifactId&gt;
-&lt;/dependency&gt;
+<!-- 核心功能 -->
+<dependency>
+    <artifactId>justdb-core</artifactId>
+</dependency>
 
-&lt;!-- 可选：AI 集成 --&gt;
-&lt;dependency&gt;
-    &lt;artifactId&gt;justdb-ai&lt;/artifactId&gt;
-&lt;/dependency&gt;
+<!-- 可选：AI 集成 -->
+<dependency>
+    <artifactId>justdb-ai</artifactId>
+</dependency>
 
-&lt;!-- 可选：Excel 支持 --&gt;
-&lt;dependency&gt;
-    &lt;artifactId&gt;justdb-excel&lt;/artifactId&gt;
-&lt;/dependency&gt;
+<!-- 可选：Excel 支持 -->
+<dependency>
+    <artifactId>justdb-excel</artifactId>
+</dependency>
 ```
 
 ## 测试哲学

@@ -149,7 +149,7 @@ public class Table extends QueryAble {
     @XmlAttribute(name = "former-names")
     @JsonProperty("formerNames")
     @JsonAlias({"oldNames", "oldName", "formerName", "previousNames"})
-    private List&lt;String&gt; formerNames = new ArrayList&lt;&gt;();
+    private List<String> formerNames = new ArrayList<>();
 }
 ```
 
@@ -160,7 +160,7 @@ public class Table extends QueryAble {
 1. **使用 camelCase**: `tableName`, `columnType`
 2. **集合使用复数**: `columns`, `tables`
 3. **布尔值使用 is/has 前缀**: `nullable`, `autoIncrement`
-4. **SQL 标准术语**: `referencedTable` (而非 `foreignTable`)
+4. **SQL 标准术语**: `beforeDrops` 使用 DROP 而非 Remove，`beforeAlters` 使用 ALTER 而非 Modify
 
 ### 常用别名
 
@@ -170,7 +170,8 @@ public class Table extends QueryAble {
 | `formerNames` | `oldNames`, `oldName`, `formerName`, `previousNames` |
 | `beforeCreates` | `beforeCreate`, `preCreate` |
 | `afterCreates` | `afterCreate`, `postCreate` |
-| `referencedTable` | `foreignTable`, `refTable` |
+| `beforeDrops` | `beforeRemoves`, `beforeDrop`, `preDrop` | 使用 SQL DROP 术语 |
+| `beforeAlters` | `beforeModifies`, `beforeAlter`, `preAlter` | 使用 SQL ALTER 术语 |
 
 ## 实施
 

@@ -17,15 +17,17 @@ tag:
 | 维度 | JustDB | Liquibase |
 |:---|:---|:---|
 | **设计理念** | 声明式 | 命令式（抽象 SQL） |
-| **Schema 定义** | XML/YAML/JSON/TOML | XML/JSON/YAML/SQL |
+| **Schema 定义** | XML/YAML/JSON/SQL/TOML | XML/JSON/YAML/SQL |
 | **变更方式** | 修改 Schema 文件 | 新增 changeSet |
 | **版本管理** | 自动 | 手动管理 ID/Author |
 | **数据库独立性** | 自动 | 通过抽象 SQL |
 
 ## 代码对比
 
+**JustDB - 声明期望状态，选择你喜欢的格式：**
+
 ::: code-tabs
-@tab JustDB (XML)
+@tab XML
 ```xml
 <!-- schema.xml -->
 <Justdb>
@@ -39,7 +41,7 @@ tag:
 </Justdb>
 ```
 
-@tab JustDB (YAML)
+@tab YAML
 ```yaml
 # schema.yaml
 Table:
@@ -56,7 +58,7 @@ Table:
         unique: true
 ```
 
-@tab JustDB (JSON)
+@tab JSON
 ```json
 {
   "Table": [
@@ -74,7 +76,17 @@ Table:
 }
 ```
 
-@tab JustDB (TOML)
+@tab SQL
+```sql
+-- schema.sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY,
+    username VARCHAR(50),
+    UNIQUE KEY idx_username (username)
+);
+```
+
+@tab TOML
 ```toml
 [[Table]]
 name = "users"
@@ -96,7 +108,23 @@ unique = true
 name = "username"
 ```
 
-@tab Liquibase (XML)
+@tab Properties
+```properties
+table.users.name=users
+table.users.column.id.name=id
+table.users.column.id.type=BIGINT
+table.users.column.id.primaryKey=true
+table.users.column.username.name=username
+table.users.column.username.type=VARCHAR(50)
+table.users.index.idx_username.unique=true
+table.users.index.idx_username.columns=username
+```
+:::
+
+**Liquibase - 命令式 changeSet：**
+
+::: code-tabs
+@tab XML
 ```xml
 <databaseChangeLog>
   <changeSet id="1" author="john">
@@ -117,7 +145,7 @@ name = "username"
 </databaseChangeLog>
 ```
 
-@tab Liquibase (YAML)
+@tab YAML
 ```yaml
 databaseChangeLog:
   - changeSet:

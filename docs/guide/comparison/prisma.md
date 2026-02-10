@@ -18,14 +18,16 @@ tag:
 |:---|:---|:---|
 | **语言** | Java | TypeScript/Node.js |
 | **设计理念** | 声明式文件 | 声明式文件 |
-| **Schema 定义** | XML/YAML/JSON/TOML | 专属 DSL |
-| **类型生成** | ❌ | ✅ |
-| **ORM 集成** | ❌ | ✅ |
+| **Schema 定义** | XML/YAML/JSON/SQL/TOML/Properties | 专属 DSL |
+| **类型生成** | ✅ (Java/Python/TS/Go) | ✅ (TypeScript) |
+| **ORM 集成** | ✅ (JPA/MyBatis/SQLAlchemy/Django/GORM) | ✅ (Prisma) |
 
 ## 代码对比
 
+**JustDB - 多格式声明式 Schema：**
+
 ::: code-tabs
-@tab JustDB (XML)
+@tab XML
 ```xml
 <!-- schema.xml -->
 <Justdb>
@@ -37,7 +39,7 @@ tag:
 </Justdb>
 ```
 
-@tab JustDB (YAML)
+@tab YAML
 ```yaml
 # schema.yaml
 Table:
@@ -53,7 +55,7 @@ Table:
         type: VARCHAR(100)
 ```
 
-@tab JustDB (JSON)
+@tab JSON
 ```json
 {
   "Table": [
@@ -69,7 +71,17 @@ Table:
 }
 ```
 
-@tab JustDB (TOML)
+@tab SQL
+```sql
+-- schema.sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50),
+    email VARCHAR(100)
+);
+```
+
+@tab TOML
 ```toml
 [[Table]]
 name = "users"
@@ -89,6 +101,23 @@ name = "email"
 type = "VARCHAR(100)"
 ```
 
+@tab Properties
+```properties
+table.users.name=users
+table.users.column.id.name=id
+table.users.column.id.type=BIGINT
+table.users.column.id.primaryKey=true
+table.users.column.id.autoIncrement=true
+table.users.column.username.name=username
+table.users.column.username.type=VARCHAR(50)
+table.users.column.email.name=email
+table.users.column.email.type=VARCHAR(100)
+```
+:::
+
+**Prisma - TypeScript/Node.js ORM 与专属 DSL：**
+
+::: code-tabs
 @tab Prisma
 ```prisma
 // schema.prisma
@@ -113,6 +142,9 @@ model Post {
 **JustDB 优势**：
 - ✅ 多格式：支持 8 种输入格式
 - ✅ 多数据库：支持 30+ 数据库
+- ✅ 多语言：支持 Java、Python、TypeScript、Go
+- ✅ ORM 生成：可生成 JPA、MyBatis、SQLAlchemy、Django、GORM 模型
+- ✅ ORM 导入：支持从 Prisma、SQLAlchemy、GORM 等 ORM 导入（orm2schema）
 - ✅ AI 集成：自然语言操作
 - ✅ JDBC 驱动：标准 JDBC 接口
 - ✅ 文档化：Schema 即文档

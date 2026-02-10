@@ -279,7 +279,7 @@ public boolean isVersionApplied(String version)
 **获取已应用的版本列表**:
 
 ```java
-public List&lt;String&gt; getAppliedVersions()
+public List<String> getAppliedVersions()
 ```
 
 **获取最新应用的版本**:
@@ -299,14 +299,14 @@ public boolean isUpToDate(String version)
 **生成 SQL 脚本**（不执行）:
 
 ```java
-public List&lt;String&gt; generateScripts(Justdb schema)
+public List<String> generateScripts(Justdb schema)
 ```
 
 **示例**:
 
 ```java
 SchemaDeployer deployer = new SchemaDeployer("mysql");
-List&lt;String&gt; scripts = deployer.generateScripts(justdb);
+List<String> scripts = deployer.generateScripts(justdb);
 
 for (String script : scripts) {
     System.out.println(script);
@@ -382,7 +382,7 @@ try {
     // 检查历史
     SchemaHistoryManager history = deployer.getHistoryManager();
     if (history != null) {
-        List&lt;String&gt; appliedVersions = history.getAppliedVersions();
+        List<String> appliedVersions = history.getAppliedVersions();
         System.out.println("Applied versions: " + appliedVersions);
     }
 }
@@ -539,7 +539,7 @@ public class SqlGeneration {
         // SQL 生成模式（不需要数据库连接）
         SchemaDeployer deployer = new SchemaDeployer("postgresql");
 
-        List&lt;String&gt; scripts = deployer.generateScripts(justdb);
+        List<String> scripts = deployer.generateScripts(justdb);
 
         System.out.println("-- PostgreSQL SQL Scripts");
         System.out.println();
@@ -617,7 +617,7 @@ public class MultiDatabaseSupport {
             System.out.println("=== " + dbType.toUpperCase() + " ===");
 
             SchemaDeployer deployer = new SchemaDeployer(dbType);
-            List&lt;String&gt; scripts = deployer.generateScripts(justdb);
+            List<String> scripts = deployer.generateScripts(justdb);
 
             for (String script : scripts) {
                 System.out.println(script);

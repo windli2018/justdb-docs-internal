@@ -152,11 +152,11 @@ JustDB 需要一个强大的模板引擎来生成 SQL 和代码。模板引擎�
 子插件可以继承父插件的模板：
 
 ```xml
-&lt;plugin id="mysql" dialect="mysql" ref-id="sql-standard-root"&gt;
-    &lt;templates&gt;
-        &lt;!-- 可以引用 sql-standard-root 的模板 --&gt;
-    &lt;/templates&gt;
-&lt;/plugin&gt;
+<plugin id="mysql" dialect="mysql" ref-id="sql-standard-root">
+    <templates>
+        <!-- 可以引用 sql-standard-root 的模板 -->
+    </templates>
+</plugin>
 ```
 
 ## 后果
@@ -186,15 +186,15 @@ JustDB 需要一个强大的模板引擎来生成 SQL 和代码。模板引擎�
 ### 基本模板
 
 ```xml
-&lt;template id="create-table-mysql-lineage" type="SQL" category="db"&gt;
-    &lt;content&gt;
+<template id="create-table-mysql-lineage" type="SQL" category="db">
+    <content>
 CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{name}} (
 {{#each columns}}
   {{name}} {{type}}{{#unless @last}},{{/unless}}
 {{/each}}
 );
-    &lt;/content&gt;
-&lt;/template&gt;
+    </content>
+</template>
 ```
 
 ### 辅助函数

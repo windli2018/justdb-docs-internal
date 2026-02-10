@@ -46,8 +46,8 @@ justdb interactive --batch commands.txt --echo
 ```
 
 批处理选项：
-- `--batch, -b &lt;file&gt;` - 从文件读取命令并执行
-- `--current-dir, -C &lt;dir&gt;` - 设置工作目录
+- `--batch, -b <file>` - 从文件读取命令并执行
+- `--current-dir, -C <dir>` - 设置工作目录
 - `--exit-on-error, -e` - 首次错误时退出（默认: true）
 - `--echo, -x` - 执行前回显命令（默认: false）
 
@@ -167,7 +167,7 @@ status
 
 # 显示帮助
 help
-help &lt;command&gt;
+help <command>
 
 # 清屏
 clear
@@ -185,23 +185,23 @@ q
 ### 命令补全
 ```bash
 # TAB 补全命令
-lo&lt;TAB&gt;          # load
-sh&lt;TAB&gt;          # show
-ai&lt;TAB&gt;          # ai
+lo<TAB>          # load
+sh<TAB>          # show
+ai<TAB>          # ai
 ```
 
 ### 文件名补全
 ```bash
 # TAB 补全文件路径
-load sch&lt;TAB&gt;    # load schema.yaml
-cd /path/to/p&lt;TAB&gt;  # cd /path/to/project/
+load sch<TAB>    # load schema.yaml
+cd /path/to/p<TAB>  # cd /path/to/project/
 ```
 
 ### 表名补全
 ```bash
 # TAB 补全表名
-show columns FROM use&lt;TAB&gt;  # users
-show ta&lt;TAB&gt;                # tables
+show columns FROM use<TAB>  # users
+show ta<TAB>                # tables
 ```
 
 ## 历史记录

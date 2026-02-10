@@ -13,14 +13,19 @@ tags:
 
 ## 概述
 
-JustDB Schema 的别名系统通过 `@JsonAlias` 注解支持多种命名格式，保持向后兼容性的同时提供统一的规范命名。
+JustDB Schema 的别名系统通过 `@JsonAlias` 注解支持多种命名格式。
+
+> **格式不是限制用户的工具，格式是用户方便之门**
+
+别名系统让不同背景的用户都能方便使用：向后兼容旧版本、向 AI 开放多种格式、向人类提供熟悉的命名习惯。
 
 ## 设计目标
 
-1. **向后兼容**: 支持旧版本的字段名
-2. **灵活输入**: 接受多种命名风格
-3. **规范输出**: 统一使用规范命名（camelCase 复数形式）
-4. **SQL 标准**: 优先使用 SQL 标准术语
+1. **向后兼容**: 支持旧版本的字段名，保护用户投资
+2. **向 AI 兼容**: 任何 AI、盲写，都能兼容
+3. **向人类兼容**: 不同编程背景的开发者都能用熟悉的格式
+4. **规范输出**: 统一使用规范命名（camelCase 复数形式）
+5. **SQL 标准**: 优先使用 SQL 标准术语
 
 ## 核心命名约定
 
@@ -63,14 +68,14 @@ protected String referenceId;
 **使用示例**：
 
 ```xml
-&lt;!-- 定义全局列模板 --&gt;
-&lt;Column id="global_id" name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
+<!-- 定义全局列模板 -->
+<Column id="global_id" name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
 
-&lt;!-- 在表中引用 --&gt;
-&lt;Table name="users"&gt;
-    &lt;!-- 可以使用任意别名格式 --&gt;
-    &lt;Column id="col_users_id" refId="global_id" name="id"/&gt;
-&lt;/Table&gt;
+<!-- 在表中引用 -->
+<Table name="users">
+    <!-- 可以使用任意别名格式 -->
+    <Column id="col_users_id" refId="global_id" name="id"/>
+</Table>
 ```
 
 ### formerNames 别名
@@ -81,7 +86,7 @@ protected String referenceId;
 @JsonProperty("formerNames")
 @JsonAlias({"oldNames", "oldName", "formerName", "former_names", "old_names",
               "previousNames", "previousName", "previous_names", "old-names"})
-protected List&lt;String&gt; formerNames;
+protected List<String> formerNames;
 ```
 
 **支持的输入格式**：
@@ -96,12 +101,12 @@ protected List&lt;String&gt; formerNames;
 **使用示例**：
 
 ```xml
-&lt;!-- 记录表名变更历史 --&gt;
-&lt;Table name="users"&gt;
-    &lt;formerNames&gt;
-        &lt;oldName&gt;user&lt;/oldName&gt;
-    &lt;/formerNames&gt;
-&lt;/Table&gt;
+<!-- 记录表名变更历史 -->
+<Table name="users">
+    <formerNames>
+        <oldName>user</oldName>
+    </formerNames>
+</Table>
 ```
 
 生成的迁移 SQL：
@@ -150,7 +155,7 @@ tableScopes:
               "beforeRemoves", "beforeRemove", "before-drop", "before-drops",
               "Before-Drop", "Before-Drops", "before_drops", "Before-Remove",
               "onBeforeDrop", "onDrop"})
-protected List&lt;ConditionalSqlScript&gt; beforeDrops;
+protected List<ConditionalSqlScript> beforeDrops;
 ```
 
 **生命周期钩子命名**：
