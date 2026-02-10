@@ -238,7 +238,7 @@ plugins:
 
 **加载**：
 ```java
-List<String> pluginPaths = config.getPluginPaths();
+List&lt;String&gt; pluginPaths = config.getPluginPaths();
 for (String path : pluginPaths) {
     JustdbPlugin plugin = loadPluginFromPath(path);
     pluginManager.registerPlugin(plugin);
@@ -569,7 +569,7 @@ public class PluginManager {
     public void registerPlugin(JustdbPlugin plugin)
 
     // 获取所有插件
-    public List<JustdbPlugin> getPlugins()
+    public List<JustdbPlugin&gt;> getPlugins()
 
     // 获取数据库适配器
     public DatabaseAdapter[] getDatabaseAdapters()
@@ -607,7 +607,7 @@ for (DatabaseAdapter adapter : adapters) {
 GenericTemplate template = manager.getTemplate("create-table", "mysql");
 
 // 按类型获取组件
-List<DatabaseAdapter> mysqlAdapters = manager.getComponents(
+List<DatabaseAdapter&gt;> mysqlAdapters = manager.getComponents(
     DatabaseAdapter.class,
     adapter -> "mysql".equals(adapter.getDbType())
 );

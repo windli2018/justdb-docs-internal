@@ -239,7 +239,7 @@ CREATE INDEX {{> index-name}} ON {{> table-name}}({{> columns}});
 
 ```java
 public class LineageDetector {
-    private static final Map<String, String> DIALECT_TO_LINEAGE = Map.of(
+    private static final Map&lt;String, String&gt; DIALECT_TO_LINEAGE = Map.of(
         "mysql", "mysql-lineage",
         "mariadb", "mysql-lineage",
         "tidb", "mysql-lineage",

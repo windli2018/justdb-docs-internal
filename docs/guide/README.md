@@ -20,13 +20,13 @@ order: 2
 
 ### 入门指南
 
-- **[安装](./installation.md)** - 安装和配置JustDB *(即将推出)*
-- **[第一个模式](./first-schema.md)** - 创建您的第一个数据库模式 *(即将推出)*
-- **[基本操作](./basic-operations.md)** - 常见的数据库操作 *(即将推出)*
+- **[安装](../getting-started/installation.md)** - 安装和配置JustDB
+- **[快速开始](../getting-started/quick-start.md)** - 5分钟快速上手
+- **[第一个 Schema](../getting-started/first-schema.md)** - 创建您的第一个数据库模式
+- **[迁移基础](../getting-started/migration-basics.md)** - 常见的数据库操作
+- **[数据库开发日常](./ai-assisted-development.md)** - 配合 AI 使用 JustDB 进行日常数据库开发
 
 ### 高级主题
-
-- **[AI 辅助开发](./ai-assisted-development.md)** - 配合 AI 使用 JustDB 开发数据库
 - **[模式演进](./schema-evolution.md)** - 管理模式随时间的变化 *(即将推出)*
 - **[迁移策略](./migration-strategies.md)** - 数据库迁移的最佳实践 *(即将推出)*
 - **[团队协作](./team-collaboration.md)** - 在团队环境中使用JustDB *(即将推出)*

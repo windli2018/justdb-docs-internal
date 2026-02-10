@@ -267,7 +267,7 @@ DDL 生成时自动过滤虚拟列：
 
 ```java
 // In DBGenerator or Table processing
-List<Column> physicalColumns = table.getColumns().stream()
+List<Column&gt;> physicalColumns = table.getColumns().stream()
     .filter(c -> c.getVirtual() == null || !c.getVirtual())
     .collect(Collectors.toList());
 ```

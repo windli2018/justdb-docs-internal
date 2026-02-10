@@ -39,7 +39,7 @@ public interface ISchemaLoader {
 ```java
 public interface SchemaLocation {
     boolean supports(String location);
-    List<Loaded<Justdb>> load(String location, List<String> fileTypes, JustdbManager manager);
+    List<Loaded&gt;<Justdb>> load(String location, List&lt;String&gt; fileTypes, JustdbManager manager);
 }
 ```
 
@@ -56,14 +56,14 @@ Factory class for loading Schema from various locations.
 Loads a single Schema from a specified location.
 
 ```java
-public static Loaded<Justdb> load(String location, JustdbManager manager)
+public static Loaded&lt;Justdb&gt; load(String location, JustdbManager manager)
 ```
 
 **Parameters**:
 - `location` - Schema location (file path, URL, etc.)
 - `manager` - JustdbManager instance
 
-**Returns**: `Loaded<Justdb>` - Encapsulates loading result
+**Returns**: `Loaded&lt;Justdb&gt;` - Encapsulates loading result
 
 **Example**:
 
@@ -71,7 +71,7 @@ public static Loaded<Justdb> load(String location, JustdbManager manager)
 JustdbManager manager = JustdbManager.getInstance();
 
 // Load from file
-Loaded<Justdb> result = SchemaLoaderFactory.load("schema.json", manager);
+Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("schema.json", manager);
 if (result.isSuccess()) {
     Justdb justdb = result.getData();
 }
@@ -82,7 +82,7 @@ if (result.isSuccess()) {
 Loads multiple Schemas from a specified location (supports directory scanning).
 
 ```java
-public static List<Loaded<Justdb>> loadAll(String location, List<String> fileTypes, JustdbManager manager)
+public static List<Loaded&gt;<Justdb>> loadAll(String location, List&lt;String&gt; fileTypes, JustdbManager manager)
 ```
 
 **Parameters**:
@@ -90,7 +90,7 @@ public static List<Loaded<Justdb>> loadAll(String location, List<String> fileTyp
 - `fileTypes` - File type filter (null means default types)
 - `manager` - JustdbManager instance
 
-**Returns**: `List<Loaded<Justdb>>` - List of loading results
+**Returns**: `List<Loaded&gt;<Justdb>>` - List of loading results
 
 **Default File Types**: xml, json, yaml, yml, toml, sql
 
@@ -98,10 +98,10 @@ public static List<Loaded<Justdb>> loadAll(String location, List<String> fileTyp
 
 ```java
 // Load all Schemas in directory
-List<Loaded<Justdb>> results = SchemaLoaderFactory.loadAll("./schemas", null, manager);
+List<Loaded&gt;<Justdb>> results = SchemaLoaderFactory.loadAll("./schemas", null, manager);
 
 // Load only JSON files
-List<Loaded<Justdb>> results = SchemaLoaderFactory.loadAll(
+List<Loaded&gt;<Justdb>> results = SchemaLoaderFactory.loadAll(
     "./schemas",
     Arrays.asList("json"),
     manager
@@ -121,7 +121,7 @@ public static void registerHandler(SchemaLocation handler)
 Gets all registered handlers.
 
 ```java
-public static List<SchemaLocation> getHandlers()
+public static List<SchemaLocation&gt;> getHandlers()
 ```
 
 ## Supported Formats
@@ -328,10 +328,10 @@ Justdb justdb = loader.load(registry, "schema.json", config);
 
 ### Loading Result
 
-**Loaded<Justdb>** - Encapsulates loading result
+**Loaded&lt;Justdb&gt;** - Encapsulates loading result
 
 ```java
-public class Loaded<T> {
+public class Loaded&lt;T&gt; {
     public boolean isSuccess();        // Whether successful
     public T getData();               // Get data
     public String getLocation();       // Get location
@@ -343,7 +343,7 @@ public class Loaded<T> {
 **Usage Example**:
 
 ```java
-Loaded<Justdb> result = SchemaLoaderFactory.load("schema.json", manager);
+Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("schema.json", manager);
 
 if (result.isSuccess()) {
     Justdb justdb = result.getData();
@@ -369,7 +369,7 @@ public class BasicLoading {
         JustdbManager manager = JustdbManager.getInstance();
 
         // Load from file
-        Loaded<Justdb> result = SchemaLoaderFactory.load("schema.json", manager);
+        Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("schema.json", manager);
 
         if (result.isSuccess()) {
             Justdb justdb = result.getData();
@@ -396,25 +396,25 @@ public class MultiSourceLoading {
         JustdbManager manager = JustdbManager.getInstance();
 
         // Load from file
-        Loaded<Justdb> fileResult = SchemaLoaderFactory.load("./schema.json", manager);
+        Loaded&lt;Justdb&gt; fileResult = SchemaLoaderFactory.load("./schema.json", manager);
         printResult("File", fileResult);
 
         // Load from classpath
-        Loaded<Justdb> classpathResult = SchemaLoaderFactory.load(
+        Loaded&lt;Justdb&gt; classpathResult = SchemaLoaderFactory.load(
             "classpath:default-schema.xml",
             manager
         );
         printResult("Classpath", classpathResult);
 
         // Load from HTTP
-        Loaded<Justdb> httpResult = SchemaLoaderFactory.load(
+        Loaded&lt;Justdb&gt; httpResult = SchemaLoaderFactory.load(
             "https://example.com/schema.json",
             manager
         );
         printResult("HTTP", httpResult);
     }
 
-    private static void printResult(String source, Loaded<Justdb> result) {
+    private static void printResult(String source, Loaded&lt;Justdb&gt; result) {
         if (result.isSuccess()) {
             Justdb justdb = result.getData();
             System.out.println(source + " loaded: " + justdb.getTables().size() + " tables");
@@ -439,7 +439,7 @@ public class DirectoryScan {
         JustdbManager manager = JustdbManager.getInstance();
 
         // Scan all Schema files in directory
-        List<Loaded<Justdb>> results = SchemaLoaderFactory.loadAll(
+        List<Loaded&gt;<Justdb>> results = SchemaLoaderFactory.loadAll(
             "./schemas",
             null,  // Use default file types
             manager
@@ -447,7 +447,7 @@ public class DirectoryScan {
 
         System.out.println("Found " + results.size() + " schemas:");
 
-        for (Loaded<Justdb> result : results) {
+        for (Loaded&lt;Justdb&gt; result : results) {
             if (result.isSuccess()) {
                 Justdb justdb = result.getData();
                 System.out.println("  - " + justdb.getId() + " (" +
@@ -477,7 +477,7 @@ public class CustomLoaderExample {
             }
 
             @Override
-            public List<Loaded<Justdb>> load(String location, List<String> fileTypes,
+            public List<Loaded&gt;<Justdb>> load(String location, List&lt;String&gt; fileTypes,
                                             JustdbManager manager) {
                 // Custom loading logic
                 Justdb justdb = loadFromCustomSource(location);
@@ -495,7 +495,7 @@ public class CustomLoaderExample {
 
         // Use custom loader
         JustdbManager manager = JustdbManager.getInstance();
-        Loaded<Justdb> result = SchemaLoaderFactory.load("custom:my-schema", manager);
+        Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("custom:my-schema", manager);
 
         if (result.isSuccess()) {
             System.out.println("Loaded using custom loader");
@@ -574,11 +574,11 @@ config.setValidate(true);
 
 ```java
 // Load base Schema
-Loaded<Justdb> baseResult = SchemaLoaderFactory.load("base-schema.json", manager);
+Loaded&lt;Justdb&gt; baseResult = SchemaLoaderFactory.load("base-schema.json", manager);
 Justdb baseSchema = baseResult.getData();
 
 // Load extension Schema
-Loaded<Justdb> extResult = SchemaLoaderFactory.load("extension-schema.json", manager);
+Loaded&lt;Justdb&gt; extResult = SchemaLoaderFactory.load("extension-schema.json", manager);
 Justdb extSchema = extResult.getData();
 
 // Merge Schemas

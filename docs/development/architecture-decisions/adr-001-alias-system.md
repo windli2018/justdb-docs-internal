@@ -149,7 +149,7 @@ public class Table extends QueryAble {
     @XmlAttribute(name = "former-names")
     @JsonProperty("formerNames")
     @JsonAlias({"oldNames", "oldName", "formerName", "previousNames"})
-    private List<String> formerNames = new ArrayList<>();
+    private List&lt;String&gt; formerNames = new ArrayList<>();
 }
 ```
 

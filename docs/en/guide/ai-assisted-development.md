@@ -54,7 +54,44 @@ flowchart TB
 # 4. Write migration script
 ```
 
-**JustDB approach:**
+**JustDB approach - Choose your preferred format:**
+
+::: tip JustDB supports multiple formats!
+You can define schemas using XML, YAML, JSON, SQL, TOML, or Markdown - whichever works best for your team!
+:::
+
+### **Schema Definition** <Badge text="Multi-format" type="tip"/>
+
+<!-- tabbed-codeblocks -->
+
+::: code-tabs#schema-format
+
+@tab XML
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb xmlns="http://www.verydb.org/justdb">
+    <Table name="orders" comment="Order table">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+        <Column name="order_no" type="VARCHAR(32)" nullable="false" unique="true"/>
+        <Column name="user_id" type="BIGINT" nullable="false"/>
+        <Column name="total_amount" type="DECIMAL(10,2)" nullable="false" defaultValue="0.00"/>
+        <Column name="status" type="VARCHAR(20)" nullable="false" defaultValue="pending"/>
+        <Column name="created_at" type="TIMESTAMP" nullable="false" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        <Index name="idx_user_id">
+            <column>user_id</column>
+        </Index>
+        <Index name="idx_status">
+            <column>status</column>
+        </Index>
+        <Index name="idx_created_at">
+            <column>created_at</column>
+        </Index>
+    </Table>
+</Justdb>
+```
+
+@tab YAML
 
 ```yaml
 # Use declarative YAML to define table structure
@@ -93,6 +130,166 @@ Table:
       - name: idx_created_at
         columns: [created_at]
 ```
+
+@tab JSON
+
+```json
+{
+  "Table": [
+    {
+      "name": "orders",
+      "comment": "Order table",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true,
+          "autoIncrement": true
+        },
+        {
+          "name": "order_no",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "unique": true
+        },
+        {
+          "name": "user_id",
+          "type": "BIGINT",
+          "nullable": false
+        },
+        {
+          "name": "total_amount",
+          "type": "DECIMAL(10,2)",
+          "nullable": false,
+          "defaultValue": "0.00"
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(20)",
+          "nullable": false,
+          "defaultValue": "pending"
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "defaultValueComputed": "CURRENT_TIMESTAMP"
+        }
+      ],
+      "Index": [
+        {
+          "name": "idx_user_id",
+          "columns": ["user_id"]
+        },
+        {
+          "name": "idx_status",
+          "columns": ["status"]
+        },
+        {
+          "name": "idx_created_at",
+          "columns": ["created_at"]
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+
+```sql
+-- JustDB also supports native SQL DDL
+CREATE TABLE orders (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    order_no VARCHAR(32) NOT NULL UNIQUE,
+    user_id BIGINT NOT NULL,
+    total_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_user_id (user_id),
+    INDEX idx_status (status),
+    INDEX idx_created_at (created_at)
+) COMMENT 'Order table';
+```
+
+@tab TOML
+
+```toml
+# Use TOML for your schema definition
+[[Table]]
+name = "orders"
+comment = "Order table"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+
+[[Table.Column]]
+name = "order_no"
+type = "VARCHAR(32)"
+nullable = false
+unique = true
+
+[[Table.Column]]
+name = "user_id"
+type = "BIGINT"
+nullable = false
+
+[[Table.Column]]
+name = "total_amount"
+type = "DECIMAL(10,2)"
+nullable = false
+defaultValue = "0.00"
+
+[[Table.Column]]
+name = "status"
+type = "VARCHAR(20)"
+nullable = false
+defaultValue = "pending"
+
+[[Table.Column]]
+name = "created_at"
+type = "TIMESTAMP"
+nullable = false
+defaultValueComputed = "CURRENT_TIMESTAMP"
+
+[[Table.Index]]
+name = "idx_user_id"
+columns = ["user_id"]
+
+[[Table.Index]]
+name = "idx_status"
+columns = ["status"]
+
+[[Table.Index]]
+name = "idx_created_at"
+columns = ["created_at"]
+```
+
+@tab Markdown
+
+```markdown
+# orders - Order table
+
+| Column | Type | Constraints | Default |
+|--------|------|-------------|---------|
+| id | BIGINT | PRIMARY KEY, AUTO_INCREMENT | - |
+| order_no | VARCHAR(32) | NOT NULL, UNIQUE | - |
+| user_id | BIGINT | NOT NULL | - |
+| total_amount | DECIMAL(10,2) | NOT NULL | 0.00 |
+| status | VARCHAR(20) | NOT NULL | 'pending' |
+| created_at | TIMESTAMP | NOT NULL | CURRENT_TIMESTAMP |
+
+## Indexes
+
+- `idx_user_id` on (user_id)
+- `idx_status` on (status)
+- `idx_created_at` on (created_at)
+```
+
+:::
 
 **Development workflow:**
 ```bash
@@ -138,6 +335,23 @@ ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM orders");
 
 ### Scenario 3: Schema Analysis and Optimization
 
+::: code-tabs#analysis-schema
+
+@tab XML
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb xmlns="http://www.verydb.org/justdb">
+    <Table name="users">
+        <Column name="id" type="BIGINT" primaryKey="true"/>
+        <Column name="email" type="VARCHAR(100)"/>
+        <Column name="nickname" type="VARCHAR(50)" nullable="true"/>
+    </Table>
+</Justdb>
+```
+
+@tab YAML
+
 ```yaml
 # Complete Schema definition for easy analysis
 Table:
@@ -152,6 +366,68 @@ Table:
         type: VARCHAR(50)
         nullable: true
 ```
+
+@tab JSON
+
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {"name": "id", "type": "BIGINT", "primaryKey": true},
+        {"name": "email", "type": "VARCHAR(100)"},
+        {"name": "nickname", "type": "VARCHAR(50)", "nullable": true}
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+
+```sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY,
+    email VARCHAR(100),
+    nickname VARCHAR(50) NULL
+);
+```
+
+@tab TOML
+
+```toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+
+[[Table.Column]]
+name = "nickname"
+type = "VARCHAR(50)"
+nullable = true
+```
+
+@tab Markdown
+
+```markdown
+# users
+
+| Column | Type | Constraints |
+|--------|------|-------------|
+| id | BIGINT | PRIMARY KEY |
+| email | VARCHAR(100) | - |
+| nickname | VARCHAR(50) | NULL |
+```
+
+:::
 
 **Use JustDB tools for analysis:**
 ```bash
@@ -169,6 +445,25 @@ justdb analyze --schema schema.yaml
 ### Scenario 4: Virtual Column Advanced Features
 
 JustDB supports virtual columns for dynamically computing values based on other columns:
+
+::: code-tabs#virtual-column
+
+@tab XML
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb xmlns="http://www.verydb.org/justdb">
+    <Table name="products">
+        <Column name="id" type="BIGINT" primaryKey="true"/>
+        <Column name="name" type="VARCHAR(100)"/>
+        <Column name="price" type="DECIMAL(10,2)"/>
+        <Column name="discounted_price" type="DECIMAL(10,2)" virtual="true" expression="price * 0.9"/>
+        <Column name="stock_status" type="VARCHAR(20)" virtual="true" expression="CASE WHEN stock > 100 THEN 'High' WHEN stock > 0 THEN 'Low' ELSE 'Out of Stock' END"/>
+    </Table>
+</Justdb>
+```
+
+@tab YAML
 
 ```yaml
 Table:
@@ -190,8 +485,97 @@ Table:
       - name: stock_status
         type: VARCHAR(20)
         virtual: true
-        expression: "CASE WHEN stock > 100 THEN '充足' WHEN stock > 0 THEN '紧张' ELSE '缺货' END"
+        expression: "CASE WHEN stock > 100 THEN 'High' WHEN stock > 0 THEN 'Low' ELSE 'Out of Stock' END"
 ```
+
+@tab JSON
+
+```json
+{
+  "Table": [
+    {
+      "name": "products",
+      "Column": [
+        {"name": "id", "type": "BIGINT", "primaryKey": true},
+        {"name": "name", "type": "VARCHAR(100)"},
+        {"name": "price", "type": "DECIMAL(10,2)"},
+        {
+          "name": "discounted_price",
+          "type": "DECIMAL(10,2)",
+          "virtual": true,
+          "expression": "price * 0.9"
+        },
+        {
+          "name": "stock_status",
+          "type": "VARCHAR(20)",
+          "virtual": true,
+          "expression": "CASE WHEN stock > 100 THEN 'High' WHEN stock > 0 THEN 'Low' ELSE 'Out of Stock' END"
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+
+```sql
+CREATE TABLE products (
+    id BIGINT PRIMARY KEY,
+    name VARCHAR(100),
+    price DECIMAL(10,2),
+    discounted_price DECIMAL(10,2) AS (price * 0.9) VIRTUAL,
+    stock_status VARCHAR(20) AS (CASE WHEN stock > 100 THEN 'High' WHEN stock > 0 THEN 'Low' ELSE 'Out of Stock' END) VIRTUAL
+);
+```
+
+@tab TOML
+
+```toml
+[[Table]]
+name = "products"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+
+[[Table.Column]]
+name = "name"
+type = "VARCHAR(100)"
+
+[[Table.Column]]
+name = "price"
+type = "DECIMAL(10,2)"
+
+[[Table.Column]]
+name = "discounted_price"
+type = "DECIMAL(10,2)"
+virtual = true
+expression = "price * 0.9"
+
+[[Table.Column]]
+name = "stock_status"
+type = "VARCHAR(20)"
+virtual = true
+expression = "CASE WHEN stock > 100 THEN 'High' WHEN stock > 0 THEN 'Low' ELSE 'Out of Stock' END"
+```
+
+@tab Markdown
+
+```markdown
+# products
+
+| Column | Type | Features |
+|--------|------|----------|
+| id | BIGINT | PRIMARY KEY |
+| name | VARCHAR(100) | - |
+| price | DECIMAL(10,2) | - |
+| discounted_price | DECIMAL(10,2) | VIRTUAL: `price * 0.9` |
+| stock_status | VARCHAR(20) | VIRTUAL: `CASE WHEN stock > 100 THEN 'High' WHEN stock > 0 THEN 'Low' ELSE 'Out of Stock' END` |
+```
+
+:::
 
 ### Scenario 5: Monitoring Database Changes
 
@@ -249,6 +633,23 @@ JustdbConnection conn = new JustdbConnection(dataSource);
 
 ### 1. Schema as Code, Schema as Documentation
 
+::: code-tabs#schema-as-doc
+
+@tab XML
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb xmlns="http://www.verydb.org/justdb">
+    <!-- Schema file is both code and documentation -->
+    <Table name="orders" comment="Order table - stores user order information">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"
+                comment="Order ID, primary key auto-increment"/>
+    </Table>
+</Justdb>
+```
+
+@tab YAML
+
 ```yaml
 # Schema file is both code and documentation
 Table:
@@ -261,6 +662,67 @@ Table:
         autoIncrement: true
         comment: Order ID, primary key auto-increment
 ```
+
+@tab JSON
+
+```json
+{
+  "Table": [
+    {
+      "name": "orders",
+      "comment": "Order table - stores user order information",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true,
+          "autoIncrement": true,
+          "comment": "Order ID, primary key auto-increment"
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+
+```sql
+-- Schema file is both code and documentation
+CREATE TABLE orders (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT 'Order ID, primary key auto-increment'
+) COMMENT 'Order table - stores user order information';
+```
+
+@tab TOML
+
+```toml
+# Schema file is both code and documentation
+[[Table]]
+name = "orders"
+comment = "Order table - stores user order information"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+comment = "Order ID, primary key auto-increment"
+```
+
+@tab Markdown
+
+```markdown
+# orders - Order table
+
+**Description**: stores user order information
+
+| Column | Type | Constraints | Comment |
+|--------|------|-------------|----------|
+| id | BIGINT | PRIMARY KEY, AUTO_INCREMENT | Order ID, primary key auto-increment |
+```
+
+:::
 
 **Tool support:**
 - Generate API documentation

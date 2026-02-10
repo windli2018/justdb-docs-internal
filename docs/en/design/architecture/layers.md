@@ -17,6 +17,9 @@ JustDB is organized into distinct architectural layers, each with specific respo
 │  │   CLI    │  │ Spring   │  │   API    │  │   AI   ││
 │  │  Tool    │  │  Boot    │  │  Library │  │ Helper ││
 │  └──────────┘  └──────────┘  └──────────┘  └─────────┘│
+│  ┌──────────────────────────────────────────────────┐ │
+│  │         MySQL Protocol Server                     │ │
+│  └──────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────┘
                             │
 ┌─────────────────────────────────────────────────────────┐
@@ -65,6 +68,14 @@ Provides interfaces for different use cases:
 ### AI Helper
 - Natural language to Schema translation
 - Intelligent migration suggestions
+
+### MySQL Protocol Server
+- Standard MySQL protocol implementation
+- Support for any MySQL client connection
+- Compatible with MySQL Workbench, DBeaver, Navicat, etc.
+- SQL query execution via standard MySQL clients
+- Transaction management (BEGIN, COMMIT, ROLLBACK)
+- Metadata queries (SHOW, DESCRIBE)
 
 ## Service Layer
 

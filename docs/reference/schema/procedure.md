@@ -21,11 +21,11 @@ tag:
 |------|------|------|------|
 | `id` | String | 否 | 唯一标识符，用于引用 |
 | `name` | String | 是 | 存储过程名称 |
-| `parameters` | List<Parameter> | 否 | 参数列表 |
+| `parameters` | List<Parameter&gt;> | 否 | 参数列表 |
 | `content` | String | 是 | 存储过程内容 |
 | `returnType` | String | 否 | 返回值类型 |
 | `comment` | String | 否 | 存储过程注释 |
-| `dbms` | List<String> | 否 | 适用数据库列表 |
+| `dbms` | List&lt;String&gt; | 否 | 适用数据库列表 |
 
 ## 参数定义
 

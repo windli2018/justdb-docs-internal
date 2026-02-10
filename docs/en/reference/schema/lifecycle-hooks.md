@@ -35,7 +35,7 @@ Hooks use `ConditionalSqlScript` to define conditional SQL scripts:
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
 | `content` | String | Yes | SQL script content |
-| `dbms` | List<String> | No | Applicable database list |
+| `dbms` | List&lt;String&gt; | No | Applicable database list |
 | `condition` | String | No | Execution condition expression |
 
 ## Basic Examples

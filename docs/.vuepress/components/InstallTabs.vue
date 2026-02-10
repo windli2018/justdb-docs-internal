@@ -48,39 +48,38 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { locales, getCurrentLocale, createTranslation } from '../locales';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { locales, createTranslation } from '../locales';
 
 const activeTab = ref('npm');
 const copied = ref('');
 const currentLang = ref('zh-CN');
 
-// 使用更可靠的方法检测语言
+// 检测语言
 const detectLanguage = () => {
   if (typeof window !== 'undefined') {
-    // 从 URL 路径判断语言
     const path = window.location.pathname;
-    // 如果路径以 /en/ 开头，则为英文，否则为中文
     currentLang.value = path.startsWith('/en/') ? 'en-US' : 'zh-CN';
-  } else {
-    // 服务端渲染时的默认值
-    currentLang.value = 'zh-CN';
   }
 };
 
 onMounted(() => {
   detectLanguage();
-  
-  // 监听 URL 变化
-  const handleUrlChange = () => {
-    detectLanguage();
-  };
-  
-  // 监听浏览器前进后退事件
-  window.addEventListener('popstate', handleUrlChange);
-  
-  // 如果有 hashchange 事件也触发检测
-  window.addEventListener('hashchange', handleUrlChange);
+
+  // 监听 URL 变化（通过定期检查）
+  let lastPath = window.location.pathname;
+  const checkInterval = setInterval(() => {
+    const currentPath = window.location.pathname;
+    if (currentPath !== lastPath) {
+      lastPath = currentPath;
+      detectLanguage();
+    }
+  }, 100); // 每 100ms 检查一次
+
+  // 清理定时器
+  onUnmounted(() => {
+    clearInterval(checkInterval);
+  });
 });
 
 // 从当前语言判断是否为中文
@@ -266,4 +265,5 @@ html[data-theme='dark'] .code-block {
 
 html[data-theme='dark'] .code-block code {
   color: var(--vp-c-brand-1, #4a9d7f);
-}</style>
+}
+</style>

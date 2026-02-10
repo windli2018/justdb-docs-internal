@@ -237,7 +237,7 @@ Authorization: Bearer {jwt_token}
 @Data
 public class ApiRequest<T> {
     private T data;
-    private Map<String, String> metadata;
+    private Map&lt;String, String&gt; metadata;
 }
 
 // Schema 应用请求
@@ -283,9 +283,9 @@ public class Error {
 public class ApplyResult {
     private boolean success;
     private String schemaVersion;
-    private List<SchemaChange> changes;
-    private List<String> sql;
-    private List<Warning> warnings;
+    private List<SchemaChange&gt;> changes;
+    private List&lt;String&gt; sql;
+    private List<Warning&gt;> warnings;
 }
 
 @Data
@@ -295,7 +295,7 @@ public class SchemaChange {
     private String column;
     private String fromType;
     private String toType;
-    private Map<String, Object> properties;
+    private Map&lt;String, , Object> properties;
 }
 
 public enum ChangeType {
@@ -451,7 +451,7 @@ public class ApiKey {
 
     @ElementCollection
     @Column(name = "allowed_databases")
-    private Set<String> allowedDatabases;
+    private Set&lt;String&gt; allowedDatabases;
 
     @Column(name = "expires_at")
     private LocalDateTime expiresAt;

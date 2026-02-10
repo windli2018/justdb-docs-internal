@@ -378,7 +378,7 @@ public boolean isVersionApplied(String version) {
 }
 
 // 获取已应用的版本列表
-public List<String> getAppliedVersions() {
+public List&lt;String&gt; getAppliedVersions() {
     return schemaHistoryRepository.getAppliedVersions();
 }
 
@@ -388,12 +388,12 @@ public String getLatestAppliedVersion() {
 }
 
 // 获取版本的所有对象变更
-public List<SchemaObjectHistory> getObjectChangesByVersion(String version) {
+public List<SchemaObjectHistory&gt;> getObjectChangesByVersion(String version) {
     return schemaHistoryRepository.getObjectChangesByVersion(version);
 }
 
 // 获取所有 History 记录
-public List<SchemaHistory> getAllHistory() {
+public List<SchemaHistory&gt;> getAllHistory() {
     return schemaHistoryRepository.findAll();
 }
 
@@ -823,7 +823,7 @@ public boolean isVersionApplied(String version) {
  * @param version 版本号
  * @return 对象变更列表
  */
-public List<SchemaObjectHistory> getObjectChangesByVersion(String version) {
+public List<SchemaObjectHistory&gt;> getObjectChangesByVersion(String version) {
     try {
         return objectHistoryRepository.findBySchemaVersion(version);
     } catch (Exception e) {
@@ -831,8 +831,8 @@ public List<SchemaObjectHistory> getObjectChangesByVersion(String version) {
     }
 }
 
-public List<SchemaObjectHistory> findBySchemaVersion(String schemaVersion) {
-    List<SchemaObjectHistory> changes = new ArrayList<>();
+public List<SchemaObjectHistory&gt;> findBySchemaVersion(String schemaVersion) {
+    List<SchemaObjectHistory&gt;> changes = new ArrayList<>();
     String selectSql = String.format(
         "SELECT id, object_type, object_name, schema_version, description, ddl_statement, " +
         "checksum, installed_by, installed_on, execution_time, success, status_code " +

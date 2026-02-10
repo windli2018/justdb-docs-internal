@@ -3,15 +3,14 @@
     <div class="install-wrapper">
       <h2 class="install-title">{{ title }}</h2>
       <ClientOnly>
-        <InstallTabs />
+        <InstallTabs :key="currentLang" />
       </ClientOnly>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { locales } from '../locales';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import InstallTabs from './InstallTabs.vue';
 
 const currentLang = ref('zh-CN');
@@ -20,17 +19,32 @@ const currentLang = ref('zh-CN');
 const detectLanguage = () => {
   if (typeof window !== 'undefined') {
     const path = window.location.pathname;
-    currentLang.value = path.startsWith('/en/') ? 'en-US' : 'zh-CN';
-    console.log('[HomeInstallSection] 语言检测:', { path, currentLang: currentLang.value });
+    const lang = path.startsWith('/en/') ? 'en-US' : 'zh-CN';
+    console.log('[HomeInstallSection] 语言检测:', { path, lang });
+    currentLang.value = lang;
   }
 };
 
 onMounted(() => {
   detectLanguage();
+
+  // 监听 URL 变化（通过定期检查）
+  let lastPath = window.location.pathname;
+  const checkInterval = setInterval(() => {
+    const currentPath = window.location.pathname;
+    if (currentPath !== lastPath) {
+      lastPath = currentPath;
+      detectLanguage();
+    }
+  }, 100); // 每 100ms 检查一次
+
+  // 清理定时器
+  onUnmounted(() => {
+    clearInterval(checkInterval);
+  });
 });
 
 const title = computed(() => {
-  // 由于标题不在 locales 配置中，我们需要单独处理
   return currentLang.value === 'zh-CN' ? '快速安装' : 'Quick Installation';
 });
 </script>

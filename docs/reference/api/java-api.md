@@ -300,8 +300,8 @@ sequence.setCycle(false);
 **方法签名**:
 
 ```java
-public static Loaded<Justdb> load(String location, JustdbManager manager)
-public static List<Loaded<Justdb>> loadAll(String location, List<String> fileTypes, JustdbManager manager)
+public static Loaded&lt;Justdb&gt; load(String location, JustdbManager manager)
+public static List<Loaded&gt;<Justdb>> loadAll(String location, List&lt;String&gt; fileTypes, JustdbManager manager)
 ```
 
 **代码示例**:
@@ -310,19 +310,19 @@ public static List<Loaded<Justdb>> loadAll(String location, List<String> fileTyp
 JustdbManager manager = JustdbManager.getInstance();
 
 // 从文件加载
-Loaded<Justdb> result = SchemaLoaderFactory.load("schema.json", manager);
+Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("schema.json", manager);
 if (result.isSuccess()) {
     Justdb justdb = result.getData();
 }
 
 // 从类路径加载
-Loaded<Justdb> result = SchemaLoaderFactory.load("classpath:schema.xml", manager);
+Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("classpath:schema.xml", manager);
 
 // 从 HTTP 加载
-Loaded<Justdb> result = SchemaLoaderFactory.load("https://example.com/schema.json", manager);
+Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("https://example.com/schema.json", manager);
 
 // 从目录加载所有 Schema
-List<Loaded<Justdb>> results = SchemaLoaderFactory.loadAll("./schemas", null, manager);
+List<Loaded&gt;<Justdb>> results = SchemaLoaderFactory.loadAll("./schemas", null, manager);
 ```
 
 ### Loaded - 加载结果
@@ -539,11 +539,11 @@ import org.verydb.justdb.schema.*;
 import java.util.*;
 
 public class DynamicSchemaBuilder {
-    public static Table buildTable(String name, List<Map<String, Object>> columns) {
+    public static Table buildTable(String name, List<Map&gt;<String, Object>> columns) {
         Table table = new Table(name);
-        List<Column> columnList = new ArrayList<>();
+        List<Column&gt;> columnList = new ArrayList<>();
 
-        for (Map<String, Object> colDef : columns) {
+        for (Map&lt;String, , Object> colDef : columns) {
             Column column = new Column();
             column.setName((String) colDef.get("name"));
             column.setType((String) colDef.get("type"));
@@ -570,9 +570,9 @@ public class DynamicSchemaBuilder {
     }
 
     public static void main(String[] args) {
-        List<Map<String, Object>> columns = new ArrayList<>();
+        List<Map&gt;<String, Object>> columns = new ArrayList<>();
 
-        Map<String, Object> idCol = new HashMap<>();
+        Map&lt;String, , Object> idCol = new HashMap<>();
         idCol.put("name", "id");
         idCol.put("type", "BIGINT");
         idCol.put("primaryKey", true);
@@ -580,7 +580,7 @@ public class DynamicSchemaBuilder {
         idCol.put("comment", "主键");
         columns.add(idCol);
 
-        Map<String, Object> nameCol = new HashMap<>();
+        Map&lt;String, , Object> nameCol = new HashMap<>();
         nameCol.put("name", "name");
         nameCol.put("type", "VARCHAR(100)");
         nameCol.put("nullable", false);

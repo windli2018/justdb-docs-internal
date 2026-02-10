@@ -31,11 +31,11 @@ Sequence is a database object used to generate unique numeric values. JustDB pro
 | `cycle` | Boolean | No | Whether to cycle after reaching max/min value |
 | `cache` | Long | No | Cache size for pre-fetching values |
 | `changeType` | ChangeType | No | Change type |
-| `formerNames` | List<String> | No | Old name list |
-| `beforeCreates` | List<ConditionalSqlScript> | No | SQL to execute before creation |
-| `afterCreates` | List<ConditionalSqlScript> | No | SQL to execute after creation |
-| `beforeDrops` | List<ConditionalSqlScript> | No | SQL to execute before dropping |
-| `afterDrops` | List<ConditionalSqlScript> | No | SQL to execute after dropping |
+| `formerNames` | List&lt;String&gt; | No | Old name list |
+| `beforeCreates` | List<ConditionalSqlScript&gt;> | No | SQL to execute before creation |
+| `afterCreates` | List<ConditionalSqlScript&gt;> | No | SQL to execute after creation |
+| `beforeDrops` | List<ConditionalSqlScript&gt;> | No | SQL to execute before dropping |
+| `afterDrops` | List<ConditionalSqlScript&gt;> | No | SQL to execute after dropping |
 
 ## Format Examples
 

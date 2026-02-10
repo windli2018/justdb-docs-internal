@@ -37,7 +37,7 @@ private String referenceId;
 
 @JsonProperty("formerNames")  // Canonical
 @JsonAlias({"oldNames", "oldName", "formerName", "previousNames"})
-private List<String> formerNames;
+private List&lt;String&gt; formerNames;
 ```
 
 ### Benefits

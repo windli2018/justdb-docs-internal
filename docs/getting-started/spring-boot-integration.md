@@ -55,6 +55,8 @@ src/main/resources/
     └── users.yaml
 ```
 
+::: code-tabs
+@tab YAML
 ```yaml
 # src/main/resources/justdb/users.yaml
 Table:
@@ -70,6 +72,69 @@ Table:
       - name: email
         type: VARCHAR(100)
 ```
+
+@tab XML
+```xml
+<!-- src/main/resources/justdb/users.xml -->
+<Justdb>
+    <Table name="users">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+        <Column name="username" type="VARCHAR(50)" nullable="false"/>
+        <Column name="email" type="VARCHAR(100)"/>
+    </Table>
+</Justdb>
+```
+
+@tab JSON
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true,
+          "autoIncrement": true
+        },
+        {
+          "name": "username",
+          "type": "VARCHAR(50)",
+          "nullable": false
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(100)"
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab TOML
+```toml
+# src/main/resources/justdb/users.toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+nullable = false
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+```
+:::
 
 ### 启动应用
 
@@ -271,12 +336,12 @@ public class DatabaseMigrationRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         // 加载 Schema
-        List<Loaded<Justdb>> schemas = SchemaLoader.loadFromClasspath(
+        List<Loaded&gt;<Justdb>> schemas = SchemaLoader.loadFromClasspath(
             "justdb", justdbManager
         );
 
         // 执行迁移
-        for (Loaded<Justdb> loaded : schemas) {
+        for (Loaded&lt;Justdb&gt; loaded : schemas) {
             schemaDeployer.deploy(loaded.getValue());
         }
     }

@@ -86,7 +86,7 @@ For tracking Schema evolution, recording object rename history.
 @JsonProperty("formerNames")
 @JsonAlias({"oldNames", "oldName", "formerName", "former_names", "old_names",
               "previousNames", "previousName", "previous_names", "old-names"})
-protected List<String> formerNames;
+protected List&lt;String&gt; formerNames;
 ```
 
 **Supported input formats**:
@@ -155,7 +155,7 @@ Adopt SQL standard operation terminology, supporting multiple aliases.
               "beforeRemoves", "beforeRemove", "before-drop", "before-drops",
               "Before-Drop", "Before-Drops", "before_drops", "Before-Remove",
               "onBeforeDrop", "onDrop"})
-protected List<ConditionalSqlScript> beforeDrops;
+protected List<ConditionalSqlScript&gt;> beforeDrops;
 ```
 
 **Lifecycle hook naming**:

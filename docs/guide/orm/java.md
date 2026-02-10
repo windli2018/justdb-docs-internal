@@ -244,7 +244,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUsername(String username);
 
-    List<User> findByEmailContaining(String email);
+    List<User&gt;> findByEmailContaining(String email);
 }
 ```
 
@@ -261,15 +261,15 @@ import org.verydb.justdb.SchemaLoader;
 Justdb schema = SchemaLoader.loadFromFile("schema.xml");
 
 // 生成 JPA 实体
-List<EntityGenerationResult> jpaEntities =
+List<EntityGenerationResult&gt;> jpaEntities =
     OrmIntegration.generateEntitiesFromSchema(schema, "JPA_ENTITY");
 
 // 生成 MyBatis Bean
-List<EntityGenerationResult> mybatisBeans =
+List<EntityGenerationResult&gt;> mybatisBeans =
     OrmIntegration.generateEntitiesFromSchema(schema, "MYBATIS_BEAN");
 
 // 生成 MyBatis 映射文件
-List<String> mappings =
+List&lt;String&gt; mappings =
     OrmIntegration.generateMyBatisMappingsFromSchema(schema);
 
 // 写入文件
@@ -339,7 +339,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 public interface UserMapper {
 
     @Select("SELECT * FROM users WHERE username LIKE CONCAT('%', #{keyword}, '%')")
-    List<User> searchByKeyword(String keyword);
+    List<User&gt;> searchByKeyword(String keyword);
 }
 ```
 

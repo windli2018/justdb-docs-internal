@@ -106,7 +106,7 @@ public class Justdb {
 
     @XmlElementWrapper(name = "Table")
     @XmlElement(name = "Table")
-    private List<Table> tables;
+    private List<Table&gt;> tables;
 }
 ```
 

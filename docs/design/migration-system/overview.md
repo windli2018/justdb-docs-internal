@@ -98,20 +98,20 @@ JustDB Migrate 模式提供动态测试能力，使得：
 ├─────────────────────────────────────────────────────────────┤
 │ + currentSchema: Justdb                                     │
 │ + targetSchema: Justdb                                     │
-│ + dataChanges: List<DataChange>                            │
+│ + dataChanges: List<DataChange&gt;>                            │
 │                                                          │
 │ + calculateAll(): CanonicalSchemaDiff                       │
 │ + calculateTables(): CanonicalSchemaDiff                       │
 │ + calculateColumns(): CanonicalSchemaDiff                      │
 │ + calculateDataChanges(): CanonicalSchemaDiff                 │
 │                                                          │
-│ + generateSql(dialect): List<String>                         │
-│ + generateDataChangeSql(dialect): List<String>               │
+│ + generateSql(dialect): List&lt;String&gt;                         │
+│ + generateDataChangeSql(dialect): List&lt;String&gt;               │
 │                                                          │
 │ + detectConditionOverlaps(table, dataNodes): OverlapResult  │
 │ + findMatchingDataNode(currentDataNodes, target): Data       │
-│ + groupDataByTable(schema): Map<String, List<Data>>          │
-│ + filterByTableScopes(tables, scopes): Map<String, Table>   │
+│ + groupDataByTable(schema): Map&lt;String, , List<Data&gt;>>          │
+│ + filterByTableScopes(tables, scopes): Map&lt;String, , Table>   │
 └─────────────────────────────────────────────────────────────┘
 ┌─────────────────────────────────────────────────────────────┐
 │                        DataChange                           │
@@ -138,7 +138,7 @@ public class CanonicalSchemaDiff {
     private final Justdb targetSchema;
 
     // 新增：数据变更列表
-    private final List<DataChange> dataChanges = new ArrayList<>();
+    private final List<DataChange&gt;> dataChanges = new ArrayList<>();
 
     // ========== 核心方法 ==========
 
@@ -162,12 +162,12 @@ public class CanonicalSchemaDiff {
     /**
      * 生成所有变更的 SQL（DDL + DML）
      */
-    public List<String> generateSql(String dialect);
+    public List&lt;String&gt; generateSql(String dialect);
 
     /**
      * 生成数据变更的 SQL 语句
      */
-    public List<String> generateDataChangeSql(String dialect);
+    public List&lt;String&gt; generateDataChangeSql(String dialect);
 
     // ========== 辅助方法 ==========
 
@@ -176,27 +176,27 @@ public class CanonicalSchemaDiff {
      */
     private OverlapDetectionResult detectConditionOverlaps(
         Table table,
-        List<Data> dataNodes
+        List<Data&gt;> dataNodes
     );
 
     /**
      * 找到匹配的 Data 节点（通过 condition 和 module）
      */
     private Data findMatchingDataNode(
-        List<Data> currentDataNodes,
+        List<Data&gt;> currentDataNodes,
         Data targetData
     );
 
     /**
      * 将 Data 节点按表名分组
      */
-    private Map<String, List<Data>> groupDataByTable(Justdb schema);
+    private Map&lt;String, , List<Data&gt;>> groupDataByTable(Justdb schema);
 
     /**
      * 按 tableScopes 过滤表
      */
-    private Map<String, Table> filterByTableScopes(
-        Map<String, Table> tables,
+    private Map&lt;String, , Table> filterByTableScopes(
+        Map&lt;String, , Table> tables,
         TableScopes scopes
     );
 
@@ -213,7 +213,7 @@ public class CanonicalSchemaDiff {
      * 2. UPDATE 匹配主键的行
      * 3. INSERT schema 中 deleted=false 的行
      */
-    private List<String> generateRestorationSql(
+    private List&lt;String&gt; generateRestorationSql(
         Table table,
         Data data,
         String dialect
@@ -225,7 +225,7 @@ public class CanonicalSchemaDiff {
      * 2. INSERT 新数据
      * 3. 处理 deleted=true 的行
      */
-    private List<String> generateDefaultDataSql(
+    private List&lt;String&gt; generateDefaultDataSql(
         Table table,
         Data data,
         String dialect
@@ -234,11 +234,11 @@ public class CanonicalSchemaDiff {
     private String buildDeleteOutOfScopeSql(
         Table table,
         String condition,
-        List<Row> schemaRows,
+        List<Row&gt;> schemaRows,
         String dialect
     );
 
-    private String buildNotEqualsClause(Map<String, Object> primaryKey);
+    private String buildNotEqualsClause(Map&lt;String, , Object> primaryKey);
 
     private String formatValue(Object value);
 
@@ -305,7 +305,7 @@ public class Data extends SchemaSense {
 
     @JsonProperty("Row")
     @XmlElement(name = "Row")
-    List<Row> rows = new ArrayList<>();
+    List<Row&gt;> rows = new ArrayList<>();
 }
 ```
 
@@ -441,9 +441,9 @@ DELETE FROM `users` WHERE `id`=998;
 │           CanonicalSchemaDiff.calculateDataChanges()            │
 │                                                                 │
 │  1. 按表分组 Data 节点                                          │
-│     Map<String, List<Data>> targetDataByTable =              │
+│     Map&lt;String, , List<Data&gt;>> targetDataByTable =              │
 │         groupDataByTable(targetSchema)                         │
-│     Map<String, List<Data>> currentDataByTable =             │
+│     Map&lt;String, , List<Data&gt;>> currentDataByTable =             │
 │         groupDataByTable(currentSchema)                        │
 │                                                                 │
 │  2. 对每个表的 Data 节点进行处理                                 │
@@ -529,13 +529,13 @@ public class TableScopes extends ItemScopes {
     @JsonAlias({"includeTables", "tableIncludes",
                "includeTablePatterns", "table-include-patterns"})
     @Override
-    public List<String> getIncludes();
+    public List&lt;String&gt; getIncludes();
 
     @JsonProperty("excludes")
     @JsonAlias({"excludeTables", "tableExcludes",
                "excludeTablePatterns", "table-exclude-patterns"})
     @Override
-    public List<String> getExcludes();
+    public List&lt;String&gt; getExcludes();
 }
 ```
 
@@ -697,8 +697,8 @@ public class TableScopes extends ItemScopes {
 ```java
 public class JustdbConfiguration extends UnknownValues {
     // 新增：表过滤模式
-    private List<String> includeTablePatterns = new ArrayList<>();
-    private List<String> excludeTablePatterns = new ArrayList<>();
+    private List&lt;String&gt; includeTablePatterns = new ArrayList<>();
+    private List&lt;String&gt; excludeTablePatterns = new ArrayList<>();
 
     // 新增：数据过滤条件
     private String dataFilter;
@@ -746,17 +746,17 @@ public class DataConditionValidator {
      * 验证单个表的多个 Data 节点
      * @return ValidationResult
      */
-    public ValidationResult validate(Table table, List<Data> dataNodes);
+    public ValidationResult validate(Table table, List<Data&gt;> dataNodes);
 
     private ValidationResult validateConditionSyntax(Table table, Data data);
-    private OverlapDetectionResult detectOverlaps(Table table, List<Data> dataNodes);
-    private CoverageResult checkCoverage(Table table, List<Data> dataNodes);
+    private OverlapDetectionResult detectOverlaps(Table table, List<Data&gt;> dataNodes);
+    private CoverageResult checkCoverage(Table table, List<Data&gt;> dataNodes);
 }
 
 public static class ValidationResult {
     private boolean valid = true;
-    private List<String> errors = new ArrayList<>();
-    private List<String> warnings = new ArrayList<>();
+    private List&lt;String&gt; errors = new ArrayList<>();
+    private List&lt;String&gt; warnings = new ArrayList<>();
 }
 ```
 
@@ -787,7 +787,7 @@ public static class ValidationResult {
 // 唯一的入口
 CanonicalSchemaDiff diff = new CanonicalSchemaDiff(current, target);
 diff.calculateAll();        // 计算所有变更
-List<String> sql = diff.generateSql();  // 生成 SQL
+List&lt;String&gt; sql = diff.generateSql();  // 生成 SQL
 executeSql(sql);               // 执行 SQL
 ```
 

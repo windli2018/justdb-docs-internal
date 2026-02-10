@@ -266,7 +266,7 @@ Or use Java-side filtering (more flexible):
 
 ```java
 // In DBGenerator or Table processing
-List<Column> physicalColumns = table.getColumns().stream()
+List<Column&gt;> physicalColumns = table.getColumns().stream()
     .filter(c -> c.getVirtual() == null || !c.getVirtual())
     .collect(Collectors.toList());
 ```

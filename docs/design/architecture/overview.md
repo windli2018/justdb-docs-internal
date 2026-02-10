@@ -348,6 +348,7 @@ Justdb (根容器)
 - `db2schema` - 从数据库提取 Schema
 - `interactive` - 交互式终端
 - `ai` - AI 助手
+- `mysql-server` - MySQL 协议服务
 
 ### 核心模块 (justdb-core)
 - Schema 加载和序列化
@@ -359,6 +360,11 @@ Justdb (根容器)
 - 标准 JDBC 接口实现
 - SQL 解析和执行
 - 事务管理
+
+### MySQL 协议服务 (justdb-mysql-protocol)
+- MySQL 协议服务器
+- 支持标准 MySQL 客户端连接
+- MySQL Workbench、DBeaver 等工具兼容
 
 ### AI 模块 (justdb-ai)
 - AI 集成

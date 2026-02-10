@@ -20,6 +20,8 @@ tag:
 
 ### 最简单的 Schema
 
+::: code-tabs
+@tab YAML
 ```yaml
 # minimal.yaml
 namespace: com.example
@@ -30,6 +32,57 @@ Table:
         type: INT
         primaryKey: true
 ```
+
+@tab XML
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb namespace="com.example">
+    <Table name="users">
+        <Column name="id" type="INT" primaryKey="true"/>
+    </Table>
+</Justdb>
+```
+
+@tab JSON
+```json
+{
+  "namespace": "com.example",
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {
+          "name": "id",
+          "type": "INT",
+          "primaryKey": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+-- minimal.sql
+CREATE TABLE users (
+    id INT PRIMARY KEY
+);
+```
+
+@tab TOML
+```toml
+namespace = "com.example"
+
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "INT"
+primaryKey = true
+```
+:::
 
 ### 完整的 Schema 结构
 
@@ -162,6 +215,8 @@ JustDB 自动处理不同数据库的类型映射：
 
 ### 主键
 
+::: code-tabs
+@tab YAML
 ```yaml
 Column:
   - name: id
@@ -170,8 +225,46 @@ Column:
     autoIncrement: true
 ```
 
+@tab XML
+```xml
+<Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+```
+
+@tab JSON
+```json
+{
+  "Column": [
+    {
+      "name": "id",
+      "type": "BIGINT",
+      "primaryKey": true,
+      "autoIncrement": true
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT
+);
+```
+
+@tab TOML
+```toml
+[[Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+```
+:::
+
 ### 非空约束
 
+::: code-tabs
+@tab YAML
 ```yaml
 Column:
   - name: username
@@ -179,8 +272,44 @@ Column:
     nullable: false
 ```
 
+@tab XML
+```xml
+<Column name="username" type="VARCHAR(50)" nullable="false"/>
+```
+
+@tab JSON
+```json
+{
+  "Column": [
+    {
+      "name": "username",
+      "type": "VARCHAR(50)",
+      "nullable": false
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+CREATE TABLE users (
+    username VARCHAR(50) NOT NULL
+);
+```
+
+@tab TOML
+```toml
+[[Column]]
+name = "username"
+type = "VARCHAR(50)"
+nullable = false
+```
+:::
+
 ### 默认值
 
+::: code-tabs
+@tab YAML
 ```yaml
 Column:
   # 固定默认值
@@ -199,14 +328,108 @@ Column:
     defaultValueComputed: UUID()
 ```
 
+@tab XML
+```xml
+<Column name="status" type="VARCHAR(20)" defaultValue="active"/>
+<Column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+<Column name="uuid" type="CHAR(36)" defaultValueComputed="UUID()"/>
+```
+
+@tab JSON
+```json
+{
+  "Column": [
+    {
+      "name": "status",
+      "type": "VARCHAR(20)",
+      "defaultValue": "active"
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMP",
+      "defaultValueComputed": "CURRENT_TIMESTAMP"
+    },
+    {
+      "name": "uuid",
+      "type": "CHAR(36)",
+      "defaultValueComputed": "UUID()"
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+CREATE TABLE users (
+    status VARCHAR(20) DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    uuid CHAR(36) DEFAULT UUID()
+);
+```
+
+@tab TOML
+```toml
+[[Column]]
+name = "status"
+type = "VARCHAR(20)"
+defaultValue = "active"
+
+[[Column]]
+name = "created_at"
+type = "TIMESTAMP"
+defaultValueComputed = "CURRENT_TIMESTAMP"
+
+[[Column]]
+name = "uuid"
+type = "CHAR(36)"
+defaultValueComputed = "UUID()"
+```
+:::
+
 ### 唯一约束
 
+::: code-tabs
+@tab YAML
 ```yaml
 Column:
   - name: email
     type: VARCHAR(100)
     unique: true
 ```
+
+@tab XML
+```xml
+<Column name="email" type="VARCHAR(100)" unique="true"/>
+```
+
+@tab JSON
+```json
+{
+  "Column": [
+    {
+      "name": "email",
+      "type": "VARCHAR(100)",
+      "unique": true
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+CREATE TABLE users (
+    email VARCHAR(100) UNIQUE
+);
+```
+
+@tab TOML
+```toml
+[[Column]]
+name = "email"
+type = "VARCHAR(100)"
+unique = true
+```
+:::
 
 ### 注释
 
@@ -221,6 +444,8 @@ Column:
 
 ### 普通索引
 
+::: code-tabs
+@tab YAML
 ```yaml
 Index:
   - name: idx_username
@@ -228,8 +453,44 @@ Index:
     comment: 用户名索引
 ```
 
+@tab XML
+```xml
+<Index name="idx_username" comment="用户名索引">
+    <IndexColumn name="username"/>
+</Index>
+```
+
+@tab JSON
+```json
+{
+  "Index": [
+    {
+      "name": "idx_username",
+      "columns": ["username"],
+      "comment": "用户名索引"
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+CREATE INDEX idx_username ON users (username);
+```
+
+@tab TOML
+```toml
+[[Index]]
+name = "idx_username"
+columns = ["username"]
+comment = "用户名索引"
+```
+:::
+
 ### 唯一索引
 
+::: code-tabs
+@tab YAML
 ```yaml
 Index:
   - name: idx_email
@@ -237,14 +498,85 @@ Index:
     unique: true
 ```
 
+@tab XML
+```xml
+<Index name="idx_email" unique="true">
+    <IndexColumn name="email"/>
+</Index>
+```
+
+@tab JSON
+```json
+{
+  "Index": [
+    {
+      "name": "idx_email",
+      "columns": ["email"],
+      "unique": true
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+CREATE UNIQUE INDEX idx_email ON users (email);
+```
+
+@tab TOML
+```toml
+[[Index]]
+name = "idx_email"
+columns = ["email"]
+unique = true
+```
+:::
+
 ### 复合索引
 
+::: code-tabs
+@tab YAML
 ```yaml
 Index:
   - name: idx_user_status
     columns: [user_id, status]
     comment: 用户状态复合索引
 ```
+
+@tab XML
+```xml
+<Index name="idx_user_status" comment="用户状态复合索引">
+    <IndexColumn name="user_id"/>
+    <IndexColumn name="status"/>
+</Index>
+```
+
+@tab JSON
+```json
+{
+  "Index": [
+    {
+      "name": "idx_user_status",
+      "columns": ["user_id", "status"],
+      "comment": "用户状态复合索引"
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+CREATE INDEX idx_user_status ON users (user_id, status);
+```
+
+@tab TOML
+```toml
+[[Index]]
+name = "idx_user_status"
+columns = ["user_id", "status"]
+comment = "用户状态复合索引"
+```
+:::
 
 ### 索引选项
 
@@ -260,6 +592,8 @@ Index:
 
 ### 定义外键
 
+::: code-tabs
+@tab YAML
 ```yaml
 Table:
   - name: orders
@@ -281,6 +615,90 @@ Table:
         onDelete: CASCADE     # 删除级联
         onUpdate: RESTRICT    # 更新限制
 ```
+
+@tab XML
+```xml
+<Table name="orders">
+    <Column name="id" type="BIGINT" primaryKey="true"/>
+    <Column name="user_id" type="BIGINT" nullable="false"/>
+    <Constraint name="fk_orders_user" type="FOREIGN_KEY"
+                referencedTable="users" referencedColumn="id"
+                foreignKey="user_id" onDelete="CASCADE" onUpdate="RESTRICT"/>
+</Table>
+```
+
+@tab JSON
+```json
+{
+  "Table": [
+    {
+      "name": "orders",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true
+        },
+        {
+          "name": "user_id",
+          "type": "BIGINT",
+          "nullable": false
+        }
+      ],
+      "Constraint": [
+        {
+          "name": "fk_orders_user",
+          "type": "FOREIGN_KEY",
+          "referencedTable": "users",
+          "referencedColumn": "id",
+          "foreignKey": "user_id",
+          "onDelete": "CASCADE",
+          "onUpdate": "RESTRICT"
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+CREATE TABLE orders (
+    id BIGINT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    CONSTRAINT fk_orders_user
+        FOREIGN KEY (user_id)
+        REFERENCES users (id)
+        ON DELETE CASCADE
+        ON UPDATE RESTRICT
+);
+```
+
+@tab TOML
+```toml
+[[Table]]
+name = "orders"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+
+[[Table.Column]]
+name = "user_id"
+type = "BIGINT"
+nullable = false
+
+[[Table.Constraint]]
+name = "fk_orders_user"
+type = "FOREIGN_KEY"
+referencedTable = "users"
+referencedColumn = "id"
+foreignKey = "user_id"
+onDelete = "CASCADE"
+onUpdate = "RESTRICT"
+```
+:::
 
 ### 一对多关系
 
@@ -355,6 +773,8 @@ Table:
 
 ### 使用 referenceId
 
+::: code-tabs
+@tab YAML
 ```yaml
 # 定义可复用的列
 Column:
@@ -379,6 +799,93 @@ Table:
         type: VARCHAR(50)
       - referenceId: global_timestamp  # 引用 global_timestamp
 ```
+
+@tab XML
+```xml
+<!-- 定义可复用的列 -->
+<Column id="global_id" name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+<Column id="global_timestamp" name="created_at" type="TIMESTAMP"
+        nullable="false" defaultValueComputed="CURRENT_TIMESTAMP"/>
+
+<!-- 引用定义的列 -->
+<Table name="users">
+    <Column referenceId="global_id"/>
+    <Column name="username" type="VARCHAR(50)"/>
+    <Column referenceId="global_timestamp"/>
+</Table>
+```
+
+@tab JSON
+```json
+{
+  "Column": [
+    {
+      "id": "global_id",
+      "name": "id",
+      "type": "BIGINT",
+      "primaryKey": true,
+      "autoIncrement": true
+    },
+    {
+      "id": "global_timestamp",
+      "name": "created_at",
+      "type": "TIMESTAMP",
+      "nullable": false,
+      "defaultValueComputed": "CURRENT_TIMESTAMP"
+    }
+  ],
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {
+          "referenceId": "global_id"
+        },
+        {
+          "name": "username",
+          "type": "VARCHAR(50)"
+        },
+        {
+          "referenceId": "global_timestamp"
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab TOML
+```toml
+# 定义可复用的列
+[[Column]]
+id = "global_id"
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+
+[[Column]]
+id = "global_timestamp"
+name = "created_at"
+type = "TIMESTAMP"
+nullable = false
+defaultValueComputed = "CURRENT_TIMESTAMP"
+
+# 引用定义的列
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+referenceId = "global_id"
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+
+[[Table.Column]]
+referenceId = "global_timestamp"
+```
+:::
 
 ## Schema 组织
 

@@ -429,7 +429,7 @@ public class ApiKey {
     private String name;
     private String key;
     private Set<Permission> permissions;
-    private Set<String> allowedDatabases;
+    private Set&lt;String&gt; allowedDatabases;
     private Date expiresAt;
 }
 ```
@@ -440,7 +440,7 @@ public class ApiKey {
 @Component
 public class RateLimiter {
 
-    private final Map<String, RateLimit> limits = new ConcurrentHashMap<>();
+    private final Map&lt;String, , RateLimit> limits = new ConcurrentHashMap<>();
 
     public boolean checkLimit(String apiKey, String endpoint) {
         RateLimit limit = limits.get(apiKey);
@@ -603,7 +603,7 @@ public class SchemaVersion {
     private String version;          // 版本号
 
     @Column(columnDefinition = "JSON")
-    private List<SchemaChange> changes; // 变更记录
+    private List<SchemaChange&gt;> changes; // 变更记录
 
     private LocalDateTime appliedAt;
     private String appliedBy;        // 操作人
@@ -737,8 +737,8 @@ public class MetricsCollector {
 public class HealthController {
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> health() {
-        Map<String, Object> health = new HashMap<>();
+    public ResponseEntity<Map&lt;String, , Object>> health() {
+        Map&lt;String, , Object> health = new HashMap<>();
 
         // 检查数据库连接
         health.put("database", checkDatabase());

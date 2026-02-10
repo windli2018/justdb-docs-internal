@@ -246,11 +246,11 @@ import org.verydb.justdb.loader.SchemaLoader;
 import org.verydb.justdb.schema.Justdb;
 
 // 加载 Excel 文件
-Loaded<Justdb> loaded = SchemaLoader.loadFromFile("schema.xlsx");
+Loaded&lt;Justdb&gt; loaded = SchemaLoader.loadFromFile("schema.xlsx");
 Justdb schema = loaded.getMainSchema();
 
 // 访问 Schema
-List<Table> tables = schema.getTables();
+List<Table&gt;> tables = schema.getTables();
 for (Table table : tables) {
     System.out.println("Table: " + table.getName());
     for (Column column : table.getColumns()) {

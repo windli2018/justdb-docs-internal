@@ -168,11 +168,11 @@ String sql = generator.generateAlterTable(table, diff);
 
 ```java
 // 生成所有 SQL
-List<String> sqlList = generator.generateAll(schema);
+List&lt;String&gt; sqlList = generator.generateAll(schema);
 
 // 生成指定类型 SQL
-List<String> createSQL = generator.generateCreates(schema);
-List<String> dropSQL = generator.generateDrops(schema);
+List&lt;String&gt; createSQL = generator.generateCreates(schema);
+List&lt;String&gt; dropSQL = generator.generateDrops(schema);
 ```
 
 ## Schema 模型

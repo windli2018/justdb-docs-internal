@@ -26,6 +26,8 @@ JustDB 追求最简洁的表达方式：
 
 **配置极简**
 
+::: code-tabs
+@tab YAML
 ```yaml
 # 只需定义必要的内容
 Table:
@@ -35,6 +37,52 @@ Table:
         type: BIGINT
         primaryKey: true
 ```
+
+@tab XML
+```xml
+<Justdb>
+    <Table name="users">
+        <Column name="id" type="BIGINT" primaryKey="true"/>
+    </Table>
+</Justdb>
+```
+
+@tab JSON
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY
+);
+```
+
+@tab TOML
+```toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+```
+:::
 
 **合理默认值**
 
@@ -92,6 +140,8 @@ Item
 
 **统一的生命周期钩子**
 
+::: code-tabs
+@tab YAML
 ```yaml
 Table:
   - name: users
@@ -103,10 +153,63 @@ Table:
       - sql: "DROP SEQUENCE seq_users"
 ```
 
+@tab XML
+```xml
+<Table name="users">
+    <beforeCreates>
+        <ConditionalSqlScript sql="CREATE SEQUENCE seq_users START WITH 1"/>
+    </beforeCreates>
+    <afterCreates>
+        <ConditionalSqlScript sql="ALTER TABLE users ADD UNIQUE (username)"/>
+    </afterCreates>
+    <beforeDrops>
+        <ConditionalSqlScript sql="DROP SEQUENCE seq_users"/>
+    </beforeDrops>
+</Table>
+```
+
+@tab JSON
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "beforeCreates": [
+        {"sql": "CREATE SEQUENCE seq_users START WITH 1"}
+      ],
+      "afterCreates": [
+        {"sql": "ALTER TABLE users ADD UNIQUE (username)"}
+      ],
+      "beforeDrops": [
+        {"sql": "DROP SEQUENCE seq_users"}
+      ]
+    }
+  ]
+}
+```
+
+@tab TOML
+```toml
+[[Table]]
+name = "users"
+
+[[Table.beforeCreates]]
+sql = "CREATE SEQUENCE seq_users START WITH 1"
+
+[[Table.afterCreates]]
+sql = "ALTER TABLE users ADD UNIQUE (username)"
+
+[[Table.beforeDrops]]
+sql = "DROP SEQUENCE seq_users"
+```
+:::
+
 ### 3. 声明式优先 (Declarative First)
 
 描述"要什么"，而不是"怎么做"：
 
+::: code-tabs
+@tab YAML
 ```yaml
 # 声明式 - 描述期望状态
 Table:
@@ -115,11 +218,62 @@ Table:
       - name: email
         type: VARCHAR(100)
         unique: true
-
-# 命令式 - 描述如何执行（避免）
-# CREATE TABLE users (...);
-# ALTER TABLE users ADD CONSTRAINT ... UNIQUE (email);
 ```
+
+@tab XML
+```xml
+<!-- 声明式 - 描述期望状态 -->
+<Justdb>
+    <Table name="users">
+        <Column name="email" type="VARCHAR(100)" unique="true"/>
+    </Table>
+</Justdb>
+```
+
+@tab JSON
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {
+          "name": "email",
+          "type": "VARCHAR(100)",
+          "unique": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+-- 命令式 - 描述如何执行（避免）
+CREATE TABLE users (
+    email VARCHAR(100),
+    UNIQUE (email)
+);
+```
+
+@tab TOML
+```toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+unique = true
+```
+:::
+
+**优势**：
+- 更易理解和维护
+- 工具自动优化执行路径
+- 避免人为错误
+- 支持多种数据库方言
 
 **优势**：
 - 更易理解和维护
@@ -143,6 +297,8 @@ Table:
 
 **命名惯例**
 
+::: code-tabs
+@tab YAML
 ```yaml
 # 表名自动复数（可选）
 Table:
@@ -160,6 +316,64 @@ Column:
     type: BIGINT
     # 自动推断为外键关联到 users.id
 ```
+
+@tab XML
+```xml
+<!-- 主键自动推断 -->
+<Table name="users">
+    <Column name="id" type="BIGINT">
+        <!-- 自动识别为主键 -->
+    </Column>
+    <Column name="user_id" type="BIGINT">
+        <!-- 自动推断为外键 -->
+    </Column>
+</Table>
+```
+
+@tab JSON
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "user_id",
+          "type": "BIGINT"
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+-- 主键和约束由约定推断
+CREATE TABLE users (
+    id BIGINT,
+    user_id BIGINT
+);
+```
+
+@tab TOML
+```toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+
+[[Table.Column]]
+name = "user_id"
+type = "BIGINT"
+```
+:::
 
 ### 5. 可扩展性 (Extensibility)
 
@@ -260,6 +474,7 @@ graph TB
         A1[CLI]
         A2[Spring Boot]
         A3[Java API]
+        A4[MySQL 协议服务]
     end
 
     subgraph "领域层 (Domain)"
@@ -281,6 +496,7 @@ graph TB
     A1 --> B1
     A2 --> B1
     A3 --> B1
+    A4 --> B1
     B1 --> C1
     B2 --> C2
     B3 --> C3
@@ -333,13 +549,34 @@ SchemaDiff diff = SchemaDiff.calculate(current, target);
 
 JustDB 支持从简单到复杂的渐进式使用：
 
+**入门级 - 最简单**
+
+::: code-tabs
+@tab YAML
 ```yaml
-# 入门级 - 最简单
 Table:
   - name: users
     Column: []
+```
 
-# 进阶级 - 添加约束
+@tab XML
+```xml
+<Justdb>
+    <Table name="users"/>
+</Justdb>
+```
+
+@tab SQL
+```sql
+CREATE TABLE users ();
+```
+:::
+
+**进阶级 - 添加约束**
+
+::: code-tabs
+@tab YAML
+```yaml
 Table:
   - name: users
     Column:
@@ -349,8 +586,53 @@ Table:
       - name: email
         type: VARCHAR(100)
         nullable: false
+```
 
-# 高级级 - 完整配置
+@tab XML
+```xml
+<Table name="users">
+    <Column name="id" type="BIGINT" primaryKey="true"/>
+    <Column name="email" type="VARCHAR(100)" nullable="false"/>
+</Table>
+```
+
+@tab JSON
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(100)",
+          "nullable": false
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY,
+    email VARCHAR(100) NOT NULL
+);
+```
+:::
+
+**高级级 - 完整配置**
+
+::: code-tabs
+@tab YAML
+```yaml
 Table:
   - name: users
     comment: 用户表
@@ -362,6 +644,16 @@ Table:
         primaryKey: true
         autoIncrement: true
         comment: 用户ID
+      - name: email
+        type: VARCHAR(100)
+        nullable: false
+      - name: username
+        type: VARCHAR(50)
+        nullable: false
+      - name: created_at
+        type: TIMESTAMP
+        nullable: false
+        defaultValueComputed: CURRENT_TIMESTAMP
     Index:
       - name: idx_email
         columns: [email]
@@ -371,6 +663,38 @@ Table:
       - dbms: mysql
         sql: "SET sql_mode='STRICT_TRANS_TABLES'"
 ```
+
+@tab XML
+```xml
+<Table name="users" comment="用户表" engine="InnoDB" charset="utf8mb4">
+    <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"
+            comment="用户ID"/>
+    <Column name="email" type="VARCHAR(100)" nullable="false"/>
+    <Column name="username" type="VARCHAR(50)" nullable="false"/>
+    <Column name="created_at" type="TIMESTAMP" nullable="false"
+            defaultValueComputed="CURRENT_TIMESTAMP"/>
+    <Index name="idx_email" unique="true" comment="邮箱唯一索引">
+        <IndexColumn name="email"/>
+    </Index>
+    <beforeCreates>
+        <ConditionalSqlScript dbms="mysql" sql="SET sql_mode='STRICT_TRANS_TABLES'"/>
+    </beforeCreates>
+</Table>
+```
+
+@tab SQL
+```sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '用户ID',
+    email VARCHAR(100) NOT NULL,
+    username VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY idx_email (email) COMMENT '邮箱唯一索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '用户表';
+
+SET sql_mode='STRICT_TRANS_TABLES';
+```
+:::
 
 ### 错误处理
 

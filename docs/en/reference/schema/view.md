@@ -25,16 +25,16 @@ View is a virtual table based on the result set of a SQL query. JustDB provides 
 | `id` | String | No | View ID, used for reference |
 | `comment` | String | No | View comment |
 | `query` | String | Yes | View definition query (SQL) |
-| `columns` | List<ViewColumn> | No | View column definitions |
+| `columns` | List<ViewColumn&gt;> | No | View column definitions |
 | `selectType` | SelectType | No | View type |
 | `changeType` | ChangeType | No | Change type |
-| `formerNames` | List<String> | No | Old name list |
-| `beforeCreates` | List<ConditionalSqlScript> | No | SQL to execute before creation |
-| `afterCreates` | List<ConditionalSqlScript> | No | SQL to execute after creation |
-| `beforeDrops` | List<ConditionalSqlScript> | No | SQL to execute before dropping |
-| `afterDrops` | List<ConditionalSqlScript> | No | SQL to execute after dropping |
-| `beforeAlters` | List<ConditionalSqlScript> | No | SQL to execute before modification |
-| `afterAlters` | List<ConditionalSqlScript> | No | SQL to execute after modification |
+| `formerNames` | List&lt;String&gt; | No | Old name list |
+| `beforeCreates` | List<ConditionalSqlScript&gt;> | No | SQL to execute before creation |
+| `afterCreates` | List<ConditionalSqlScript&gt;> | No | SQL to execute after creation |
+| `beforeDrops` | List<ConditionalSqlScript&gt;> | No | SQL to execute before dropping |
+| `afterDrops` | List<ConditionalSqlScript&gt;> | No | SQL to execute after dropping |
+| `beforeAlters` | List<ConditionalSqlScript&gt;> | No | SQL to execute before modification |
+| `afterAlters` | List<ConditionalSqlScript&gt;> | No | SQL to execute after modification |
 
 ### ViewColumn Properties
 

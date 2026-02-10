@@ -81,13 +81,13 @@ Main diff calculation class.
 public class CanonicalSchemaDiff {
     private final Justdb currentSchema;        // Current Schema
     private final Justdb targetSchema;         // Target Schema
-    private final List<TableChange> tableChanges;      // Table changes
-    private final List<ColumnChange> columnChanges;    // Column changes
-    private final List<IndexChange> indexChanges;      // Index changes
-    private final List<ConstraintChange> constraintChanges; // Constraint changes
-    private final List<SequenceChange> sequenceChanges;  // Sequence changes
-    private final List<DataChange> dataChanges;         // Data changes
-    private final List<TableDataFilterChange> tableDataFilterChanges; // Data filter changes
+    private final List<TableChange&gt;> tableChanges;      // Table changes
+    private final List<ColumnChange&gt;> columnChanges;    // Column changes
+    private final List<IndexChange&gt;> indexChanges;      // Index changes
+    private final List<ConstraintChange&gt;> constraintChanges; // Constraint changes
+    private final List<SequenceChange&gt;> sequenceChanges;  // Sequence changes
+    private final List<DataChange&gt;> dataChanges;         // Data changes
+    private final List<TableDataFilterChange&gt;> tableDataFilterChanges; // Data filter changes
 }
 ```
 
@@ -99,7 +99,7 @@ Table change information.
 public static class TableChange extends Item {
     private String tableName;      // New table name
     private ChangeType changeType; // Change type
-    private List<String> formerNames; // Old name list
+    private List&lt;String&gt; formerNames; // Old name list
     private Table currentTable;    // Current table
     private Table targetTable;     // Target table
 }
@@ -114,7 +114,7 @@ public static class ColumnChange extends Item {
     private String tableName;      // Owner table name
     private String columnName;     // New column name
     private ChangeType changeType; // Change type
-    private List<String> formerNames; // Old name list
+    private List&lt;String&gt; formerNames; // Old name list
     private Column currentColumn;  // Current column
     private Column targetColumn;   // Target column
 }
@@ -156,7 +156,7 @@ Sequence change information.
 public static class SequenceChange extends Item {
     private String sequenceName;       // Sequence name
     private ChangeType changeType;     // Change type
-    private List<String> formerNames;  // Old name list
+    private List&lt;String&gt; formerNames;  // Old name list
     private Sequence currentSequence;  // Current sequence
     private Sequence targetSequence;   // Target sequence
 }
@@ -214,8 +214,8 @@ CanonicalSchemaDiff diff = new CanonicalSchemaDiff(currentSchema, targetSchema);
 diff.calculateAll();
 
 // Get changes
-List<TableChange> tableChanges = diff.getTableChanges();
-List<ColumnChange> columnChanges = diff.getColumnChanges();
+List<TableChange&gt;> tableChanges = diff.getTableChanges();
+List<ColumnChange&gt;> columnChanges = diff.getColumnChanges();
 ```
 
 ### calculateTables()
@@ -347,7 +347,7 @@ deployer.deployDiff(diffSchema);
 Generate data change SQL.
 
 ```java
-public List<String> generateDataChangeSql(String dialect)
+public List&lt;String&gt; generateDataChangeSql(String dialect)
 ```
 
 **Parameters**:
@@ -362,7 +362,7 @@ public List<String> generateDataChangeSql(String dialect)
 Generate data filter change SQL.
 
 ```java
-public List<String> generateTableDataFilterChangeSql(String dialect)
+public List&lt;String&gt; generateTableDataFilterChangeSql(String dialect)
 ```
 
 **Strategy**: Delete undeleted rows, then re-import based on new filter conditions.
@@ -383,14 +383,14 @@ public class BasicDiff {
         JustdbManager manager = JustdbManager.getInstance();
 
         // Load current Schema
-        Loaded<Justdb> currentResult = SchemaLoaderFactory.load(
+        Loaded&lt;Justdb&gt; currentResult = SchemaLoaderFactory.load(
             "current-schema.json",
             manager
         );
         Justdb currentSchema = currentResult.getData();
 
         // Load target Schema
-        Loaded<Justdb> targetResult = SchemaLoaderFactory.load(
+        Loaded&lt;Justdb&gt; targetResult = SchemaLoaderFactory.load(
             "target-schema.json",
             manager
         );
@@ -496,7 +496,7 @@ public class MigrationSqlGeneration {
         SchemaMigrationService migrationService =
             new SchemaMigrationService(currentSchema, manager);
 
-        List<String> sqlStatements = migrationService.generateMigrationSql(diff);
+        List&lt;String&gt; sqlStatements = migrationService.generateMigrationSql(diff);
 
         // Output SQL
         System.out.println("-- Migration SQL");
@@ -531,12 +531,12 @@ public class TableScopeFiltering {
         scopes.setExcludes(Arrays.asList("*_temp", "*_backup"));
 
         // Filter tables
-        Map<String, Table> currentTables = toTableMap(currentSchema);
-        Map<String, Table> targetTables = toTableMap(targetSchema);
+        Map&lt;String, , Table> currentTables = toTableMap(currentSchema);
+        Map&lt;String, , Table> targetTables = toTableMap(targetSchema);
 
-        Map<String, Table> filteredCurrent =
+        Map&lt;String, , Table> filteredCurrent =
             CanonicalSchemaDiff.filterByTableScopes(currentTables, scopes);
-        Map<String, Table> filteredTarget =
+        Map&lt;String, , Table> filteredTarget =
             CanonicalSchemaDiff.filterByTableScopes(targetTables, scopes);
 
         // Calculate differences using filtered tables
@@ -590,7 +590,7 @@ public class FullMigration {
         SchemaMigrationService migrationService =
             new SchemaMigrationService(currentSchema, manager);
 
-        List<String> sqlStatements = migrationService.generateMigrationSql(diff);
+        List&lt;String&gt; sqlStatements = migrationService.generateMigrationSql(diff);
 
         // 3. Execute migration
         Connection connection = DriverManager.getConnection(

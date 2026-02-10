@@ -179,10 +179,10 @@ Used to represent differences between two Schemas:
 public class CanonicalSchemaDiff {
     private Justdb sourceSchema;      // Source Schema
     private Justdb targetSchema;      // Target Schema
-    private List<Table> tables;       // Changed tables
-    private List<Column> columns;     // Changed columns
-    private List<Index> indexes;      // Changed indexes
-    private List<Constraint> constraints; // Changed constraints
+    private List<Table&gt;> tables;       // Changed tables
+    private List<Column&gt;> columns;     // Changed columns
+    private List<Index&gt;> indexes;      // Changed indexes
+    private List<Constraint&gt;> constraints; // Changed constraints
 }
 ```
 
@@ -304,7 +304,7 @@ CanonicalSchemaDiff diff = new CanonicalSchemaDiff(currentSchema, targetSchema);
 diff.calculateAll();
 
 // Generate SQL
-List<String> sqlStatements = diff.generateSql("mysql");
+List&lt;String&gt; sqlStatements = diff.generateSql("mysql");
 
 // Execute changes
 SchemaEvolutionManager manager = new SchemaEvolutionManager(connection);

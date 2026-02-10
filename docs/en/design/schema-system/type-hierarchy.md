@@ -207,7 +207,7 @@ Through `UnknownValues` base class, all Schema objects can support dynamic attri
 
 ```java
 public class UnknownValues {
-    private Map<String, Object> unknownValues = new HashMap<>();
+    private Map&lt;String, , Object> unknownValues = new HashMap<>();
 
     public Object get(String key) {
         return unknownValues.get(key);
@@ -324,7 +324,7 @@ public class Table extends QueryAble {
 
 public class Columns {
     @XmlElement(name = "Column")
-    private List<Column> list = new ArrayList<>();
+    private List<Column&gt;> list = new ArrayList<>();
 }
 ```
 

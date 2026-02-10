@@ -477,7 +477,7 @@ public interface VirtualTableProvider {
      * @param context SQL 执行上下文（包含原始 SQL、参数等）
      * @return VirtualTableResult 包含 Table 和 Data，null 表示不支持此表名
      */
-    VirtualTableResult get(Justdb justdb, String tableName, Map<String, Object> context);
+    VirtualTableResult get(Justdb justdb, String tableName, Map&lt;String, , Object> context);
 }
 ```
 
@@ -717,7 +717,7 @@ dataSource.setVirtualTableProvider(builtinProvider);
 
 // 正常使用，虚拟表会自动工作
 SqlExecutor executor = new SqlExecutor(dataSource, connection);
-List<Map<String, Object>> result = executor.executeSelect("SELECT * FROM TABLES");
+List<Map&gt;<String, Object>> result = executor.executeSelect("SELECT * FROM TABLES");
 ```
 
 ### 7.8 关键文件清单
@@ -854,7 +854,7 @@ public interface VirtualTableProvider {
      * @param context 上下文
      * @return Table 定义，null 表示不支持此表名
      */
-    Table get(Justdb justdb, String tableName, Map<String, Object> context);
+    Table get(Justdb justdb, String tableName, Map&lt;String, , Object> context);
 }
 ```
 
@@ -866,8 +866,8 @@ public interface VirtualTableProvider {
 public class JustdbDataSource {
 
     private final Justdb justdb;
-    private final Map<String, TableData> tables;
-    private final Map<String, Sequence> sequences;
+    private final Map&lt;String, , TableData> tables;
+    private final Map&lt;String, , Sequence> sequences;
     private final AtomicLong transactionId;
 
     // 新增：虚拟表 Provider（可设置，默认为空）
@@ -986,7 +986,7 @@ dataSource.setVirtualTableProvider((j, name, ctx) -> {
 
 // 正常使用，虚拟表会自动工作
 SqlExecutor executor = new SqlExecutor(dataSource, connection);
-List<Map<String, Object>> result = executor.executeSelect("SELECT * FROM TABLES");
+List<Map&gt;<String, Object>> result = executor.executeSelect("SELECT * FROM TABLES");
 ```
 
 ### 11.7 实施步骤
@@ -1087,7 +1087,7 @@ void testQueryVirtualTable() {
     SqlExecutor executor = new SqlExecutor(dataSource, connection);
 
     // 查询虚拟表 TABLES
-    List<Map<String, Object>> result = executor.executeSelect(
+    List<Map&gt;<String, Object>> result = executor.executeSelect(
         "SELECT TABLE_NAME FROM TABLES"
     );
 
@@ -1131,7 +1131,7 @@ private org.verydb.justdb.jdbc.VirtualTableProvider virtualTableProvider;
 **VirtualTableProvider 接口**：
 - ✅ 函数式接口（`@FunctionalInterface`）
 - ✅ 返回 `Table` 定义
-- ✅ 参数：`Justdb justdb`, `String tableName`, `Map<String, Object> context`
+- ✅ 参数：`Justdb justdb`, `String tableName`, `Map&lt;String, , Object> context`
 - ✅ 返回 `null` 表示不支持该表名
 
 **JustdbDataSource 集成**：

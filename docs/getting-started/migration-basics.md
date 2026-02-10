@@ -43,9 +43,10 @@ flowchart LR
 
 ### 首次迁移
 
-```bash
-# 创建 Schema
-cat > users.yaml << EOF
+::: code-tabs
+@tab YAML
+```yaml
+# users.yaml
 Table:
   - name: users
     Column:
@@ -54,8 +55,68 @@ Table:
         primaryKey: true
       - name: username
         type: VARCHAR(50)
-EOF
+```
 
+@tab XML
+```xml
+<!-- users.xml -->
+<Justdb>
+    <Table name="users">
+        <Column name="id" type="BIGINT" primaryKey="true"/>
+        <Column name="username" type="VARCHAR(50)"/>
+    </Table>
+</Justdb>
+```
+
+@tab JSON
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true
+        },
+        {
+          "name": "username",
+          "type": "VARCHAR(50)"
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+-- users.sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY,
+    username VARCHAR(50)
+);
+```
+
+@tab TOML
+```toml
+# users.toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+```
+:::
+
+```bash
 # 执行迁移
 justdb migrate users.yaml
 
@@ -196,6 +257,8 @@ Table: orders
 
 JustDB 通过 `formerNames` 属性智能检测重命名：
 
+::: code-tabs
+@tab YAML
 ```yaml
 # 修改前
 Table:
@@ -212,6 +275,54 @@ Table:
         formerNames: [username]   # 旧名称
         type: VARCHAR(50)
 ```
+
+@tab XML
+```xml
+<!-- 修改前 -->
+<Table name="users">
+    <Column name="username" type="VARCHAR(50)"/>
+</Table>
+
+<!-- 修改后 -->
+<Table name="users">
+    <Column name="user_name" type="VARCHAR(50)">
+        <formerNames>
+            <formerName>username</formerName>
+        </formerNames>
+    </Column>
+</Table>
+```
+
+@tab JSON
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {
+          "name": "user_name",
+          "formerNames": ["username"],
+          "type": "VARCHAR(50)"
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab TOML
+```toml
+# 修改后
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "user_name"
+formerNames = ["username"]
+type = "VARCHAR(50)"
+```
+:::
 
 ```bash
 # 迁移时自动生成重命名 SQL

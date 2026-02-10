@@ -705,13 +705,14 @@ graph TB
         A1[Spring Boot]
         A2[Raw Java]
         A3[CLI]
-        A4[Web UI]
+        A4[MySQL Clients]
     end
 
     subgraph "API Layer"
         B1[Java API]
         B2[JDBC Driver]
-        B3[AI Service]
+        B3[MySQL Protocol Server]
+        B4[AI Service]
     end
 
     subgraph "Core Layer"
@@ -735,10 +736,11 @@ graph TB
     A1 --> B1
     A2 --> B1
     A3 --> B1
-    A4 --> B1
+    A4 --> B3
     B1 --> C1
     B2 --> C1
     B3 --> C1
+    B4 --> C1
     C1 --> D1
     C2 --> D1
     C3 --> D1

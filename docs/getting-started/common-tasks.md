@@ -20,6 +20,8 @@ tag:
 
 ### 基本表
 
+::: code-tabs
+@tab YAML
 ```yaml
 Table:
   - name: users
@@ -34,6 +36,74 @@ Table:
       - name: email
         type: VARCHAR(100)
 ```
+
+@tab XML
+```xml
+<Table name="users">
+    <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+    <Column name="username" type="VARCHAR(50)" nullable="false"/>
+    <Column name="email" type="VARCHAR(100)"/>
+</Table>
+```
+
+@tab JSON
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true,
+          "autoIncrement": true
+        },
+        {
+          "name": "username",
+          "type": "VARCHAR(50)",
+          "nullable": false
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(100)"
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100)
+);
+```
+
+@tab TOML
+```toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+nullable = false
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+```
+:::
 
 ### 带注释的表
 
@@ -183,6 +253,8 @@ justdb migrate --safe-drop
 
 ### 普通索引
 
+::: code-tabs
+@tab YAML
 ```yaml
 Index:
   - name: idx_username
@@ -190,8 +262,31 @@ Index:
     comment: 用户名索引
 ```
 
+@tab XML
+```xml
+<Index name="idx_username" comment="用户名索引">
+    <IndexColumn name="username"/>
+</Index>
+```
+
+@tab SQL
+```sql
+CREATE INDEX idx_username ON users (username);
+```
+
+@tab TOML
+```toml
+[[Index]]
+name = "idx_username"
+columns = ["username"]
+comment = "用户名索引"
+```
+:::
+
 ### 唯一索引
 
+::: code-tabs
+@tab YAML
 ```yaml
 Index:
   - name: idx_email
@@ -200,8 +295,32 @@ Index:
     comment: 邮箱唯一索引
 ```
 
+@tab XML
+```xml
+<Index name="idx_email" unique="true" comment="邮箱唯一索引">
+    <IndexColumn name="email"/>
+</Index>
+```
+
+@tab SQL
+```sql
+CREATE UNIQUE INDEX idx_email ON users (email);
+```
+
+@tab TOML
+```toml
+[[Index]]
+name = "idx_email"
+columns = ["email"]
+unique = true
+comment = "邮箱唯一索引"
+```
+:::
+
 ### 复合索引
 
+::: code-tabs
+@tab YAML
 ```yaml
 Index:
   - name: idx_user_status
@@ -209,8 +328,32 @@ Index:
     comment: 用户状态复合索引
 ```
 
+@tab XML
+```xml
+<Index name="idx_user_status" comment="用户状态复合索引">
+    <IndexColumn name="user_id"/>
+    <IndexColumn name="status"/>
+</Index>
+```
+
+@tab SQL
+```sql
+CREATE INDEX idx_user_status ON users (user_id, status);
+```
+
+@tab TOML
+```toml
+[[Index]]
+name = "idx_user_status"
+columns = ["user_id", "status"]
+comment = "用户状态复合索引"
+```
+:::
+
 ### 全文索引
 
+::: code-tabs
+@tab YAML
 ```yaml
 Index:
   - name: idx_content_fulltext
@@ -218,6 +361,28 @@ Index:
     type: FULLTEXT
     comment: 内容全文索引
 ```
+
+@tab XML
+```xml
+<Index name="idx_content_fulltext" type="FULLTEXT" comment="内容全文索引">
+    <IndexColumn name="content"/>
+</Index>
+```
+
+@tab SQL
+```sql
+CREATE FULLTEXT INDEX idx_content_fulltext ON articles (content);
+```
+
+@tab TOML
+```toml
+[[Index]]
+name = "idx_content_fulltext"
+columns = ["content"]
+type = "FULLTEXT"
+comment = "内容全文索引"
+```
+:::
 
 ## 删除索引
 
@@ -233,6 +398,8 @@ Index:
 
 ### 创建外键
 
+::: code-tabs
+@tab YAML
 ```yaml
 Table:
   - name: orders
@@ -252,6 +419,87 @@ Table:
         onDelete: CASCADE
 ```
 
+@tab XML
+```xml
+<Table name="orders">
+    <Column name="id" type="BIGINT" primaryKey="true"/>
+    <Column name="user_id" type="BIGINT" nullable="false"/>
+    <Constraint name="fk_orders_user" type="FOREIGN_KEY"
+                referencedTable="users" referencedColumn="id"
+                foreignKey="user_id" onDelete="CASCADE"/>
+</Table>
+```
+
+@tab JSON
+```json
+{
+  "Table": [
+    {
+      "name": "orders",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true
+        },
+        {
+          "name": "user_id",
+          "type": "BIGINT",
+          "nullable": false
+        }
+      ],
+      "Constraint": [
+        {
+          "name": "fk_orders_user",
+          "type": "FOREIGN_KEY",
+          "referencedTable": "users",
+          "referencedColumn": "id",
+          "foreignKey": "user_id",
+          "onDelete": "CASCADE"
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+CREATE TABLE orders (
+    id BIGINT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    CONSTRAINT fk_orders_user
+        FOREIGN KEY (user_id)
+        REFERENCES users (id)
+        ON DELETE CASCADE
+);
+```
+
+@tab TOML
+```toml
+[[Table]]
+name = "orders"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+
+[[Table.Column]]
+name = "user_id"
+type = "BIGINT"
+nullable = false
+
+[[Table.Constraint]]
+name = "fk_orders_user"
+type = "FOREIGN_KEY"
+referencedTable = "users"
+referencedColumn = "id"
+foreignKey = "user_id"
+onDelete = "CASCADE"
+```
+:::
+
 ### 级联操作
 
 ```yaml
@@ -268,6 +516,8 @@ Constraint:
 
 ### 基本重命名
 
+::: code-tabs
+@tab YAML
 ```yaml
 Table:
   - name: users           # 新名称
@@ -277,6 +527,53 @@ Table:
         type: BIGINT
         primaryKey: true
 ```
+
+@tab XML
+```xml
+<Table name="users">
+    <formerNames>
+        <formerName>user</formerName>
+    </formerNames>
+    <Column name="id" type="BIGINT" primaryKey="true"/>
+</Table>
+```
+
+@tab JSON
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "formerNames": ["user"],
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+-- JustDB generates: ALTER TABLE user RENAME TO users;
+```
+
+@tab TOML
+```toml
+[[Table]]
+name = "users"
+formerNames = ["user"]
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+```
+:::
 
 ### 批量重命名
 

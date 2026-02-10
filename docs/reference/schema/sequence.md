@@ -28,7 +28,7 @@ tag:
 | `cycle` | Boolean | 否 | 是否循环（默认 false） |
 | `cache` | Integer | 否 | 缓存大小 |
 | `comment` | String | 否 | 序列注释 |
-| `dbms` | List<String> | 否 | 适用数据库列表 |
+| `dbms` | List&lt;String&gt; | 否 | 适用数据库列表 |
 
 ## 基本示例
 

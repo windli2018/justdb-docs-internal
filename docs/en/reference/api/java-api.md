@@ -29,13 +29,13 @@ JustDB provides a complete Java API for defining, loading, generating, and deplo
 | Property | Type | Description |
 |----------|------|-------------|
 | `namespace` | String | Namespace, used for code generation |
-| `tables` | List<Table> | Table definition list |
-| `views` | List<View> | View definition list |
-| `sequences` | List<Sequence> | Sequence definition list |
-| `indexes` | List<Index> | Index definition list |
-| `constraints` | List<Constraint> | Constraint definition list |
-| `data` | List<Data> | Data export definition |
-| `properties` | List<Property> | Schema properties |
+| `tables` | List<Table&gt;> | Table definition list |
+| `views` | List<View&gt;> | View definition list |
+| `sequences` | List<Sequence&gt;> | Sequence definition list |
+| `indexes` | List<Index&gt;> | Index definition list |
+| `constraints` | List<Constraint&gt;> | Constraint definition list |
+| `data` | List<Data&gt;> | Data export definition |
+| `properties` | List<Property&gt;> | Schema properties |
 
 **Code Example**:
 
@@ -70,16 +70,16 @@ justdb.setTables(Arrays.asList(usersTable));
 | `name` | String | Table name |
 | `id` | String | Table ID |
 | `comment` | String | Table comment |
-| `columns` | List<Column> | Column definitions |
-| `indexes` | List<Index> | Index definitions |
-| `constraints` | List<Constraint> | Constraint definitions |
-| `sequences` | List<Sequence> | Sequence definitions |
+| `columns` | List<Column&gt;> | Column definitions |
+| `indexes` | List<Index&gt;> | Index definitions |
+| `constraints` | List<Constraint&gt;> | Constraint definitions |
+| `sequences` | List<Sequence&gt;> | Sequence definitions |
 | `engine` | String | Storage engine (MySQL) |
 | `charset` | String | Character set |
 | `collation` | String | Collation rules |
 | `autoIncrement` | Long | Auto-increment start value |
 | `changeType` | ChangeType | Change type |
-| `formerNames` | List<String> | Old name list |
+| `formerNames` | List&lt;String&gt; | Old name list |
 | `dataExportStrategy` | DataExportStrategy | Data export strategy |
 | `dataFilterCondition` | String | Data filter condition |
 
@@ -126,7 +126,7 @@ table.setDataFilterCondition("status = 'active'");
 | `precision` | Integer | Precision |
 | `scale` | Integer | Decimal places |
 | `changeType` | ChangeType | Change type |
-| `formerNames` | List<String> | Old name list |
+| `formerNames` | List&lt;String&gt; | Old name list |
 
 **Supported Data Types**:
 
@@ -173,7 +173,7 @@ emailColumn.setComment("Email address");
 |----------|------|-------------|
 | `name` | String | Index name |
 | `tableName` | String | Parent table name |
-| `columns` | List<String> | Index columns |
+| `columns` | List&lt;String&gt; | Index columns |
 | `unique` | Boolean | Whether unique index |
 | `type` | String | Index type |
 | `comment` | String | Index comment |
@@ -209,7 +209,7 @@ compositeIndex.setColumns(Arrays.asList("email", "status"));
 | `name` | String | Constraint name |
 | `tableName` | String | Parent table name |
 | `type` | ConstraintType | Constraint type |
-| `columns` | List<String> | Constraint columns |
+| `columns` | List&lt;String&gt; | Constraint columns |
 | `referencedTable` | String | Referenced table (foreign key) |
 | `referencedColumn` | String | Referenced column (foreign key) |
 | `checkExpression` | String | Check expression |
@@ -267,7 +267,7 @@ check.setCheckExpression("age >= 18");
 | `cycle` | Boolean | Whether to cycle |
 | `cache` | Long | Cache size |
 | `changeType` | ChangeType | Change type |
-| `formerNames` | List<String> | Old name list |
+| `formerNames` | List&lt;String&gt; | Old name list |
 
 **Code Example**:
 
@@ -300,8 +300,8 @@ Factory class for loading Schema from various sources.
 **Method Signatures**:
 
 ```java
-public static Loaded<Justdb> load(String location, JustdbManager manager)
-public static List<Loaded<Justdb>> loadAll(String location, List<String> fileTypes, JustdbManager manager)
+public static Loaded&lt;Justdb&gt; load(String location, JustdbManager manager)
+public static List<Loaded&gt;<Justdb>> loadAll(String location, List&lt;String&gt; fileTypes, JustdbManager manager)
 ```
 
 **Code Example**:
@@ -310,19 +310,19 @@ public static List<Loaded<Justdb>> loadAll(String location, List<String> fileTyp
 JustdbManager manager = JustdbManager.getInstance();
 
 // Load from file
-Loaded<Justdb> result = SchemaLoaderFactory.load("schema.json", manager);
+Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("schema.json", manager);
 if (result.isSuccess()) {
     Justdb justdb = result.getData();
 }
 
 // Load from classpath
-Loaded<Justdb> result = SchemaLoaderFactory.load("classpath:schema.xml", manager);
+Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("classpath:schema.xml", manager);
 
 // Load from HTTP
-Loaded<Justdb> result = SchemaLoaderFactory.load("https://example.com/schema.json", manager);
+Loaded&lt;Justdb&gt; result = SchemaLoaderFactory.load("https://example.com/schema.json", manager);
 
 // Load all Schemas from directory
-List<Loaded<Justdb>> results = SchemaLoaderFactory.loadAll("./schemas", null, manager);
+List<Loaded&gt;<Justdb>> results = SchemaLoaderFactory.loadAll("./schemas", null, manager);
 ```
 
 ### Loaded - Loading Result
@@ -539,11 +539,11 @@ import org.verydb.justdb.schema.*;
 import java.util.*;
 
 public class DynamicSchemaBuilder {
-    public static Table buildTable(String name, List<Map<String, Object>> columns) {
+    public static Table buildTable(String name, List<Map&gt;<String, Object>> columns) {
         Table table = new Table(name);
-        List<Column> columnList = new ArrayList<>();
+        List<Column&gt;> columnList = new ArrayList<>();
 
-        for (Map<String, Object> colDef : columns) {
+        for (Map&lt;String, , Object> colDef : columns) {
             Column column = new Column();
             column.setName((String) colDef.get("name"));
             column.setType((String) colDef.get("type"));
@@ -570,9 +570,9 @@ public class DynamicSchemaBuilder {
     }
 
     public static void main(String[] args) {
-        List<Map<String, Object>> columns = new ArrayList<>();
+        List<Map&gt;<String, Object>> columns = new ArrayList<>();
 
-        Map<String, Object> idCol = new HashMap<>();
+        Map&lt;String, , Object> idCol = new HashMap<>();
         idCol.put("name", "id");
         idCol.put("type", "BIGINT");
         idCol.put("primaryKey", true);
@@ -580,7 +580,7 @@ public class DynamicSchemaBuilder {
         idCol.put("comment", "Primary key");
         columns.add(idCol);
 
-        Map<String, Object> nameCol = new HashMap<>();
+        Map&lt;String, , Object> nameCol = new HashMap<>();
         nameCol.put("name", "name");
         nameCol.put("type", "VARCHAR(100)");
         nameCol.put("nullable", false);

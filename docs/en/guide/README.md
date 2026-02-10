@@ -20,9 +20,10 @@ Welcome to the JustDB User Guide! This section will help you understand JustDB's
 
 ### Getting Started Guides
 
-- **[Installation](./installation.md)** - Install and configure JustDB *(Coming soon)*
-- **[First Schema](./first-schema.md)** - Create your first database schema *(Coming soon)*
-- **[Basic Operations](./basic-operations.md)** - Common database operations *(Coming soon)*
+- **[Installation](../getting-started/installation.md)** - Install and configure JustDB
+- **[Quick Start](../getting-started/quick-start.md)** - Get started in 5 minutes
+- **[First Schema](../getting-started/first-schema.md)** - Create your first database schema
+- **[Migration Basics](../getting-started/migration-basics.md)** - Common database operations
 
 ### Advanced Topics
 

@@ -95,9 +95,12 @@ justdb:
 
 ## 创建第一个 Schema
 
-创建文件 `schema.yaml`：
+创建 Schema 文件：
 
+::: code-tabs
+@tab YAML
 ```yaml
+# schema.yaml
 namespace: com.example
 Table:
   - id: users
@@ -126,6 +129,115 @@ Table:
         columns: [username]
         unique: true
 ```
+
+@tab XML
+```xml
+<!-- schema.xml -->
+<Justdb namespace="com.example">
+    <Table id="users" name="用户表" comment="存储系统用户信息">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"
+                comment="用户ID"/>
+        <Column name="username" type="VARCHAR(50)" nullable="false"
+                comment="用户名"/>
+        <Column name="email" type="VARCHAR(100)" comment="邮箱"/>
+        <Column name="created_at" type="TIMESTAMP" nullable="false"
+                defaultValueComputed="CURRENT_TIMESTAMP" comment="创建时间"/>
+        <Index name="idx_username" unique="true">
+            <IndexColumn name="username"/>
+        </Index>
+    </Table>
+</Justdb>
+```
+
+@tab JSON
+```json
+{
+  "namespace": "com.example",
+  "Table": [
+    {
+      "id": "users",
+      "name": "用户表",
+      "comment": "存储系统用户信息",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true,
+          "autoIncrement": true,
+          "comment": "用户ID"
+        },
+        {
+          "name": "username",
+          "type": "VARCHAR(50)",
+          "nullable": false,
+          "comment": "用户名"
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(100)",
+          "comment": "邮箱"
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "defaultValueComputed": "CURRENT_TIMESTAMP",
+          "comment": "创建时间"
+        }
+      ],
+      "Index": [
+        {
+          "name": "idx_username",
+          "columns": ["username"],
+          "unique": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab TOML
+```toml
+# schema.toml
+namespace = "com.example"
+
+[[Table]]
+id = "users"
+name = "用户表"
+comment = "存储系统用户信息"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+comment = "用户ID"
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+nullable = false
+comment = "用户名"
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+comment = "邮箱"
+
+[[Table.Column]]
+name = "created_at"
+type = "TIMESTAMP"
+nullable = false
+defaultValueComputed = "CURRENT_TIMESTAMP"
+comment = "创建时间"
+
+[[Table.Index]]
+name = "idx_username"
+columns = ["username"]
+unique = true
+```
+:::
 
 ## 部署 Schema
 
@@ -182,6 +294,8 @@ DESCRIBE users;
 
 添加新字段：
 
+::: code-tabs
+@tab YAML
 ```yaml
 Column:
   - name: id
@@ -196,6 +310,69 @@ Column:
   - name: created_at
     type: TIMESTAMP
 ```
+
+@tab XML
+```xml
+<Column name="id" type="BIGINT" primaryKey="true"/>
+<Column name="username" type="VARCHAR(50)"/>
+<Column name="email" type="VARCHAR(100)"/>
+<Column name="phone" type="VARCHAR(20)"/>
+<Column name="created_at" type="TIMESTAMP"/>
+```
+
+@tab JSON
+```json
+{
+  "Column": [
+    {
+      "name": "id",
+      "type": "BIGINT",
+      "primaryKey": true
+    },
+    {
+      "name": "username",
+      "type": "VARCHAR(50)"
+    },
+    {
+      "name": "email",
+      "type": "VARCHAR(100)"
+    },
+    {
+      "name": "phone",
+      "type": "VARCHAR(20)"
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMP"
+    }
+  ]
+}
+```
+
+@tab TOML
+```toml
+[[Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+
+[[Column]]
+name = "username"
+type = "VARCHAR(50)"
+
+[[Column]]
+name = "email"
+type = "VARCHAR(100)"
+
+[[Column]]
+name = "phone"
+type = "VARCHAR(20)"
+
+[[Column]]
+name = "created_at"
+type = "TIMESTAMP"
+```
+:::
 
 重新执行迁移：
 

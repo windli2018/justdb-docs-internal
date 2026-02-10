@@ -88,20 +88,20 @@ JustDB Migrate mode provides dynamic testing capabilities:
 ├─────────────────────────────────────────────────────────────┤
 │ + currentSchema: Justdb                                     │
 │ + targetSchema: Justdb                                     │
-│ + dataChanges: List<DataChange>                            │
+│ + dataChanges: List<DataChange&gt;>                            │
 │                                                          │
 │ + calculateAll(): CanonicalSchemaDiff                       │
 │ + calculateTables(): CanonicalSchemaDiff                       │
 │ + calculateColumns(): CanonicalSchemaDiff                      │
 │ + calculateDataChanges(): CanonicalSchemaDiff                 │
 │                                                          │
-│ + generateSql(dialect): List<String>                         │
-│ + generateDataChangeSql(dialect): List<String>               │
+│ + generateSql(dialect): List&lt;String&gt;                         │
+│ + generateDataChangeSql(dialect): List&lt;String&gt;               │
 │                                                          │
 │ + detectConditionOverlaps(table, dataNodes): OverlapResult  │
 │ + findMatchingDataNode(currentDataNodes, target): Data       │
-│ + groupDataByTable(schema): Map<String, List<Data>>          │
-│ + filterByTableScopes(tables, scopes): Map<String, Table>   │
+│ + groupDataByTable(schema): Map&lt;String, , List<Data&gt;>>          │
+│ + filterByTableScopes(tables, scopes): Map&lt;String, , Table>   │
 └─────────────────────────────────────────────────────────────┘
 ┌─────────────────────────────────────────────────────────────┐
 │                        DataChange                           │
@@ -136,7 +136,7 @@ public class Data extends SchemaSense {
 
     @JsonProperty("Row")
     @XmlElement(name = "Row")
-    List<Row> rows = new ArrayList<>();
+    List<Row&gt;> rows = new ArrayList<>();
 }
 ```
 
@@ -224,13 +224,13 @@ public class TableScopes extends ItemScopes {
     @JsonAlias({"includeTables", "tableIncludes",
                "includeTablePatterns", "table-include-patterns"})
     @Override
-    public List<String> getIncludes();
+    public List&lt;String&gt; getIncludes();
 
     @JsonProperty("excludes")
     @JsonAlias({"excludeTables", "tableExcludes",
                "excludeTablePatterns", "table-exclude-patterns"})
     @Override
-    public List<String> getExcludes();
+    public List&lt;String&gt; getExcludes();
 }
 ```
 
@@ -357,7 +357,7 @@ validateDataConditions: true
 // Single entry point
 CanonicalSchemaDiff diff = new CanonicalSchemaDiff(current, target);
 diff.calculateAll();        // Calculate all changes
-List<String> sql = diff.generateSql();  // Generate SQL
+List&lt;String&gt; sql = diff.generateSql();  // Generate SQL
 executeSql(sql);               // Execute SQL
 ```
 

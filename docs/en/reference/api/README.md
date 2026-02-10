@@ -163,12 +163,12 @@ String sql = generator.generateAlterTable(table, diff);
 
 ```java
 // Generate all SQL
-List<String> sqlList = generator.generateAll(schema);
+List&lt;String&gt; sqlList = generator.generateAll(schema);
 
 // Generate specific types
-List<String> createSQL = generator.generateCreates(schema);
-List<String> dropSQL = generator.generateDrops(schema);
-List<String> alterSQL = generator.generateAlters(schema);
+List&lt;String&gt; createSQL = generator.generateCreates(schema);
+List&lt;String&gt; dropSQL = generator.generateDrops(schema);
+List&lt;String&gt; alterSQL = generator.generateAlters(schema);
 ```
 
 ## Schema Model
@@ -188,7 +188,7 @@ table.setName("users");
 schema.addTable(table);
 
 // Get tables
-List<Table> tables = schema.getTables();
+List<Table&gt;> tables = schema.getTables();
 ```
 
 ### Table

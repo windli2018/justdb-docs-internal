@@ -75,7 +75,7 @@ Compares two schemas and finds differences.
 ```java
 public class SchemaDiffer {
     public CanonicalSchemaDiff calculate(Justdb current, Justdb target);
-    public List<TableDiff> calculateTableDiff(Table current, Table target);
+    public List<TableDiff&gt;> calculateTableDiff(Table current, Table target);
 }
 ```
 
@@ -114,7 +114,7 @@ public class TemplateRootContext {
     private String dbType;
     private boolean idempotent;
     private boolean safeDrop;
-    private Map<String, Object> data;
+    private Map&lt;String, , Object> data;
 }
 ```
 
@@ -192,9 +192,9 @@ Represents schema differences.
 
 ```java
 public class CanonicalSchemaDiff {
-    private List<TableDiff> tableDiffs;
-    private List<ViewDiff> viewDiffs;
-    private List<IndexDiff> indexDiffs;
+    private List<TableDiff&gt;> tableDiffs;
+    private List<ViewDiff&gt;> viewDiffs;
+    private List<IndexDiff&gt;> indexDiffs;
 }
 ```
 
@@ -206,8 +206,8 @@ Tracks schema evolution.
 
 ```java
 public interface HistoryService {
-    void recordMigration(Justdb schema, List<String> sql);
-    List<MigrationRecord> getHistory();
+    void recordMigration(Justdb schema, List&lt;String&gt; sql);
+    List<MigrationRecord&gt;> getHistory();
     Justdb getSchemaAtVersion(String version);
 }
 ```

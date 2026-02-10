@@ -260,6 +260,7 @@ graph TB
         A1[CLI]
         A2[Spring Boot]
         A3[Java API]
+        A4[MySQL Protocol Server]
     end
 
     subgraph "Domain Layer"
@@ -281,6 +282,7 @@ graph TB
     A1 --> B1
     A2 --> B1
     A3 --> B1
+    A4 --> B1
     B1 --> C1
     B2 --> C2
     B3 --> C3

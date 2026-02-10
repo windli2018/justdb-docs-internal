@@ -705,13 +705,14 @@ graph TB
         A1[Spring Boot]
         A2[Raw Java]
         A3[CLI]
-        A4[Web UI]
+        A4[MySQL 客户端]
     end
 
     subgraph "API 层"
         B1[Java API]
         B2[JDBC Driver]
-        B3[AI Service]
+        B3[MySQL 协议服务]
+        B4[AI Service]
     end
 
     subgraph "核心层"
@@ -735,10 +736,11 @@ graph TB
     A1 --> B1
     A2 --> B1
     A3 --> B1
-    A4 --> B1
+    A4 --> B3
     B1 --> C1
     B2 --> C1
     B3 --> C1
+    B4 --> C1
     C1 --> D1
     C2 --> D1
     C3 --> D1

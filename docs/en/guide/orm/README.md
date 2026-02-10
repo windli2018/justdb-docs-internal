@@ -491,5 +491,5 @@ Markdown format is more readable and easier to maintain:
 - [Python ORM Guide](./python.md)
 - [TypeScript ORM Guide](./typescript.md)
 - [Go ORM Guide](./go.md)
-- [CLI Commands](../../../reference/cli/commands.md)
-- [Schema Formats](../../../reference/formats/)
+- [CLI Commands](../../reference/cli/commands.md)
+- [Schema Formats](../../reference/formats/)

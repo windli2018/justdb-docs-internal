@@ -23,7 +23,7 @@ All Schema objects inherit from `Item`, and `Item` inherits from `UnknownValues`
 
 ```java
 public class UnknownValues {
-    private Map<String, Object> unknownValues = new HashMap<>();
+    private Map&lt;String, , Object> unknownValues = new HashMap<>();
 
     public Object get(String key) {
         return unknownValues.get(key);
@@ -33,7 +33,7 @@ public class UnknownValues {
         unknownValues.put(key, value);
     }
 
-    public Map<String, Object> getUnknownValues() {
+    public Map&lt;String, , Object> getUnknownValues() {
         return unknownValues;
     }
 }
@@ -83,7 +83,7 @@ public class ExtensionPoint {
     private String target;                    // Target object type (table, column, index, etc.)
     private String type;                      // Type: standard or custom
     private String customClass;               // Custom type class name
-    private List<ExtensionAttribute> attributes; // Attribute list
+    private List<ExtensionAttribute&gt;> attributes; // Attribute list
 }
 
 public class ExtensionAttribute {
@@ -150,7 +150,7 @@ public class ExtensionAttribute {
 
 ```java
 public class ExtensionPointRegistry {
-    private Map<String, ExtensionPoint> extensionPoints = new HashMap<>();
+    private Map&lt;String, , ExtensionPoint> extensionPoints = new HashMap<>();
 
     public void register(ExtensionPoint extensionPoint) {
         extensionPoints.put(extensionPoint.getName(), extensionPoint);
@@ -160,7 +160,7 @@ public class ExtensionPointRegistry {
         return extensionPoints.get(name);
     }
 
-    public List<ExtensionPoint> getByTarget(String target) {
+    public List<ExtensionPoint&gt;> getByTarget(String target) {
         return extensionPoints.values().stream()
             .filter(ep -> ep.getTarget().equals(target))
             .collect(Collectors.toList());
@@ -255,8 +255,8 @@ Plugin system automatically loads extension points defined in `default-plugins.x
 
 ```java
 public class ExtensionPointValidator {
-    public void validate(Item item, List<ExtensionPoint> extensionPoints) {
-        Map<String, Object> unknownValues = item.getUnknownValues();
+    public void validate(Item item, List<ExtensionPoint&gt;> extensionPoints) {
+        Map&lt;String, , Object> unknownValues = item.getUnknownValues();
 
         for (ExtensionPoint ep : extensionPoints) {
             if (ep.getTarget().equals(item.getClass().getSimpleName())) {

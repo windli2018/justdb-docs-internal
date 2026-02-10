@@ -119,22 +119,22 @@ void destroy()
 
 ```java
 // 文件系统
-Loaded<Justdb> loadFromFile(String path)
+Loaded&lt;Justdb&gt; loadFromFile(String path)
 
 // 输入流
-Loaded<Justdb> loadFromStream(InputStream stream, Format format)
+Loaded&lt;Justdb&gt; loadFromStream(InputStream stream, Format format)
 
 // URL
-Loaded<Justdb> loadFromUrl(String url)
+Loaded&lt;Justdb&gt; loadFromUrl(String url)
 
 // 类路径
-Loaded<Justdb> loadFromClasspath(String resource)
+Loaded&lt;Justdb&gt; loadFromClasspath(String resource)
 
 // 数据库
-Loaded<Justdb> loadFromDatabase(Connection connection)
+Loaded&lt;Justdb&gt; loadFromDatabase(Connection connection)
 
 // 多个来源
-List<Loaded<Justdb>> loadFromLocations(List<String> locations)
+List<Loaded&gt;<Justdb>> loadFromLocations(List&lt;String&gt; locations)
 ```
 
 ### 自动格式检测
@@ -159,16 +159,16 @@ public class FormatDetector {
 ```java
 // 单个文件
 SchemaLoader loader = new SchemaLoader(justdbManager);
-Loaded<Justdb> loaded = loader.loadFromFile("schema.yaml");
+Loaded&lt;Justdb&gt; loaded = loader.loadFromFile("schema.yaml");
 Justdb schema = loaded.getMainSchema();
 
 // 多个文件（合并）
-List<String> locations = Arrays.asList(
+List&lt;String&gt; locations = Arrays.asList(
     "base-schema.yaml",
     "users-schema.yaml",
     "orders-schema.yaml"
 );
-List<Loaded<Justdb>> results = loader.loadFromLocations(locations);
+List<Loaded&gt;<Justdb>> results = loader.loadFromLocations(locations);
 Justdb merged = SchemaMerger.merge(results);
 ```
 
@@ -263,10 +263,10 @@ if (result.isSuccess()) {
 public class UsersTable extends QueryAble {
 
     @JsonProperty("beforeCreates")
-    private List<ConditionalSqlScript> beforeCreates;
+    private List<ConditionalSqlScript&gt;> beforeCreates;
 
     @JsonProperty("afterCreates")
-    private List<ConditionalSqlScript> afterCreates;
+    private List<ConditionalSqlScript&gt;> afterCreates;
 
     // ...
 }
@@ -286,19 +286,19 @@ public class UsersTable extends QueryAble {
 ```java
 public class DBGenerator {
     // 生成创建表 SQL
-    public List<String> generateCreateTable(Table table)
+    public List&lt;String&gt; generateCreateTable(Table table)
 
     // 生成修改表 SQL
-    public List<String> generateAlterTable(TableDiff diff)
+    public List&lt;String&gt; generateAlterTable(TableDiff diff)
 
     // 生成删除表 SQL
-    public List<String> generateDropTable(Table table)
+    public List&lt;String&gt; generateDropTable(Table table)
 
     // 生成索引 SQL
-    public List<String> generateCreateIndex(Index index)
+    public List&lt;String&gt; generateCreateIndex(Index index)
 
     // 生成约束 SQL
-    public List<String> generateCreateConstraint(Constraint constraint)
+    public List&lt;String&gt; generateCreateConstraint(Constraint constraint)
 }
 ```
 
@@ -336,7 +336,7 @@ TemplateRootContext context = TemplateRootContext.builder()
     .build();
 
 // 生成 SQL
-List<String> sql = generator.generateCreateTable(table, context);
+List&lt;String&gt; sql = generator.generateCreateTable(table, context);
 
 // 输出
 for (String statement : sql) {
@@ -376,7 +376,7 @@ public class TemplateEngine {
     public Template compile(String templateContent)
 
     // 执行模板
-    public String execute(Template template, Map<String, Object> context)
+    public String execute(Template template, Map&lt;String, , Object> context)
 
     // 注册辅助函数
     public void registerHelper(String name, Helper helper)
@@ -441,7 +441,7 @@ engine.registerHelper("toUpperCase", (options) -> {
 Template template = engine.compile("CREATE TABLE {{name}} (");
 
 // 执行
-Map<String, Object> context = new HashMap<>();
+Map&lt;String, , Object> context = new HashMap<>();
 context.put("name", "users");
 String result = engine.execute(template, context);
 // 输出: CREATE TABLE users (
@@ -496,7 +496,7 @@ manager.registerPlugin(new MySqlPlugin());
 manager.registerPlugin(new PostgreSQLPlugin());
 
 // 获取插件
-List<JustdbPlugin> plugins = manager.getPlugins();
+List<JustdbPlugin&gt;> plugins = manager.getPlugins();
 
 // 按类型获取
 DatabaseAdapter[] adapters = manager.getDatabaseAdapters();
@@ -549,19 +549,19 @@ manager.registerPlugin(new MyDatabasePlugin());
 ```java
 public class SchemaEvolutionManager {
     // 计算差异
-    public List<CanonicalSchemaDiff> calculateDiff(
+    public List<CanonicalSchemaDiff&gt;> calculateDiff(
         Justdb oldSchema,
         Justdb newSchema
     )
 
     // 生成迁移 SQL
-    public List<String> generateMigrationSql(
-        List<CanonicalSchemaDiff> diffs
+    public List&lt;String&gt; generateMigrationSql(
+        List<CanonicalSchemaDiff&gt;> diffs
     )
 
     // 执行迁移
     public MigrationResult executeMigration(
-        List<String> sql,
+        List&lt;String&gt; sql,
         Connection connection
     )
 }
@@ -592,13 +592,13 @@ Justdb oldSchema = loadFromFile("old-schema.yaml");
 Justdb newSchema = loadFromFile("new-schema.yaml");
 
 // 计算差异
-List<CanonicalSchemaDiff> diffs = manager.calculateDiff(
+List<CanonicalSchemaDiff&gt;> diffs = manager.calculateDiff(
     oldSchema,
     newSchema
 );
 
 // 生成迁移 SQL
-List<String> sql = manager.generateMigrationSql(diffs);
+List&lt;String&gt; sql = manager.generateMigrationSql(diffs);
 
 // 执行迁移
 MigrationResult result = manager.executeMigration(sql, connection);
@@ -611,7 +611,7 @@ MigrationResult result = manager.executeMigration(sql, connection);
 @Table(name = "users")
 public class UsersTable {
     @JsonProperty("formerNames")
-    private List<String> formerNames = Arrays.asList("user");
+    private List&lt;String&gt; formerNames = Arrays.asList("user");
 }
 
 // 自动检测重命名
@@ -637,7 +637,7 @@ sequenceDiagram
     PM-->>SL: SchemaFormat
     SL->>Format: load()
     Format-->>SL: Justdb
-    SL-->>JM: Loaded<Justdb>
+    SL-->>JM: Loaded&lt;Justdb&gt;
     JM-->>User: Justdb
 ```
 
@@ -658,7 +658,7 @@ sequenceDiagram
     PM-->>DG: GenericTemplate
     DG->>TE: execute(template, context)
     TE-->>DG: SQL
-    DG-->>User: List<String>
+    DG-->>User: List&lt;String&gt;
 ```
 
 ### 部署协作
@@ -673,9 +673,9 @@ sequenceDiagram
 
     User->>SD: deploy(newSchema)
     SD->>SE: calculateDiff(oldSchema, newSchema)
-    SE-->>SD: List<SchemaDiff>
+    SE-->>SD: List<SchemaDiff&gt;>
     SD->>DG: generateSql(diffs)
-    DG-->>SD: List<String>
+    DG-->>SD: List&lt;String&gt;
     SD->>DB: execute(sql)
     DB-->>SD: result
     SD-->>User: DeployResult

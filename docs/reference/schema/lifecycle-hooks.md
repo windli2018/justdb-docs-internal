@@ -35,7 +35,7 @@ tag:
 | 属性 | 类型 | 必填 | 说明 |
 |------|------|------|------|
 | `content` | String | 是 | SQL 脚本内容 |
-| `dbms` | List<String> | 否 | 适用数据库列表 |
+| `dbms` | List&lt;String&gt; | 否 | 适用数据库列表 |
 | `condition` | String | 否 | 执行条件表达式 |
 
 ## 基本示例

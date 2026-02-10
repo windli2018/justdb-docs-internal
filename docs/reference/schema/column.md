@@ -21,7 +21,7 @@ tag:
 | `id` | String | 否 | 唯一标识符，用于引用 |
 | `name` | String | 是 | 列名 |
 | `referenceId` | String | 否 | 引用其他列的 id |
-| `formerNames` | List<String> | 否 | 曾用名列表，用于追踪重命名 |
+| `formerNames` | List&lt;String&gt; | 否 | 曾用名列表，用于追踪重命名 |
 | `type` | String | 是 | 数据类型 |
 | `nullable` | Boolean | 否 | 是否可空（默认 true） |
 | `defaultValue` | String | 否 | 默认值 |
@@ -32,7 +32,7 @@ tag:
 | `primaryKeyName` | String | 否 | 主键约束名称 |
 | `comment` | String | 否 | 数据库注释 |
 | `remark` | String | 否 | JustDB 备注 |
-| `dbms` | List<String> | 否 | 适用数据库列表 |
+| `dbms` | List&lt;String&gt; | 否 | 适用数据库列表 |
 
 ## 数据类型
 

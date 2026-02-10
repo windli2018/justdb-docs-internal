@@ -279,7 +279,7 @@ public boolean isVersionApplied(String version)
 **Get list of applied versions**:
 
 ```java
-public List<String> getAppliedVersions()
+public List&lt;String&gt; getAppliedVersions()
 ```
 
 **Get latest applied version**:
@@ -299,14 +299,14 @@ public boolean isUpToDate(String version)
 **Generate SQL scripts** (without execution):
 
 ```java
-public List<String> generateScripts(Justdb schema)
+public List&lt;String&gt; generateScripts(Justdb schema)
 ```
 
 **Example**:
 
 ```java
 SchemaDeployer deployer = new SchemaDeployer("mysql");
-List<String> scripts = deployer.generateScripts(justdb);
+List&lt;String&gt; scripts = deployer.generateScripts(justdb);
 
 for (String script : scripts) {
     System.out.println(script);
@@ -382,7 +382,7 @@ try {
     // Check history
     SchemaHistoryManager history = deployer.getHistoryManager();
     if (history != null) {
-        List<String> appliedVersions = history.getAppliedVersions();
+        List&lt;String&gt; appliedVersions = history.getAppliedVersions();
         System.out.println("Applied versions: " + appliedVersions);
     }
 }
@@ -539,7 +539,7 @@ public class SqlGeneration {
         // SQL generation mode (no database connection needed)
         SchemaDeployer deployer = new SchemaDeployer("postgresql");
 
-        List<String> scripts = deployer.generateScripts(justdb);
+        List&lt;String&gt; scripts = deployer.generateScripts(justdb);
 
         System.out.println("-- PostgreSQL SQL Scripts");
         System.out.println();
@@ -617,7 +617,7 @@ public class MultiDatabaseSupport {
             System.out.println("=== " + dbType.toUpperCase() + " ===");
 
             SchemaDeployer deployer = new SchemaDeployer(dbType);
-            List<String> scripts = deployer.generateScripts(justdb);
+            List&lt;String&gt; scripts = deployer.generateScripts(justdb);
 
             for (String script : scripts) {
                 System.out.println(script);

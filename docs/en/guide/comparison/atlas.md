@@ -18,10 +18,11 @@ tag:
 |:---|:---|:---|
 | **Language Ecosystem** | Java/JVM | Multi-language (Go core) |
 | **Design Philosophy** | Declarative | Declarative + GitOps |
-| **Schema Definition** | XML/YAML/JSON/SQL/TOML | SQL/HCL/ORM |
+| **Schema Definition** | XML/YAML/JSON/SQL/TOML/Markdown/Excel | SQL/HCL/ORM |
 | **Diff Calculation** | Automatic | Automatic |
 | **AI Integration** | Local/Cloud AI | Atlas Copilot (cloud) |
 | **JDBC Driver** | ✅ Unique | ❌ |
+| **Mysql Compatible Server** | ✅ Unique | ❌ |
 | **Deployment** | CLI/JDBC | CLI/Terraform/K8s |
 | **Enterprise Features** | Open Source | Cloud SaaS |
 

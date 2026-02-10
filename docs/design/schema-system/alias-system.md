@@ -86,7 +86,7 @@ protected String referenceId;
 @JsonProperty("formerNames")
 @JsonAlias({"oldNames", "oldName", "formerName", "former_names", "old_names",
               "previousNames", "previousName", "previous_names", "old-names"})
-protected List<String> formerNames;
+protected List&lt;String&gt; formerNames;
 ```
 
 **支持的输入格式**：
@@ -155,7 +155,7 @@ tableScopes:
               "beforeRemoves", "beforeRemove", "before-drop", "before-drops",
               "Before-Drop", "Before-Drops", "before_drops", "Before-Remove",
               "onBeforeDrop", "onDrop"})
-protected List<ConditionalSqlScript> beforeDrops;
+protected List<ConditionalSqlScript&gt;> beforeDrops;
 ```
 
 **生命周期钩子命名**：

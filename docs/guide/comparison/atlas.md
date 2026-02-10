@@ -18,10 +18,11 @@ tag:
 |:---|:---|:---|
 | **语言生态** | Java/JVM | 多语言（Go 核心） |
 | **设计理念** | 声明式 | 声明式 + GitOps |
-| **Schema 定义** | XML/YAML/JSON/SQL/TOML | SQL/HCL/ORM |
+| **Schema 定义** | XML/YAML/JSON/SQL/TOML/Markdown/Excel | SQL/HCL/ORM |
 | **差异计算** | 自动 | 自动 |
 | **AI 集成** | 本地/云端 AI | Atlas Copilot（云端） |
 | **JDBC 驱动** | ✅ 独有 | ❌ |
+| **Mysql兼容服务** | ✅ 独有 | ❌ |
 | **部署方式** | CLI/JDBC | CLI/Terraform/K8s |
 | **企业功能** | 开源免费 | 云端 SaaS |
 

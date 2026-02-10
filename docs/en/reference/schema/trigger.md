@@ -25,13 +25,13 @@ Trigger is a database object that automatically executes in response to certain 
 | `id` | String | No | Trigger ID, used for reference |
 | `comment` | String | No | Trigger comment |
 | `tableName` | String | Yes | Associated table name |
-| `events` | List<TriggerEvent> | Yes | Trigger events |
+| `events` | List<TriggerEvent&gt;> | Yes | Trigger events |
 | `timing` | TriggerTiming | Yes | Trigger timing |
 | `body` | String | Yes | Trigger body (SQL/PL-SQL) |
 | `forEach` | ForEachType | No | Trigger scope (ROW/STATEMENT) |
 | `condition` | String | No | Trigger condition (WHEN clause) |
 | `changeType` | ChangeType | No | Change type |
-| `formerNames` | List<String> | No | Old name list |
+| `formerNames` | List&lt;String&gt; | No | Old name list |
 
 ### TriggerEvent (Events)
 

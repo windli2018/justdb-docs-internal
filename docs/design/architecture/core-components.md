@@ -49,7 +49,7 @@ JustDB Schema Extractor 是一个模块化、可扩展的数据库 schema 反向
 
 ```java
 public interface TableExtractor {
-    List<Table> extractTables(Connection connection, ExtractConfig config) throws SQLException;
+    List<Table&gt;> extractTables(Connection connection, ExtractConfig config) throws SQLException;
     default boolean supports(String dialect) { return true; }
 }
 ```
@@ -58,7 +58,7 @@ public interface TableExtractor {
 
 ```java
 public interface ColumnExtractor {
-    List<Column> extractColumns(Connection connection, String tableName, String schema) throws SQLException;
+    List<Column&gt;> extractColumns(Connection connection, String tableName, String schema) throws SQLException;
     default boolean supports(String dialect) { return true; }
 }
 ```
@@ -73,7 +73,7 @@ public interface PrimaryKeyExtractor {
         String getKeyName();
     }
 
-    List<PrimaryKeyColumn> extractPrimaryKeys(Connection connection, String tableName, String schema) throws SQLException;
+    List<PrimaryKeyColumn&gt;> extractPrimaryKeys(Connection connection, String tableName, String schema) throws SQLException;
     default boolean supports(String dialect) { return true; }
 }
 ```
@@ -91,7 +91,7 @@ public interface IndexExtractor {
         boolean isPrimary();
     }
 
-    List<IndexInfo> extractIndexes(Connection connection, String tableName, String schema) throws SQLException;
+    List<IndexInfo&gt;> extractIndexes(Connection connection, String tableName, String schema) throws SQLException;
     default boolean supports(String dialect) { return true; }
 }
 ```
@@ -108,7 +108,7 @@ public interface ForeignKeyExtractor {
         int getSequence();
     }
 
-    List<ForeignKey> extractForeignKeys(Connection connection, String tableName, String schema) throws SQLException;
+    List<ForeignKey&gt;> extractForeignKeys(Connection connection, String tableName, String schema) throws SQLException;
     default boolean supports(String dialect) { return true; }
 }
 ```
@@ -117,7 +117,7 @@ public interface ForeignKeyExtractor {
 
 ```java
 public interface ViewExtractor {
-    List<View> extractViews(Connection connection, String schema) throws SQLException;
+    List<View&gt;> extractViews(Connection connection, String schema) throws SQLException;
     String getViewDefinition(Connection connection, String viewName, String schema) throws SQLException;
     default boolean supports(String dialect) { return true; }
 }
@@ -149,7 +149,7 @@ public interface SequenceExtractor {
         Boolean isCycle();
     }
 
-    List<Sequence> extractSequences(Connection connection, String schema) throws SQLException;
+    List<Sequence&gt;> extractSequences(Connection connection, String schema) throws SQLException;
     default boolean supports(String dialect) {
         return !"mysql".equals(dialect) && !"tidb".equals(dialect);
     }
@@ -191,7 +191,7 @@ Justdb schema = extractor.extractSchema(connection, config);
 ```java
 public class MyIndexExtractor implements IndexExtractor {
     @Override
-    public List<IndexInfo> extractIndexes(Connection conn, String table, String schema) {
+    public List<IndexInfo&gt;> extractIndexes(Connection conn, String table, String schema) {
         // 使用 SQL 模板或直接查询
     }
 
@@ -265,11 +265,11 @@ MyDatabaseExtractor.register("mydb");
 调用时传入参数：
 
 ```java
-Map<String, Object> bindings = new HashMap<>();
+Map&lt;String, , Object> bindings = new HashMap<>();
 bindings.put("tableName", "users");
 bindings.put("schema", "public");
 
-List<Map<String, Object>> results = extractor.queryForMaps(conn, "extract-columns", bindings);
+List<Map&gt;<String, Object>> results = extractor.queryForMaps(conn, "extract-columns", bindings);
 ```
 
 ## 支持的数据库
@@ -310,7 +310,7 @@ public interface TriggerExtractor {
         String getBody();
     }
 
-    List<Trigger> extractTriggers(Connection connection, String tableName, String schema) throws SQLException;
+    List<Trigger&gt;> extractTriggers(Connection connection, String tableName, String schema) throws SQLException;
     default boolean supports(String dialect) { return true; }
 }
 

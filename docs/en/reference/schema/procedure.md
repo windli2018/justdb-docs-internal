@@ -21,11 +21,11 @@ Stored Procedures are precompiled SQL statement sets stored in the database that
 |----------|------|----------|-------------|
 | `id` | String | No | Unique identifier, used for reference |
 | `name` | String | Yes | Procedure name |
-| `parameters` | List<Parameter> | No | Parameter list |
+| `parameters` | List<Parameter&gt;> | No | Parameter list |
 | `content` | String | Yes | Procedure content |
 | `returnType` | String | No | Return value type |
 | `comment` | String | No | Procedure comment |
-| `dbms` | List<String> | No | Applicable database list |
+| `dbms` | List&lt;String&gt; | No | Applicable database list |
 
 ## Parameter Definition
 

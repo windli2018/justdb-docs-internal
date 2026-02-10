@@ -23,6 +23,7 @@ graph TB
         CLI[CLI 工具]
         JDBC[JDBC 驱动]
         Spring[Spring Boot Starter]
+        MySQL[MySQL 协议服务]
     end
 
     subgraph "API 层 (API Layer)"
@@ -51,6 +52,7 @@ graph TB
     CLI --> SchemaAPI
     JDBC --> SchemaAPI
     Spring --> SchemaAPI
+    MySQL --> SchemaAPI
 
     SchemaAPI --> SchemaModel
     FormatAPI --> PluginSystem
@@ -185,6 +187,61 @@ justdb:
 - 注册 JDBC DataSource
 - 集成 Spring 事务管理
 
+#### 1.4 MySQL 协议服务
+
+**职责**：提供标准 MySQL 协议接口，支持任何 MySQL 客户端连接
+
+**核心组件**：
+- `MySQLProtocolServer` - MySQL 协议服务器
+- `MySQLConnectionHandler` - 连接处理器
+- `MySQLCommandProcessor` - 命令处理器
+- `MySQLResultSetSender` - 结果集发送器
+
+**支持的 MySQL 协议功能**：
+- 标准 SQL 查询（SELECT、INSERT、UPDATE、DELETE）
+- 预编译语句（PreparedStatement）
+- 存储过程调用
+- 事务管理（BEGIN、COMMIT、ROLLBACK）
+- 元数据查询（SHOW、DESCRIBE）
+- 多结果集处理
+
+**连接方式**：
+```bash
+# 命令行启动
+justdb mysql-server --port 3307 --schema /path/to/schema.yaml
+
+# MySQL 客户端连接
+mysql -h 127.0.0.1 -P 3307 -u root -p
+
+# 使用 MySQL Workbench
+# Host: 127.0.0.1
+# Port: 3307
+# Username: root
+# Password: (任意)
+```
+
+**支持的客户端工具**：
+- MySQL 命令行客户端
+- MySQL Workbench
+- DBeaver
+- Navicat
+- HeidiSQL
+- 任何标准 MySQL 客户端
+
+**使用示例**：
+```java
+// 启动 MySQL 协议服务
+MySQLProtocolServer server = MySQLProtocolServer.builder()
+    .port(3307)
+    .schemaPath("/path/to/schema.yaml")
+    .build();
+
+server.start();
+
+// 客户端可以用任何 MySQL 客户端连接
+// mysql -h 127.0.0.1 -P 3307
+```
+
 ### 2. API 层 (API Layer)
 
 API 层提供编程接口，封装核心层的功能。
@@ -210,7 +267,7 @@ deployer.deploy(schema, connection);
 
 // 计算差异
 SchemaDiff diff = new SchemaDiff();
-List<CanonicalSchemaDiff> changes = diff.calculate(oldSchema, newSchema);
+List<CanonicalSchemaDiff&gt;> changes = diff.calculate(oldSchema, newSchema);
 ```
 
 #### 2.2 Format API
@@ -260,7 +317,7 @@ DBGenerator generator = new DBGenerator(
 );
 
 // 生成 SQL
-List<String> sql = generator.generateCreateTable(table);
+List&lt;String&gt; sql = generator.generateCreateTable(table);
 
 // 执行 SQL
 for (String statement : sql) {
@@ -397,14 +454,14 @@ public enum ChangeType {
 ```java
 // 计算差异
 SchemaDiff differ = new SchemaDiff();
-List<CanonicalSchemaDiff> diffs = differ.calculate(oldSchema, newSchema);
+List<CanonicalSchemaDiff&gt;> diffs = differ.calculate(oldSchema, newSchema);
 
 // 生成迁移 SQL
 SchemaEvolutionManager manager = new SchemaEvolutionManager(
     justdbManager,
     dialect
 );
-List<String> sql = manager.generateMigrationSql(diffs);
+List&lt;String&gt; sql = manager.generateMigrationSql(diffs);
 ```
 
 ### 4. 适配层 (Adapter Layer)
@@ -505,7 +562,7 @@ sequenceDiagram
     Format->>Model: deserialize
     Model-->>Format: Justdb
     Format-->>Loader: Justdb
-    Loader-->>CLI: Loaded<Justdb>
+    Loader-->>CLI: Loaded&lt;Justdb&gt;
     CLI-->>User: Success
 ```
 
@@ -521,7 +578,7 @@ sequenceDiagram
 
     User->>Deployer: deploy(newSchema)
     Deployer->>Diff: calculate(old, new)
-    Diff-->>Deployer: List<SchemaDiff>
+    Diff-->>Deployer: List<SchemaDiff&gt;>
     Deployer->>Template: execute("create-table", context)
     Template->>Plugin: getTemplate("create-table", "mysql")
     Plugin-->>Template: Handlebars template
@@ -567,7 +624,7 @@ sequenceDiagram
 ```java
 // API 层接口
 public interface SchemaLoader {
-    Loaded<Justdb> loadFromFile(String path);
+    Loaded&lt;Justdb&gt; loadFromFile(String path);
 }
 
 // 核心层实现

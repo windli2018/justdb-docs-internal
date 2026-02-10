@@ -1106,7 +1106,7 @@ public class MigrateCommand extends BaseCommand implements Callable<Integer> {
         );
 
         // 生成 DDL
-        List<String> ddl = generator.generateCreateTable(table, contextParams);
+        List&lt;String&gt; ddl = generator.generateCreateTable(table, contextParams);
         // ...
     }
 }

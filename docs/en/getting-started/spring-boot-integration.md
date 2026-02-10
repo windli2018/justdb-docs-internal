@@ -271,12 +271,12 @@ public class DatabaseMigrationRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         // Load Schema
-        List<Loaded<Justdb>> schemas = SchemaLoader.loadFromClasspath(
+        List<Loaded&gt;<Justdb>> schemas = SchemaLoader.loadFromClasspath(
             "justdb", justdbManager
         );
 
         // Execute migration
-        for (Loaded<Justdb> loaded : schemas) {
+        for (Loaded&lt;Justdb&gt; loaded : schemas) {
             schemaDeployer.deploy(loaded.getValue());
         }
     }

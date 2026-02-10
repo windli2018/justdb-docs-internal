@@ -54,7 +54,7 @@ public class SchemaHashCalculator {
     public String calculateSchemaHash(Justdb schema) {
         try {
             // 1. 提取需要Hash的关键字段
-            Map<String, Object> schemaMap = extractSchemaMap(schema);
+            Map&lt;String, , Object> schemaMap = extractSchemaMap(schema);
 
             // 2. 序列化为规范化JSON
             String normalizedJson = NORMALIZED_MAPPER.writeValueAsString(schemaMap);
@@ -73,15 +73,15 @@ public class SchemaHashCalculator {
     /**
      * 提取Schema的关键字段（忽略运行时元数据）
      */
-    private Map<String, Object> extractSchemaMap(Justdb schema) {
-        Map<String, Object> map = new TreeMap<>(); // TreeMap自动排序
+    private Map&lt;String, , Object> extractSchemaMap(Justdb schema) {
+        Map&lt;String, , Object> map = new TreeMap<>(); // TreeMap自动排序
 
         // Schema级属性
         map.put("namespace", schema.getNamespace());
         map.put("name", schema.getName());
 
         // 提取所有表
-        List<Map<String, Object>> tables = new ArrayList<>();
+        List<Map&gt;<String, Object>> tables = new ArrayList<>();
         for (Table table : schema.getTables()) {
             tables.add(extractTableMap(table));
         }
@@ -96,14 +96,14 @@ public class SchemaHashCalculator {
     /**
      * 提取Table的关键字段（列顺序无关）
      */
-    private Map<String, Object> extractTableMap(Table table) {
-        Map<String, Object> map = new TreeMap<>();
+    private Map&lt;String, , Object> extractTableMap(Table table) {
+        Map&lt;String, , Object> map = new TreeMap<>();
 
         map.put("name", table.getName());
         map.put("comment", table.getComment());
 
         // 列：按列名排序，确保列顺序不影响Hash
-        List<Map<String, Object>> columns = new ArrayList<>();
+        List<Map&gt;<String, Object>> columns = new ArrayList<>();
         for (Column column : table.getColumns()) {
             columns.add(extractColumnMap(column));
         }
@@ -111,7 +111,7 @@ public class SchemaHashCalculator {
         map.put("columns", columns);
 
         // 索引：按索引名排序
-        List<Map<String, Object>> indexes = new ArrayList<>();
+        List<Map&gt;<String, Object>> indexes = new ArrayList<>();
         for (Index index : table.getIndexes()) {
             indexes.add(extractIndexMap(index));
         }
@@ -125,8 +125,8 @@ public class SchemaHashCalculator {
     /**
      * 提取Column的关键字段
      */
-    private Map<String, Object> extractColumnMap(Column column) {
-        Map<String, Object> map = new TreeMap<>();
+    private Map&lt;String, , Object> extractColumnMap(Column column) {
+        Map&lt;String, , Object> map = new TreeMap<>();
 
         map.put("name", column.getName());
         map.put("type", column.getType());
@@ -181,7 +181,7 @@ public class IncrementalSchemaHashCalculator {
         updateDigest(digest, schema.getName());
 
         // 表：先排序再Hash
-        List<Table> sortedTables = schema.getTables().stream()
+        List<Table&gt;> sortedTables = schema.getTables().stream()
             .sorted(Comparator.comparing(Table::getName))
             .collect(Collectors.toList());
 
@@ -197,7 +197,7 @@ public class IncrementalSchemaHashCalculator {
         updateDigest(digest, table.getComment());
 
         // 列：按列名排序
-        List<Column> sortedColumns = table.getColumns().stream()
+        List<Column&gt;> sortedColumns = table.getColumns().stream()
             .sorted(Comparator.comparing(Column::getName))
             .collect(Collectors.toList());
 
@@ -258,7 +258,7 @@ public class StructuralHashCalculator {
      * 计算结构签名Hash
      */
     public String calculateStructuralHash(Justdb schema) {
-        List<String> signatures = new ArrayList<>();
+        List&lt;String&gt; signatures = new ArrayList<>();
 
         // 收集所有对象的结构签名
         for (Table table : schema.getTables()) {
@@ -284,7 +284,7 @@ public class StructuralHashCalculator {
         sig.append(table.getName()).append("|");
 
         // 列签名（按列名排序）
-        List<String> columnSigs = new ArrayList<>();
+        List&lt;String&gt; columnSigs = new ArrayList<>();
         for (Column col : table.getColumns()) {
             columnSigs.add(columnSignature(col));
         }
@@ -292,7 +292,7 @@ public class StructuralHashCalculator {
         sig.append(String.join(",", columnSigs)).append("|");
 
         // 索引签名
-        List<String> indexSigs = new ArrayList<>();
+        List&lt;String&gt; indexSigs = new ArrayList<>();
         for (Index idx : table.getIndexes()) {
             indexSigs.add(indexSignature(idx));
         }
@@ -377,8 +377,8 @@ public class DeploymentValidator {
         }
 
         // 4. 计算差异（按对象级别）
-        Map<String, String> currentObjectHashes = hashCalculator.calculateObjectHashes(schema);
-        Map<String, String> deployedObjectHashes = historyRepository.getLatestObjectHashes();
+        Map&lt;String, String&gt; currentObjectHashes = hashCalculator.calculateObjectHashes(schema);
+        Map&lt;String, String&gt; deployedObjectHashes = historyRepository.getLatestObjectHashes();
 
         // 5. 识别变更的对象
         MapDifference<String, String> diff = Maps.difference(currentObjectHashes, deployedObjectHashes);
@@ -420,8 +420,8 @@ public class ConsistencyChecker {
      * 对象级别详细检查
      */
     private ConsistencyReport detailedObjectLevelCheck(Justdb schema, Connection conn) {
-        Map<String, String> expectedObjectHashes = hashCalculator.calculateObjectHashes(schema);
-        Map<String, String> actualObjectHashes = extractObjectHashesFromDatabase(conn);
+        Map&lt;String, String&gt; expectedObjectHashes = hashCalculator.calculateObjectHashes(schema);
+        Map&lt;String, String&gt; actualObjectHashes = extractObjectHashesFromDatabase(conn);
 
         MapDifference<String, String> diff = Maps.difference(expectedObjectHashes, actualObjectHashes);
 
@@ -559,7 +559,7 @@ CREATE TABLE users (
 
 ```java
 // 在计算Hash前，先按列名排序
-List<Column> sortedColumns = table.getColumns().stream()
+List<Column&gt;> sortedColumns = table.getColumns().stream()
     .sorted(Comparator.comparing(Column::getName))
     .collect(Collectors.toList());
 
@@ -648,7 +648,7 @@ public interface SchemaHashCalculator {
      * 计算所有对象的Hash
      * 返回: Map<"TABLE:users", "hash1", "VIEW:user_view", "hash2", ...>
      */
-    Map<String, String> calculateObjectHashes(Justdb schema);
+    Map&lt;String, String&gt; calculateObjectHashes(Justdb schema);
 
     /**
      * 计算单个对象的Hash
@@ -673,7 +673,7 @@ public interface SchemaHashHistoryRepository {
     /**
      * 获取最新的对象Hash
      */
-    Map<String, String> getLatestObjectHashes();
+    Map&lt;String, String&gt; getLatestObjectHashes();
 
     /**
      * 获取当前数据库的Schema Hash
@@ -692,8 +692,8 @@ public class SchemaHashRecord {
     private String hashAlgorithm;
     private Long executionTimeMs;
     private Boolean success;
-    private Map<String, String> metadata;
-    private List<ObjectHashRecord> objectHashes;
+    private Map&lt;String, String&gt; metadata;
+    private List<ObjectHashRecord&gt;> objectHashes;
 }
 ```
 
@@ -719,11 +719,11 @@ public class SchemaDeployer {
         }
 
         // 3. 计算差异
-        Map<String, String> newObjectHashes = hashCalculator.calculateObjectHashes(schema);
-        Map<String, String> lastObjectHashes = historyRepository.getLatestObjectHashes();
+        Map&lt;String, String&gt; newObjectHashes = hashCalculator.calculateObjectHashes(schema);
+        Map&lt;String, String&gt; lastObjectHashes = historyRepository.getLatestObjectHashes();
 
         // 4. 生成SQL（只对变更对象）
-        List<String> sqlStatements = generateSqlForChanges(schema, newObjectHashes, lastObjectHashes);
+        List&lt;String&gt; sqlStatements = generateSqlForChanges(schema, newObjectHashes, lastObjectHashes);
 
         // 5. 执行SQL
         long startTime = System.currentTimeMillis();

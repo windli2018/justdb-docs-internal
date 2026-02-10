@@ -179,10 +179,10 @@ public enum ChangeType {
 public class CanonicalSchemaDiff {
     private Justdb sourceSchema;      // 源 Schema
     private Justdb targetSchema;      // 目标 Schema
-    private List<Table> tables;       // 变更的表
-    private List<Column> columns;     // 变更的列
-    private List<Index> indexes;      // 变更的索引
-    private List<Constraint> constraints; // 变更的约束
+    private List<Table&gt;> tables;       // 变更的表
+    private List<Column&gt;> columns;     // 变更的列
+    private List<Index&gt;> indexes;      // 变更的索引
+    private List<Constraint&gt;> constraints; // 变更的约束
 }
 ```
 
@@ -304,7 +304,7 @@ CanonicalSchemaDiff diff = new CanonicalSchemaDiff(currentSchema, targetSchema);
 diff.calculateAll();
 
 // 生成 SQL
-List<String> sqlStatements = diff.generateSql("mysql");
+List&lt;String&gt; sqlStatements = diff.generateSql("mysql");
 
 // 执行变更
 SchemaEvolutionManager manager = new SchemaEvolutionManager(connection);

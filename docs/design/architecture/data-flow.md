@@ -120,7 +120,7 @@ public class FormatDetector {
 
 ```java
 public class SchemaLoader {
-    public Loaded<Justdb> loadFromFile(String path) {
+    public Loaded&lt;Justdb&gt; loadFromFile(String path) {
         // 1. 检测格式
         Format format = FormatDetector.detect(path);
 
@@ -321,7 +321,7 @@ public class TemplateRootContext {
     private final String dbType;
     private final boolean idempotent;
     private final boolean safeDrop;
-    private final Map<String, Object> data;
+    private final Map&lt;String, , Object> data;
 
     public static Builder builder() {
         return new Builder();
@@ -332,7 +332,7 @@ public class TemplateRootContext {
         private String dbType;
         private boolean idempotent = false;
         private boolean safeDrop = false;
-        private Map<String, Object> data = new HashMap<>();
+        private Map&lt;String, , Object> data = new HashMap<>();
 
         public Builder justdbManager(JustdbManager justdbManager) {
             this.justdbManager = justdbManager;
@@ -401,7 +401,7 @@ public class TemplateExecutor {
 
 ```java
 // 生成 CREATE TABLE 语句
-public List<String> generateCreateTable(Table table) {
+public List&lt;String&gt; generateCreateTable(Table table) {
     TemplateRootContext context = TemplateRootContext.builder()
         .justdbManager(justdbManager)
         .dbType("mysql")
@@ -481,8 +481,8 @@ flowchart TD
 
 ```java
 public class SchemaDiff {
-    public List<CanonicalSchemaDiff> calculate(Justdb oldSchema, Justdb newSchema) {
-        List<CanonicalSchemaDiff> diffs = new ArrayList<>();
+    public List<CanonicalSchemaDiff&gt;> calculate(Justdb oldSchema, Justdb newSchema) {
+        List<CanonicalSchemaDiff&gt;> diffs = new ArrayList<>();
 
         // 1. 检测新增对象
         for (Table newTable : newSchema.getTables()) {
@@ -537,11 +537,11 @@ public class SchemaDiff {
 
 ```java
 public class SchemaEvolutionManager {
-    public List<String> generateMigrationSql(List<CanonicalSchemaDiff> diffs) {
-        List<String> sql = new ArrayList<>();
+    public List&lt;String&gt; generateMigrationSql(List<CanonicalSchemaDiff&gt;> diffs) {
+        List&lt;String&gt; sql = new ArrayList<>();
 
         // 按类型排序
-        List<CanonicalSchemaDiff> sorted = sortDiffs(diffs);
+        List<CanonicalSchemaDiff&gt;> sorted = sortDiffs(diffs);
 
         for (CanonicalSchemaDiff diff : sorted) {
             switch (diff.getChangeType()) {
@@ -563,7 +563,7 @@ public class SchemaEvolutionManager {
         return sql;
     }
 
-    private List<CanonicalSchemaDiff> sortDiffs(List<CanonicalSchemaDiff> diffs) {
+    private List<CanonicalSchemaDiff&gt;> sortDiffs(List<CanonicalSchemaDiff&gt;> diffs) {
         // 拓扑排序，确保依赖顺序
         // 1. 先删除外键
         // 2. 再删除表
@@ -578,7 +578,7 @@ public class SchemaEvolutionManager {
 
 ```java
 public class MigrationExecutor {
-    public MigrationResult execute(List<String> sql, Connection connection) {
+    public MigrationResult execute(List&lt;String&gt; sql, Connection connection) {
         MigrationResult result = new MigrationResult();
 
         try {
@@ -634,12 +634,12 @@ sequenceDiagram
 
     User->>Diff: 计算差异
     Diff->>Diff: 比较 Schema
-    Diff-->>User: List<SchemaDiff>
+    Diff-->>User: List<SchemaDiff&gt;>
 
     User->>Generator: 生成 SQL
     Generator->>Generator: 选择模板
     Generator->>Generator: 执行模板
-    Generator-->>User: List<String>
+    Generator-->>User: List&lt;String&gt;
 
     User->>Executor: 执行迁移
     Executor->>DB: 开始事务
@@ -725,7 +725,7 @@ if (safeDrop) {
 
 ```java
 // 批量执行 SQL
-public void executeBatch(List<String> sql, Connection connection) {
+public void executeBatch(List&lt;String&gt; sql, Connection connection) {
     try (Statement stmt = connection.createStatement()) {
         for (String statement : sql) {
             stmt.addBatch(statement);
@@ -739,7 +739,7 @@ public void executeBatch(List<String> sql, Connection connection) {
 
 ```java
 // 并行加载多个 Schema 文件
-List<Loaded<Justdb>> results = paths.parallelStream()
+List<Loaded&gt;<Justdb>> results = paths.parallelStream()
     .map(path -> loader.loadFromFile(path))
     .collect(Collectors.toList());
 ```
@@ -748,7 +748,7 @@ List<Loaded<Justdb>> results = paths.parallelStream()
 
 ```java
 // 缓存编译后的模板
-private final Map<String, Template> templateCache = new ConcurrentHashMap<>();
+private final Map&lt;String, , Template> templateCache = new ConcurrentHashMap<>();
 
 public Template getTemplate(String key) {
     return templateCache.computeIfAbsent(key, k -> compileTemplate(k));

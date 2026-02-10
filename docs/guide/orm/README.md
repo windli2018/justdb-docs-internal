@@ -464,6 +464,6 @@ justdb schema2orm [options]
 
 ## 参考资源
 
-- [Schema 定义](../reference/schema/)
-- [格式支持](../reference/formats/)
+- [Schema 定义](../../reference/schema/)
+- [格式支持](../../reference/formats/)
 - [CLI 命令](../../reference/cli/commands.md)

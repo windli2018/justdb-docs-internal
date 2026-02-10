@@ -32,16 +32,16 @@ Implement **lifecycle hooks** on schema objects with conditional execution.
 ```java
 public class QueryAble {
     // Creation hooks
-    protected List<ConditionalSqlScript> beforeCreates;
-    protected List<ConditionalSqlScript> afterCreates;
+    protected List<ConditionalSqlScript&gt;> beforeCreates;
+    protected List<ConditionalSqlScript&gt;> afterCreates;
 
     // Drop hooks
-    protected List<ConditionalSqlScript> beforeDrops;
-    protected List<ConditionalSqlScript> afterDrops;
+    protected List<ConditionalSqlScript&gt;> beforeDrops;
+    protected List<ConditionalSqlScript&gt;> afterDrops;
 
     // Alter hooks
-    protected List<ConditionalSqlScript> beforeAlters;
-    protected List<ConditionalSqlScript> afterAlters;
+    protected List<ConditionalSqlScript&gt;> beforeAlters;
+    protected List<ConditionalSqlScript&gt;> afterAlters;
 }
 ```
 
@@ -157,7 +157,7 @@ afterAlters:
 
 ```java
 public class SchemaDeployer {
-    private void executeHooks(List<ConditionalSqlScript> hooks,
+    private void executeHooks(List<ConditionalSqlScript&gt;> hooks,
                               QueryAble object,
                               HookType type) {
         for (ConditionalSqlScript hook : hooks) {

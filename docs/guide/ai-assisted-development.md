@@ -55,7 +55,42 @@ flowchart TB
 # 4. 编写迁移脚本
 ```
 
-**JustDB 方式**：
+**JustDB 方式 - 选择你喜欢的格式**：
+
+::: tip JustDB 支持多种格式！
+你可以使用 XML、YAML、JSON、SQL、TOML 或 Markdown 来定义 Schema - 选择最适合你团队的格式！
+:::
+
+### **Schema 定义示例** <Badge text="多格式支持" type="tip"/>
+
+::: code-tabs#schema-format
+
+@tab XML
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb xmlns="http://www.verydb.org/justdb">
+    <Table name="orders" comment="订单表">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+        <Column name="order_no" type="VARCHAR(32)" nullable="false" unique="true"/>
+        <Column name="user_id" type="BIGINT" nullable="false"/>
+        <Column name="total_amount" type="DECIMAL(10,2)" nullable="false" defaultValue="0.00"/>
+        <Column name="status" type="VARCHAR(20)" nullable="false" defaultValue="pending"/>
+        <Column name="created_at" type="TIMESTAMP" nullable="false" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        <Index name="idx_user_id">
+            <column>user_id</column>
+        </Index>
+        <Index name="idx_status">
+            <column>status</column>
+        </Index>
+        <Index name="idx_created_at">
+            <column>created_at</column>
+        </Index>
+    </Table>
+</Justdb>
+```
+
+@tab YAML
 
 ```yaml
 # 使用声明式 YAML 定义表结构
@@ -94,6 +129,166 @@ Table:
       - name: idx_created_at
         columns: [created_at]
 ```
+
+@tab JSON
+
+```json
+{
+  "Table": [
+    {
+      "name": "orders",
+      "comment": "订单表",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true,
+          "autoIncrement": true
+        },
+        {
+          "name": "order_no",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "unique": true
+        },
+        {
+          "name": "user_id",
+          "type": "BIGINT",
+          "nullable": false
+        },
+        {
+          "name": "total_amount",
+          "type": "DECIMAL(10,2)",
+          "nullable": false,
+          "defaultValue": "0.00"
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(20)",
+          "nullable": false,
+          "defaultValue": "pending"
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "defaultValueComputed": "CURRENT_TIMESTAMP"
+        }
+      ],
+      "Index": [
+        {
+          "name": "idx_user_id",
+          "columns": ["user_id"]
+        },
+        {
+          "name": "idx_status",
+          "columns": ["status"]
+        },
+        {
+          "name": "idx_created_at",
+          "columns": ["created_at"]
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+
+```sql
+-- JustDB 也支持原生 SQL DDL
+CREATE TABLE orders (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    order_no VARCHAR(32) NOT NULL UNIQUE,
+    user_id BIGINT NOT NULL,
+    total_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_user_id (user_id),
+    INDEX idx_status (status),
+    INDEX idx_created_at (created_at)
+) COMMENT '订单表';
+```
+
+@tab TOML
+
+```toml
+# 使用 TOML 定义 Schema
+[[Table]]
+name = "orders"
+comment = "订单表"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+
+[[Table.Column]]
+name = "order_no"
+type = "VARCHAR(32)"
+nullable = false
+unique = true
+
+[[Table.Column]]
+name = "user_id"
+type = "BIGINT"
+nullable = false
+
+[[Table.Column]]
+name = "total_amount"
+type = "DECIMAL(10,2)"
+nullable = false
+defaultValue = "0.00"
+
+[[Table.Column]]
+name = "status"
+type = "VARCHAR(20)"
+nullable = false
+defaultValue = "pending"
+
+[[Table.Column]]
+name = "created_at"
+type = "TIMESTAMP"
+nullable = false
+defaultValueComputed = "CURRENT_TIMESTAMP"
+
+[[Table.Index]]
+name = "idx_user_id"
+columns = ["user_id"]
+
+[[Table.Index]]
+name = "idx_status"
+columns = ["status"]
+
+[[Table.Index]]
+name = "idx_created_at"
+columns = ["created_at"]
+```
+
+@tab Markdown
+
+```markdown
+# orders - 订单表
+
+| 字段 | 类型 | 约束 | 默认值 |
+|------|------|------|--------|
+| id | BIGINT | PRIMARY KEY, AUTO_INCREMENT | - |
+| order_no | VARCHAR(32) | NOT NULL, UNIQUE | - |
+| user_id | BIGINT | NOT NULL | - |
+| total_amount | DECIMAL(10,2) | NOT NULL | 0.00 |
+| status | VARCHAR(20) | NOT NULL | 'pending' |
+| created_at | TIMESTAMP | NOT NULL | CURRENT_TIMESTAMP |
+
+## 索引
+
+- `idx_user_id` on (user_id)
+- `idx_status` on (status)
+- `idx_created_at` on (created_at)
+```
+
+:::
 
 **开发流程**：
 ```bash
@@ -139,6 +334,23 @@ ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM orders");
 
 ### 场景 3：Schema 分析与优化
 
+::: code-tabs#analysis-schema
+
+@tab XML
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb xmlns="http://www.verydb.org/justdb">
+    <Table name="users">
+        <Column name="id" type="BIGINT" primaryKey="true"/>
+        <Column name="email" type="VARCHAR(100)"/>
+        <Column name="nickname" type="VARCHAR(50)" nullable="true"/>
+    </Table>
+</Justdb>
+```
+
+@tab YAML
+
 ```yaml
 # 完整的 Schema 定义便于分析
 Table:
@@ -153,6 +365,68 @@ Table:
         type: VARCHAR(50)
         nullable: true
 ```
+
+@tab JSON
+
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {"name": "id", "type": "BIGINT", "primaryKey": true},
+        {"name": "email", "type": "VARCHAR(100)"},
+        {"name": "nickname", "type": "VARCHAR(50)", "nullable": true}
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+
+```sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY,
+    email VARCHAR(100),
+    nickname VARCHAR(50) NULL
+);
+```
+
+@tab TOML
+
+```toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+
+[[Table.Column]]
+name = "nickname"
+type = "VARCHAR(50)"
+nullable = true
+```
+
+@tab Markdown
+
+```markdown
+# users
+
+| 字段 | 类型 | 约束 |
+|------|------|------|
+| id | BIGINT | PRIMARY KEY |
+| email | VARCHAR(100) | - |
+| nickname | VARCHAR(50) | NULL |
+```
+
+:::
 
 **使用 JustDB 工具分析**：
 ```bash
@@ -170,6 +444,25 @@ justdb analyze --schema schema.yaml
 ### 场景 4：虚拟列（Virtual Column）高级功能
 
 JustDB 支持虚拟列，可以根据其他列动态计算值：
+
+::: code-tabs#virtual-column
+
+@tab XML
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb xmlns="http://www.verydb.org/justdb">
+    <Table name="products">
+        <Column name="id" type="BIGINT" primaryKey="true"/>
+        <Column name="name" type="VARCHAR(100)"/>
+        <Column name="price" type="DECIMAL(10,2)"/>
+        <Column name="discounted_price" type="DECIMAL(10,2)" virtual="true" expression="price * 0.9"/>
+        <Column name="stock_status" type="VARCHAR(20)" virtual="true" expression="CASE WHEN stock > 100 THEN '充足' WHEN stock > 0 THEN '紧张' ELSE '缺货' END"/>
+    </Table>
+</Justdb>
+```
+
+@tab YAML
 
 ```yaml
 Table:
@@ -193,6 +486,95 @@ Table:
         virtual: true
         expression: "CASE WHEN stock > 100 THEN '充足' WHEN stock > 0 THEN '紧张' ELSE '缺货' END"
 ```
+
+@tab JSON
+
+```json
+{
+  "Table": [
+    {
+      "name": "products",
+      "Column": [
+        {"name": "id", "type": "BIGINT", "primaryKey": true},
+        {"name": "name", "type": "VARCHAR(100)"},
+        {"name": "price", "type": "DECIMAL(10,2)"},
+        {
+          "name": "discounted_price",
+          "type": "DECIMAL(10,2)",
+          "virtual": true,
+          "expression": "price * 0.9"
+        },
+        {
+          "name": "stock_status",
+          "type": "VARCHAR(20)",
+          "virtual": true,
+          "expression": "CASE WHEN stock > 100 THEN '充足' WHEN stock > 0 THEN '紧张' ELSE '缺货' END"
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+
+```sql
+CREATE TABLE products (
+    id BIGINT PRIMARY KEY,
+    name VARCHAR(100),
+    price DECIMAL(10,2),
+    discounted_price DECIMAL(10,2) AS (price * 0.9) VIRTUAL,
+    stock_status VARCHAR(20) AS (CASE WHEN stock > 100 THEN '充足' WHEN stock > 0 THEN '紧张' ELSE '缺货' END) VIRTUAL
+);
+```
+
+@tab TOML
+
+```toml
+[[Table]]
+name = "products"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+
+[[Table.Column]]
+name = "name"
+type = "VARCHAR(100)"
+
+[[Table.Column]]
+name = "price"
+type = "DECIMAL(10,2)"
+
+[[Table.Column]]
+name = "discounted_price"
+type = "DECIMAL(10,2)"
+virtual = true
+expression = "price * 0.9"
+
+[[Table.Column]]
+name = "stock_status"
+type = "VARCHAR(20)"
+virtual = true
+expression = "CASE WHEN stock > 100 THEN '充足' WHEN stock > 0 THEN '紧张' ELSE '缺货' END"
+```
+
+@tab Markdown
+
+```markdown
+# products
+
+| 字段 | 类型 | 特性 |
+|------|------|------|
+| id | BIGINT | PRIMARY KEY |
+| name | VARCHAR(100) | - |
+| price | DECIMAL(10,2) | - |
+| discounted_price | DECIMAL(10,2) | VIRTUAL: `price * 0.9` |
+| stock_status | VARCHAR(20) | VIRTUAL: `CASE WHEN stock > 100 THEN '充足' WHEN stock > 0 THEN '紧张' ELSE '缺货' END` |
+```
+
+:::
 
 ### 场景 5：监控数据库变化
 
@@ -250,6 +632,23 @@ JustdbConnection conn = new JustdbConnection(dataSource);
 
 ### 1. Schema 即代码，Schema 即文档
 
+::: code-tabs#schema-as-doc
+
+@tab XML
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb xmlns="http://www.verydb.org/justdb">
+    <!-- Schema 文件既是代码，也是文档 -->
+    <Table name="orders" comment="订单表 - 存储用户订单信息">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"
+                comment="订单ID，主键自增"/>
+    </Table>
+</Justdb>
+```
+
+@tab YAML
+
 ```yaml
 # Schema 文件既是代码，也是文档
 Table:
@@ -262,6 +661,67 @@ Table:
         autoIncrement: true
         comment: 订单ID，主键自增
 ```
+
+@tab JSON
+
+```json
+{
+  "Table": [
+    {
+      "name": "orders",
+      "comment": "订单表 - 存储用户订单信息",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true,
+          "autoIncrement": true,
+          "comment": "订单ID，主键自增"
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+
+```sql
+-- Schema 文件既是代码，也是文档
+CREATE TABLE orders (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '订单ID，主键自增'
+) COMMENT '订单表 - 存储用户订单信息';
+```
+
+@tab TOML
+
+```toml
+# Schema 文件既是代码，也是文档
+[[Table]]
+name = "orders"
+comment = "订单表 - 存储用户订单信息"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+comment = "订单ID，主键自增"
+```
+
+@tab Markdown
+
+```markdown
+# orders - 订单表
+
+**说明**：存储用户订单信息
+
+| 字段 | 类型 | 约束 | 说明 |
+|------|------|------|------|
+| id | BIGINT | PRIMARY KEY, AUTO_INCREMENT | 订单ID，主键自增 |
+```
+
+:::
 
 **工具支持**：
 - 📖 生成 API 文档
@@ -497,6 +957,25 @@ A: JustDB 设计时充分考虑兼容性：
 
 JustDB 支持虚拟列，可以根据其他列动态计算值：
 
+::: code-tabs#virtual-column
+
+@tab XML
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb xmlns="http://www.verydb.org/justdb">
+    <Table name="products">
+        <Column name="id" type="BIGINT" primaryKey="true"/>
+        <Column name="name" type="VARCHAR(100)"/>
+        <Column name="price" type="DECIMAL(10,2)"/>
+        <Column name="discounted_price" type="DECIMAL(10,2)" virtual="true" expression="price * 0.9"/>
+        <Column name="stock_status" type="VARCHAR(20)" virtual="true" expression="CASE WHEN stock > 100 THEN '充足' WHEN stock > 0 THEN '紧张' ELSE '缺货' END"/>
+    </Table>
+</Justdb>
+```
+
+@tab YAML
+
 ```yaml
 Table:
   - name: products
@@ -519,6 +998,95 @@ Table:
         virtual: true
         expression: "CASE WHEN stock > 100 THEN '充足' WHEN stock > 0 THEN '紧张' ELSE '缺货' END"
 ```
+
+@tab JSON
+
+```json
+{
+  "Table": [
+    {
+      "name": "products",
+      "Column": [
+        {"name": "id", "type": "BIGINT", "primaryKey": true},
+        {"name": "name", "type": "VARCHAR(100)"},
+        {"name": "price", "type": "DECIMAL(10,2)"},
+        {
+          "name": "discounted_price",
+          "type": "DECIMAL(10,2)",
+          "virtual": true,
+          "expression": "price * 0.9"
+        },
+        {
+          "name": "stock_status",
+          "type": "VARCHAR(20)",
+          "virtual": true,
+          "expression": "CASE WHEN stock > 100 THEN '充足' WHEN stock > 0 THEN '紧张' ELSE '缺货' END"
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+
+```sql
+CREATE TABLE products (
+    id BIGINT PRIMARY KEY,
+    name VARCHAR(100),
+    price DECIMAL(10,2),
+    discounted_price DECIMAL(10,2) AS (price * 0.9) VIRTUAL,
+    stock_status VARCHAR(20) AS (CASE WHEN stock > 100 THEN '充足' WHEN stock > 0 THEN '紧张' ELSE '缺货' END) VIRTUAL
+);
+```
+
+@tab TOML
+
+```toml
+[[Table]]
+name = "products"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+
+[[Table.Column]]
+name = "name"
+type = "VARCHAR(100)"
+
+[[Table.Column]]
+name = "price"
+type = "DECIMAL(10,2)"
+
+[[Table.Column]]
+name = "discounted_price"
+type = "DECIMAL(10,2)"
+virtual = true
+expression = "price * 0.9"
+
+[[Table.Column]]
+name = "stock_status"
+type = "VARCHAR(20)"
+virtual = true
+expression = "CASE WHEN stock > 100 THEN '充足' WHEN stock > 0 THEN '紧张' ELSE '缺货' END"
+```
+
+@tab Markdown
+
+```markdown
+# products
+
+| 字段 | 类型 | 特性 |
+|------|------|------|
+| id | BIGINT | PRIMARY KEY |
+| name | VARCHAR(100) | - |
+| price | DECIMAL(10,2) | - |
+| discounted_price | DECIMAL(10,2) | VIRTUAL: `price * 0.9` |
+| stock_status | VARCHAR(20) | VIRTUAL: `CASE WHEN stock > 100 THEN '充足' WHEN stock > 0 THEN '紧张' ELSE '缺货' END` |
+```
+
+:::
 
 **AI 对话**：
 ```markdown
@@ -588,6 +1156,23 @@ JustdbConnection conn = new JustdbConnection(dataSource);
 
 ### 1. Schema 即代码，Schema 即文档
 
+::: code-tabs#schema-as-doc
+
+@tab XML
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb xmlns="http://www.verydb.org/justdb">
+    <!-- Schema 文件既是代码，也是文档 -->
+    <Table name="orders" comment="订单表 - 存储用户订单信息">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"
+                comment="订单ID，主键自增"/>
+    </Table>
+</Justdb>
+```
+
+@tab YAML
+
 ```yaml
 # Schema 文件既是代码，也是文档
 Table:
@@ -600,6 +1185,67 @@ Table:
         autoIncrement: true
         comment: 订单ID，主键自增
 ```
+
+@tab JSON
+
+```json
+{
+  "Table": [
+    {
+      "name": "orders",
+      "comment": "订单表 - 存储用户订单信息",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true,
+          "autoIncrement": true,
+          "comment": "订单ID，主键自增"
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+
+```sql
+-- Schema 文件既是代码，也是文档
+CREATE TABLE orders (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '订单ID，主键自增'
+) COMMENT '订单表 - 存储用户订单信息';
+```
+
+@tab TOML
+
+```toml
+# Schema 文件既是代码，也是文档
+[[Table]]
+name = "orders"
+comment = "订单表 - 存储用户订单信息"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+comment = "订单ID，主键自增"
+```
+
+@tab Markdown
+
+```markdown
+# orders - 订单表
+
+**说明**：存储用户订单信息
+
+| 字段 | 类型 | 约束 | 说明 |
+|------|------|------|------|
+| id | BIGINT | PRIMARY KEY, AUTO_INCREMENT | 订单ID，主键自增 |
+```
+
+:::
 
 **AI 可以**：
 - 📖 理解业务逻辑
