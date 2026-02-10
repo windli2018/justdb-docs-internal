@@ -1,7 +1,7 @@
 ---
 icon: table
 title: Schema System Design
-order: 52
+order: 1
 ---
 
 # Schema System Design
@@ -15,6 +15,42 @@ The schema system is responsible for:
 - Validating schema structures and constraints
 - Maintaining schema object hierarchy
 - Tracking schema evolution
+
+## Documents
+
+### Core Concepts
+
+| Document | Description |
+|----------|-------------|
+| [Overview](./overview.md) | Schema system overview and features |
+| [Type Hierarchy](./type-hierarchy.md) | Type inheritance hierarchy |
+| [Alias System](./alias-system.md) | Field naming and alias support |
+
+### Schema Evolution
+
+| Document | Description |
+|----------|-------------|
+| [Schema Evolution](./schema-evolution.md) | Schema change tracking mechanism |
+| [Reference System](./reference-system.md) | Component reuse via referenceId |
+| [Virtual Columns](./virtual-columns.md) | Virtual column design for data reference resolution |
+
+### Extensibility
+
+| Document | Description |
+|----------|-------------|
+| [Extension Points](./extension-points.md) | Dynamic extension mechanism |
+
+### Schema Definition
+
+| Document | Description |
+|----------|-------------|
+| [Definition](./definition.md) | Schema object definitions |
+
+### Implementation
+
+| Document | Description |
+|----------|-------------|
+| [Extension Points Implementation](./extension-points-impl.md) | Extension point implementation details |
 
 ## Key Components
 

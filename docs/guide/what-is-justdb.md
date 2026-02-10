@@ -2,6 +2,7 @@
 icon: lightbulb
 title: 什么是 JustDB
 order: 1
+date: 2024-01-01
 category:
   - 指南
   - 介绍
@@ -22,11 +23,30 @@ JustDB 是一个创新的**所见即所得（WYSIWYG）数据库开发套件**�
 传统的数据库开发流程是这样的：
 
 ```mermaid
-flowchart LR
-    A[设计表结构] --> B[手写 CREATE TABLE]
-    B --> C[执行 SQL 创建表]
-    C --> D[需要修改时&lt;br/&gt;手写 ALTER TABLE]
-    D --> E[担心脚本执行顺序&lt;br/&gt;和错误处理]
+flowchart TB
+    A[📋 设计表结构]
+    B1[❌ CREATE TABLE<br/>手写SQL]
+    B2[⚠️ ALTER TABLE<br/>担心数据丢失]
+    B3[🔧 INSERT/UPDATE<br/>手动数据迁移]
+    B4[💣 DROP TABLE<br/>害怕删错表]
+
+    C[😰 脚本执行顺序?<br/>错误处理?<br/>回滚方案?]
+
+    classDef problemNode fill:#fee2e2,stroke:#ef4444,stroke-width:2px,color:#991b1b,rx:0,font-weight:bold
+    classDef painNode fill:#fef3c7,stroke:#f59e0b,stroke-width:3px,color:#92400e,rx:0,stroke-dasharray: 5 5,font-weight:bold
+
+    class A,B1,B2,B3,B4 problemNode
+    class C painNode
+
+    A -.->|发散| B1
+    A -.->|发散| B2
+    A -.->|发散| B3
+    A -.->|发散| B4
+
+    B1 -->|不确定| C
+    B2 -->|不确定| C
+    B3 -->|不确定| C
+    B4 -->|高风险| C
 ```
 
 这种方式存在以下问题：
@@ -43,8 +63,20 @@ JustDB 将数据库开发简化为：
 
 ```mermaid
 flowchart LR
-    A[声明期望的&lt;br/&gt;数据库状态] --> B[工具自动&lt;br/&gt;计算差异]
-    B --> C[工具自动&lt;br/&gt;执行变更]
+    A[✨ 声明期望状态<br/>XML/YAML/JSON/SQL/TOML]
+    B[🤖 自动计算差异<br/>智能比对]
+    C[🚀 自动执行变更<br/>安全可靠]
+    D[🔄 一键回滚<br/>随时可撤]
+
+    classDef smoothNode fill:#dbeafe,stroke:#3b82f6,stroke-width:2px,color:#1e40af,rx:10,font-weight:bold
+    classDef happyNode fill:#dcfce7,stroke:#22c55e,stroke-width:2px,color:#166534,rx:10,font-weight:bold
+
+    class A,B smoothNode
+    class C,D happyNode
+
+    A ==>|丝滑流转| B
+    B ==>|自动完成| C
+    B -.->|可选| D
 ```
 
 **只需关注"要什么"，无需关心"怎么做"**
@@ -53,11 +85,29 @@ flowchart LR
 
 ### 1. 声明式 Schema 定义
 
-使用 YAML、JSON、XML 等格式声明你期望的数据库结构：
+使用 XML、YAML、JSON、SQL、TOML 等格式声明你期望的数据库结构：
 
+::: code-tabs
+@tab XML
+```xml
+<!-- users.xml - 这就是你想要的数据库样子 -->
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb namespace="com.example">
+    <Table id="users" name="用户表" comment="存储系统用户信息">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"
+                comment="用户ID，主键自增"/>
+        <Column name="username" type="VARCHAR(50)" nullable="false"
+                comment="用户名，不能为空"/>
+        <Column name="email" type="VARCHAR(100)" comment="邮箱地址"/>
+        <Column name="created_at" type="TIMESTAMP" nullable="false"
+                defaultValueComputed="CURRENT_TIMESTAMP" comment="创建时间"/>
+    </Table>
+</Justdb>
+```
+
+@tab YAML
 ```yaml
 # users.yaml - 这就是你想要的数据库样子
-id: myapp
 namespace: com.example
 Table:
   - id: users
@@ -83,10 +133,117 @@ Table:
         comment: 创建时间
 ```
 
+@tab JSON
+```json
+{
+  "namespace": "com.example",
+  "Table": [
+    {
+      "id": "users",
+      "name": "用户表",
+      "comment": "存储系统用户信息",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true,
+          "autoIncrement": true,
+          "comment": "用户ID，主键自增"
+        },
+        {
+          "name": "username",
+          "type": "VARCHAR(50)",
+          "nullable": false,
+          "comment": "用户名，不能为空"
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(100)",
+          "comment": "邮箱地址"
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "defaultValueComputed": "CURRENT_TIMESTAMP",
+          "comment": "创建时间"
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+-- schema.sql
+-- JustDB 也支持 SQL 格式的 Schema 定义
+
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '用户ID，主键自增',
+    username VARCHAR(50) NOT NULL COMMENT '用户名，不能为空',
+    email VARCHAR(100) COMMENT '邮箱地址',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
+) COMMENT '用户表';
+
+-- 或者使用标准 SQL 注释
+ALTER TABLE users COMMENT '存储系统用户信息';
+```
+
+@tab TOML
+```toml
+namespace = "com.example"
+
+[[Table]]
+id = "users"
+name = "用户表"
+comment = "存储系统用户信息"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+comment = "用户ID，主键自增"
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+nullable = false
+comment = "用户名，不能为空"
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+comment = "邮箱地址"
+
+[[Table.Column]]
+name = "created_at"
+type = "TIMESTAMP"
+nullable = true
+defaultValueComputed = "CURRENT_TIMESTAMP"
+comment = "创建时间"
+```
+:::
+
 ### 2. 智能差异计算
 
 当你修改 Schema 时，JustDB 会自动计算变更并只执行必要的 SQL：
 
+::: code-tabs
+@tab XML
+```xml
+<!-- 修改后 - 添加了 avatar 字段 -->
+<Table id="users">
+    <Column name="id" type="BIGINT" primaryKey="true"/>
+    <Column name="username" type="VARCHAR(50)"/>
+    <Column name="email" type="VARCHAR(100)"/>
+    <Column name="avatar" type="VARCHAR(500)"/> <!-- 新增 -->
+    <Column name="created_at" type="TIMESTAMP"/>
+</Table>
+```
+
+@tab YAML
 ```yaml
 # 修改后 - 添加了 avatar 字段
 Column:
@@ -103,6 +260,53 @@ Column:
     type: TIMESTAMP
 ```
 
+@tab JSON
+```json
+{
+  "Column": [
+    {"name": "id", "type": "BIGINT", "primaryKey": true},
+    {"name": "username", "type": "VARCHAR(50)"},
+    {"name": "email", "type": "VARCHAR(100)"},
+    {"name": "avatar", "type": "VARCHAR(500)"},
+    {"name": "created_at", "type": "TIMESTAMP"}
+  ]
+}
+```
+
+@tab SQL
+```sql
+-- 修改后 - 添加了 avatar 字段
+-- JustDB 解析 SQL 格式的 Schema 定义并计算差异
+
+ALTER TABLE users ADD COLUMN avatar VARCHAR(500) COMMENT '用户头像';
+```
+
+@tab TOML
+```toml
+# 修改后 - 添加了 avatar 字段
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+
+[[Table.Column]]
+name = "avatar"      # 新增
+type = "VARCHAR(500)"
+
+[[Table.Column]]
+name = "created_at"
+type = "TIMESTAMP"
+```
+:::
+
 JustDB 自动生成并执行：
 
 ```sql
@@ -113,8 +317,17 @@ ALTER TABLE users ADD COLUMN avatar VARCHAR(500);
 
 JustDB 支持几乎所有常见的数据格式，你可以选择最适合团队的格式：
 
-&lt;CodeGroup&gt;
-&lt;CodeGroupItem title="YAML"&gt;
+::: code-tabs
+@tab XML
+```xml
+<Justdb>
+  <Table name="users">
+    <Column name="id" type="BIGINT" primaryKey="true"/>
+  </Table>
+</Justdb>
+```
+
+@tab YAML
 ```yaml
 Table:
   - name: users
@@ -123,9 +336,8 @@ Table:
         type: BIGINT
         primaryKey: true
 ```
-&lt;/CodeGroupItem&gt;
 
-&lt;CodeGroupItem title="JSON"&gt;
+@tab JSON
 ```json
 {
   "Table": [
@@ -142,18 +354,25 @@ Table:
   ]
 }
 ```
-&lt;/CodeGroupItem&gt;
 
-&lt;CodeGroupItem title="XML"&gt;
-```xml
-&lt;Justdb&gt;
-  &lt;Table name="users"&gt;
-    &lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
-  &lt;/Table&gt;
-&lt;/Justdb&gt;
+@tab SQL
+```sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY
+);
 ```
-&lt;/CodeGroupItem&gt;
-&lt;/CodeGroup&gt;
+
+@tab TOML
+```toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+```
+:::
 
 ### 4. AI 集成
 

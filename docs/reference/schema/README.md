@@ -21,7 +21,6 @@ JustDB Schema 是一个用于描述数据库结构的声明式框架。通过 Sc
 `Justdb` 是 Schema 定义的根节点，包含所有的数据库对象定义：
 
 ```yaml
-id: myapp
 namespace: com.example
 Table:
   - name: users

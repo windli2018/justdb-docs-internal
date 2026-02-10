@@ -17,16 +17,32 @@ tag:
 | 维度 | JustDB | Flyway |
 |:---|:---|:---|
 | **设计理念** | 声明式 | 命令式 |
-| **Schema 定义** | YAML/JSON/XML | SQL 脚本 |
+| **Schema 定义** | XML/YAML/JSON/SQL/TOML | SQL 脚本 |
 | **变更方式** | 修改 Schema 文件 | 新增 SQL 脚本 |
 | **版本管理** | 自动 | 手动管理版本号 |
 | **差异计算** | 自动 | 手动编写 |
 
 ## 代码对比
 
-<CodeGroup>
-<CodeGroupItem title="JustDB">
+**JustDB - 声明期望状态，选择你喜欢的格式：**
 
+::: code-tabs
+@tab XML
+```xml
+<!-- schema.xml - 声明期望状态 -->
+<Justdb>
+    <Table name="users">
+        <Column name="id" type="BIGINT" primaryKey="true"/>
+        <Column name="username" type="VARCHAR(50)"/>
+        <Column name="email" type="VARCHAR(100)"/>
+    </Table>
+</Justdb>
+
+<!-- 修改时只需更新文件 -->
+<!-- JustDB 自动计算差异 -->
+```
+
+@tab YAML
 ```yaml
 # schema.yaml - 声明期望状态
 Table:
@@ -44,10 +60,65 @@ Table:
 # JustDB 自动计算差异
 ```
 
-</CodeGroupItem>
+@tab JSON
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {"name": "id", "type": "BIGINT", "primaryKey": true},
+        {"name": "username", "type": "VARCHAR(50)"},
+        {"name": "email", "type": "VARCHAR(100)"}
+      ]
+    }
+  ]
+}
 
-<CodeGroupItem title="Flyway">
+// 修改时只需更新文件
+// JustDB 自动计算差异
+```
 
+@tab SQL
+```sql
+-- schema.sql - 声明期望状态
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY,
+    username VARCHAR(50),
+    email VARCHAR(100)
+);
+
+-- 修改时只需更新文件
+-- JustDB 自动计算差异
+```
+
+@tab TOML
+```toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+
+# 修改时只需更新文件
+# JustDB 自动计算差异
+```
+:::
+
+**Flyway - 命令式 SQL 迁移脚本：**
+
+::: code-tabs
+@tab SQL
 ```sql
 -- V1__create_users_table.sql
 CREATE TABLE users (
@@ -64,9 +135,7 @@ ALTER TABLE users ADD COLUMN avatar VARCHAR(500);
 
 -- 每次变更都需要新脚本
 ```
-
-</CodeGroupItem>
-</CodeGroup>
+:::
 
 ## 优缺点对比
 

@@ -13,32 +13,32 @@
     <div class="tabs-content">
       <div v-show="activeTab === 'npm'" class="tab-panel">
         <div class="code-block">
-          <code>npm install vuepress@next</code>
-          <button class="copy-button" @click="copyCode('npm install vuepress@next')">
+          <code>npm install @justdb/cli</code>
+          <button class="copy-button" @click="copyCode('npm install @justdb/cli')">
             {{ copied === 'npm' ? t('copied') : t('copy') }}
           </button>
         </div>
       </div>
       <div v-show="activeTab === 'yarn'" class="tab-panel">
         <div class="code-block">
-          <code>yarn add vuepress@next</code>
-          <button class="copy-button" @click="copyCode('yarn add vuepress@next')">
+          <code>yarn add @justdb/cli</code>
+          <button class="copy-button" @click="copyCode('yarn add @justdb/cli')">
             {{ copied === 'yarn' ? t('copied') : t('copy') }}
           </button>
         </div>
       </div>
       <div v-show="activeTab === 'pnpm'" class="tab-panel">
         <div class="code-block">
-          <code>pnpm add vuepress@next</code>
-          <button class="copy-button" @click="copyCode('pnpm add vuepress@next')">
+          <code>pnpm add @justdb/cli</code>
+          <button class="copy-button" @click="copyCode('pnpm add @justdb/cli')">
             {{ copied === 'pnpm' ? t('copied') : t('copy') }}
           </button>
         </div>
       </div>
       <div v-show="activeTab === 'bun'" class="tab-panel">
         <div class="code-block">
-          <code>bun add vuepress@next</code>
-          <button class="copy-button" @click="copyCode('bun add vuepress@next')">
+          <code>bun add @justdb/cli</code>
+          <button class="copy-button" @click="copyCode('bun add @justdb/cli')">
             {{ copied === 'bun' ? t('copied') : t('copy') }}
           </button>
         </div>

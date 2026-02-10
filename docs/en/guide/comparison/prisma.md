@@ -18,15 +18,28 @@ tag:
 |:---|:---|:---|
 | **Language** | Java | TypeScript/Node.js |
 | **Design Philosophy** | Declarative file | Declarative file |
-| **Schema Definition** | YAML/JSON/XML | Custom DSL |
+| **Schema Definition** | XML/YAML/JSON/SQL/TOML | Custom DSL |
 | **Type Generation** | ❌ | ✅ |
 | **ORM Integration** | ❌ | ✅ |
 
 ## Code Comparison
 
-<CodeGroup>
-<CodeGroupItem title="JustDB">
+**JustDB - Multi-format declarative schema:**
 
+::: code-tabs
+@tab XML
+```xml
+<!-- schema.xml -->
+<Justdb>
+    <Table name="users">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+        <Column name="username" type="VARCHAR(50)"/>
+        <Column name="email" type="VARCHAR(100)"/>
+    </Table>
+</Justdb>
+```
+
+@tab YAML
 ```yaml
 # schema.yaml
 Table:
@@ -42,10 +55,57 @@ Table:
         type: VARCHAR(100)
 ```
 
-</CodeGroupItem>
+@tab JSON
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {"name": "id", "type": "BIGINT", "primaryKey": true, "autoIncrement": true},
+        {"name": "username", "type": "VARCHAR(50)"},
+        {"name": "email", "type": "VARCHAR(100)"}
+      ]
+    }
+  ]
+}
+```
 
-<CodeGroupItem title="Prisma">
+@tab SQL
+```sql
+-- schema.sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50),
+    email VARCHAR(100)
+);
+```
 
+@tab TOML
+```toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+```
+:::
+
+**Prisma - TypeScript/Node.js ORM with custom DSL:**
+
+::: code-tabs
+@tab Prisma
 ```prisma
 // schema.prisma
 model User {
@@ -62,9 +122,7 @@ model Post {
   author    User     @relation(fields: [authorId], references: [id])
 }
 ```
-
-</CodeGroupItem>
-</CodeGroup>
+:::
 
 ## Pros and Cons
 

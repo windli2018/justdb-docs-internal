@@ -27,6 +27,19 @@ export const zhSidebar = sidebar({
         },
         "design-philosophy.md",
         "use-cases.md",
+        "ai-assisted-development.md",
+        {
+          text: "ORM 集成",
+          icon: "code",
+          prefix: "/guide/orm/",
+          link: "/guide/orm/",
+          collapsible: true,
+          children: [
+            "python.md",
+            "typescript.md",
+            "go.md",
+          ],
+        },
       ],
     },
     {
@@ -42,6 +55,22 @@ export const zhSidebar = sidebar({
         "migration-basics.md",
         "spring-boot-integration.md",
         "common-tasks.md",
+      ],
+    },
+    {
+      text: "速查手册",
+      icon: "bolt",
+      prefix: "/cheatsheet/",
+      link: "/cheatsheet/",
+      collapsible: true,
+      children: [
+        "serial.md",
+        "virtual-column.md",
+        "plugin.md",
+        "type-mapping.md",
+        "lifecycle-hooks.md",
+        "reference-system.md",
+        "migration.md",
       ],
     },
     {

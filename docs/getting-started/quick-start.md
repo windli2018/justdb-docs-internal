@@ -1,4 +1,5 @@
 ---
+date: 2024-01-01
 icon: play
 title: 5 分钟快速上手
 order: 2
@@ -97,7 +98,6 @@ justdb:
 创建文件 `schema.yaml`：
 
 ```yaml
-id: myapp
 namespace: com.example
 Table:
   - id: users
@@ -226,8 +226,8 @@ justdb
 
 JustDB 支持多种格式，你可以选择最适合的：
 
-&lt;CodeGroup&gt;
-&lt;CodeGroupItem title="YAML"&gt;
+<CodeGroup>
+<CodeGroupItem title="YAML"&gt;
 ```yaml
 Table:
   - name: users
@@ -236,9 +236,9 @@ Table:
         type: BIGINT
         primaryKey: true
 ```
-&lt;/CodeGroupItem&gt;
+</CodeGroupItem>
 
-&lt;CodeGroupItem title="JSON"&gt;
+<CodeGroupItem title="JSON"&gt;
 ```json
 {
   "Table": [
@@ -255,9 +255,9 @@ Table:
   ]
 }
 ```
-&lt;/CodeGroupItem&gt;
+</CodeGroupItem>
 
-&lt;CodeGroupItem title="XML"&gt;
+<CodeGroupItem title="XML"&gt;
 ```xml
 &lt;Justdb&gt;
   &lt;Table name="users"&gt;
@@ -265,8 +265,8 @@ Table:
   &lt;/Table&gt;
 &lt;/Justdb&gt;
 ```
-&lt;/CodeGroupItem&gt;
-&lt;/CodeGroup&gt;
+</CodeGroupItem>
+</CodeGroup>
 
 格式转换：
 

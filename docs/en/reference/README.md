@@ -125,7 +125,6 @@ justdb interactive             # Interactive mode with AI
 ### Basic Schema Example
 
 ```yaml
-id: myapp
 namespace: com.example
 Table:
   - name: users

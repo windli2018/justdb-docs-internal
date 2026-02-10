@@ -18,7 +18,7 @@ tag:
 |:---|:---|:---|
 | **Language Ecosystem** | Java/JVM | Multi-language (Go core) |
 | **Design Philosophy** | Declarative | Declarative + GitOps |
-| **Schema Definition** | YAML/JSON/XML | SQL/HCL/ORM |
+| **Schema Definition** | XML/YAML/JSON/SQL/TOML | SQL/HCL/ORM |
 | **Diff Calculation** | Automatic | Automatic |
 | **AI Integration** | Local/Cloud AI | Atlas Copilot (cloud) |
 | **JDBC Driver** | ✅ Unique | ❌ |
@@ -27,9 +27,28 @@ tag:
 
 ## Code Comparison
 
-<CodeGroup>
-<CodeGroupItem title="JustDB">
+**JustDB - Multi-format declarative schema:**
 
+::: code-tabs
+@tab XML
+```xml
+<!-- schema.xml -->
+<Justdb>
+    <Table name="users">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+        <Column name="username" type="VARCHAR(50)" nullable="false"/>
+        <Column name="email" type="VARCHAR(100)"/>
+        <Index name="idx_username" unique="true">
+            <IndexColumn name="username"/>
+        </Index>
+    </Table>
+</Justdb>
+
+<!-- Run migration directly -->
+<!-- justdb migrate -->
+```
+
+@tab YAML
 ```yaml
 # schema.yaml
 Table:
@@ -50,13 +69,81 @@ Table:
         unique: true
 
 # Run migration directly
-justdb migrate
+# justdb migrate
 ```
 
-</CodeGroupItem>
+@tab JSON
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {"name": "id", "type": "BIGINT", "primaryKey": true, "autoIncrement": true},
+        {"name": "username", "type": "VARCHAR(50)", "nullable": false},
+        {"name": "email", "type": "VARCHAR(100)"}
+      ],
+      "Index": [
+        {"name": "idx_username", "columns": ["username"], "unique": true}
+      ]
+    }
+  ]
+}
 
-<CodeGroupItem title="Atlas (HCL)">
+// Run migration directly
+// justdb migrate
+```
 
+@tab SQL
+```sql
+-- schema.sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100),
+    UNIQUE KEY idx_username (username)
+);
+
+-- Run migration directly
+-- justdb migrate
+```
+
+@tab TOML
+```toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+nullable = false
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+
+[[Table.Index]]
+name = "idx_username"
+unique = true
+
+[[Table.Index.IndexColumn]]
+name = "username"
+
+# Run migration directly
+# justdb migrate
+```
+:::
+
+**Atlas - GitOps-focused schema management:**
+
+::: code-tabs
+@tab HCL
 ```hcl
 # schema.hcl
 table "users" {
@@ -82,10 +169,7 @@ atlas schema apply -u "postgres://user:pass@localhost/db" \
   --to file://schema.hcl
 ```
 
-</CodeGroupItem>
-
-<CodeGroupItem title="Atlas (SQL)">
-
+@tab SQL
 ```sql
 -- schema.sql
 CREATE TABLE users (
@@ -96,15 +180,13 @@ CREATE TABLE users (
 
 CREATE UNIQUE INDEX idx_username ON users(username);
 ```
-
-</CodeGroupItem>
-</CodeGroup>
+:::
 
 ## Pros and Cons
 
 **JustDB Advantages**:
 - ✅ **JDBC Driver**: Unique in-memory database driver for offline development
-- ✅ **Multi-format Support**: Native support for 8 data formats (YAML/JSON/XML/Properties, etc.)
+- ✅ **Multi-format Support**: Native support for 8 data formats (XML/YAML/JSON/TOML/Properties, etc.)
 - ✅ **AI Integration**: Support for local LLMs and multiple cloud AI providers
 - ✅ **Java Ecosystem**: Deep integration with Java/JVM ecosystem
 - ✅ **Template System**: Flexible template engine for custom SQL generation

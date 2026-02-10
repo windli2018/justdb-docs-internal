@@ -1,5 +1,6 @@
 ---
 icon: book-bookmark
+date: 2024-01-01
 title: 术语表
 order: 4
 category:
@@ -23,7 +24,6 @@ tag:
 
 ```yaml
 # 一个简单的 Schema 定义
-id: myapp
 namespace: com.example
 Table:
   - name: users
@@ -189,7 +189,6 @@ Sequence:
 Justdb 是 Schema 定义的根容器对象。
 
 ```yaml
-id: myapp
 namespace: com.example
 catalog: myapp
 Table: [...]

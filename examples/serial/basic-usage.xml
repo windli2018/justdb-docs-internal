@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Serial Basic Usage Example
+
+  This example demonstrates the basic usage of serial/auto-increment columns
+  across different database types.
+-->
+<Justdb xmlns="http://www.verydb.org/schema/v1">
+
+  <!-- MySQL: AUTO_INCREMENT -->
+  <Database id="mysql-demo" type="mysql">
+    <Table name="users">
+      <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true">
+        <Comment>用户ID (MySQL AUTO_INCREMENT)</Comment>
+      </Column>
+      <Column name="username" type="VARCHAR(50)" nullable="false">
+        <Comment>用户名</Comment>
+      </Column>
+      <Column name="email" type="VARCHAR(100)">
+        <Comment>邮箱</Comment>
+      </Column>
+    </Table>
+  </Database>
+
+  <!-- PostgreSQL: SERIAL and BIGSERIAL -->
+  <Database id="postgres-demo" type="postgresql">
+    <Table name="users">
+      <Column name="id" type="BIGSERIAL" primaryKey="true">
+        <Comment>用户ID (PostgreSQL BIGSERIAL)</Comment>
+      </Column>
+      <Column name="username" type="VARCHAR(50)" nullable="false">
+        <Comment>用户名</Comment>
+      </Column>
+      <Column name="email" type="VARCHAR(100)">
+        <Comment>邮箱</Comment>
+      </Column>
+    </Table>
+
+    <!-- Using SERIAL for smaller tables -->
+    <Table name="categories">
+      <Column name="id" type="SERIAL" primaryKey="true">
+        <Comment>分类ID (PostgreSQL SERIAL)</Comment>
+      </Column>
+      <Column name="name" type="VARCHAR(100)" nullable="false">
+        <Comment>分类名称</Comment>
+      </Column>
+    </Table>
+  </Database>
+
+  <!-- Oracle: SEQUENCE + TRIGGER -->
+  <Database id="oracle-demo" type="oracle">
+    <!-- Define sequence -->
+    <Sequence name="users_seq" startWith="1" incrementBy="1" minValue="1" maxValue="999999999999999999999999999"/>
+
+    <Table name="users">
+      <Column name="id" type="NUMBER(19)" primaryKey="false">
+        <Comment>用户ID (Oracle SEQUENCE)</Comment>
+      </Column>
+      <Column name="username" type="VARCHAR2(50)" nullable="false">
+        <Comment>用户名</Comment>
+      </Column>
+      <Column name="email" type="VARCHAR2(100)">
+        <Comment>邮箱</Comment>
+      </Column>
+
+      <!-- Trigger to auto-populate ID from sequence -->
+      <Trigger name="users_bi_trg" timing="before" events="insert">
+        <Body>
+          BEGIN
+            IF :NEW.id IS NULL THEN
+              SELECT users_seq.NEXTVAL INTO :NEW.id FROM dual;
+            END IF;
+          END;
+        </Body>
+      </Trigger>
+    </Table>
+  </Database>
+
+  <!-- SQL Server: IDENTITY -->
+  <Database id="sqlserver-demo" type="sqlserver">
+    <Table name="users">
+      <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true" identity="true">
+        <Comment>用户ID (SQL Server IDENTITY)</Comment>
+      </Column>
+      <Column name="username" type="VARCHAR(50)" nullable="false">
+        <Comment>用户名</Comment>
+      </Column>
+      <Column name="email" type="VARCHAR(100)">
+        <Comment>邮箱</Comment>
+      </Column>
+    </Table>
+
+    <!-- Custom identity seed and increment -->
+    <Table name="orders">
+      <Column name="id" type="INT" primaryKey="true" autoIncrement="true">
+        <Comment>订单ID (Starting from 1000, increment by 10)</Comment>
+      </Column>
+      <Column name="user_id" type="BIGINT" nullable="false">
+        <Comment>用户ID</Comment>
+      </Column>
+      <Column name="amount" type="DECIMAL(10,2)" nullable="false">
+        <Comment>订单金额</Comment>
+      </Column>
+    </Table>
+  </Database>
+
+  <!-- SQLite: AUTOINCREMENT -->
+  <Database id="sqlite-demo" type="sqlite">
+    <Table name="users">
+      <Column name="id" type="INTEGER" primaryKey="true" autoIncrement="true">
+        <Comment>用户ID (SQLite AUTOINCREMENT)</Comment>
+      </Column>
+      <Column name="username" type="TEXT" nullable="false">
+        <Comment>用户名</Comment>
+      </Column>
+      <Column name="email" type="TEXT">
+        <Comment>邮箱</Comment>
+      </Column>
+    </Table>
+  </Database>
+
+  <!-- H2: AUTO_INCREMENT or IDENTITY -->
+  <Database id="h2-demo" type="h2">
+    <Table name="users">
+      <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true">
+        <Comment>用户ID (H2 AUTO_INCREMENT)</Comment>
+      </Column>
+      <Column name="username" type="VARCHAR(50)" nullable="false">
+        <Comment>用户名</Comment>
+      </Column>
+      <Column name="email" type="VARCHAR(100)">
+        <Comment>邮箱</Comment>
+      </Column>
+    </Table>
+  </Database>
+
+</Justdb>

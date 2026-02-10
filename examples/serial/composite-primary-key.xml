@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Serial with Composite Primary Key Example
+
+  This example demonstrates using auto-increment columns
+  with composite primary keys.
+-->
+<Justdb xmlns="http://www.verydb.org/schema/v1">
+
+  <!-- Order items table with composite PK -->
+  <Table name="order_items">
+    <!-- Foreign key to orders -->
+    <Column name="order_id" type="BIGINT" primaryKey="true" nullable="false">
+      <Comment>订单ID</Comment>
+    </Column>
+
+    <!-- Auto-increment line item number -->
+    <Column name="line_no" type="INT" primaryKey="true" nullable="false" autoIncrement="true">
+      <Comment>订单行号 (自增)</Comment>
+    </Column>
+
+    <Column name="product_id" type="BIGINT" nullable="false">
+      <Comment>商品ID</Comment>
+    </Column>
+
+    <Column name="quantity" type="INT" nullable="false">
+      <Comment>数量</Comment>
+    </Column>
+
+    <Column name="unit_price" type="DECIMAL(10,2)" nullable="false">
+      <Comment>单价</Comment>
+    </Column>
+  </Table>
+
+  <!-- Configuration entries with composite PK -->
+  <Table name="config_entries">
+    <Column name="category" type="VARCHAR(50)" primaryKey="true" nullable="false">
+      <Comment>配置分类</Comment>
+    </Column>
+
+    <Column name="seq_no" type="INT" primaryKey="true" nullable="false" autoIncrement="true">
+      <Comment>序号 (自增)</Comment>
+    </Column>
+
+    <Column name="config_key" type="VARCHAR(100)" nullable="false">
+      <Comment>配置键</Comment>
+    </Column>
+
+    <Column name="config_value" type="TEXT">
+      <Comment>配置值</Comment>
+    </Column>
+  </Table>
+
+  <!-- Multi-tenant tenant-specific IDs -->
+  <Table name="tenant_entities">
+    <Column name="tenant_id" type="BIGINT" primaryKey="true" nullable="false">
+      <Comment>租户ID</Comment>
+    </Column>
+
+    <Column name="entity_id" type="BIGINT" primaryKey="true" nullable="false" autoIncrement="true">
+      <Comment>实体ID (租户内自增)</Comment>
+    </Column>
+
+    <Column name="entity_name" type="VARCHAR(100)" nullable="false">
+      <Comment>实体名称</Comment>
+    </Column>
+  </Table>
+
+</Justdb>

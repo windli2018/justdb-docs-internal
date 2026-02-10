@@ -1,5 +1,6 @@
 ---
 icon: server
+date: 2024-01-01
 title: CI/CD 集成
 order: 12
 category:

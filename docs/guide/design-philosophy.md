@@ -1,5 +1,6 @@
 ---
 icon: compass
+date: 2024-01-01
 title: 设计哲学
 order: 3
 category:

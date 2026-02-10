@@ -18,15 +18,26 @@ tag:
 |:---|:---|:---|
 | **语言** | Java | Python |
 | **设计理念** | 声明式文件 | 代码定义 |
-| **Schema 定义** | YAML/JSON/XML | Python 类 |
+| **Schema 定义** | XML/YAML/JSON/TOML | Python 类 |
 | **类型安全** | 部分 | ✅ |
 | **ORM 集成** | ❌ | ✅ |
 
 ## 代码对比
 
-<CodeGroup>
-<CodeGroupItem title="JustDB">
+::: code-tabs
+@tab JustDB (XML)
+```xml
+<!-- schema.xml -->
+<Justdb>
+    <Table name="users">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+        <Column name="username" type="VARCHAR(50)" nullable="false"/>
+        <Column name="email" type="VARCHAR(100)"/>
+    </Table>
+</Justdb>
+```
 
+@tab JustDB (YAML)
 ```yaml
 # schema.yaml
 Table:
@@ -43,10 +54,44 @@ Table:
         type: VARCHAR(100)
 ```
 
-</CodeGroupItem>
+@tab JustDB (JSON)
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {"name": "id", "type": "BIGINT", "primaryKey": true, "autoIncrement": true},
+        {"name": "username", "type": "VARCHAR(50)", "nullable": false},
+        {"name": "email", "type": "VARCHAR(100)"}
+      ]
+    }
+  ]
+}
+```
 
-<CodeGroupItem title="SQLAlchemy">
+@tab JustDB (TOML)
+```toml
+[[Table]]
+name = "users"
 
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+nullable = false
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+```
+
+@tab SQLAlchemy
 ```python
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
@@ -64,9 +109,7 @@ class User(Base):
 engine = create_engine('sqlite:///users.db')
 Base.metadata.create_all(engine)
 ```
-
-</CodeGroupItem>
-</CodeGroup>
+:::
 
 ## 优缺点对比
 

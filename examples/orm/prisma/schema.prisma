@@ -1,0 +1,130 @@
+// Prisma Schema Example
+//
+// This example demonstrates a Prisma schema generated from JustDB.
+// It includes models for users, orders, products, and categories.
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+// User model
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique @db.VarChar(50)
+  email     String?  @unique @db.VarChar(100)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  orders    Order[]
+  posts     Post[]
+  comments  Comment[]
+
+  @@map("users")
+}
+
+// Category model
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique @db.VarChar(100)
+  description String?  @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  // Relations
+  products    Product[]
+
+  @@map("categories")
+}
+
+// Product model
+model Product {
+  id          Int       @id @default(autoincrement())
+  categoryId  Int       @map("category_id")
+  name        String    @db.VarChar(200)
+  description String?   @db.Text
+  price       Decimal   @db.Decimal(10, 2)
+  stock       Int       @default(0)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  category    Category  @relation(fields: [categoryId], references: [id])
+  orderItems  OrderItem[]
+
+  @@map("products")
+  @@index([categoryId])
+}
+
+// Order model
+model Order {
+  id          Int       @id @default(autoincrement())
+  userId      Int       @map("user_id")
+  totalAmount Decimal   @default(0) @map("total_amount") @db.Decimal(10, 2)
+  status      String    @default("pending") @db.VarChar(20)
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  user        User      @relation(fields: [userId], references: [id])
+  items       OrderItem[]
+
+  @@map("orders")
+  @@index([userId])
+}
+
+// OrderItem model
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  orderId   Int     @map("order_id")
+  productId Int     @map("product_id")
+  quantity  Int
+  unitPrice Decimal @map("unit_price") @db.Decimal(10, 2)
+
+  // Relations
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+  @@index([orderId])
+  @@index([productId])
+}
+
+// Post model
+model Post {
+  id        Int      @id @default(autoincrement())
+  authorId  Int      @map("author_id")
+  title     String   @db.VarChar(200)
+  content   String   @db.Text
+  published Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  author    User      @relation(fields: [authorId], references: [id])
+  comments  Comment[]
+
+  @@map("posts")
+  @@index([authorId])
+}
+
+// Comment model
+model Comment {
+  id        Int      @id @default(autoincrement())
+  postId    Int      @map("post_id")
+  userId    Int      @map("user_id")
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("comments")
+  @@index([postId])
+  @@index([userId])
+}

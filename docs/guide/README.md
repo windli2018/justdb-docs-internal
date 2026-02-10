@@ -1,5 +1,6 @@
 ---
 icon: book
+date: 2024-01-01
 title: 用户指南
 order: 2
 ---
@@ -25,6 +26,7 @@ order: 2
 
 ### 高级主题
 
+- **[AI 辅助开发](./ai-assisted-development.md)** - 配合 AI 使用 JustDB 开发数据库
 - **[模式演进](./schema-evolution.md)** - 管理模式随时间的变化 *(即将推出)*
 - **[迁移策略](./migration-strategies.md)** - 数据库迁移的最佳实践 *(即将推出)*
 - **[团队协作](./team-collaboration.md)** - 在团队环境中使用JustDB *(即将推出)*

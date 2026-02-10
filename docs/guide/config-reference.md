@@ -1,5 +1,6 @@
 ---
 icon: settings
+date: 2024-01-01
 title: 配置参考
 order: 14
 category:

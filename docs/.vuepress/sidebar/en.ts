@@ -27,6 +27,18 @@ export const enSidebar = sidebar({
         },
         "design-philosophy.md",
         "use-cases.md",
+        {
+          text: "ORM Integration",
+          icon: "code",
+          prefix: "/en/guide/orm/",
+          link: "/en/guide/orm/",
+          collapsible: true,
+          children: [
+            "python.md",
+            "typescript.md",
+            "go.md",
+          ],
+        },
       ],
     },
     {
@@ -42,6 +54,22 @@ export const enSidebar = sidebar({
         "migration-basics.md",
         "spring-boot-integration.md",
         "common-tasks.md",
+      ],
+    },
+    {
+      text: "Cheatsheet",
+      icon: "bolt",
+      prefix: "/en/cheatsheet/",
+      link: "/en/cheatsheet/",
+      collapsible: true,
+      children: [
+        "serial.md",
+        "virtual-column.md",
+        "plugin.md",
+        "type-mapping.md",
+        "lifecycle-hooks.md",
+        "reference-system.md",
+        "migration.md",
       ],
     },
     {

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Serial with Custom Starting Value Example
+
+  This example demonstrates how to set custom starting values
+  and increment steps for auto-increment columns.
+-->
+<Justdb xmlns="http://www.verydb.org/schema/v1">
+
+  <!-- MySQL: Starting value via ALTER TABLE (manual) -->
+  <Database id="mysql-custom" type="mysql">
+    <!-- Table with auto-increment starting from 1000 -->
+    <Table name="orders">
+      <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true">
+        <Comment>订单ID (Starting from 1000)</Comment>
+      </Column>
+      <Column name="user_id" type="BIGINT" nullable="false"/>
+      <Column name="amount" type="DECIMAL(10,2)" nullable="false"/>
+
+      <!-- Lifecycle hook to set starting value -->
+      <beforeCreates>
+        <ConditionalSqlScript dbms="mysql">
+          ALTER TABLE orders AUTO_INCREMENT = 1000;
+        </ConditionalSqlScript>
+      </beforeCreates>
+    </Table>
+
+    <!-- Table with custom increment step (requires database configuration) -->
+    <Table name="invoices">
+      <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true">
+        <Comment>发票ID (Increment by 10)</Comment>
+      </Column>
+      <Column name="order_id" type="BIGINT" nullable="false"/>
+      <Column name="total" type="DECIMAL(10,2)" nullable="false"/>
+    </Table>
+  </Database>
+
+  <!-- PostgreSQL: Custom sequence parameters -->
+  <Database id="postgres-custom" type="postgresql">
+    <!-- Define custom sequence -->
+    <Sequence name="orders_id_seq" startWith="1000" incrementBy="10"/>
+
+    <Table name="orders">
+      <Column name="id" type="BIGINT" defaultValue="nextval('orders_id_seq')" primaryKey="true">
+        <Comment>订单ID (Starting from 1000, increment by 10)</Comment>
+      </Column>
+      <Column name="user_id" type="BIGINT" nullable="false"/>
+      <Column name="amount" type="DECIMAL(10,2)" nullable="false"/>
+    </Table>
+
+    <!-- Using BIGSERIAL with custom restart -->
+    <Table name="products">
+      <Column name="id" type="BIGSERIAL" primaryKey="true">
+        <Comment>商品ID</Comment>
+      </Column>
+      <Column name="name" type="VARCHAR(100)" nullable="false"/>
+    </Table>
+  </Database>
+
+  <!-- SQL Server: Custom IDENTITY parameters -->
+  <Database id="sqlserver-custom" type="sqlserver">
+    <Table name="orders">
+      <!-- IDENTITY(seed, increment) -->
+      <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true">
+        <Comment>订单ID (Starting from 1000, increment by 10)</Comment>
+      </Column>
+      <Column name="user_id" type="BIGINT" nullable="false"/>
+      <Column name="amount" type="DECIMAL(10,2)" nullable="false"/>
+    </Table>
+
+    <!-- Customer codes starting from 50000 -->
+    <Table name="customers">
+      <Column name="id" type="INT" primaryKey="true" autoIncrement="true">
+        <Comment>客户ID (Starting from 50000)</Comment>
+      </Column>
+      <Column name="name" type="VARCHAR(100)" nullable="false"/>
+    </Table>
+  </Database>
+
+  <!-- Oracle: Custom sequence with cycle option -->
+  <Database id="oracle-custom" type="oracle">
+    <!-- Sequence that cycles after reaching max value -->
+    <Sequence name="orders_seq"
+               startWith="1000"
+               incrementBy="1"
+               minValue="1000"
+               maxValue="9999"
+               cycle="true"/>
+
+    <Table name="orders">
+      <Column name="id" type="NUMBER(4)" primaryKey="false">
+        <Comment>订单ID (1000-9999, cycles)</Comment>
+      </Column>
+      <Column name="user_id" type="NUMBER(19)" nullable="false"/>
+      <Column name="amount" type="NUMBER(10,2)" nullable="false"/>
+
+      <Trigger name="orders_bi_trg" timing="before" events="insert">
+        <Body>
+          BEGIN
+            IF :NEW.id IS NULL THEN
+              SELECT orders_seq.NEXTVAL INTO :NEW.id FROM dual;
+            END IF;
+          END;
+        </Body>
+      </Trigger>
+    </Table>
+  </Database>
+
+</Justdb>

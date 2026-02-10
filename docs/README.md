@@ -20,7 +20,7 @@ actions:
 
 features:
   - title: 声明式 Schema 定义
-    details: 通过 YAML、JSON、XML 等格式定义数据库结构，支持多数据库方言自动转换
+    details: 通过 XML、YAML、JSON、TOML 等格式定义数据库结构，支持多数据库方言自动转换
     link: /reference/formats/
 
   - title: 智能差异迁移
@@ -78,9 +78,19 @@ justdb init
 justdb migrate
 ```
 
-&lt;CodeGroup&gt;
-&lt;CodeGroupItem title="YAML"&gt;
+::: code-tabs
+@tab XML
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb id="mydb" namespace="com.example">
+    <Table id="users" name="用户表">
+        <Column id="user_id" name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+        <Column id="user_name" name="username" type="VARCHAR(255)" nullable="false"/>
+    </Table>
+</Justdb>
+```
 
+@tab YAML
 ```yaml
 id: mydb
 namespace: com.example
@@ -99,10 +109,7 @@ Table:
         nullable: false
 ```
 
-&lt;/CodeGroupItem&gt;
-
-&lt;CodeGroupItem title="JSON"&gt;
-
+@tab JSON
 ```json
 {
   "id": "mydb",
@@ -131,8 +138,29 @@ Table:
 }
 ```
 
-&lt;/CodeGroupItem&gt;
-&lt;/CodeGroup&gt;
+@tab TOML
+```toml
+id = "mydb"
+namespace = "com.example"
+
+[[Table]]
+id = "users"
+name = "用户表"
+
+[[Table.Column]]
+id = "user_id"
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+
+[[Table.Column]]
+id = "user_name"
+name = "username"
+type = "VARCHAR(255)"
+nullable = false
+```
+:::
 
 ## 下一步
 

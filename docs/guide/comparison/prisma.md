@@ -18,15 +18,26 @@ tag:
 |:---|:---|:---|
 | **语言** | Java | TypeScript/Node.js |
 | **设计理念** | 声明式文件 | 声明式文件 |
-| **Schema 定义** | YAML/JSON/XML | 专属 DSL |
+| **Schema 定义** | XML/YAML/JSON/TOML | 专属 DSL |
 | **类型生成** | ❌ | ✅ |
 | **ORM 集成** | ❌ | ✅ |
 
 ## 代码对比
 
-<CodeGroup>
-<CodeGroupItem title="JustDB">
+::: code-tabs
+@tab JustDB (XML)
+```xml
+<!-- schema.xml -->
+<Justdb>
+    <Table name="users">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+        <Column name="username" type="VARCHAR(50)"/>
+        <Column name="email" type="VARCHAR(100)"/>
+    </Table>
+</Justdb>
+```
 
+@tab JustDB (YAML)
 ```yaml
 # schema.yaml
 Table:
@@ -42,10 +53,43 @@ Table:
         type: VARCHAR(100)
 ```
 
-</CodeGroupItem>
+@tab JustDB (JSON)
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {"name": "id", "type": "BIGINT", "primaryKey": true, "autoIncrement": true},
+        {"name": "username", "type": "VARCHAR(50)"},
+        {"name": "email", "type": "VARCHAR(100)"}
+      ]
+    }
+  ]
+}
+```
 
-<CodeGroupItem title="Prisma">
+@tab JustDB (TOML)
+```toml
+[[Table]]
+name = "users"
 
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+```
+
+@tab Prisma
 ```prisma
 // schema.prisma
 model User {
@@ -62,9 +106,7 @@ model Post {
   author    User     @relation(fields: [authorId], references: [id])
 }
 ```
-
-</CodeGroupItem>
-</CodeGroup>
+:::
 
 ## 优缺点对比
 

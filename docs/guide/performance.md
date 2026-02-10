@@ -1,5 +1,6 @@
 ---
 icon: gauge-high
+date: 2024-01-01
 title: 性能优化
 order: 10
 category:

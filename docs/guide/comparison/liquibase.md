@@ -17,16 +17,29 @@ tag:
 | 维度 | JustDB | Liquibase |
 |:---|:---|:---|
 | **设计理念** | 声明式 | 命令式（抽象 SQL） |
-| **Schema 定义** | YAML/JSON/XML | XML/JSON/YAML/SQL |
+| **Schema 定义** | XML/YAML/JSON/TOML | XML/JSON/YAML/SQL |
 | **变更方式** | 修改 Schema 文件 | 新增 changeSet |
 | **版本管理** | 自动 | 手动管理 ID/Author |
 | **数据库独立性** | 自动 | 通过抽象 SQL |
 
 ## 代码对比
 
-<CodeGroup>
-<CodeGroupItem title="JustDB">
+::: code-tabs
+@tab JustDB (XML)
+```xml
+<!-- schema.xml -->
+<Justdb>
+    <Table name="users">
+        <Column name="id" type="BIGINT" primaryKey="true"/>
+        <Column name="username" type="VARCHAR(50)"/>
+        <Index name="idx_username" unique="true">
+            <IndexColumn name="username"/>
+        </Index>
+    </Table>
+</Justdb>
+```
 
+@tab JustDB (YAML)
 ```yaml
 # schema.yaml
 Table:
@@ -43,10 +56,47 @@ Table:
         unique: true
 ```
 
-</CodeGroupItem>
+@tab JustDB (JSON)
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {"name": "id", "type": "BIGINT", "primaryKey": true},
+        {"name": "username", "type": "VARCHAR(50)"}
+      ],
+      "Index": [
+        {"name": "idx_username", "columns": ["username"], "unique": true}
+      ]
+    }
+  ]
+}
+```
 
-<CodeGroupItem title="Liquibase (XML)">
+@tab JustDB (TOML)
+```toml
+[[Table]]
+name = "users"
 
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+
+[[Table.Index]]
+name = "idx_username"
+unique = true
+
+[[Table.Index.IndexColumn]]
+name = "username"
+```
+
+@tab Liquibase (XML)
 ```xml
 <databaseChangeLog>
   <changeSet id="1" author="john">
@@ -67,10 +117,7 @@ Table:
 </databaseChangeLog>
 ```
 
-</CodeGroupItem>
-
-<CodeGroupItem title="Liquibase (YAML)">
-
+@tab Liquibase (YAML)
 ```yaml
 databaseChangeLog:
   - changeSet:
@@ -97,9 +144,7 @@ databaseChangeLog:
             columnNames: username
             constraintName: idx_username
 ```
-
-</CodeGroupItem>
-</CodeGroup>
+:::
 
 ## 优缺点对比
 

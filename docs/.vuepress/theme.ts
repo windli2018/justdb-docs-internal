@@ -66,6 +66,9 @@ export default hopeTheme({
       },
     },
 
+    // 启用 CodeTabs
+    codeTabs: true,
+    
     // 启用 Mermaid
     mermaid: true,
 
@@ -97,7 +100,7 @@ export default hopeTheme({
   mdEnhance: {
     align: true,
     attrs: true,
-    codetabs: true,
+    codeTabs: true,
     component: true,
     demo: true,
     figure: true,
@@ -122,6 +125,8 @@ export default hopeTheme({
     sup: true,
     tasklist: true,
     vPre: true,
+    // 显式启用 tabs
+    tabs: true,
   },
 
   // 多语言配置

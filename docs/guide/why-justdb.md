@@ -1,5 +1,6 @@
 ---
 icon: star
+date: 2024-01-01
 title: 为什么选择 JustDB
 order: 2
 category:
@@ -36,9 +37,8 @@ tag:
 
 #### 1. 声明式 vs 命令式
 
-&lt;CodeGroup&gt;
-&lt;CodeGroupItem title="JustDB (声明式)"&gt;
-
+::: code-tabs
+@tab JustDB (声明式)
 ```yaml
 # 只需描述期望的状态
 Table:
@@ -58,10 +58,7 @@ Table:
 - 自动处理变更计算
 - 避免人为错误
 
-&lt;/CodeGroupItem&gt;
-
-&lt;CodeGroupItem title="Flyway (命令式)"&gt;
-
+@tab Flyway (命令式)
 ```sql
 -- V1__create_users_table.sql
 CREATE TABLE users (
@@ -80,63 +77,82 @@ ALTER TABLE users ADD COLUMN phone VARCHAR(20);
 - 容易出现语法错误
 - 修改已有变更困难
 
-&lt;/CodeGroupItem&gt;
-
-&lt;CodeGroupItem title="Liquibase (命令式)"&gt;
-
+@tab Liquibase (命令式)
 ```xml
-&lt;changeSet id="1" author="john"&gt;
-    &lt;createTable tableName="users"&gt;
-        &lt;column name="id" type="BIGINT"&gt;
-            &lt;constraints primaryKey="true"/&gt;
-        &lt;/column&gt;
-        &lt;column name="username" type="VARCHAR(50)"/&gt;
-        &lt;column name="email" type="VARCHAR(100)"/&gt;
-    &lt;/createTable&gt;
-&lt;/changeSet&gt;
+<changeSet id="1" author="john">
+    <createTable tableName="users">
+        <column name="id" type="BIGINT">
+            <constraints primaryKey="true"/>
+        </column>
+        <column name="username" type="VARCHAR(50)"/>
+        <column name="email" type="VARCHAR(100)"/>
+    </createTable>
+</changeSet>
 
-&lt;changeSet id="2" author="john"&gt;
-    &lt;addColumn tableName="users"&gt;
-        &lt;column name="phone" type="VARCHAR(20)"/&gt;
-    &lt;/addColumn&gt;
-&lt;/changeSet&gt;
+<changeSet id="2" author="john">
+    <addColumn tableName="users">
+        <column name="phone" type="VARCHAR(20)"/>
+    </addColumn>
+</changeSet>
 ```
 
 **劣势**：
 - XML 配置繁琐
 - 需要管理 changeSet ID
 - 修改已有 changeSet 会出错
-
-&lt;/CodeGroupItem&gt;
-&lt;/CodeGroup&gt;
+:::
 
 #### 2. 智能差异计算
 
 JustDB 自动计算 Schema 变更，无需手写 ALTER TABLE 语句：
 
 ```mermaid
-flowchart LR
-    A[修改 Schema 文件] --> B[JustDB 计算 Diff]
-    B --> C{变更类型}
-    C --> D[新增表/列/索引]
-    C --> E[修改表/列/索引]
-    C --> F[删除表/列/索引]
-    C --> G[重命名表/列]
-    D --> H[生成 CREATE SQL]
-    E --> I[生成 ALTER SQL]
-    F --> J[生成 DROP SQL]
-    G --> K[生成 RENAME SQL]
-    H --> L[执行变更]
+flowchart TB
+    A[📝 修改 Schema 文件]
+    B[🔍 JustDB 计算 Diff]
+    C{📋 变更类型}
+    D[➕ 新增表/列/索引]
+    E[✏️ 修改表/列/索引]
+    F[➖ 删除表/列/索引]
+    G[🔄 重命名表/列]
+    H[📄 生成 CREATE SQL]
+    I[📝 生成 ALTER SQL]
+    J[🗑️ 生成 DROP SQL]
+    K[✍️ 生成 RENAME SQL]
+    L[✅ 执行变更]
+
+    A --> B
+    B --> C
+    C --> D
+    C --> E
+    C --> F
+    C --> G
+    D --> H
+    E --> I
+    F --> J
+    G --> K
+    H --> L
     I --> L
     J --> L
     K --> L
+
+    classDef startNode fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,color:#0c4a6e,rx:10,font-weight:bold
+    classDef processNode fill:#fef3c7,stroke:#f59e0b,stroke-width:2px,color:#92400e,rx:8
+    classDef changeNode fill:#fce7f3,stroke:#db2777,stroke-width:2px,color:#831843,rx:8
+    classDef sqlNode fill:#dbeafe,stroke:#3b82f6,stroke-width:2px,color:#1e40af,rx:8
+    classDef endNode fill:#dcfce7,stroke:#22c55e,stroke-width:2px,color:#166534,rx:10,font-weight:bold
+
+    class A startNode
+    class B,C processNode
+    class D,E,F,G changeNode
+    class H,I,J,K sqlNode
+    class L endNode
 ```
 
 #### 3. Schema 即文档
 
-&lt;CodeGroup&gt;
-&lt;CodeGroupItem title="JustDB"&gt;
-
+::: code-tabs
+@tab JustDB
 ```yaml
 # Schema 文件本身就是最好的文档
 Table:
@@ -159,10 +175,7 @@ Table:
 - 支持 Markdown 格式导出
 - 可以生成可视化的 ER 图
 
-&lt;/CodeGroupItem&gt;
-
-&lt;CodeGroupItem title="传统方式"&gt;
-
+@tab 传统方式
 ```sql
 -- SQL 脚本
 CREATE TABLE users (
@@ -178,9 +191,7 @@ CREATE TABLE users (
 - 需要单独维护数据库文档
 - 文档与数据库容易不同步
 - 查看文档需要切换到其他工具
-
-&lt;/CodeGroupItem&gt;
-&lt;/CodeGroup&gt;
+:::
 
 #### 4. 多格式支持
 
@@ -188,11 +199,11 @@ JustDB 支持多种数据格式，适应不同团队的需求：
 
 | 格式 | 适用场景 | 优势 |
 |:---|:---|:---|
+| **XML** | 企业级应用 | 类型安全，工具支持好，结构清晰 |
 | **YAML** | 配置文件 | 人类友好，注释支持好 |
 | **JSON** | API 交互 | 机器可读，生态丰富 |
-| **XML** | 企业级应用 | 类型安全，工具支持好 |
-| **Properties** | Java 应用 | 简单配置 |
 | **TOML** | 现代应用 | 语法简洁 |
+| **Properties** | Java 应用 | 简单配置 |
 | **SQL** | 传统数据库 | 兼容现有脚本 |
 | **Markdown** | 文档驱动 | 文档即代码 |
 | **Excel** | 业务人员 | 业务友好，易于编辑 |

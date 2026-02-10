@@ -1,5 +1,6 @@
 ---
 icon: rocket
+date: 2024-01-01
 title: 应用场景
 order: 4
 category:

@@ -17,7 +17,6 @@ JustDB schemas define database structure in a declarative format. The same schem
 The root object containing all schema definitions.
 
 ```yaml
-id: myapp                    # Schema identifier
 namespace: com.example       # Java package namespace
 description: My Application  # Optional description
 Table: [...]                  # Tables

@@ -1,5 +1,6 @@
 ---
 icon: route
+date: 2024-01-01
 title: 迁移策略
 order: 8
 category:
@@ -24,7 +25,6 @@ tag:
 ```bash
 # 创建 Schema 文件
 cat > schema.yaml << EOF
-id: myapp
 namespace: com.example
 Table:
   - name: users

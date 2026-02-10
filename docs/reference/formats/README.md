@@ -31,8 +31,8 @@ JustDB 支持多种 Schema 定义格式，你可以根据项目需求选择最�
 
 ### 可读性对比
 
-&lt;CodeGroup&gt;
-&lt;CodeGroupItem title="YAML"&gt;
+<CodeGroup>
+<CodeGroupItem title="YAML"&gt;
 ```yaml
 Table:
   - name: users
@@ -44,9 +44,9 @@ Table:
       - name: username
         type: VARCHAR(50)
 ```
-&lt;/CodeGroupItem&gt;
+</CodeGroupItem>
 
-&lt;CodeGroupItem title="JSON"&gt;
+<CodeGroupItem title="JSON"&gt;
 ```json
 {
   "Table": [
@@ -68,31 +68,57 @@ Table:
   ]
 }
 ```
-&lt;/CodeGroupItem&gt;
+</CodeGroupItem>
 
-&lt;CodeGroupItem title="XML"&gt;
+<CodeGroupItem title="XML"&gt;
 ```xml
 &lt;Table name="users" comment="用户表"&gt;
   &lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
   &lt;Column name="username" type="VARCHAR(50)"/&gt;
 &lt;/Table&gt;
 ```
-&lt;/CodeGroupItem&gt;
-&lt;/CodeGroup&gt;
+</CodeGroupItem>
+</CodeGroup>
 
 ### 功能对比
 
-| 功能 | YAML | JSON | XML | TOML | Properties |
-|------|------|------|-----|------|-----------|
-| 注释 | ✓ | ✗ | ✓ | ✓ | ✓ |
-| 多文档 | ✓ | - | - | - | - |
+| 功能 | XML | YAML | JSON | TOML | Properties |
+|------|-----|------|------|------|-----------|
+| 注释 | ✓ | ✓ | ✗ | ✓ | ✓ |
+| 多文档 | - | ✓ | - | - | - |
 | 引用 | ✓ | ✓ | ✓ | ✓ | - |
 | 别名支持 | ✓ | ✓ | ✓ | ✓ | ✓ |
 | 类型丰富度 | ✓✓ | ✓✓ | ✓✓ | ✓ | ✓ |
+| 结构清晰度 | ✓✓✓ | ✓✓ | ✓ | ✓✓ | ✓ |
 
 ## 格式选择建议
 
-### 推荐使用 YAML
+### 推荐使用 XML
+
+**优势**：
+- 结构清晰，不易出错
+- 强类型验证
+- Schema 验证（XSD）
+- 企业级标准
+- 工具支持完善
+
+**适用场景**：
+- 新项目（推荐）
+- 企业级应用
+- 需要严格类型检查
+- 团队协作
+
+```xml
+<!-- 推荐：使用 XML -->
+<?xml version="1.0" encoding="UTF-8"?>
+<Justdb id="formats-readme" namespace="com.example">
+    <Table name="users">
+        <Column name="id" type="BIGINT"/>
+    </Table>
+</Justdb>
+```
+
+### 使用 YAML
 
 **优势**：
 - 最佳可读性
@@ -101,12 +127,11 @@ Table:
 - 广泛支持
 
 **适用场景**：
-- 新项目
 - 需要人工编辑
 - 团队协作
+- 配置文件
 
 ```yaml
-# 推荐：使用 YAML
 id: myapp
 namespace: com.example
 Table:
@@ -142,26 +167,6 @@ Table:
 }
 ```
 
-### 使用 XML
-
-**优势**：
-- 企业级标准
-- 强类型验证
-- Schema 验证
-
-**适用场景**：
-- 现有 Java 企业应用
-- 需要 XSD 验证
-- JAXB 注解项目
-
-```xml
-&lt;Justdb id="myapp"&gt;
-  &lt;Table name="users"&gt;
-    &lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
-  &lt;/Table&gt;
-&lt;/Justdb&gt;
-```
-
 ### 使用 TOML
 
 **优势**：
@@ -192,14 +197,17 @@ primaryKey = true
 JustDB 支持格式之间的相互转换：
 
 ```bash
-# YAML 转 JSON
-justdb convert -f yaml -t json schema.yaml > schema.json
+# XML 转 YAML
+justdb convert -f xml -t yaml schema.xml > schema.yaml
+
+# XML 转 JSON
+justdb convert -f xml -t json schema.xml > schema.json
 
 # JSON 转 XML
 justdb convert -f json -t xml schema.json > schema.xml
 
-# XML 转 YAML
-justdb convert -f xml -t yaml schema.xml > schema.yaml
+# YAML 转 XML
+justdb convert -f yaml -t xml schema.yaml > schema.xml
 ```
 
 ### 编程方式转换
@@ -254,7 +262,7 @@ Table:
 
 ```yaml
 # 主 Schema (YAML)
-id: myapp
+id: formats-readme
 namespace: com.example
 
 # 导入其他格式的 Schema
@@ -270,14 +278,14 @@ Import:
 ```yaml
 # 文档 1：基础 Schema
 ---
-id: myapp
+id: formats-readme
 namespace: com.example
 Table:
   - name: users
 
 # 文档 2：扩展 Schema
 ---
-id: myapp-extensions
+id: formats-readme-extensions
 namespace: com.example
 Table:
   - name: orders

@@ -48,6 +48,66 @@ require (
     github.com/hashicorp/terraform-plugin-framework v1.0.0
     github.com/hashicorp/terraform-plugin-framework/providerserver v0.1.0
 )
+
+// 数据库驱动（空白导入用于注册驱动）
+require (
+    github.com/go-sql-driver/mysql      v1.7.1  // MySQL
+    github.com/lib/pq                  v1.10.9 // PostgreSQL
+    github.com/mattn/go-sqlite3        v1.14.17 // SQLite
+    github.com/denisenkom/go-mssqldb   v1.5.0  // SQL Server
+    github.com/sijms/go-ora/v2         v2.7.10 // Oracle
+)
+```
+
+---
+
+## Go database/sql - 类似 Java JDBC
+
+### 对比
+
+| Java JDBC | Go database/sql |
+|:---|:---|
+| `java.sql.Connection` | `sql.DB` |
+| `java.sql.Statement` | `sql.Stmt` / `sql.DB.Exec()` |
+| `java.sql.ResultSet` | `sql.Rows` |
+| `DriverManager.getConnection()` | `sql.Open()` |
+| `Class.forName()` 显式加载 | `_ import` 隐式注册 |
+| 外部连接池（HikariCP） | 内置连接池 |
+
+### 基本用法
+
+```go
+package database
+
+import (
+    "context"
+    "database/sql"
+    "fmt"
+
+    // 空白导入注册驱动
+    _ "github.com/go-sql-driver/mysql"
+    _ "github.com/lib/pq"
+    _ "github.com/mattn/go-sqlite3"
+    _ "github.com/denisenkom/go-mssqldb"
+    _ "github.com/sijms/go-ora/v2"
+)
+
+type SQLExecutor struct {
+    drivers map[string]string
+}
+
+func NewSQLExecutor() *SQLExecutor {
+    return &SQLExecutor{
+        drivers: map[string]string{
+            "mysql":      "mysql",
+            "postgresql": "postgres",
+            "sqlite":     "sqlite3",
+            "sqlserver":  "sqlserver",
+            "oracle":     "gora",
+            "h2":         "h2",
+        },
+    }
+}
 ```
 
 ---
@@ -192,19 +252,182 @@ func (r *resourceJustDbSchema) generateSQLFromCloud(
 func (r *resourceJustDbSchema) executeSQL(
     ctx context.Context,
     databaseUrl string,
+    dialect string,
     sqlList []string,
 ) error {
-    // 使用 Go 标准库 database/sql 执行
-    db, err := sql.Open("mysql", databaseUrl)
+    executor := NewSQLExecutor()
+    db, err := executor.Open(ctx, dialect, databaseUrl)
     if err != nil {
-        return err
+        return fmt.Errorf("failed to open database: %w", err)
     }
     defer db.Close()
 
-    for _, sql := range sqlList {
-        if _, err := db.ExecContext(ctx, sql); err != nil {
-            return fmt.Errorf("failed to execute SQL: %s\nError: %w", sql, err)
+    return executor.ExecuteSQLList(ctx, db, sqlList)
+}
+```
+
+### SQL 执行器实现
+
+```go
+// 打开数据库连接
+func (e *SQLExecutor) Open(ctx context.Context, dialect, jdbcURL string) (*sql.DB, error) {
+    // 转换 JDBC URL 到 Go 连接字符串
+    goURL, err := e.convertJDBCUrl(jdbcURL, dialect)
+    if err != nil {
+        return nil, fmt.Errorf("failed to convert JDBC URL: %w", err)
+    }
+
+    driver, ok := e.drivers[dialect]
+    if !ok {
+        return nil, fmt.Errorf("unsupported dialect: %s", dialect)
+    }
+
+    db, err := sql.Open(driver, goURL)
+    if err != nil {
+        return nil, fmt.Errorf("failed to open database: %w", err)
+    }
+
+    // 配置连接池
+    db.SetMaxOpenConns(25)
+    db.SetMaxIdleConns(5)
+    db.SetConnMaxLifetime(5 * time.Minute)
+
+    // 验证连接
+    if err := db.PingContext(ctx); err != nil {
+        db.Close()
+        return nil, fmt.Errorf("failed to ping database: %w", err)
+    }
+
+    return db, nil
+}
+
+// 转换 JDBC URL 到 Go 连接字符串
+func (e *SQLExecutor) convertJDBCUrl(jdbcURL, dialect string) (string, error) {
+    switch dialect {
+    case "mysql":
+        // jdbc:mysql://host:3306/db?user=root&password=pass
+        // → root:pass@tcp(host:3306)/db?parseTime=true
+        return e.convertMySQLUrl(jdbcURL)
+    case "postgresql":
+        // jdbc:postgresql://host:5432/db?user=root&password=pass
+        // → postgres://user:pass@host:5432/db?sslmode=disable
+        return e.convertPostgreSQLUrl(jdbcURL)
+    case "sqlite":
+        // jdbc:sqlite:/path/to/db.sqlite
+        // → file:/path/to/db.sqlite
+        return e.convertSQLiteUrl(jdbcURL)
+    case "sqlserver":
+        // jdbc:sqlserver://host:1433;databaseName=db;user=sa;password=pass
+        // → sqlserver://sa:pass@host:1433?database=db
+        return e.convertSQLServerUrl(jdbcURL)
+    case "oracle":
+        // jdbc:oracle:thin:@host:1521:orcl
+        // → oracle://user:pass@host:1521/orcl
+        return e.convertOracleUrl(jdbcURL)
+    default:
+        return "", fmt.Errorf("unsupported dialect: %s", dialect)
+    }
+}
+
+// MySQL URL 转换
+func (e *SQLExecutor) convertMySQLUrl(jdbcURL string) (string, error) {
+    // 使用 url.Parse 解析
+    u, err := url.Parse(jdbcURL)
+    if err != nil {
+        return "", err
+    }
+
+    // 提取参数
+    query := u.Query()
+    user := query.Get("user")
+    password := query.Get("password")
+    dbname := strings.TrimPrefix(u.Path, "/")
+
+    // 构建格式: user:password@tcp(host:port)/dbname
+    host := u.Host
+    if host == "" {
+        host = "localhost:3306"
+    }
+
+    goURL := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true", user, password, host, dbname)
+    return goURL, nil
+}
+
+// PostgreSQL URL 转换
+func (e *SQLExecutor) convertPostgreSQLUrl(jdbcURL string) (string, error) {
+    u, err := url.Parse(jdbcURL)
+    if err != nil {
+        return "", err
+    }
+
+    query := u.Query()
+    user := query.Get("user")
+    password := query.Get("password")
+    dbname := strings.TrimPrefix(u.Path, "/")
+    host := u.Host
+    if host == "" {
+        host = "localhost:5432"
+    }
+
+    goURL := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", user, password, host, dbname)
+    return goURL, nil
+}
+
+// SQLite URL 转换
+func (e *SQLExecutor) convertSQLiteUrl(jdbcURL string) (string, error) {
+    // jdbc:sqlite:/path/to/db.sqlite → file:/path/to/db.sqlite
+    path := strings.TrimPrefix(jdbcURL, "jdbc:sqlite:")
+    return "file:" + path, nil
+}
+
+// SQL Server URL 转换
+func (e *SQLExecutor) convertSQLServerUrl(jdbcURL string) (string, error) {
+    // jdbc:sqlserver://host:1433;databaseName=db;user=sa;password=pass
+    // → sqlserver://sa:pass@host:1433?database=db
+
+    // 解析 JDBC URL（简化版）
+    parts := strings.Split(strings.TrimPrefix(jdbcURL, "jdbc:sqlserver://"), ";")
+    hostPort := parts[0]
+
+    params := make(map[string]string)
+    for _, part := range parts[1:] {
+        kv := strings.SplitN(part, "=", 2)
+        if len(kv) == 2 {
+            params[strings.ToLower(kv[0])] = kv[1]
         }
+    }
+
+    user := params["user"]
+    password := params["password"]
+    dbname := params["databasename"]
+
+    goURL := fmt.Sprintf("sqlserver://%s:%s@%s?database=%s", user, password, hostPort, dbname)
+    return goURL, nil
+}
+
+// Oracle URL 转换
+func (e *SQLExecutor) convertOracleUrl(jdbcURL string) (string, error) {
+    // jdbc:oracle:thin:@host:1521:orcl → oracle://user:pass@host:1521/orcl
+    // 简化实现
+    return "oracle://", fmt.Errorf("Oracle URL conversion not fully implemented")
+}
+
+// 执行 SQL 列表（带事务）
+func (e *SQLExecutor) ExecuteSQLList(ctx context.Context, db *sql.DB, sqlList []string) error {
+    tx, err := db.BeginTx(ctx, nil)
+    if err != nil {
+        return fmt.Errorf("failed to begin transaction: %w", err)
+    }
+    defer tx.Rollback() // 如果提交成功，Rollback 是无操作
+
+    for i, sql := range sqlList {
+        if _, err := tx.ExecContext(ctx, sql); err != nil {
+            return fmt.Errorf("failed to execute SQL [%d]: %s\nError: %w", i, sql, err)
+        }
+    }
+
+    if err := tx.Commit(); err != nil {
+        return fmt.Errorf("failed to commit transaction: %w", err)
     }
 
     return nil
@@ -212,48 +435,31 @@ func (r *resourceJustDbSchema) executeSQL(
 
 func (r *resourceJustDbSchema) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
     // Update 逻辑与 Create 类似
-    // ...
+    var plan resourceJustDbSchemaModel
+    resp.State = &plan
+
+    schemaFile := plan.SchemaFile.ValueString()
+    databaseUrl := plan.DatabaseUrl.ValueString()
+    dialect := plan.Dialect.ValueString()
+    idempotent := plan.Idempotent.ValueBool()
+
+    sqlList, err := r.generateSQLFromCloud(schemaFile, dialect, idempotent)
+    if err != nil {
+        resp.Diagnostics.AddError("Failed to generate SQL", err.Error())
+        return
+    }
+
+    if err := r.executeSQL(ctx, databaseUrl, dialect, sqlList); err != nil {
+        resp.Diagnostics.AddError("Failed to execute SQL", err.Error())
+        return
+    }
+
+    plan.LastApplied = types.StringValue(time.Now().Format(time.RFC3339))
 }
 
 func (r *resourceJustDbSchema) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-    // 删除 Schema（如果支持）
-    // 或者只记录日志
-}
-
-func (r *resourceJustDbSchema) buildCommand(
-    operation string,
-    schemaFile string,
-    databaseUrl string,
-    dialect string,
-    idempotent bool,
-) *exec.Cmd {
-
-    args := []string{"migrate", "-u", databaseUrl, "-s", schemaFile}
-
-    if operation == "validate" {
-        args = []string{"validate", "-s", schemaFile}
-    }
-
-    cmd := exec.Command("justdb", args...)
-    cmd.Env = append(os.Environ(),
-        fmt.Sprintf("JUSTDB_IDEMPOTENT=%t", idempotent),
-        fmt.Sprintf("JUSTDB_DIALECT=%s", dialect),
-    )
-
-    return cmd
-}
-
-func (r *resourceJustDbSchema) executeCommand(ctx context.Context, cmd *exec.Cmd) (string, error) {
-    output, err := cmd.CombinedOutput()
-    if err != nil {
-        return "", fmt.Errorf("command failed: %w", err)
-    }
-    return string(output), nil
-}
-
-func (r *resourceJustDbSchema) parseOutput(output string) (*ApplyResult, error) {
-    // 解析 JSON 输出
-    // ...
+    // Schema 删除通常不删除数据库表
+    // 只是从 Terraform state 中移除
 }
 ```
 
@@ -352,11 +558,6 @@ func (d *dataSourceJustDbDiff) Read(ctx context.Context, req datasource.ReadRequ
 
 ---
 
-## 错误处理
-
-### 1. 重试逻辑
-
-```go
 ## 数据模型
 
 ```go
@@ -397,9 +598,14 @@ type resourceJustDbSchemaModel struct {
 
 ## 错误处理
 
-### 1. 重试逻辑
+### 重试逻辑
+
+```go
+package client
 
 import (
+    "net"
+    "strings"
     "time"
 )
 
@@ -451,7 +657,7 @@ func isRetryableError(err error) bool {
 }
 ```
 
-### 2. 错误分类
+### 错误分类
 
 ```go
 package errors

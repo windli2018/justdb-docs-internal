@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Custom Type Mapping Plugin Example
+
+  This example demonstrates how to create a JustDB plugin
+  that defines custom type mappings and database adapters.
+-->
+<plugin xmlns="http://www.verydb.org/plugin/v1"
+        id="custom-types"
+        name="Custom Type Support"
+        version="1.0.0"
+        description="Extended type mappings for custom databases">
+
+  <!-- Database Adapter Definition -->
+  <adapters>
+    <adapter id="clickhouse"
+             name="ClickHouse"
+             category="database"
+             urlPattern="jdbc:clickhouse://.*">
+      <driver>
+        <groupId>com.clickhouse</groupId>
+        <artifactId>clickhouse-jdbc</artifactId>
+        <version>0.4.6</version>
+        <class>com.clickhouse.jdbc.ClickHouseDriver</class>
+      </driver>
+      <dialect>clickhouse</dialect>
+      <supportsSchema>true</supportsSchema>
+      <supportsCatalog>true</supportsCatalog>
+      <identifierQuote>`</identifierQuote>
+    </adapter>
+
+    <adapter id="duckdb"
+             name="DuckDB"
+             category="database"
+             urlPattern="jdbc:duckdb:.*">
+      <driver>
+        <groupId>org.duckdb</groupId>
+        <artifactId>duckdb_jdbc</artifactId>
+        <version>0.9.2</version>
+        <class>org.duckdb.DuckDBDriver</class>
+      </driver>
+      <dialect>duckdb</dialect>
+      <supportsSchema>false</supportsSchema>
+      <identifierQuote>"</identifierQuote>
+    </adapter>
+  </adapters>
+
+  <!-- Custom Type Mappings -->
+  <typeMappings>
+    <!-- ClickHouse Type Mappings -->
+    <typeMapping sourceType="UInt8" target="clickhouse" targetType="TINYINT UNSIGNED"/>
+    <typeMapping sourceType="UInt16" target="clickhouse" targetType="SMALLINT UNSIGNED"/>
+    <typeMapping sourceType="UInt32" target="clickhouse" targetType="INT UNSIGNED"/>
+    <typeMapping sourceType="UInt64" target="clickhouse" targetType="BIGINT UNSIGNED"/>
+    <typeMapping sourceType="Int8" target="clickhouse" targetType="TINYINT"/>
+    <typeMapping sourceType="Int16" target="clickhouse" targetType="SMALLINT"/>
+    <typeMapping sourceType="Int32" target="clickhouse" targetType="INT"/>
+    <typeMapping sourceType="Int64" target="clickhouse" targetType="BIGINT"/>
+    <typeMapping sourceType="Float32" target="clickhouse" targetType="FLOAT"/>
+    <typeMapping sourceType="Float64" target="clickhouse" targetType="DOUBLE"/>
+    <typeMapping sourceType="String" target="clickhouse" targetType="TEXT"/>
+    <typeMapping sourceType="DateTime" target="clickhouse" targetType="DATETIME"/>
+    <typeMapping sourceType="Date" target="clickhouse" targetType="DATE"/>
+    <typeMapping sourceType="Array(T)" target="clickhouse" targetType="ARRAY"/>
+    <typeMapping sourceType="Map(K,V)" target="clickhouse" targetType="JSON"/>
+
+    <!-- DuckDB Type Mappings -->
+    <typeMapping sourceType="TINYINT" target="duckdb" targetType="TINYINT"/>
+    <typeMapping sourceType="SMALLINT" target="duckdb" targetType="SMALLINT"/>
+    <typeMapping sourceType="INTEGER" target="duckdb" targetType="INTEGER"/>
+    <typeMapping sourceType="BIGINT" target="duckdb" targetType="BIGINT"/>
+    <typeMapping sourceType="HUGEINT" target="duckdb" targetType="DECIMAL(38,0)"/>
+    <typeMapping sourceType="REAL" target="duckdb" targetType="FLOAT"/>
+    <typeMapping sourceType="DOUBLE" target="duckdb" targetType="DOUBLE"/>
+    <typeMapping sourceType="VARCHAR" target="duckdb" targetType="VARCHAR"/>
+    <typeMapping sourceType="BLOB" target="duckdb" targetType="BLOB"/>
+    <typeMapping sourceType="DATE" target="duckdb" targetType="DATE"/>
+    <typeMapping sourceType="TIMESTAMP" target="duckdb" targetType="TIMESTAMP"/>
+    <typeMapping sourceType="TIME" target="duckdb" targetType="TIME"/>
+    <typeMapping sourceType="INTERVAL" target="duckdb" targetType="INTERVAL"/>
+    <typeMapping sourceType="LIST" target="duckdb" targetType="ARRAY"/>
+    <typeMapping sourceType="STRUCT" target="duckdb" targetType="JSON"/>
+  </typeMappings>
+
+  <!-- Custom Extension Points -->
+  <extensionPoints>
+    <extensionPoint id="clickhouse-engine"
+                   target="Table"
+                   name="ClickHouse Engine"
+                   description="Table engine specification for ClickHouse">
+      <attributes>
+        <attribute name="engine"
+                   type="string"
+                   defaultValue="MergeTree"
+                   description="Table engine type"/>
+        <attribute name="partitionBy"
+                   type="string"
+                   description="Partition expression"/>
+        <attribute name="orderBy"
+                   type="string"
+                   description="Order by expression"/>
+        <attribute name="primary_key"
+                   type="string"
+                   description="Primary key expression"/>
+        <attribute name="sampling"
+                   type="string"
+                   description="Sampling expression"/>
+      </attributes>
+    </extensionPoint>
+
+    <extensionPoint id="duckdb-appender"
+                   target="Table"
+                   name="DuckDB Appender"
+                   description="Custom appender configuration">
+      <attributes>
+        <attribute name="parallel"
+                   type="boolean"
+                   defaultValue="true"
+                   description="Enable parallel appender"/>
+        <attribute name="compression"
+                   type="string"
+                   defaultValue="auto"
+                   description="Compression type"/>
+      </attributes>
+    </extensionPoint>
+  </extensionPoints>
+
+  <!-- Custom Templates -->
+  <templates>
+    <!-- ClickHouse Table Template -->
+    <template id="create-table-clickhouse"
+             name="create-table"
+             type="SQL"
+             category="db"
+             dialect="clickhouse">
+      <content><![CDATA[
+CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+{{#each table.columns}}
+  {{this.name}} {{this.type}}{{#unless this.nullable}} NOT NULL{{/unless}}{{#if this.defaultValue}} DEFAULT {{this.defaultValue}}{{/if}}{{#unless @last}},
+{{/unless}}{{/each}}
+) ENGINE = {{#if table.engine}}{{table.engine}}{{else}}MergeTree{{/if}}
+{{#if table.partitionBy}}PARTITION BY {{table.partitionBy}}{{/if}}
+{{#if table.orderBy}}ORDER BY {{table.orderBy}}{{/if}}
+{{#if table.primary_key}}PRIMARY KEY {{table.primary_key}}{{/if}}
+{{#if table.settings}}
+SETTINGS
+{{#each table.settings}}
+  {{@key}} = {{this}}{{#unless @last}},{{/unless}}
+{{/each}}
+{{/if}};
+      ]]></content>
+    </template>
+
+    <!-- DuckDB Table Template -->
+    <template id="create-table-duckdb"
+             name="create-table"
+             type="SQL"
+             category="db"
+             dialect="duckdb">
+      <content><![CDATA[
+CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+{{#each table.columns}}
+  {{this.name}} {{this.type}}{{#unless this.nullable}} NOT NULL{{/unless}}{{#if this.defaultValue}} DEFAULT {{this.defaultValue}}{{/if}}{{#unless @last}},
+{{/unless}}{{/each}}
+);
+      ]]></content>
+    </template>
+  </templates>
+
+  <!-- Custom Template Helpers -->
+  <helpers>
+    <helper id="clickhouse-type"
+            name="clickhouseType"
+            description="Convert JustDB type to ClickHouse type">
+      <script language="javascript">
+        <content><![CDATA[
+function clickhouseType(column) {
+  var type = column.type || 'String';
+  var nullable = column.nullable;
+
+  if (nullable) {
+    return 'Nullable(' + type + ')';
+  }
+  return type;
+}
+        ]]></content>
+      </script>
+    </helper>
+
+    <helper id="duckdb-quote"
+            name="duckdbQuote"
+            description="Quote identifier for DuckDB">
+      <script language="javascript">
+        <content><![CDATA[
+function duckdbQuote(name) {
+  if (name.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/)) {
+    return name;
+  }
+  return '"' + name.replace(/"/g, '""') + '"';
+}
+        ]]></content>
+      </script>
+    </helper>
+  </helpers>
+
+</plugin>

@@ -17,16 +17,32 @@ tag:
 | Dimension | JustDB | Flyway |
 |:---|:---|:---|
 | **Design Philosophy** | Declarative | Imperative |
-| **Schema Definition** | YAML/JSON/XML | SQL scripts |
+| **Schema Definition** | XML/YAML/JSON/SQL/TOML | SQL scripts |
 | **Change Method** | Modify schema file | Add new SQL script |
 | **Version Management** | Automatic | Manual version numbers |
-| **Diff Calculation** | Automatic | Manual编写 |
+| **Diff Calculation** | Automatic | Manual writing |
 
 ## Code Comparison
 
-<CodeGroup>
-<CodeGroupItem title="JustDB">
+**JustDB - Declare desired state in your preferred format:**
 
+::: code-tabs
+@tab XML
+```xml
+<!-- schema.xml - Declare desired state -->
+<Justdb>
+    <Table name="users">
+        <Column name="id" type="BIGINT" primaryKey="true"/>
+        <Column name="username" type="VARCHAR(50)"/>
+        <Column name="email" type="VARCHAR(100)"/>
+    </Table>
+</Justdb>
+
+<!-- To modify, just update the file -->
+<!-- JustDB automatically calculates the diff -->
+```
+
+@tab YAML
 ```yaml
 # schema.yaml - Declare desired state
 Table:
@@ -44,10 +60,65 @@ Table:
 # JustDB automatically calculates the diff
 ```
 
-</CodeGroupItem>
+@tab JSON
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {"name": "id", "type": "BIGINT", "primaryKey": true},
+        {"name": "username", "type": "VARCHAR(50)"},
+        {"name": "email", "type": "VARCHAR(100)"}
+      ]
+    }
+  ]
+}
 
-<CodeGroupItem title="Flyway">
+// To modify, just update the file
+// JustDB automatically calculates the diff
+```
 
+@tab SQL
+```sql
+-- schema.sql - Declare desired state
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY,
+    username VARCHAR(50),
+    email VARCHAR(100)
+);
+
+-- To modify, just update the file
+-- JustDB automatically calculates the diff
+```
+
+@tab TOML
+```toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+
+# To modify, just update the file
+# JustDB automatically calculates the diff
+```
+:::
+
+**Flyway - Imperative SQL migration scripts:**
+
+::: code-tabs
+@tab SQL
 ```sql
 -- V1__create_users_table.sql
 CREATE TABLE users (
@@ -64,9 +135,7 @@ ALTER TABLE users ADD COLUMN avatar VARCHAR(500);
 
 -- Each change requires a new script
 ```
-
-</CodeGroupItem>
-</CodeGroup>
+:::
 
 ## Pros and Cons
 

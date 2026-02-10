@@ -17,7 +17,7 @@ JustDB Schema 是一种声明式的数据库结构定义语言，支持多种格
 ### Schema 根元素
 
 ```yaml
-id: myapp                    # Schema 唯一标识
+id: definition-example                    # Schema 唯一标识
 namespace: com.example       # Java 命名空间（可选）
 version: 1.0.0              # 版本号（可选）
 ```
@@ -342,7 +342,7 @@ afterAlters:
 
 ```yaml
 # schema.yaml
-id: myapp
+id: definition-example
 includes:
   - path: tables/users.yaml
   - path: tables/orders.yaml
@@ -435,7 +435,7 @@ Table:
 
 ```yaml
 # 主文件只包含结构
-id: myapp
+id: definition-example
 includes:
   - tables/*.yaml
   - views/*.yaml
@@ -454,7 +454,7 @@ Table:
 
 ```yaml
 ---
-id: myapp
+id: definition-example
 version: 1.0.0
 namespace: com.example
 

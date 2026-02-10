@@ -1,4 +1,5 @@
 ---
+date: 2024-01-01
 icon: leaf
 title: Spring Boot 快速集成
 order: 6

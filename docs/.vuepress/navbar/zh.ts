@@ -13,6 +13,11 @@ export const zhNavbar = navbar([
     link: "/getting-started/",
   },
   {
+    text: "速查手册",
+    icon: "bolt",
+    link: "/cheatsheet/",
+  },
+  {
     text: "参考文档",
     icon: "book",
     children: [

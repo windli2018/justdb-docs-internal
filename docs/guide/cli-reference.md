@@ -1,5 +1,6 @@
 ---
 icon: terminal
+date: 2024-01-01
 title: CLI 参考
 order: 15
 category:

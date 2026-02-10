@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  preferColumn Examples
+
+  The preferColumn attribute allows overriding column values
+  during DDL generation. This is useful for:
+  - Replacing computed values with defaults
+  - Providing fallback values for unsupported expressions
+  - Customizing DDL output per database
+-->
+<Justdb xmlns="http://www.verydb.org/schema/v1">
+
+  <!-- Example 1: Using preferColumn for virtual column fallback -->
+  <Table name="users">
+    <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+    <Column name="username" type="VARCHAR(50)" nullable="false"/>
+    <Column name="email" type="VARCHAR(100)"/>
+
+    <!-- Virtual column: email domain -->
+    <Column name="email_domain" type="VARCHAR(100)" virtual="true">
+      <Expression>SUBSTRING_INDEX(email, '@', -1)</Expression>
+      <preferColumn>'unknown'</preferColumn>
+      <Comment>邮箱域名 (数据库不支持时使用默认值)</Comment>
+    </Column>
+  </Table>
+
+  <!-- Example 2: Stored vs non-stored virtual columns -->
+  <Table name="order_items">
+    <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+    <Column name="quantity" type="INT" nullable="false"/>
+    <Column name="unit_price" type="DECIMAL(10,2)" nullable="false"/>
+
+    <!-- Stored virtual column with fallback -->
+    <Column name="line_total" type="DECIMAL(12,2)" virtual="true" stored="true">
+      <Expression>quantity * unit_price</Expression>
+      <preferColumn>0</preferColumn>
+      <Comment>行总价</Comment>
+    </Column>
+  </Table>
+
+  <!-- Example 3: Combining virtual and preferColumn for data masking -->
+  <Table name="sensitive_data">
+    <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+    <Column name="credit_card" type="VARCHAR(20)" nullable="false"/>
+
+    <!-- Masked credit card number -->
+    <Column name="masked_card" type="VARCHAR(20)" virtual="true">
+      <Expression>CONCAT('****-****-****-', RIGHT(credit_card, 4))</Expression>
+      <preferColumn>'****-****-****-****'</preferColumn>
+      <Comment>脱敏卡号</Comment>
+    </Column>
+  </Table>
+
+  <!-- Example 4: Date calculations with fallback -->
+  <Table name="subscriptions">
+    <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+    <Column name="start_date" type="DATE" nullable="false"/>
+    <Column name="duration_months" type="INT" nullable="false"/>
+
+    <!-- End date calculation -->
+    <Column name="end_date" type="DATE" virtual="true" stored="true">
+      <Expression>DATE_ADD(start_date, INTERVAL duration_months MONTH)</Expression>
+      <preferColumn>NULL</preferColumn>
+      <Comment>到期日</Comment>
+    </Column>
+
+    <!-- Days remaining -->
+    <Column name="days_remaining" type="INT" virtual="true">
+      <Expression>DATEDIFF(end_date, CURDATE())</Expression>
+      <preferColumn>0</preferColumn>
+      <Comment>剩余天数</Comment>
+    </Column>
+  </Table>
+
+  <!-- Example 5: URL parsing with fallback -->
+  <Table name="resources">
+    <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+    <Column name="url" type="VARCHAR(500)" nullable="false"/>
+
+    <!-- Extract domain from URL -->
+    <Column name="domain" type="VARCHAR(100)" virtual="true">
+      <Expression>REGEXP_SUBSTR(url, '://([^/]*)', 1, 1, '', 2)</Expression>
+      <preferColumn>'localhost'</preferColumn>
+      <Comment>域名</Comment>
+    </Column>
+
+    <!-- Extract protocol -->
+    <Column name="protocol" type="VARCHAR(10)" virtual="true">
+      <Expression>SUBSTRING_INDEX(url, '://', 1)</Expression>
+      <preferColumn>'https'</preferColumn>
+      <Comment>协议</Comment>
+    </Column>
+  </Table>
+
+</Justdb>

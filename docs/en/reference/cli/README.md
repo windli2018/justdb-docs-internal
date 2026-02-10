@@ -345,7 +345,6 @@ justdb init
 
 # 2. Create schema
 cat > schema.yaml << EOF
-id: myapp
 Table:
   - name: users
     Column:

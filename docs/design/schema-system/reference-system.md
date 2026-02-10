@@ -1,635 +1,567 @@
-# JustDB 关联表数据维护优化方案
+# Reference System 引用系统设计
 
 ## 设计文档版本
 
-**版本**: 2.0
-**日期**: 2026-02-08
-**作者**: Claude Code
-**状态**: 设计中
+**版本**: 1.0
+**日期**: 2026-02-10
+**作者**: JustDB Team
+**状态**: 已实现
 
 ---------------------------
 
 ## 目录
 
-1. [问题描述](#1-问题描述)
-2. [核心设计](#2-核心设计)
-3. [架构设计](#3-架构设计)
-4. [实现步骤](#4-实现步骤)
-5. [关键文件](#5-关键文件)
-6. [验证方式](#6-验证方式)
-7. [示例](#7-示例)
+1. [概述](#1-概述)
+2. [核心概念](#2-核心概念)
+3. [引用语法](#3-引用语法)
+4. [属性合并规则](#4-属性合并规则)
+5. [作用域规则](#5-作用域规则)
+6. [使用场景](#6-使用场景)
+7. [最佳实践](#7-最佳实践)
 
 ---------------------------
 
-## 1. 问题描述
+## 1. 概述
 
-### 1.1 当前痛点
+### 1.1 设计目标
 
-关联表（如 user_roles）存储纯 ID 难以维护：
+Reference System（引用系统）允许在 Schema 中定义可复用组件，通过 `referenceId` 实现组件继承和复用。
 
-```xml
-&lt;!-- 当前方式：只存储数字 ID --&gt;
-&lt;Data table="user_roles"&gt;
-    &lt;Row user_id="1" role_id="5"/&gt;
-    &lt;Row user_id="1" role_id="8"/&gt;
-    &lt;Row user_id="2" role_id="5"/&gt;
-&lt;/Data&gt;
-```
+**解决的问题**：
+1. 消除重复定义（如每张表都要定义 id 列）
+2. 统一标准列定义（如统一的时间戳列格式）
+3. 支持组件继承和覆盖
+4. 提高 Schema 可维护性
 
-**问题**：
-1. 无法直观理解（user_id=1 是谁？role_id=5 是什么角色？）
-2. Schema 中的数据难以人工维护和审查
-3. 导出/导入时需要手动维护 ID 关系
-4. 数据迁移时 ID 可能发生变化
-
-### 1.2 目标
-
-支持使用可读标识符来维护关联表数据：
+### 1.2 基本示例
 
 ```xml
-&lt;!-- 期望方式：使用可读标识符 --&gt;
-&lt;Table name="user_roles"&gt;
-    &lt;Column name="user_id" type="BIGINT" nullable="false"/&gt;
-    &lt;Column name="role_id" type="BIGINT" nullable="false"/&gt;
+<!-- 定义可复用列模板 -->
+<Column id="global_id" name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+<Column id="global_timestamp" name="created_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/>
 
-    &lt;!-- 虚拟列：定义可读标识符到 ID 的映射 --&gt;
-    &lt;Column name="username" virtual="true" from="users.username" on="user_id"/&gt;
-    &lt;Column name="rolename" virtual="true" from="roles.rolename" on="role_id"/&gt;
-&lt;/Table&gt;
-
-&lt;Data table="user_roles"&gt;
-    &lt;!-- 直接使用虚拟列名 --&gt;
-    &lt;Row username="alice" rolename="admin"/&gt;
-    &lt;Row username="alice" rolename="editor"/&gt;
-    &lt;Row username="bob" rolename="viewer"/&gt;
-&lt;/Data&gt;
+<!-- 引用全局列 -->
+<Table name="users">
+    <Column referenceId="global_id" name="id"/>
+    <Column name="username" type="VARCHAR(50)"/>
+    <Column referenceId="global_timestamp" name="created_at"/>
+</Table>
 ```
 
 ---------------------------
 
-## 2. 核心设计
+## 2. 核心概念
 
-### 2.1 Virtual Column 虚拟列
+### 2.1 引用类型
 
-**概念**：在 Table 定义中添加虚拟列，用于数据导入时将可读标识符转换为实际 ID。
+| 类型 | 说明 | 示例 |
+|------|------|------|
+| **Column 引用** | 复用列定义 | `<Column referenceId="global_id"/>` |
+| **Constraint 引用** | 复用约束定义 | `<Constraint referenceId="fk_user"/>` |
+| **Index 引用** | 复用索引定义 | `<Index referenceId="idx_created"/>` |
+| **Table 片段引用** | 复用表中的列组 | `<Column referenceId="audit_columns.created_at"/>` |
 
-**属性**：
+### 2.2 支持的元素
 
-| 属性 | 类型 | 必填 | 默认值 | 说明 |
-|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|--------------------------------------------------------|------------------------------------------------------|
-| `name` | String | ✓ | - | 虚拟列名（可读标识符，如 username） |
-| `virtual` | Boolean | ✓ | false | 标记为虚拟列 |
-| `from` | String | ✓ | - | 来源：表名.字段名（如 users.username） |
-| `on` | String | ✓ | - | 映射到当前表的列名（如 user_id） |
+所有支持 `id` 属性的 Schema 元素都支持引用：
 
-**示例**：
 ```xml
-&lt;Column name="username" virtual="true" from="users.username" on="user_id"/&gt;
+<!-- Column 引用 -->
+<Column id="pk_id" name="id" type="BIGINT" primaryKey="true"/>
+<Column referenceId="pk_id"/>
+
+<!-- Constraint 引用 -->
+<Constraint id="fk_user" type="FOREIGN_KEY">
+    <referencedTable>users</referencedTable>
+</Constraint>
+<Constraint referenceId="fk_user"/>
+
+<!-- Index 引用 -->
+<Index id="idx_created" name="idx_created_at">
+    <column>created_at</column>
+</Index>
+<Index referenceId="idx_created"/>
 ```
 
-**含义**：
-- `name="username"`：数据导入时可以使用 `username` 字段
-- `virtual="true"`：标记为虚拟列，不生成物理列
-- `from="users.username"`：从 `users` 表的 `username` 字段查找
-- `on="user_id"`：找到的 ID 填充到当前表的 `user_id` 列
+### 2.3 定义位置
 
-### 2.2 设计决策
+#### 全局定义
 
-1. **统一类型系统**：虚拟列继承 `Column` 类，复用现有类型系统
-2. **DDL 自动过滤**：生成 CREATE TABLE 时自动跳过 `virtual=true` 的列
-3. **数据导入时解析**：只在 Data 部署时执行引用解析
-4. **命名规范**：遵循 JustDB camelCase 规范
-5. **别名支持**：使用 `@JsonAlias` 支持多种命名格式
+```xml
+<Justdb>
+    <!-- 全局定义，所有表都可以引用 -->
+    <Column id="global_pk" name="id" type="BIGINT" primaryKey="true"/>
 
-### 2.3 与物理列的区别
+    <Table name="users">
+        <Column referenceId="global_pk"/>
+    </Table>
 
-| 特性 | 物理列 | 虚拟列 |
-|------------------------------------------------------|--------------------------------------------------------|--------------------------------------------------------|
-| 生成 DDL | ✓ | ✗ |
-| 存储数据 | ✓ | ✗ |
-| 数据导入时使用 | ✓ | ✓ |
-| 定义位置 | Column list | Column list |
-| 用途 | 实际存储 | 引用解析 |
+    <Table name="orders">
+        <Column referenceId="global_pk"/>
+    </Table>
+</Justdb>
+```
+
+#### 局部定义
+
+```xml
+<Table name="users">
+    <!-- 只在 users 表内可见 -->
+    <Column id="local_col" name="status" type="VARCHAR(20)"/>
+    <Column referenceId="local_col" name="user_status"/>
+</Table>
+```
 
 ---------------------------
 
-## 3. 架构设计
+## 3. 引用语法
 
-### 3.1 整体架构
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                      Schema Deployer                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                               │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │              Data Processor                          │   │
-│  │  ┌────────────────────────────────────────────────┐  │   │
-│  │  │         Virtual Column Resolver                │  │   │
-│  │  │  1. Get virtual columns from Table             │  │   │
-│  │  │  2. Match Row fields with virtual columns      │  │   │
-│  │  │  3. Execute lookup queries                     │  │   │
-│  │  │  4. Replace virtual fields with actual IDs     │  │   │
-│  │  └────────────────────────────────────────────────┘  │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                           ↓                                   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │              SQL Executor                           │   │
-│  │  Execute INSERT with resolved IDs                   │   │
-│  └──────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
-         ↓                           ↓
-    ┌─────────┐                 ┌──────────┐
-    │ Target  │                 │  Target  │
-    │  users  │                 │  roles   │
-    │ table   │                 │  table   │
-    └─────────┘                 └──────────┘
-```
-
-### 3.2 解析流程
-
-```
-1. Schema Loading
-   ↓
-   Table with virtual columns loaded
-   ↓
-2. Data Deployment
-   ↓
-   VirtualColumnResolver.resolve(data, table, connection)
-   ↓
-   For each Row:
-     a. Find matching virtual columns
-     b. Extract virtual field values
-     c. Execute lookup query per virtual column
-     d. Build resolved Row with actual IDs
-   ↓
-3. Execute INSERT
-   ↓
-   Insert with resolved IDs (virtual fields removed)
-```
-
-### 3.3 SQL 模板设计
-
-遵循 JustDB 的模板系统设计：
+### 3.1 基本引用
 
 ```xml
-&lt;!-- 模板: virtual-column-lookup --&gt;
-&lt;!-- 用途: 根据可读标识符查找对应的 ID --&gt;
-&lt;template id="virtual-column-lookup" type="SQL" category="data"&gt;
-    SELECT {{targetTable}}.{{idField}}
-    FROM {{targetTable}}
-    WHERE {{targetTable}}.{{keyField}} = '{{{value}}}'
-&lt;/template&gt;
+<!-- 完整引用 -->
+<Column referenceId="global_id"/>
+
+<!-- 覆盖名称 -->
+<Column referenceId="global_id" name="user_id"/>
+
+<!-- 覆盖多个属性 -->
+<Column referenceId="global_id" name="user_id" autoIncrement="false"/>
 ```
 
-**模板变量**：
-- `{{targetTable}}`: 目标表名
-- `{{keyField}}`: 匹配字段名
-- `{{idField}}`: 返回的 ID 字段名
-- `{{{value}}}`: 可读标识符值（三重大括号转义）
+### 3.2 命名空间引用
+
+#### 点表示法
+
+```xml
+<!-- 使用点表示法引用命名空间的元素 -->
+<Column referenceId="common.pk_id"/>
+<Column referenceId="common.ts_created"/>
+
+<!-- 引用抽象表中的列 -->
+<Column referenceId="audit_columns.created_at"/>
+<Column referenceId="audit_columns.updated_at"/>
+```
+
+#### XML 命名空间
+
+```xml
+<!-- 使用 xmlns 前缀 -->
+<Column referenceId="pk_id" xmlns="common"/>
+```
+
+### 3.3 Table 片段引用
+
+引用抽象表中的列：
+
+```xml
+<!-- 定义审计列组（抽象表不生成 DDL） -->
+<Table id="audit_columns" abstract="true">
+    <Column name="created_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/>
+    <Column name="updated_at" type="TIMESTAMP" defaultValueComputed="ON UPDATE CURRENT_TIMESTAMP"/>
+    <Column name="created_by" type="BIGINT"/>
+    <Column name="updated_by" type="BIGINT"/>
+</Table>
+
+<!-- 引用审计列 -->
+<Table name="users">
+    <Column name="id" type="BIGINT" primaryKey="true"/>
+    <Column name="username" type="VARCHAR(50)"/>
+    <!-- 包含审计列 -->
+    <Column referenceId="audit_columns.created_at"/>
+    <Column referenceId="audit_columns.updated_at"/>
+</Table>
+```
 
 ---------------------------
 
-## 4. 实现步骤
+## 4. 属性合并规则
 
-### Phase 1: Column 类扩展
+### 4.1 合并优先级
 
-**修改文件**：`justdb-core/src/main/java/org/verydb/justdb/schema/Column.java`
+| 引用属性 | 本地属性 | 合并结果 |
+|---------|---------|---------|
+| 未设置 | 未设置 | 使用引用定义 |
+| 未设置 | 已设置 | **使用本地属性** |
+| 已设置 | 未设置 | 使用引用属性 |
+| 已设置 | 已设置 | **使用本地属性** |
 
-添加虚拟列相关字段：
+**规则**：本地属性优先级更高
 
-```java
-/**
- * Mark as virtual column (not physical, for reference resolution only).
- * 标记为虚拟列（非物理列，仅用于引用解析）
- */
-@JsonProperty("virtual")
-@JsonAlias({"virtual", "isVirtual", "virtualColumn"})
-private Boolean virtual = false;
-
-/**
- * Source reference: table.field or just field name.
- * 来源引用：表名.字段名 或 仅字段名
- * Examples: "users.username", "username"
- */
-@JsonProperty("from")
-@JsonAlias({"from", "source", "ref", "reference", "lookup"})
-private String from;
-
-/**
- * Target column in current table to populate with resolved ID.
- * 映射到当前表的目标列名
- */
-@JsonProperty("on")
-@JsonAlias({"on", "to", "targetColumn", "targetField"})
-private String on;
-
-/**
- * Parse from attribute to extract table and field.
- * 解析 from 属性提取表名和字段名
- */
-public VirtualColumnRef getVirtualColumnRef() {
-    if (from == null || !virtual) {
-        return null;
-    }
-
-    String[] parts = from.split("\\.");
-    if (parts.length == 2) {
-        return new VirtualColumnRef(parts[0], parts[1]);
-    } else if (parts.length == 1) {
-        return new VirtualColumnRef(null, parts[0]);
-    }
-    return null;
-}
-
-/**
- * Virtual column reference holder.
- * 虚拟列引用持有者
- */
-@Data
-@AllArgsConstructor
-public static class VirtualColumnRef {
-    private String table;
-    private String field;
-}
-```
-
-### Phase 2: 虚拟列解析器
-
-**新建文件**：`justdb-core/src/main/java/org/verydb/justdb/deploy/VirtualColumnResolver.java`
-
-```java
-package org.verydb.justdb.deploy;
-
-import org.verydb.justdb.schema.Column;
-import org.verydb.justdb.schema.Data;
-import org.verydb.justdb.schema.Row;
-import org.verydb.justdb.schema.Table;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.stream.Collectors;
-
-/**
- * Resolves virtual column references to actual IDs.
- * 虚拟列解析器：将虚拟列引用解析为实际 ID
- */
-public class VirtualColumnResolver {
-
-    /**
-     * Resolves all virtual columns in the data.
-     * 解析数据中的所有虚拟列
-     */
-    public static Data resolve(Data data, Table table, Connection connection) throws SQLException {
-        // Get virtual columns from table
-        List&lt;Column&gt; virtualColumns = table.getColumns().stream()
-            .filter(c -> c.getVirtual() != null && c.getVirtual())
-            .collect(Collectors.toList());
-
-        if (virtualColumns.isEmpty()) {
-            return data; // No virtual columns to resolve
-        }
-
-        List&lt;Row&gt; resolvedRows = new ArrayList&lt;&gt;();
-
-        for (Row row : data.getRows()) {
-            Map&lt;String, Object&gt; resolvedValues = new HashMap&lt;&gt;(row.getValues());
-
-            // Resolve each virtual column
-            for (Column vc : virtualColumns) {
-                String virtualFieldName = vc.getName();
-                if (resolvedValues.containsKey(virtualFieldName)) {
-                    Object identifier = resolvedValues.get(virtualFieldName);
-                    Object actualId = lookupId(vc, identifier, connection, table);
-
-                    // Populate target column with resolved ID
-                    resolvedValues.put(vc.getOn(), actualId);
-
-                    // Remove the virtual field
-                    resolvedValues.remove(virtualFieldName);
-                }
-            }
-
-            resolvedRows.add(new Row(resolvedValues));
-        }
-
-        // Create new Data with resolved rows
-        Data resolvedData = new Data();
-        resolvedData.setTable(data.getTable());
-        resolvedData.setRows(resolvedRows);
-        // Copy other properties...
-
-        return resolvedData;
-    }
-
-    /**
-     * Looks up the actual ID from target table.
-     * 从目标表查找实际 ID
-     */
-    private static Object lookupId(Column virtualColumn, Object identifier,
-                                   Connection connection, Table currentTable) throws SQLException {
-        Column.VirtualColumnRef ref = virtualColumn.getVirtualColumnRef();
-
-        String targetTable = ref.getTable();
-        String keyField = ref.getField();
-        String idField = "id"; // Default, can be made configurable
-
-        // If target table not specified, try to infer from current table's foreign keys
-        if (targetTable == null) {
-            targetTable = inferTargetTable(currentTable, virtualColumn.getOn());
-        }
-
-        String sql = String.format(
-            "SELECT %s FROM %s WHERE %s = ?",
-            idField,
-            targetTable,
-            keyField
-        );
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setObject(1, identifier);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return rs.getObject(1);
-            } else {
-                throw new SQLException(String.format(
-                    "Virtual column reference not found: %s.%s = '%s'",
-                    targetTable,
-                    keyField,
-                    identifier
-                ));
-            }
-        }
-    }
-
-    /**
-     * Infer target table from foreign key constraints.
-     * 从外键约束推断目标表名
-     */
-    private static String inferTargetTable(Table table, String column) {
-        // Try to find foreign key constraint for the column
-        if (table.getConstraints() != null) {
-            return table.getConstraints().stream()
-                .filter(c -> c.getReferencedTable() != null)
-                .filter(c -> c.getColumns() != null && c.getColumns().contains(column))
-                .map(c -> c.getReferencedTable())
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(
-                    "Cannot infer target table for virtual column on " + column));
-        }
-        throw new IllegalArgumentException("Cannot infer target table for virtual column on " + column);
-    }
-}
-```
-
-### Phase 3: DDL 生成集成
-
-**修改文件**：`justdb-core/src/main/resources/default-plugins.xml`
-
-更新 column-spec 模板，过滤虚拟列：
+### 4.2 Column 引用示例
 
 ```xml
-&lt;!-- 更新后的列定义模板 --&gt;
-&lt;template id="column-spec" type="SQL" category="column"&gt;
-    {{#unless virtual}}
-    {{name}} {{type}}{{#if nullable}} nullable{{/if}}{{#if defaultValue}} DEFAULT {{{defaultValue}}}{{/if}}
-    {{/unless}}
-&lt;/template&gt;
+<!-- 定义 -->
+<Column id="username" name="username" type="VARCHAR(50)" nullable="false" comment="User login name"/>
+
+<!-- 完整引用 -->
+<Column referenceId="username"/>
+<!-- 结果: name=username, type=VARCHAR(50), nullable=false, comment="User login name" -->
+
+<!-- 覆盖 name -->
+<Column referenceId="username" name="login_name"/>
+<!-- 结果: name=login_name, type=VARCHAR(50), nullable=false, comment="User login name" -->
+
+<!-- 覆盖 type -->
+<Column referenceId="username" type="VARCHAR(100)"/>
+<!-- 结果: name=username, type=VARCHAR(100), nullable=false, comment="User login name" -->
+
+<!-- 覆盖多个属性 -->
+<Column referenceId="username" name="email" type="VARCHAR(255)" comment="Email address"/>
+<!-- 结果: name=email, type=VARCHAR(255), nullable=false, comment="Email address" -->
 ```
 
-或者使用 Java 端过滤（更灵活）：
+### 4.3 Constraint 引用示例
 
-```java
-// In DBGenerator or Table processing
-List&lt;Column&gt; physicalColumns = table.getColumns().stream()
-    .filter(c -> c.getVirtual() == null || !c.getVirtual())
-    .collect(Collectors.toList());
+```xml
+<!-- 定义 -->
+<Constraint id="fk_user" type="FOREIGN_KEY">
+    <referencedTable>users</referencedTable>
+    <referencedColumn>id</referencedColumn>
+    <onDelete>CASCADE</onDelete>
+</Constraint>
+
+<!-- 引用并指定列 -->
+<Constraint referenceId="fk_user">
+    <column>created_by</column>
+</Constraint>
+
+<!-- 覆盖引用行为 -->
+<Constraint referenceId="fk_user">
+    <column>updated_by</column>
+    <onDelete>SET NULL</onDelete>
+</Constraint>
 ```
-
-### Phase 4: 生命周期集成
-
-**修改文件**：`justdb-core/src/main/java/org/verydb/justdb/SchemaDeployer.java`
-
-在 `deployData()` 方法中集成虚拟列解析：
-
-```java
-private void deployData(Data data, Justdb justdb, Connection connection) throws SQLException {
-    // Get table definition
-    Table table = justdb.getTable(data.getTable());
-
-    // Resolve virtual columns before deployment
-    Data resolvedData = VirtualColumnResolver.resolve(data, table, connection);
-
-    // Continue with normal deployment...
-    // ... execute INSERT with resolved data
-}
-```
-
-### Phase 5: 测试和文档
-
-**新建测试文件**：`justdb-core/src/test/java/org/verydb/justdb/deploy/VirtualColumnResolverTest.java`
-
-**新建示例文件**：`docs/virtual-column-usage.md`
 
 ---------------------------
 
-## 5. 关键文件
+## 5. 作用域规则
 
-| 文件 | 操作 | 说明 |
-|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|
-| `schema/Column.java` | 修改 | 添加 virtual, from, on 字段 |
-| `deploy/VirtualColumnResolver.java` | 新建 | 虚拟列解析器 |
-| `SchemaDeployer.java` | 修改 | 集成虚拟列解析 |
-| `generator/DBGenerator.java` | 修改 | DDL 生成时过滤虚拟列 |
-| `resources/default-plugins.xml` | 修改 | 更新列模板 |
-| `deploy/VirtualColumnResolverTest.java` | 新建 | 单元测试 |
-| `docs/virtual-column-usage.md` | 新建 | 使用文档 |
+### 5.1 作用域类型
+
+#### 全局作用域
+
+```xml
+<Justdb>
+    <!-- 全局定义，所有表都可以引用 -->
+    <Column id="global_pk" name="id" type="BIGINT" primaryKey="true"/>
+
+    <Table name="users">
+        <Column referenceId="global_pk"/>
+    </Table>
+
+    <Table name="orders">
+        <Column referenceId="global_pk"/>
+    </Table>
+</Justdb>
+```
+
+#### 表级作用域
+
+```xml
+<Justdb>
+    <Table name="users">
+        <!-- 只在 users 表内可见 -->
+        <Column id="local_col" name="status" type="VARCHAR(20)"/>
+        <Column referenceId="local_col" name="user_status"/>
+    </Table>
+
+    <Table name="orders">
+        <!-- 错误：无法引用 users 表的 local_col -->
+        <Column referenceId="local_col"/>  <!-- Error: reference not found -->
+    </Table>
+</Justdb>
+```
+
+### 5.2 引用解析顺序
+
+1. **当前表内查找**：先在当前表的定义中查找
+2. **全局查找**：当前表内找不到时，在全局定义中查找
+3. **命名空间查找**：使用点表示法时，在指定命名空间中查找
+
+```xml
+<Justdb>
+    <Column id="global_id" name="id" type="BIGINT"/>
+
+    <Table name="users">
+        <Column id="local_id" name="id" type="CHAR(36)"/>
+        <!-- 引用当前表的定义 -->
+        <Column referenceId="local_id"/>  <!-- 使用 CHAR(36) -->
+    </Table>
+
+    <Table name="orders">
+        <!-- 引用全局定义 -->
+        <Column referenceId="global_id"/>  <!-- 使用 BIGINT -->
+    </Table>
+</Justdb>
+```
+
+### 5.3 循环引用检测
+
+JustDB 自动检测循环引用并报错：
+
+```xml
+<!-- ❌ 错误：循环引用 -->
+<Column id="a" referenceId="b"/>
+<Column id="b" referenceId="a"/>
+<!-- Error: Circular reference detected -->
+
+<!-- ✅ 正确：无循环引用 -->
+<Column id="base" name="id" type="BIGINT"/>
+<Column id="extended" referenceId="base" name="user_id"/>
+```
 
 ---------------------------
 
-## 6. 验证方式
+## 6. 使用场景
 
-### 6.1 单元测试
+### 6.1 场景 1: 主键复用
 
-```bash
-# 运行虚拟列解析器测试
-mvn test -Dtest=VirtualColumnResolverTest
+```xml
+<!-- 定义标准主键 -->
+<Column id="pk_id" name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+<Column id="pk_uuid" name="id" type="CHAR(36)" primaryKey="true"/>
+
+<!-- 使用自增 ID -->
+<Table name="users">
+    <Column referenceId="pk_id"/>
+    <Column name="username" type="VARCHAR(50)"/>
+</Table>
+
+<!-- 使用 UUID -->
+<Table name="products">
+    <Column referenceId="pk_uuid"/>
+    <Column name="name" type="VARCHAR(100)"/>
+</Table>
 ```
 
-### 6.2 集成测试
+### 6.2 场景 2: 时间戳列
 
-```bash
-# 运行完整的数据部署测试
-mvn test -Dtest=DataDeployWithVirtualColumnTest
+```xml
+<!-- 定义标准时间戳 -->
+<Column id="ts_created" name="created_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/>
+<Column id="ts_updated" name="updated_at" type="TIMESTAMP" defaultValueComputed="ON UPDATE CURRENT_TIMESTAMP"/>
+<Column id="ts_deleted" name="deleted_at" type="TIMESTAMP"/>
+
+<!-- 应用到所有表 -->
+<Table name="users">
+    <Column name="id" type="BIGINT" primaryKey="true"/>
+    <Column name="username" type="VARCHAR(50)"/>
+    <Column referenceId="ts_created"/>
+    <Column referenceId="ts_updated"/>
+    <Column referenceId="ts_deleted"/>
+</Table>
 ```
 
-### 6.3 手动验证
+### 6.3 场景 3: 约束模板
 
-1. 创建包含虚拟列的 Schema
-2. 执行部署
-3. 验证 DDL 正确生成（无虚拟列）
-4. 验证数据正确导入（虚拟列被解析）
+```xml
+<!-- 定义标准约束 -->
+<Constraint id="fk_user" type="FOREIGN_KEY">
+    <referencedTable>users</referencedTable>
+    <referencedColumn>id</referencedColumn>
+    <onDelete>CASCADE</onDelete>
+</Constraint>
+
+<Constraint id="uk_email" type="UNIQUE">
+    <column>email</column>
+</Constraint>
+
+<!-- 使用约束模板 -->
+<Table name="orders">
+    <Column name="id" type="BIGINT" primaryKey="true"/>
+    <Column name="user_id" type="BIGINT"/>
+    <Column name="email" type="VARCHAR(100)"/>
+
+    <Constraint referenceId="fk_user">
+        <column>user_id</column>
+    </Constraint>
+    <Constraint referenceId="uk_email"/>
+</Table>
+```
+
+### 6.4 场景 4: 索引模板
+
+```xml
+<!-- 定义标准索引 -->
+<Index id="idx_created" name="idx_created_at">
+    <column>created_at</column>
+</Index>
+
+<Index id="idx_search" name="idx_search">
+    <column>name</column>
+    <column>status</column>
+</Index>
+
+<!-- 使用索引模板 -->
+<Table name="products">
+    <Column name="id" type="BIGINT" primaryKey="true"/>
+    <Column name="name" type="VARCHAR(100)"/>
+    <Column name="status" type="VARCHAR(20)"/>
+    <Column name="created_at" type="TIMESTAMP"/>
+
+    <Index referenceId="idx_created"/>
+    <Index referenceId="idx_search"/>
+</Table>
+```
+
+### 6.5 场景 5: 分层定义
+
+```xml
+<!-- 第一层：基础类型 -->
+<Column id="base.int" type="INT"/>
+<Column id="base.varchar50" type="VARCHAR(50)"/>
+<Column id="base.timestamp" type="TIMESTAMP"/>
+
+<!-- 第二层：业务列 -->
+<Column id="common.username" referenceId="base.varchar50" nullable="false"/>
+<Column id="common.email" referenceId="base.varchar50"/>
+<Column id="common.created_at" referenceId="base.timestamp" defaultValue="CURRENT_TIMESTAMP"/>
+
+<!-- 第三层：表特定 -->
+<Column id="users.username" referenceId="common.username"/>
+
+<!-- 使用 -->
+<Table name="users">
+    <Column referenceId="users.username"/>
+</Table>
+```
 
 ---------------------------
 
-## 7. 示例
+## 7. 最佳实践
 
-### 7.1 用户-角色关联
+### 7.1 命名规范
 
-```xml
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;Justdb id="user-role-demo" namespace="org.example"&gt;
-
-    &lt;!-- 用户表 --&gt;
-    &lt;Table id="users" name="users"&gt;
-        &lt;Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
-        &lt;Column name="username" type="VARCHAR(50)" nullable="false"/&gt;
-        &lt;Column name="email" type="VARCHAR(100)"/&gt;
-    &lt;/Table&gt;
-
-    &lt;!-- 角色表 --&gt;
-    &lt;Table id="roles" name="roles"&gt;
-        &lt;Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
-        &lt;Column name="rolename" type="VARCHAR(50)" nullable="false"/&gt;
-        &lt;Column name="description" type="VARCHAR(200)"/&gt;
-    &lt;/Table&gt;
-
-    &lt;!-- 用户角色关联表 --&gt;
-    &lt;Table id="user_roles" name="user_roles"&gt;
-        &lt;!-- 物理列 --&gt;
-        &lt;Column name="user_id" type="BIGINT" nullable="false"/&gt;
-        &lt;Column name="role_id" type="BIGINT" nullable="false"/&gt;
-
-        &lt;!-- 虚拟列：用于数据导入 --&gt;
-        &lt;Column name="username" virtual="true" from="users.username" on="user_id"/&gt;
-        &lt;Column name="rolename" virtual="true" from="roles.rolename" on="role_id"/&gt;
-    &lt;/Table&gt;
-
-    &lt;!-- 用户数据 --&gt;
-    &lt;Data table="users" dataExportStrategy="ALL_DATA"&gt;
-        &lt;Row username="alice" email="alice@example.com"/&gt;
-        &lt;Row username="bob" email="bob@example.com"/&gt;
-    &lt;/Data&gt;
-
-    &lt;!-- 角色数据 --&gt;
-    &lt;Data table="roles" dataExportStrategy="ALL_DATA"&gt;
-        &lt;Row rolename="admin" description="Administrator"/&gt;
-        &lt;Row rolename="editor" description="Editor"/&gt;
-        &lt;Row rolename="viewer" description="Viewer"/&gt;
-    &lt;/Data&gt;
-
-    &lt;!-- 用户角色关联数据 - 使用虚拟列名 --&gt;
-    &lt;Data table="user_roles" dataExportStrategy="ALL_DATA"&gt;
-        &lt;Row username="alice" rolename="admin"/&gt;
-        &lt;Row username="alice" rolename="editor"/&gt;
-        &lt;Row username="bob" rolename="viewer"/&gt;
-    &lt;/Data&gt;
-
-&lt;/Justdb&gt;
-```
-
-**生成的 DDL**（虚拟列不包含）：
-```sql
-CREATE TABLE users (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) NOT NULL,
-    email VARCHAR(100)
-);
-
-CREATE TABLE roles (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    rolename VARCHAR(50) NOT NULL,
-    description VARCHAR(200)
-);
-
-CREATE TABLE user_roles (
-    user_id BIGINT NOT NULL,
-    role_id BIGINT NOT NULL
-);
-```
-
-### 7.2 分类层级关联
+#### 使用前缀区分类型
 
 ```xml
-&lt;Table name="categories"&gt;
-    &lt;Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/&gt;
-    &lt;Column name="category_name" type="VARCHAR(100)" nullable="false"/&gt;
-    &lt;Column name="parent_id" type="BIGINT"/&gt;
-
-    &lt;!-- 自引用虚拟列 --&gt;
-    &lt;Column name="parent_name" virtual="true" from="categories.category_name" on="parent_id"/&gt;
-&lt;/Table&gt;
-
-&lt;Data table="categories" dataExportStrategy="ALL_DATA"&gt;
-    &lt;Row category_name="Electronics"/&gt;
-    &lt;Row category_name="Computers" parent_name="Electronics"/&gt;
-    &lt;Row category_name="Laptops" parent_name="Computers"/&gt;
-&lt;/Data&gt;
+<!-- 推荐的命名前缀 -->
+<Column id="pk_id"/>           <!-- Primary Key -->
+<Column id="fk_user"/>         <!-- Foreign Key -->
+<Column id="uk_email"/>        <!-- Unique Key -->
+<Column id="idx_created"/>     <!-- Index -->
+<Column id="chk_status"/>      <!-- Check -->
 ```
 
-### 7.3 简化格式（省略表名）
-
-如果外键约束已定义，可以省略 `from` 中的表名：
+#### 使用模块前缀
 
 ```xml
-&lt;Table name="user_roles"&gt;
-    &lt;Column name="user_id" type="BIGINT" nullable="false"/&gt;
-    &lt;Column name="role_id" type="BIGINT" nullable="false"/&gt;
+<!-- 模块化命名 -->
+<Column id="auth.username"/>        <!-- Auth 模块 -->
+<Column id="common.created_at"/>    <!-- Common 模块 -->
+<Column id="user.profile_picture"/> <!-- User 模块 -->
+```
 
-    &lt;!-- 简化格式：from 仅指定字段名 --&gt;
-    &lt;Column name="username" virtual="true" from="username" on="user_id"/&gt;
-    &lt;Column name="rolename" virtual="true" from="rolename" on="role_id"/&gt;
+### 7.2 组织结构
 
-    &lt;!-- 外键约束帮助推断目标表 --&gt;
-    &lt;Constraint name="fk_user" type="FOREIGN_KEY" referencedTable="users" referencedColumn="id"&gt;
-        user_id
-    &lt;/Constraint&gt;
-    &lt;Constraint name="fk_role" type="FOREIGN_KEY" referencedTable="roles" referencedColumn="id"&gt;
-        role_id
-    &lt;/Constraint&gt;
-&lt;/Table&gt;
+#### 按用途分组
+
+```xml
+<Justdb>
+    <!-- 第一组：基础类型 -->
+    <Column id="type.int" type="INT"/>
+    <Column id="type.varchar50" type="VARCHAR(50)"/>
+    <Column id="type.timestamp" type="TIMESTAMP"/>
+
+    <!-- 第二组：标准列 -->
+    <Column id="std.id" name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+    <Column id="std.created_at" name="created_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/>
+    <Column id="std.updated_at" name="updated_at" type="TIMESTAMP" defaultValueComputed="ON UPDATE CURRENT_TIMESTAMP"/>
+
+    <!-- 第三组：业务列 -->
+    <Column id="biz.username" name="username" type="VARCHAR(50)" nullable="false"/>
+    <Column id="biz.email" name="email" type="VARCHAR(100)"/>
+</Justdb>
+```
+
+#### 使用抽象表组织相关列
+
+```xml
+<!-- 定义抽象表（不生成 DDL） -->
+<Table id="audit_table" abstract="true">
+    <Column name="created_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/>
+    <Column name="updated_at" type="TIMESTAMP" defaultValueComputed="ON UPDATE CURRENT_TIMESTAMP"/>
+    <Column name="created_by" type="BIGINT"/>
+    <Column name="updated_by" type="BIGINT"/>
+</Table>
+
+<!-- 继承抽象表 -->
+<Table name="users" extends="audit_table">
+    <Column name="id" type="BIGINT" primaryKey="true"/>
+    <Column name="username" type="VARCHAR(50)"/>
+</Table>
+```
+
+### 7.3 避免过度嵌套
+
+```xml
+<!-- ❌ 不推荐：过深的引用链 -->
+<Column id="a" name="id" type="BIGINT"/>
+<Column id="b" referenceId="a"/>
+<Column id="c" referenceId="b"/>
+<Column id="d" referenceId="c"/>
+<Column referenceId="d"/>  <!-- 难以追踪 -->
+
+<!-- ✅ 推荐：最多 3 层 -->
+<Column id="base_id" name="id" type="BIGINT"/>
+<Column id="user_id" referenceId="base_id" name="user_id"/>
+<Column referenceId="user_id"/>
+```
+
+### 7.4 文档化引用
+
+```xml
+<!-- 为常用引用添加注释 -->
+<!--
+  Standard primary key column definitions
+  标准主键列定义
+-->
+<Column id="pk.auto_int_id" name="id" type="BIGINT" primaryKey="true" autoIncrement="true"
+        comment="Auto-increment ID (自增 ID)"/>
+<Column id="pk.uuid_id" name="id" type="CHAR(36)" primaryKey="true"
+        comment="UUID primary key (UUID 主键)"/>
+
+<!--
+  Audit columns for tracking record changes
+  审计列：跟踪记录变更
+-->
+<Column id="audit.created_at" name="created_at" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"
+        comment="Record creation time (记录创建时间)"/>
+<Column id="audit.updated_at" name="updated_at" type="TIMESTAMP" defaultValueComputed="ON UPDATE CURRENT_TIMESTAMP"
+        comment="Record update time (记录更新时间)"/>
 ```
 
 ---------------------------
 
 ## 附录
 
-### A. 设计优势
+### A. 引用系统优势
 
-1. **统一类型系统**：虚拟列继承 Column，无需新类型
-2. **一目了然**：Table 定义中直接看到所有列
-3. **语义清晰**：`virtual="true"` 明确标识
-4. **自动过滤**：DDL 生成时自动跳过虚拟列
-5. **可复用**：定义一次，所有 Data 节点可用
+1. **消除重复**：一次定义，多处使用
+2. **统一标准**：确保列定义一致性
+3. **易于维护**：修改定义自动影响所有引用
+4. **灵活性**：支持属性覆盖
+5. **类型安全**：编译时验证引用有效性
 
-### B. 设计原则遵循
+### B. 设计原则
 
-1. **不硬编码数据库方言**：使用模板系统处理 DDL 生成
-2. **向后兼容**：现有 Schema 无需修改
-3. **命名规范**：遵循 camelCase、SQL 术语
-4. **别名支持**：使用 @JsonAlias 支持多种命名格式
+1. **DRY 原则**：Don't Repeat Yourself
+2. **单一职责**：每个引用定义只负责一个组件
+3. **命名清晰**：使用描述性的 id 名称
+4. **适度抽象**：避免过度抽象导致难以理解
 
-### C. 扩展性考虑
+### C. 与其他特性对比
 
-1. **复合虚拟列**：支持 `from="table1.field1,table2.field2"`
-2. **虚拟计算列**：支持表达式 `from="CONCAT(first_name, ' ', last_name)"`
-3. **缓存机制**：缓存常用查找结果
-4. **批量查找**：一次查询多个标识符
+| 特性 | Reference System | 抽象表继承 | 模板系统 |
+|------|-----------------|-----------|---------|
+| 作用范围 | 元素级 | 表级 | SQL 级 |
+| 复用粒度 | 单个元素 | 多个元素 | SQL 片段 |
+| 覆盖支持 | ✓ | ✓ | ✓ |
+| 命名空间 | ✓ | ✗ | ✗ |
 
-### D. 与 ReferenceMap 方案对比
+### D. 参考链接
 
-| 特性 | ReferenceMap 方案 | Virtual Column 方案 |
-|------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 类型系统 | 新建类型 | 复用 Column |
-| 定义位置 | Data 节点 | Table 节点 |
-| 可复用性 | 需重复定义 | 一次定义 |
-| DDL 集成 | 需特殊处理 | 自动过滤 |
-| 语义清晰度 | 中等 | 高 |
-
----------------------------
-
-**文档结束**
+- [速查手册: Reference System](../../cheatsheet/reference-system.md)
+- [Column 参考](../../reference/schema/column.md)
+- [Schema 定义](../../reference/schema/)

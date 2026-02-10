@@ -1,4 +1,5 @@
 ---
+date: 2024-01-01
 icon: download
 title: 安装 JustDB
 order: 2

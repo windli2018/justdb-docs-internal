@@ -18,7 +18,7 @@ tag:
 |:---|:---|:---|
 | **语言生态** | Java/JVM | 多语言（Go 核心） |
 | **设计理念** | 声明式 | 声明式 + GitOps |
-| **Schema 定义** | YAML/JSON/XML | SQL/HCL/ORM |
+| **Schema 定义** | XML/YAML/JSON/TOML | SQL/HCL/ORM |
 | **差异计算** | 自动 | 自动 |
 | **AI 集成** | 本地/云端 AI | Atlas Copilot（云端） |
 | **JDBC 驱动** | ✅ 独有 | ❌ |
@@ -27,9 +27,26 @@ tag:
 
 ## 代码对比
 
-<CodeGroup>
-<CodeGroupItem title="JustDB">
+::: code-tabs
+@tab JustDB (XML)
+```xml
+<!-- schema.xml -->
+<Justdb>
+    <Table name="users">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+        <Column name="username" type="VARCHAR(50)" nullable="false"/>
+        <Column name="email" type="VARCHAR(100)"/>
+        <Index name="idx_username" unique="true">
+            <IndexColumn name="username"/>
+        </Index>
+    </Table>
+</Justdb>
 
+<!-- 直接运行迁移 -->
+<!-- justdb migrate -->
+```
+
+@tab JustDB (YAML)
 ```yaml
 # schema.yaml
 Table:
@@ -50,13 +67,63 @@ Table:
         unique: true
 
 # 直接运行迁移
-justdb migrate
+# justdb migrate
 ```
 
-</CodeGroupItem>
+@tab JustDB (JSON)
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {"name": "id", "type": "BIGINT", "primaryKey": true, "autoIncrement": true},
+        {"name": "username", "type": "VARCHAR(50)", "nullable": false},
+        {"name": "email", "type": "VARCHAR(100)"}
+      ],
+      "Index": [
+        {"name": "idx_username", "columns": ["username"], "unique": true}
+      ]
+    }
+  ]
+}
 
-<CodeGroupItem title="Atlas (HCL)">
+// 直接运行迁移
+// justdb migrate
+```
 
+@tab JustDB (TOML)
+```toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+nullable = false
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+
+[[Table.Index]]
+name = "idx_username"
+unique = true
+
+[[Table.Index.IndexColumn]]
+name = "username"
+
+# 直接运行迁移
+# justdb migrate
+```
+
+@tab Atlas (HCL)
 ```hcl
 # schema.hcl
 table "users" {
@@ -82,10 +149,7 @@ atlas schema apply -u "postgres://user:pass@localhost/db" \
   --to file://schema.hcl
 ```
 
-</CodeGroupItem>
-
-<CodeGroupItem title="Atlas (SQL)">
-
+@tab Atlas (SQL)
 ```sql
 -- schema.sql
 CREATE TABLE users (
@@ -96,15 +160,13 @@ CREATE TABLE users (
 
 CREATE UNIQUE INDEX idx_username ON users(username);
 ```
-
-</CodeGroupItem>
-</CodeGroup>
+:::
 
 ## 优缺点对比
 
 **JustDB 优势**：
 - ✅ **JDBC 驱动**：独特的内存数据库驱动，支持离线开发
-- ✅ **多格式支持**：原生支持 8 种数据格式（YAML/JSON/XML/Properties 等）
+- ✅ **多格式支持**：原生支持 8 种数据格式（XML/YAML/JSON/TOML/Properties 等）
 - ✅ **AI 集成**：支持本地 LLM 和多种云端 AI
 - ✅ **Java 生态**：深度集成 Java/JVM 生态
 - ✅ **模板系统**：灵活的模板引擎支持自定义 SQL 生成

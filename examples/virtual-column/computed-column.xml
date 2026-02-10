@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Virtual Column Examples
+
+  This example demonstrates various virtual column use cases:
+  - Computed columns (derived from other columns)
+  - Expression-based columns
+  - Database-specific virtual columns
+-->
+<Justdb xmlns="http://www.verydb.org/schema/v1">
+
+  <!-- MySQL: Generated columns (STORED vs VIRTUAL) -->
+  <Database id="mysql-demo" type="mysql">
+    <!-- STORED generated column - computed on write and stored -->
+    <Table name="users">
+      <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+      <Column name="first_name" type="VARCHAR(50)" nullable="false"/>
+      <Column name="last_name" type="VARCHAR(50)" nullable="false"/>
+
+      <!-- Virtual column: full name (stored) -->
+      <Column name="full_name" type="VARCHAR(101)" virtual="true" stored="true">
+        <Expression>CONCAT(first_name, ' ', last_name)</Expression>
+        <Comment>全名 (存储虚拟列)</Comment>
+      </Column>
+
+      <!-- Virtual column: email (virtual, not stored) -->
+      <Column name="email_domain" type="VARCHAR(100)" virtual="true" stored="false">
+        <Expression>SUBSTRING_INDEX(email, '@', -1)</Expression>
+        <Comment>邮箱域名 (虚拟列，不存储)</Comment>
+      </Column>
+
+      <Column name="email" type="VARCHAR(100)"/>
+    </Table>
+
+    <!-- Order total calculation -->
+    <Table name="order_items">
+      <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+      <Column name="order_id" type="BIGINT" nullable="false"/>
+      <Column name="quantity" type="INT" nullable="false"/>
+      <Column name="unit_price" type="DECIMAL(10,2)" nullable="false"/>
+
+      <!-- Line total -->
+      <Column name="line_total" type="DECIMAL(12,2)" virtual="true" stored="true">
+        <Expression>quantity * unit_price</Expression>
+        <Comment>行总价</Comment>
+      </Column>
+    </Table>
+  </Database>
+
+  <!-- PostgreSQL: Generated columns -->
+  <Database id="postgres-demo" type="postgresql">
+    <Table name="products">
+      <Column name="id" type="BIGSERIAL" primaryKey="true"/>
+      <Column name="name" type="VARCHAR(100)" nullable="false"/>
+      <Column name="price" type="DECIMAL(10,2)" nullable="false"/>
+      <Column name="tax_rate" type="DECIMAL(5,4)" nullable="false"/>
+
+      <!-- Price with tax -->
+      <Column name="price_with_tax" type="DECIMAL(12,2)" virtual="true" stored="true">
+        <Expression>price * (1 + tax_rate)</Expression>
+        <Comment>含税价格</Comment>
+      </Column>
+
+      <!-- Discount price (20% off) -->
+      <Column name="discount_price" type="DECIMAL(12,2)" virtual="true" stored="false">
+        <Expression>price * 0.8</Expression>
+        <Comment>折扣价 (8折)</Comment>
+      </Column>
+    </Table>
+
+    <!-- Person with age calculation -->
+    <Table name="people">
+      <Column name="id" type="BIGSERIAL" primaryKey="true"/>
+      <Column name="name" type="VARCHAR(100)" nullable="false"/>
+      <Column name="birth_date" type="DATE" nullable="false"/>
+
+      <!-- Age from birth date -->
+      <Column name="age" type="INT" virtual="true" stored="false">
+        <Expression>EXTRACT(YEAR FROM AGE(birth_date))</Expression>
+        <Comment>年龄 (从生日计算)</Comment>
+      </Column>
+    </Table>
+  </Database>
+
+  <!-- Oracle: Virtual columns -->
+  <Database id="oracle-demo" type="oracle">
+    <Table name="employees">
+      <Column name="id" type="NUMBER(19)" primaryKey="true"/>
+      <Column name="first_name" type="VARCHAR2(50)" nullable="false"/>
+      <Column name="last_name" type="VARCHAR2(50)" nullable="false"/>
+      <Column name="salary" type="NUMBER(10,2)" nullable="false"/>
+      <Column name="commission_pct" type="NUMBER(5,4)"/>
+
+      <!-- Full name -->
+      <Column name="full_name" type="VARCHAR2(101)" virtual="true">
+        <Expression>first_name || ' ' || last_name</Expression>
+        <Comment>全名</Comment>
+      </Column>
+
+      <!-- Total compensation -->
+      <Column name="total_compensation" type="NUMBER(12,2)" virtual="true">
+        <Expression>salary * (1 + NVL(commission_pct, 0))</Expression>
+        <Comment>总薪酬 (工资 + 佣金)</Comment>
+      </Column>
+    </Table>
+
+    <!-- Annual salary breakdown -->
+    <Table name="salaries">
+      <Column name="id" type="NUMBER(19)" primaryKey="true"/>
+      <Column name="monthly_salary" type="NUMBER(10,2)" nullable="false"/>
+
+      <!-- Monthly components -->
+      <Column name="annual_salary" type="NUMBER(12,2)" virtual="true">
+        <Expression>monthly_salary * 12</Expression>
+        <Comment>年薪</Comment>
+      </Column>
+
+      <Column name="daily_salary" type="NUMBER(10,2)" virtual="true">
+        <Expression>monthly_salary / 21</Expression>
+        <Comment>日薪 (按21个工作日)</Comment>
+      </Column>
+    </Table>
+  </Database>
+
+  <!-- SQL Server: Computed columns -->
+  <Database id="sqlserver-demo" type="sqlserver">
+    <Table name="orders">
+      <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+      <Column name="subtotal" type="DECIMAL(10,2)" nullable="false"/>
+      <Column name="tax" type="DECIMAL(10,2)" nullable="false"/>
+      <Column name="shipping" type="DECIMAL(10,2)" nullable="false"/>
+
+      <!-- Grand total -->
+      <Column name="total" type="DECIMAL(12,2)" virtual="true" stored="true">
+        <Expression>subtotal + tax + shipping</Expression>
+        <Comment>订单总额</Comment>
+      </Column>
+
+      <!-- Tax percentage -->
+      <Column name="tax_rate" type="DECIMAL(5,4)" virtual="true">
+        <Expression>CASE WHEN subtotal > 0 THEN tax / subtotal ELSE 0 END</Expression>
+        <Comment>税率</Comment>
+      </Column>
+    </Table>
+  </Database>
+
+</Justdb>

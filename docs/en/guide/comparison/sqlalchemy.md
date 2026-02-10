@@ -18,15 +18,28 @@ tag:
 |:---|:---|:---|
 | **Language** | Java | Python |
 | **Design Philosophy** | Declarative file | Code definition |
-| **Schema Definition** | YAML/JSON/XML | Python classes |
+| **Schema Definition** | XML/YAML/JSON/SQL/TOML | Python classes |
 | **Type Safety** | Partial | ✅ |
 | **ORM Integration** | ❌ | ✅ |
 
 ## Code Comparison
 
-<CodeGroup>
-<CodeGroupItem title="JustDB">
+**JustDB - Multi-format declarative schema:**
 
+::: code-tabs
+@tab XML
+```xml
+<!-- schema.xml -->
+<Justdb>
+    <Table name="users">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+        <Column name="username" type="VARCHAR(50)" nullable="false"/>
+        <Column name="email" type="VARCHAR(100)"/>
+    </Table>
+</Justdb>
+```
+
+@tab YAML
 ```yaml
 # schema.yaml
 Table:
@@ -43,10 +56,58 @@ Table:
         type: VARCHAR(100)
 ```
 
-</CodeGroupItem>
+@tab JSON
+```json
+{
+  "Table": [
+    {
+      "name": "users",
+      "Column": [
+        {"name": "id", "type": "BIGINT", "primaryKey": true, "autoIncrement": true},
+        {"name": "username", "type": "VARCHAR(50)", "nullable": false},
+        {"name": "email", "type": "VARCHAR(100)"}
+      ]
+    }
+  ]
+}
+```
 
-<CodeGroupItem title="SQLAlchemy">
+@tab SQL
+```sql
+-- schema.sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100)
+);
+```
 
+@tab TOML
+```toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+nullable = false
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+```
+:::
+
+**SQLAlchemy - Python ORM with code-defined schema:**
+
+::: code-tabs
+@tab Python
 ```python
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
@@ -64,9 +125,7 @@ class User(Base):
 engine = create_engine('sqlite:///users.db')
 Base.metadata.create_all(engine)
 ```
-
-</CodeGroupItem>
-</CodeGroup>
+:::
 
 ## Pros and Cons
 

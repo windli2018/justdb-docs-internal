@@ -26,7 +26,6 @@ JustDB supports multiple schema serialization formats for different use cases.
 ### Example
 
 ```yaml
-id: myapp
 namespace: com.example
 
 Table:

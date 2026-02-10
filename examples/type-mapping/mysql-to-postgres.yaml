@@ -1,0 +1,207 @@
+# Type Mapping Example: MySQL to PostgreSQL Migration
+#
+# This example demonstrates how to define type mappings when migrating
+# from MySQL to PostgreSQL using JustDB.
+
+# Schema definition
+justdb:
+  version: "1.0"
+  sourceType: mysql
+  targetType: postgresql
+
+# Type mappings for MySQL to PostgreSQL
+typeMappings:
+  # Integer types
+  - source: "TINYINT"
+    target: "SMALLINT"
+    description: "MySQL TINYINT maps to PostgreSQL SMALLINT"
+
+  - source: "TINYINT UNSIGNED"
+    target: "SMALLINT"
+    description: "Unsigned TINYINT to SMALLINT"
+
+  - source: "SMALLINT UNSIGNED"
+    target: "INTEGER"
+    description: "Unsigned SMALLINT to INTEGER"
+
+  - source: "INT"
+    target: "INTEGER"
+    description: "Standard INT mapping"
+
+  - source: "INT UNSIGNED"
+    target: "BIGINT"
+    description: "Unsigned INT to BIGINT"
+
+  - source: "BIGINT"
+    target: "BIGINT"
+    description: "Standard BIGINT mapping"
+
+  - source: "BIGINT UNSIGNED"
+    target: "NUMERIC(20,0)"
+    description: "Unsigned BIGINT to NUMERIC for larger range"
+
+  # String types
+  - source: "CHAR"
+    target: "CHAR"
+    description: "Fixed-length character string"
+
+  - source: "VARCHAR"
+    target: "VARCHAR"
+    description: "Variable-length character string"
+
+  - source: "TINYTEXT"
+    target: "TEXT"
+    description: "Tiny text to TEXT"
+
+  - source: "TEXT"
+    target: "TEXT"
+    description: "Standard text type"
+
+  - source: "MEDIUMTEXT"
+    target: "TEXT"
+    description: "Medium text to TEXT"
+
+  - source: "LONGTEXT"
+    target: "TEXT"
+    description: "Long text to TEXT (unlimited in PostgreSQL)"
+
+  # Binary types
+  - source: "BINARY"
+    target: "BYTEA"
+    description: "Fixed binary to BYTEA"
+
+  - source: "VARBINARY"
+    target: "BYTEA"
+    description: "Variable binary to BYTEA"
+
+  - source: "TINYBLOB"
+    target: "BYTEA"
+    description: "Tiny blob to BYTEA"
+
+  - source: "BLOB"
+    target: "BYTEA"
+    description: "Blob to BYTEA"
+
+  - source: "MEDIUMBLOB"
+    target: "BYTEA"
+    description: "Medium blob to BYTEA"
+
+  - source: "LONGBLOB"
+    target: "BYTEA"
+    description: "Long blob to BYTEA"
+
+  # Decimal/numeric types
+  - source: "DECIMAL"
+    target: "NUMERIC"
+    description: "Decimal to NUMERIC"
+
+  - source: "NUMERIC"
+    target: "NUMERIC"
+    description: "Numeric type"
+
+  - source: "FLOAT"
+    target: "REAL"
+    description: "Float to REAL (single precision)"
+
+  - source: "DOUBLE"
+    target: "DOUBLE PRECISION"
+    description: "Double to DOUBLE PRECISION"
+
+  # Date/time types
+  - source: "DATE"
+    target: "DATE"
+    description: "Date type"
+
+  - source: "DATETIME"
+    target: "TIMESTAMP"
+    description: "DateTime to TIMESTAMP"
+
+  - source: "TIMESTAMP"
+    target: "TIMESTAMP"
+    description: "Timestamp type"
+
+  - source: "TIME"
+    target: "TIME"
+    description: "Time type"
+
+  - source: "YEAR"
+    target: "SMALLINT"
+    description: "Year to SMALLINT"
+
+  # Enum types
+  - source: "ENUM"
+    target: "VARCHAR"
+    description: "Enum to VARCHAR (PostgreSQL has native enum but requires explicit definition)"
+
+  # Set types
+  - source: "SET"
+    target: "TEXT[]"
+    description: "Set to TEXT array"
+
+  # Boolean type
+  - source: "BOOLEAN"
+    target: "BOOLEAN"
+    description: "Boolean type"
+
+  - source: "BOOL"
+    target: "BOOLEAN"
+    description: "Bool alias to BOOLEAN"
+
+  # JSON types
+  - source: "JSON"
+    target: "JSONB"
+    description: "JSON to JSONB (binary format, more efficient)"
+
+# Custom type mappings example
+customMappings:
+  # Mapping for specific columns
+  - columnName: "email"
+    sourceType: "VARCHAR(255)"
+    targetType: "VARCHAR(100)"
+
+  - columnName: "phone"
+    sourceType: "VARCHAR(20)"
+    targetType: "VARCHAR(20)"
+
+  # Mapping for columns matching patterns
+  - columnPattern: ".*_id"
+    sourceType: "INT"
+    targetType: "INTEGER"
+
+  - columnPattern: ".*_at"
+    sourceType: "DATETIME"
+    targetType: "TIMESTAMP"
+
+# Auto-increment/serial mapping
+serialMappings:
+  - source: "INT AUTO_INCREMENT"
+    target: "SERIAL"
+
+  - source: "BIGINT AUTO_INCREMENT"
+    target: "BIGSERIAL"
+
+  - source: "SMALLINT AUTO_INCREMENT"
+    target: "SMALLSERIAL"
+
+# Migration notes
+notes: |
+  PostgreSQL Migration Considerations:
+
+  1. Case Sensitivity: PostgreSQL converts unquoted identifiers to lowercase.
+     Use quoted identifiers for mixed-case names.
+
+  2. ENUM Types: PostgreSQL supports native ENUM but requires explicit type
+     definition. Consider using VARCHAR for simpler migration.
+
+  3. Auto-Increment: Use SERIAL types instead of AUTO_INCREMENT.
+
+  4. Indexes: PostgreSQL indexes use B-tree by default. Consider GIN indexes
+     for JSONB columns and array types.
+
+  5. Character Encoding: PostgreSQL uses UTF-8 by default.
+
+  6. Table Names: PostgreSQL automatically pluralizes table names in some
+     ORMs. Be explicit in your schema.
+
+  7. Constraints: Foreign key names must be unique across the entire database
+     in PostgreSQL, not just per table.

@@ -1,81 +1,35 @@
-/* 调整首页元素顺序：Hero → 快速安装 → Features → Footer */
-/* 在首页的 main 容器上启用 flexbox */
-.home main {
-  display: flex;
-  flex-direction: column;
-}
+/* ====== 自定义样式 ====== */
+/* 注意：内容宽度通过 palette.scss 中的 $content-width 变量配置 */
 
-/* Hero 区域保持在顶部 */
-.home main .vp-hero {
-  order: 1;
-}
-
-/* 快速安装区域放在第二位（Features 之前） */
-.home main .theme-default-content {
-  order: 2;
-}
-
-/* Features 区域放在第三位 */
-.home main .vp-features {
-  order: 3;
-}
-
-/* Footer 保持在底部 */
-.home main .vp-footer {
-  order: 4;
-}
-
-/* ====== 页面布局调整 - 加宽正文区域 ====== */
-
-/* 增加正文内容宽度 */
-.theme-default-content {
-  max-width: 900px !important;
-}
-
-/* 确保图片不会溢出，同时允许更大的图片显示 */
-.theme-default-content img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* 调整代码块宽度，确保代码不会被截断 */
-.theme-default-content div[class*="language-"] {
+/* Mermaid 图表自适应宽度 */
+.mermaid {
   max-width: 100%;
   overflow-x: auto;
 }
 
-/* 调整表格宽度 */
-.theme-default-content table {
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 确保图片不会溢出 */
+.vp-page img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 代码块横向滚动 */
+.vp-page pre,
+.vp-page div[class*="language-"] {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* 表格宽度 */
+.vp-page table {
   width: 100%;
   table-layout: auto;
-}
-
-/* 在宽屏上进一步增加内容宽度 */
-@media (min-width: 1440px) {
-  .theme-default-content {
-    max-width: 1000px !important;
-  }
-}
-
-@media (min-width: 1920px) {
-  .theme-default-content {
-    max-width: 1100px !important;
-  }
-}
-
-/* 调整侧边栏宽度，让内容区域更宽 */
-.vp-sidebar {
-  width: 260px !important;
-}
-
-/* 在宽屏上可以稍微增加侧边栏宽度 */
-@media (min-width: 1440px) {
-  .vp-sidebar {
-    width: 280px !important;
-  }
-}
-
-/* 减小右侧目录（TOC）宽度 */
-.vp-toc {
-  width: 180px !important;
+  display: table;
+  overflow-x: auto;
 }

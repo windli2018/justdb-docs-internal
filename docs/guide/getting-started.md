@@ -39,10 +39,10 @@ yarn init
 
 ```bash
 # 如果使用 npm
-npm install -D vuepress@next
+npm install -D @justdb/cli
 
 # 如果使用 yarn
-yarn add -D vuepress@next
+yarn add -D @justdb/cli
 ```
 
 ## 创建您的第一个文档

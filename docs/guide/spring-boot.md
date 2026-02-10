@@ -1,5 +1,6 @@
 ---
 icon: leaf
+date: 2024-01-01
 title: Spring Boot 集成
 order: 11
 category:
@@ -50,7 +51,6 @@ spring:
 
 ```yaml
 # src/main/resources/justdb/users.yaml
-id: myapp
 namespace: com.example
 Table:
   - name: users

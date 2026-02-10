@@ -25,7 +25,7 @@ YAML（YAML Ain't Markup Language）是 JustDB 推荐的 Schema 定义格式。�
 
 ```yaml
 # JustDB 根节点
-id: myapp
+id: yaml-format
 namespace: com.example
 
 # Schema 对象
@@ -120,7 +120,7 @@ Column:
 ### 简单 Schema
 
 ```yaml
-id: myapp
+id: yaml-format
 namespace: com.example
 
 Table:
@@ -411,14 +411,14 @@ YAML 支持在一个文件中定义多个文档：
 ```yaml
 # 文档 1：基础 Schema
 ---------------------------
-id: myapp
+id: yaml-format
 namespace: com.example
 Table:
   - name: users
 
 # 文档 2：扩展 Schema
 ---------------------------
-id: myapp-extensions
+id: yaml-format-extensions
 namespace: com.example
 Table:
   - name: orders

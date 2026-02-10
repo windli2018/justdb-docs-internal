@@ -1,4 +1,5 @@
 ---
+date: 2024-01-01
 icon: rocket
 title: 快速开始
 order: 1
@@ -18,7 +19,7 @@ tag:
 
 JustDB 是一个**所见即所得的数据库开发套件**，你只需要：
 
-1. 用 YAML/JSON/XML 声明你期望的数据库结构
+1. 用 XML/YAML/JSON/SQL/TOML 声明你期望的数据库结构
 2. JustDB 自动计算并执行变更
 3. 完成！
 
@@ -42,10 +43,35 @@ JustDB 是一个**所见即所得的数据库开发套件**，你只需要：
 
 ### 第一步：创建第一个 Schema
 
-创建文件 `users.yaml`：
+创建 Schema 文件：
 
+::: code-tabs
+@tab XML
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- users.xml -->
+<Justdb namespace="com.example">
+    <Table id="users" name="用户表" comment="存储系统用户信息">
+        <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"
+                comment="用户ID，主键自增"/>
+        <Column name="username" type="VARCHAR(50)" nullable="false"
+                comment="用户名，不能为空"/>
+        <Column name="email" type="VARCHAR(100)" comment="邮箱地址"/>
+        <Column name="created_at" type="TIMESTAMP" nullable="false"
+                defaultValueComputed="CURRENT_TIMESTAMP" comment="创建时间"/>
+        <Index id="idx_username" unique="true" comment="用户名唯一索引">
+            <IndexColumn name="username"/>
+        </Index>
+        <Index id="idx_email" unique="true" comment="邮箱唯一索引">
+            <IndexColumn name="email"/>
+        </Index>
+    </Table>
+</Justdb>
+```
+
+@tab YAML
 ```yaml
-id: myapp
+# users.yaml
 namespace: com.example
 Table:
   - id: users
@@ -70,17 +96,139 @@ Table:
         defaultValueComputed: CURRENT_TIMESTAMP
         comment: 创建时间
     Index:
-      - name: idx_username
+      - id: idx_username
         columns:
           - username
         unique: true
         comment: 用户名唯一索引
-      - name: idx_email
+      - id: idx_email
         columns:
           - email
         unique: true
         comment: 邮箱唯一索引
 ```
+
+@tab JSON
+```json
+{
+  "namespace": "com.example",
+  "Table": [
+    {
+      "id": "users",
+      "name": "用户表",
+      "comment": "存储系统用户信息",
+      "Column": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primaryKey": true,
+          "autoIncrement": true,
+          "comment": "用户ID，主键自增"
+        },
+        {
+          "name": "username",
+          "type": "VARCHAR(50)",
+          "nullable": false,
+          "comment": "用户名，不能为空"
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(100)",
+          "comment": "邮箱地址"
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "defaultValueComputed": "CURRENT_TIMESTAMP",
+          "comment": "创建时间"
+        }
+      ],
+      "Index": [
+        {
+          "id": "idx_username",
+          "columns": ["username"],
+          "unique": true,
+          "comment": "用户名唯一索引"
+        },
+        {
+          "id": "idx_email",
+          "columns": ["email"],
+          "unique": true,
+          "comment": "邮箱唯一索引"
+        }
+      ]
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+-- users.sql
+-- JustDB 也支持 SQL 格式的 Schema 定义
+
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '用户ID，主键自增',
+    username VARCHAR(50) NOT NULL COMMENT '用户名，不能为空',
+    email VARCHAR(100) COMMENT '邮箱地址',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    UNIQUE KEY idx_username (username) COMMENT '用户名唯一索引',
+    UNIQUE KEY idx_email (email) COMMENT '邮箱唯一索引'
+) COMMENT '用户表';
+```
+
+@tab TOML
+```toml
+namespace = "com.example"
+
+[[Table]]
+id = "users"
+name = "用户表"
+comment = "存储系统用户信息"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+comment = "用户ID，主键自增"
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+nullable = false
+comment = "用户名，不能为空"
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+comment = "邮箱地址"
+
+[[Table.Column]]
+name = "created_at"
+type = "TIMESTAMP"
+nullable = false
+defaultValueComputed = "CURRENT_TIMESTAMP"
+comment = "创建时间"
+
+[[Table.Index]]
+id = "idx_username"
+unique = true
+comment = "用户名唯一索引"
+
+[[Table.Index.IndexColumn]]
+name = "username"
+
+[[Table.Index]]
+id = "idx_email"
+unique = true
+comment = "邮箱唯一索引"
+
+[[Table.Index.IndexColumn]]
+name = "email"
+```
+:::
 
 ### 第二步：部署到数据库
 
@@ -97,7 +245,7 @@ import java.sql.DriverManager;
 public class QuickStart {
     public static void main(String[] args) throws Exception {
         // 加载 Schema
-        Justdb schema = FormatFactory.loadFromFile("users.yaml");
+        Justdb schema = FormatFactory.loadFromFile("users.xml");
 
         // 连接数据库
         try (Connection conn = DriverManager.getConnection(
@@ -117,11 +265,11 @@ public class QuickStart {
 
 ```bash
 # 直接指定文件
-justdb migrate users.yaml
+justdb migrate users.xml
 
 # 或使用自动发现（将文件放到 justdb/ 目录）
 mkdir justdb
-mv users.yaml justdb/
+mv users.xml justdb/
 justdb migrate
 ```
 
@@ -179,9 +327,25 @@ mysql> DESC users;
 
 ### 添加新字段
 
-修改 `users.yaml`：
+修改 Schema 文件：
 
+::: code-tabs
+@tab XML
+```xml
+<!-- users.xml -->
+<Table id="users">
+    <Column name="id" type="BIGINT" primaryKey="true" autoIncrement="true"/>
+    <Column name="username" type="VARCHAR(50)" nullable="false"/>
+    <Column name="email" type="VARCHAR(100)"/>
+    <Column name="phone" type="VARCHAR(20)" comment="联系电话"/> <!-- 新增 -->
+    <Column name="created_at" type="TIMESTAMP" nullable="false"
+            defaultValueComputed="CURRENT_TIMESTAMP"/>
+</Table>
+```
+
+@tab YAML
 ```yaml
+# users.yaml
 Column:
   - name: id
     type: BIGINT
@@ -200,6 +364,57 @@ Column:
     nullable: false
     defaultValueComputed: CURRENT_TIMESTAMP
 ```
+
+@tab JSON
+```json
+{
+  "Column": [
+    {"name": "id", "type": "BIGINT", "primaryKey": true, "autoIncrement": true},
+    {"name": "username", "type": "VARCHAR(50)", "nullable": false},
+    {"name": "email", "type": "VARCHAR(100)"},
+    {"name": "phone", "type": "VARCHAR(20)", "comment": "联系电话"},
+    {"name": "created_at", "type": "TIMESTAMP", "nullable": false, "defaultValueComputed": "CURRENT_TIMESTAMP"}
+  ]
+}
+```
+
+@tab SQL
+```sql
+-- users.sql - 修改后 - 添加了 phone 字段
+-- JustDB 解析 SQL 格式的 Schema 定义并计算差异
+
+ALTER TABLE users ADD COLUMN phone VARCHAR(20) COMMENT '联系电话';
+```
+
+@tab TOML
+```toml
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+autoIncrement = true
+
+[[Table.Column]]
+name = "username"
+type = "VARCHAR(50)"
+nullable = false
+
+[[Table.Column]]
+name = "email"
+type = "VARCHAR(100)"
+
+[[Table.Column]]
+name = "phone"           # 新增
+type = "VARCHAR(20)"
+comment = "联系电话"
+
+[[Table.Column]]
+name = "created_at"
+type = "TIMESTAMP"
+nullable = false
+defaultValueComputed = "CURRENT_TIMESTAMP"
+```
+:::
 
 执行迁移：
 
@@ -222,6 +437,13 @@ ALTER TABLE users ADD COLUMN phone VARCHAR(20) COMMENT '联系电话';
 
 使用 `formerNames` 标识旧名称：
 
+::: code-tabs
+@tab XML
+```xml
+<Column name="user_name" formerNames="username" type="VARCHAR(50)" nullable="false"/>
+```
+
+@tab YAML
 ```yaml
 Column:
   - name: user_name           # 新名称
@@ -229,6 +451,38 @@ Column:
     type: VARCHAR(50)
     nullable: false
 ```
+
+@tab JSON
+```json
+{
+  "Column": [
+    {
+      "name": "user_name",
+      "formerNames": ["username"],
+      "type": "VARCHAR(50)",
+      "nullable": false
+    }
+  ]
+}
+```
+
+@tab SQL
+```sql
+-- users.sql - 修改后 - 重命名字段
+-- JustDB 解析 SQL 格式的 Schema 定义并计算差异
+
+ALTER TABLE users CHANGE COLUMN username user_name VARCHAR(50) NOT NULL COMMENT '用户名';
+```
+
+@tab TOML
+```toml
+[[Table.Column]]
+name = "user_name"
+formerNames = ["username"]
+type = "VARCHAR(50)"
+nullable = false
+```
+:::
 
 执行迁移：
 
@@ -257,8 +511,13 @@ justdb
 JustDB 支持多种格式，选择最适合你的：
 
 <VPCard
+  title="XML"
+  desc="企业级配置格式，结构清晰，推荐使用"
+/>
+
+<VPCard
   title="YAML"
-  desc="人类友好的配置格式，推荐使用"
+  desc="人类友好的配置格式"
 />
 
 <VPCard
@@ -267,12 +526,26 @@ JustDB 支持多种格式，选择最适合你的：
 />
 
 <VPCard
-  title="XML"
-  desc="企业级配置格式"
+  title="SQL"
+  desc="标准 SQL DDL 语句格式"
 />
 
-&lt;CodeGroup&gt;
-&lt;CodeGroupItem title="YAML"&gt;
+<VPCard
+  title="TOML"
+  desc="现代应用配置格式"
+/>
+
+::: code-tabs
+@tab XML
+```xml
+<Justdb>
+  <Table name="users">
+    <Column name="id" type="BIGINT" primaryKey="true"/>
+  </Table>
+</Justdb>
+```
+
+@tab YAML
 ```yaml
 Table:
   - name: users
@@ -281,9 +554,8 @@ Table:
         type: BIGINT
         primaryKey: true
 ```
-&lt;/CodeGroupItem&gt;
 
-&lt;CodeGroupItem title="JSON"&gt;
+@tab JSON
 ```json
 {
   "Table": [
@@ -300,18 +572,25 @@ Table:
   ]
 }
 ```
-&lt;/CodeGroupItem&gt;
 
-&lt;CodeGroupItem title="XML"&gt;
-```xml
-&lt;Justdb&gt;
-  &lt;Table name="users"&gt;
-    &lt;Column name="id" type="BIGINT" primaryKey="true"/&gt;
-  &lt;/Table&gt;
-&lt;/Justdb&gt;
+@tab SQL
+```sql
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY
+);
 ```
-&lt;/CodeGroupItem&gt;
-&lt;/CodeGroup&gt;
+
+@tab TOML
+```toml
+[[Table]]
+name = "users"
+
+[[Table.Column]]
+name = "id"
+type = "BIGINT"
+primaryKey = true
+```
+:::
 
 ## 常用命令
 
