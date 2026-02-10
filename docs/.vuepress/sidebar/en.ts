@@ -53,6 +53,7 @@ export const enSidebar = sidebar({
         "quick-start.md",
         "first-schema.md",
         "migration-basics.md",
+        "jdbc-guide.md",
         "spring-boot-integration.md",
         "common-tasks.md",
       ],
