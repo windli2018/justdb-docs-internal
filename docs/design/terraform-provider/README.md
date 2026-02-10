@@ -9,6 +9,7 @@ tag:
   - terraform
   - provider
   - design
+  - design
 ---
 
 # Terraform Provider 设计文档

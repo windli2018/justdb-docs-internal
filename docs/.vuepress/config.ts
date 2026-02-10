@@ -1,7 +1,7 @@
 import { defineUserConfig } from 'vuepress';
 import { viteBundler } from '@vuepress/bundler-vite';
 import theme from './theme.ts';
-import { debugSlimSearchPlugin } from './plugins/debug-slimsearch';
+import { detectDuplicateIdsPlugin } from './plugins/detect-duplicate-ids/index.js';
 
 export default defineUserConfig({
   base: '/',
@@ -20,9 +20,9 @@ export default defineUserConfig({
   }),
   theme,
   plugins: [
-    // Debug SlimSearch duplicate ID issue
-    debugSlimSearchPlugin(),
+    detectDuplicateIdsPlugin({ verbose: true }),
   ],
+
   locales: {
     // The key is the path for the locale to be nested under.
     // As a special case, the default locale can use '/' as its path.

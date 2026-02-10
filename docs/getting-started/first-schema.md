@@ -1,12 +1,13 @@
 ---
+date: 2024-01-01
 icon: file-code
 title: 创建第一个 Schema
 order: 4
 category:
   - 快速开始
-  - Schema
+  - schema
 tag:
-  - Schema
+  - schema
   - 定义
   - 语法
 ---
@@ -21,7 +22,6 @@ tag:
 
 ```yaml
 # minimal.yaml
-id: myapp
 namespace: com.example
 Table:
   - name: users
@@ -35,7 +35,6 @@ Table:
 
 ```yaml
 # complete.yaml
-id: myapp                          # Schema 唯一标识
 namespace: com.example             # 命名空间
 catalog: myapp                     # 数据库目录（可选）
 

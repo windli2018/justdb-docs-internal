@@ -7,7 +7,7 @@ category:
   - 开发指南
 tag:
   - 模板
-  - Handlebars
+  - handlebars
   - SQL生成
 ---
 

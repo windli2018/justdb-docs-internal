@@ -1,12 +1,13 @@
 ---
 icon: code-branch
+date: 2024-01-01
 title: Schema 演进
 order: 7
 category:
   - 指南
-  - Schema
+  - schema
 tag:
-  - Schema
+  - schema
   - 演进
   - 迁移
 ---

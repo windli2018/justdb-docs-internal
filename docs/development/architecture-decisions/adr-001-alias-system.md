@@ -8,7 +8,7 @@ category:
 tag:
   - ADR
   - 别名系统
-  - Schema
+  - schema
 ---
 
 # ADR-001: 别名系统

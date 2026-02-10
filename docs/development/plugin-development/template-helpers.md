@@ -7,7 +7,7 @@ category:
   - 开发指南
 tag:
   - 辅助函数
-  - Handlebars
+  - handlebars
   - 模板
 ---
 

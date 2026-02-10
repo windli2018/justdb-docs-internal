@@ -42,11 +42,32 @@ export default hopeTheme({
 
   // Markdown 增强
   markdown: {
+    // Shiki syntax highlighting with YAML support
+    highlighter: {
+      type: "shiki",
+      options: {
+        theme: "github-dark",
+        languages: [
+          "yaml",
+          "json",
+          "xml",
+          "java",
+          "python",
+          "typescript",
+          "javascript",
+          "go",
+          "sql",
+          "bash",
+          "html",
+          "css",
+          "markdown",
+          "toml",
+        ],
+      },
+    },
+
     // 启用 Mermaid
     mermaid: true,
-
-    // 启用图表
-    chart: true,
 
     // 启用 ECharts
     echarts: true,
@@ -216,6 +237,8 @@ export default hopeTheme({
   },
 
   plugins: {
+    // Blog plugin disabled - this is a documentation site, not a blog
+    // blog: true,
     // 评论插件
     comment: {
       provider: "Giscus",

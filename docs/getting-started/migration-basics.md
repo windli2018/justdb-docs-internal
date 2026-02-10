@@ -1,4 +1,5 @@
 ---
+date: 2024-01-01
 icon: arrows-rotate
 title: 迁移基础
 order: 5
@@ -7,7 +8,7 @@ category:
   - 迁移
 tag:
   - 迁移
-  - Schema
+  - schema
   - 版本管理
 ---
 

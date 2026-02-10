@@ -8,7 +8,7 @@ category:
 tag:
   - ADR
   - 模板引擎
-  - Handlebars
+  - handlebars
 ---
 
 # ADR-002: 模板引擎选择

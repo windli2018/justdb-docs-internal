@@ -1,14 +1,15 @@
 ---
 icon: cloud
+date: 2024-01-01
 title: Terraform 集成
 order: 8
 category:
   - 指南
   - 集成
 tag:
-  - Terraform
-  - IaC
-  - DevOps
+  - terraform
+  - iac
+  - devops
 ---
 
 # Terraform 集成指南
