@@ -435,7 +435,7 @@ public class MigrateCommand extends BaseCommand {
             ?? ComputedColumnStrategy.AUTO;
 
         // Pass to DBGenerator
-        DBGenerator dbGenerator = new DBGenerator(pluginManager, dialect, strategy);
+        DBGenerator dbGenerator = new DBGenerator(justdbManager, dialect, strategy);
         // ...
     }
 }

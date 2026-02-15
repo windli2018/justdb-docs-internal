@@ -95,6 +95,28 @@ justdb:
 
 ## Create Your First Schema
 
+### Option 1: Using the init command (Recommended)
+
+The easiest way to create your first schema is using the `init` command:
+
+```bash
+# Initialize a new project
+justdb init
+
+# Or specify project name
+justdb init --project myapp
+
+# Include sample data for testing
+justdb init --project myapp --with-data
+```
+
+This creates:
+- `myapp/justdb.yml` - Your schema file
+- Sample tables: users, orders, products
+- Sample data (if --with-data is used)
+
+### Option 2: Manual Schema Creation
+
 Create file `schema.yaml`:
 
 ```yaml

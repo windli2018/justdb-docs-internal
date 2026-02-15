@@ -105,31 +105,31 @@ builder.put(TemplateRootContext.KEY_SAFE_DROP, idempotentParams.getSafeDrop());
 <!-- MySQL lineage: ADD COLUMN + UPDATE + DROP COLUMN -->
 <template id="drop-column-copy-data-mysql-lineage" name="drop-column-copy-data-mysql-lineage" type="SQL" category="db">
   <content>-- Step 1: Add backup column
-ALTER TABLE {{> table-name ..}} ADD COLUMN {{> column-name @root.newcolumn}} {{> column-type ..}}{{#unless this.nullable}} NOT{{/unless}} NULL{{#if this.defaultValue}} DEFAULT {{this.defaultValue}}{{/if}};
+ALTER TABLE {{> table-name-spec ..}} ADD COLUMN {{> column-name @root.newcolumn}} {{> column-type ..}}{{#unless this.nullable}} NOT{{/unless}} NULL{{#if this.defaultValue}} DEFAULT {{this.defaultValue}}{{/if}};
 -- Step 2: Copy data
-UPDATE {{> table-name ..}} SET {{> column-name @root.newcolumn}} = {{> column-name ..}};
+UPDATE {{> table-name-spec ..}} SET {{> column-name @root.newcolumn}} = {{> column-name ..}};
 -- Step 3: Drop original column
-ALTER TABLE {{> table-name ..}} DROP COLUMN {{> column-name ..}};</content>
+ALTER TABLE {{> table-name-spec ..}} DROP COLUMN {{> column-name ..}};</content>
 </template>
 
 <!-- PostgreSQL lineage -->
 <template id="drop-column-copy-data-postgres-lineage" name="drop-column-copy-data-postgres-lineage" type="SQL" category="db">
   <content>-- Step 1: Add backup column
-ALTER TABLE {{> table-name ..}} ADD COLUMN {{> column-name @root.newcolumn}} {{> column-type ..}}{{#unless this.nullable}} NOT{{/unless}} NULL{{#if this.defaultValue}} DEFAULT {{this.defaultValue}}{{/if}};
+ALTER TABLE {{> table-name-spec ..}} ADD COLUMN {{> column-name @root.newcolumn}} {{> column-type ..}}{{#unless this.nullable}} NOT{{/unless}} NULL{{#if this.defaultValue}} DEFAULT {{this.defaultValue}}{{/if}};
 -- Step 2: Copy data
-UPDATE {{> table-name ..}} SET {{> column-name @root.newcolumn}} = {{> column-name ..}};
+UPDATE {{> table-name-spec ..}} SET {{> column-name @root.newcolumn}} = {{> column-name ..}};
 -- Step 3: Drop original column
-ALTER TABLE {{> table-name ..}} DROP COLUMN {{> column-name ..}};</content>
+ALTER TABLE {{> table-name-spec ..}} DROP COLUMN {{> column-name ..}};</content>
 </template>
 
 <!-- SQL Server lineage -->
 <template id="drop-column-copy-data-sqlserver-lineage" name="drop-column-copy-data-sqlserver-lineage" type="SQL" category="db">
   <content>-- Step 1: Add backup column
-ALTER TABLE {{> table-name ..}} ADD {{> column-name @root.newcolumn}} {{> column-type ..}}{{#unless this.nullable}} NOT{{/unless}} NULL{{#if this.defaultValue}} DEFAULT {{this.defaultValue}}{{/if}};
+ALTER TABLE {{> table-name-spec ..}} ADD {{> column-name @root.newcolumn}} {{> column-type ..}}{{#unless this.nullable}} NOT{{/unless}} NULL{{#if this.defaultValue}} DEFAULT {{this.defaultValue}}{{/if}};
 -- Step 2: Copy data
-UPDATE {{> table-name ..}} SET {{> column-name @root.newcolumn}} = {{> column-name ..}};
+UPDATE {{> table-name-spec ..}} SET {{> column-name @root.newcolumn}} = {{> column-name ..}};
 -- Step 3: Drop original column
-ALTER TABLE {{> table-name ..}} DROP COLUMN {{> column-name ..}};</content>
+ALTER TABLE {{> table-name-spec ..}} DROP COLUMN {{> column-name ..}};</content>
 </template>
 ```
 

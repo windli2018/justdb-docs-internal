@@ -261,7 +261,7 @@ A template is a Handlebars template used to generate SQL or code.
 
 ```xml
 <template id="create-table" name="create-table" type="SQL" category="db">
-  <content>CREATE TABLE {{> table-name}} ({{> columns}});</content>
+  <content>CREATE TABLE {{> table-name-spec}} ({{> columns}});</content>
 </template>
 ```
 

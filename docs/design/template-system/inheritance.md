@@ -49,7 +49,7 @@ Lineage 模板是共享的 SQL 语法，用于相关数据库组：
     <template id="create-table-mysql-lineage" name="create-table-mysql-lineage"
              type="SQL" category="db">
       <content><![CDATA[
-CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
   {{> columns}}
 );
       ]]></content>
@@ -121,12 +121,12 @@ CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
 
 ## 内置 Partial
 
-### table-name
+### table-name-spec
 
 生成带引号的表名：
 
 ```handlebars
-{{> table-name}}  -- `users`, "users", [users]
+{{> table-name-spec}}  -- `users`, "users", [users]
 ```
 
 ### column-spec
@@ -152,7 +152,7 @@ CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
 ### 创建表模板
 
 ```handlebars
-CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
 {{#each columns}}
   {{> column-spec}}{{#unless @last}},{{/unless}}
 {{/each}}
@@ -163,13 +163,13 @@ CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
 
 ```handlebars
 CREATE {{#if unique}}UNIQUE {{/if}}INDEX {{name}}
-ON {{> table-name}} ({{#each columns}}{{name}}{{#unless @last}}, {{/unless}}{{/each}});
+ON {{> table-name-spec}} ({{#each columns}}{{name}}{{#unless @last}}, {{/unless}}{{/each}});
 ```
 
 ### 外键模板
 
 ```handlebars
-ALTER TABLE {{> table-name}}
+ALTER TABLE {{> table-name-spec}}
 ADD CONSTRAINT {{name}}
 FOREIGN KEY ({{foreignKey}})
 REFERENCES {{referencedTable}}({{referencedColumn}})
@@ -185,7 +185,7 @@ REFERENCES {{referencedTable}}({{referencedColumn}})
 <GenericTemplate id="custom-drop" name="custom-drop" type="SQL" category="db"
                  injectAfter="drop-table">
   <content><![CDATA[
-DROP TABLE IF EXISTS {{> table-name}} CASCADE;
+DROP TABLE IF EXISTS {{> table-name-spec}} CASCADE;
   ]]></content>
 </GenericTemplate>
 ```

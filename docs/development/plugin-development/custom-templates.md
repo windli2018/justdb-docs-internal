@@ -138,13 +138,13 @@ JustDB 使用 [Handlebars](https://handlebarsjs.com/) 作为模板引擎：
 
 ```handlebars
 <!-- 引用其他模板 -->
-{{> table-name}}
+{{> table-name-spec}}
 
 <!-- 传递上下文 -->
 {{> column-spec column=this}}
 
 <!-- 使用父上下文 -->
-{{> table-name ..}}
+{{> table-name-spec ..}}
 ```
 
 ## 根上下文变量
@@ -251,7 +251,7 @@ CREATE TABLE users (...) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 <template id="create-table-mysql-lineage" name="create-table-mysql-lineage"
          type="SQL" category="db">
     <content>
-CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
 {{> columns}}
 {{#if this.indexes}}
 {{> indexes}}
@@ -265,7 +265,7 @@ CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
 
 ```xml
 <!-- 表名（含 schema）-->
-<template id="table-name" type="SQL" category="db">
+<template id="table-name-spec" type="SQL" category="db">
     <content>{{#if schema}}{{schema}}.{{/if}}{{name}}</content>
 </template>
 

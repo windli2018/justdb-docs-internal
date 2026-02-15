@@ -154,7 +154,7 @@ fix/user-email-length
 fix/payment-decimal-type
 
 # 重构分支
-refactor/normalize-table-names
+refactor/normalize-table-name-specs
 refactor/index-optimization
 
 # 热修复分支

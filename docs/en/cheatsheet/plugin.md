@@ -161,7 +161,7 @@ Plugin is JustDB's core extension mechanism, supporting custom database adapters
 <plugin id="sql-standard-root">
     <templates>
         <template id="create-table-mysql-lineage" name="create-table-mysql-lineage">
-            <content>CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (...)</content>
+            <content>CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (...)</content>
         </template>
     </templates>
 </plugin>

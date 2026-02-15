@@ -56,6 +56,31 @@ graph TD
 {operation}-{object}-{lineage}-lineage
 ```
 
+### 动词在前原则（Verb-First）
+
+模板名称遵循 SQL 语句的自然顺序，操作动词在前，对象在后：
+
+| 类型 | 命名格式 | 示例 | 说明 |
+|------|---------|------|------|
+| 主入口模板 | `{operation}-{object}` | `drop-table`, `drop-column` | 操作+对象 |
+| 原始操作模板 | `{operation}-{object}-raw` | `drop-table-raw`, `drop-column-raw` | 原始直接操作 |
+| 血统模板 | `{operation}-{object}-{lineage}-lineage` | `drop-table-mysql-lineage` | 血统特定实现 |
+| Plugin 特定模板 | `{operation}-{object}-{plugin}` | `drop-table-mysql`, `drop-column-mysql` | Plugin 路由 |
+| 辅助模板 | `{operation}-{object}` | `rename-table`, `copy-table` | 辅助操作 |
+| 子句模板 | `{operation}-{object}-clause` | `drop-column-clause`, `rename-column-clause` | SQL 子句 |
+
+### 操作动词（operation）
+
+| 动词 | 说明 | 示例模板 |
+|------|------|---------|
+| `drop` | 删除对象 | `drop-table`, `drop-column`, `drop-index` |
+| `create` | 创建对象 | `create-table`, `create-index`, `create-sequence` |
+| `alter` | 修改对象 | `alter-table`, `alter-column` |
+| `rename` | 重命名对象 | `rename-table`, `rename-column` |
+| `add` | 添加（ALTER 的子操作） | `add-column`, `add-constraint` |
+| `modify` | 修改（ALTER 的子操作） | `modify-column`, `modify-table` |
+| `copy` | 复制对象 | `copy-table` |
+
 ### 示例
 
 | 模板名称 | 血统 | 说明 |
@@ -63,6 +88,43 @@ graph TD
 | `create-table-mysql-lineage` | MySQL 血统 | MySQL 系列数据库的 CREATE TABLE 模板 |
 | `create-table-postgres-lineage` | PostgreSQL 血统 | PostgreSQL 系列数据库的 CREATE TABLE 模板 |
 | `drop-table-ansi-lineage` | ANSI 血统 | ANSI SQL 标准的 DROP TABLE 模板 |
+| `drop-table-raw-mysql-lineage` | MySQL 血统 | MySQL DROP TABLE 原始实现 |
+| `rename-table-mysql-lineage` | MySQL 血统 | MySQL RENAME TABLE 实现 |
+
+## 模板查找优先级
+
+`mergeTemplates()` 方法按以下优先级查找模板（从高到低）：
+
+```
+1. (name + category + type + dialect)     - 最精确匹配
+2. (name + category + type)               - 类型级模板
+3. (name + category, type='')             - 分类通用模板
+4. (name, type='' + category='')          - 全局通用模板
+```
+
+**匹配规则**：
+
+- 指定 `dialect` 时，方言特定模板优先于通用模板
+- 未指定 `dialect` 时，通用模板优先于方言模板
+- 后加载的同名模板会覆盖先加载的
+
+### 查找示例
+
+```xml
+<!-- 场景：MySQL 插件中查找 create-table 模板 -->
+
+<!-- 优先级 1: name + category + type + dialect -->
+<template id="create-table" name="create-table" type="SQL" category="db" dialect="mysql">
+
+<!-- 优先级 2: name + category + type -->
+<template id="create-table" name="create-table" type="SQL" category="db">
+
+<!-- 优先级 3: name + category (通用) -->
+<template id="create-table" name="create-table" category="db">
+
+<!-- 优先级 4: name only (全局) -->
+<template id="create-table" name="create-table">
+```
 
 ## 血统模板定义
 
@@ -74,7 +136,7 @@ graph TD
         <!-- MySQL 血统：CREATE TABLE -->
         <template id="create-table-mysql-lineage" type="SQL" category="db">
             <content>
-                CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+                CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
                     {{> columns}}
                 ){{#if this.engine}} ENGINE={{this.engine}}{{/if}};
             </content>
@@ -83,7 +145,7 @@ graph TD
         <!-- PostgreSQL 血统：CREATE TABLE -->
         <template id="create-table-postgres-lineage" type="SQL" category="db">
             <content>
-                CREATE TABLE{{#if @root.idempotent}} IF NOT EXISTS{{/if}} {{> table-name}} (
+                CREATE TABLE{{#if @root.idempotent}} IF NOT EXISTS{{/if}} {{> table-name-spec}} (
                     {{> columns}}
                 );
             </content>
@@ -92,7 +154,7 @@ graph TD
         <!-- ANSI 血统：CREATE TABLE -->
         <template id="create-table-ansi-lineage" type="SQL" category="db">
             <content>
-                CREATE TABLE {{> table-name}} (
+                CREATE TABLE {{> table-name-spec}} (
                     {{> columns}}
                 );
             </content>
@@ -177,13 +239,13 @@ graph TD
 
 ```handlebars
 <!-- MySQL 血统 -->
-CREATE INDEX {{> index-name}} ON {{> table-name}}({{> columns}});
+CREATE INDEX {{> index-name}} ON {{> table-name-spec}}({{> columns}});
 
 <!-- PostgreSQL 血统 -->
-CREATE INDEX{{#if @root.concurrent}} CONCURRENTLY{{/if}} {{> index-name}} ON {{> table-name}}({{> columns}});
+CREATE INDEX{{#if @root.concurrent}} CONCURRENTLY{{/if}} {{> index-name}} ON {{> table-name-spec}}({{> columns}});
 
 <!-- ANSI 血统 -->
-CREATE INDEX {{> index-name}} ON {{> table-name}}({{> columns}});
+CREATE INDEX {{> index-name}} ON {{> table-name-spec}}({{> columns}});
 ```
 
 ## 血统模板扩展
@@ -195,7 +257,7 @@ CREATE INDEX {{> index-name}} ON {{> table-name}}({{> columns}});
 <template id="create-table-newdb-lineage" type="SQL" category="db">
     <content>
         -- 新数据库的 CREATE TABLE 语法
-        CREATE TABLE {{> table-name}} (
+        CREATE TABLE {{> table-name-spec}} (
             {{> columns}}
         );
     </content>
@@ -217,7 +279,7 @@ CREATE INDEX {{> index-name}} ON {{> table-name}}({{> columns}});
 <!-- MySQL 血统变体 -->
 <template id="create-table-mysql-8.0-lineage" type="SQL" category="db">
     <content>
-        CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+        CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
             {{> columns}}
         ) ENGINE=InnoDB;
     </content>

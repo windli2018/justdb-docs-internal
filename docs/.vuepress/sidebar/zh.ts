@@ -113,6 +113,7 @@ export const zhSidebar = sidebar({
             "sql.md",
             "markdown.md",
             "excel.md",
+            "hcl.md",
           ],
         },
         {
@@ -136,6 +137,7 @@ export const zhSidebar = sidebar({
           collapsible: true,
           children: [
             "java-api.md",
+            "fluent-api.md",
             "jdbc-driver.md",
             "schema-loader.md",
             "schema-deployer.md",
@@ -203,6 +205,7 @@ export const zhSidebar = sidebar({
             "overview.md",
             "type-hierarchy.md",
             "alias-system.md",
+            "column-name-mapping.md",
             "schema-evolution.md",
             "reference-system.md",
             "extension-points.md",

@@ -31,7 +31,7 @@ Convert to snake_case:
 Convert to kebab-case:
 
 ```handlebars
-{{kebabCase TableName}}  <!-- TableName → table-name -->
+{{kebabCase TableName}}  <!-- TableName → table-name-spec -->
 ```
 
 ### pascalCase
@@ -224,7 +224,7 @@ pluginManager.registerHelper(helper);
 ### Complex Table Definition
 
 ```handlebars
-CREATE TABLE {{> table-name}} (
+CREATE TABLE {{> table-name-spec}} (
 {{#each columns}}
   {{name}} {{formatType type length}}{{#unless @last}},{{/unless}}
 {{/each}}
@@ -243,13 +243,13 @@ CREATE UNIQUE INDEX {{name}}
 {{else}}
 CREATE INDEX {{name}}
 {{/if}}
-ON {{> table-name}} ({{join columns ", "}});
+ON {{> table-name-spec}} ({{join columns ", "}});
 ```
 
 ### Foreign Key Constraint
 
 ```handlebars
-ALTER TABLE {{> table-name}}
+ALTER TABLE {{> table-name-spec}}
 ADD CONSTRAINT {{name}}
 FOREIGN KEY ({{foreignKey}})
 REFERENCES {{referencedTable}}({{referencedColumn}})

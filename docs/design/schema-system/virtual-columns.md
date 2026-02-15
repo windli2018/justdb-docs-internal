@@ -518,6 +518,220 @@ CREATE TABLE user_roles (
 
 ---------------------------
 
+## 7. 运行时支持架构
+
+JustDB JDBC Driver 为虚拟列提供透明的双向解析机制，让用户保持原有工作习惯的同时自动维护 Schema 的一致性。
+
+### 7.1 双向补正机制
+
+**核心特性**：
+
+1. **双向补正**：
+   - 用户直接操作 `user_id` → 自动补正 `username`（从引用表查询）
+   - 用户直接操作 `username` → 自动补正 `user_id`（反向查找 ID）
+   - 任何修改都会同步到内存中的 Schema
+
+2. **Schema 写盘规则**：
+   - `preferColumn` 值（如 `username`）：**始终写入** schema 文件
+   - id 值（如 `user_id`）：如果标记为 `noMigrate="true"` 则**不写入** schema 文件
+
+3. **使用场景**：
+   - **外部工具操作**：用户通过 MySQL Workbench、DBeaver 等工具直接连接
+   - **应用直连**：使用 MySQL 兼容的 JDBC URL 直接连接
+   - **透明代理**：JustDB 拦截 SQL 操作并进行双向补正
+
+### 7.2 SELECT 虚拟列处理
+
+```
+输入: SELECT username FROM user_roles WHERE user_id = 1
+
+1. Druid SQL Parser 解析 SQL
+   ↓
+2. 构建查询条件，获取数据行
+   ↓
+3. evaluateExprForRow() 处理每一行：
+   - 检查 username 是否为虚拟列 (column.isVirtual())
+   - 获取 row.get("user_id") = 1
+   - 在 users 表中查找 id=1 的行
+   - 返回 username="alice"
+   ↓
+4. 返回结果集
+```
+
+**双向查询支持**：
+
+```sql
+-- 查询物理列（始终支持）
+SELECT user_id FROM user_roles;  -- 返回: [1, 2, 3]
+
+-- 查询虚拟列（自动解析）
+SELECT username FROM user_roles;  -- 返回: ["alice", "bob", "charlie"]
+
+-- 混合查询
+SELECT user_id, username FROM user_roles;
+-- 返回: [{user_id: 1, username: "alice"}, ...]
+```
+
+### 7.3 INSERT 虚拟列处理
+
+```
+输入: INSERT INTO user_roles (username) VALUES ('alice')
+
+1. Druid SQL Parser 解析
+   ↓
+2. 识别 username 是虚拟列 (from="users.username" on="user_id")
+   ↓
+3. 反向解析：
+   - 查询 users 表: SELECT id FROM users WHERE username='alice'
+   - 获取结果: user_id = 1
+   ↓
+4. 双向存储（基于 noMigrate 规则）：
+   - username (preferColumn): 存储值 'alice'
+   - user_id (noMigrate=false): 同步存储 1
+   ↓
+5. 执行插入：
+   INSERT INTO user_roles (user_id, username) VALUES (1, 'alice')
+```
+
+### 7.4 UPDATE 虚拟列处理
+
+**核心理解**：虚拟列和物理列可以**互相解析**，更新任何一个都要**补正同步**
+
+```
+输入: UPDATE user_roles SET username='bob' WHERE user_id = 1
+
+1. Druid SQL Parser 解析
+   ↓
+2. 识别 username 是虚拟列 (from="users.username" on="user_id")
+   ↓
+3. 反向解析：
+   - 查询 users 表: SELECT id FROM users WHERE username='bob'
+   - 获取结果: user_id = 2
+   ↓
+4. 补正同步（基于 noMigrate 规则）：
+   - username (preferColumn): 必然存储 'bob'
+   - user_id (noMigrate=false): 同步更新为 2
+   ↓
+5. 执行更新：
+   UPDATE user_roles SET user_id=2, username='bob' WHERE id=1
+```
+
+**复杂场景示例**：
+
+```sql
+-- 场景 1: 同时更新多个虚拟列
+UPDATE user_roles SET username='charlie', rolename='guest' WHERE id=1;
+-- 转换为:
+UPDATE user_roles SET user_id=3, role_id=4 WHERE id=1;
+
+-- 场景 2: 混合虚拟列和物理列
+UPDATE user_roles SET username='bob', active=true WHERE id=1;
+-- 转换为:
+UPDATE user_roles SET user_id=2, active=true WHERE id=1;
+
+-- 场景 3: WHERE 子句中的虚拟列
+UPDATE user_roles SET active=true WHERE username='alice';
+-- 转换为:
+UPDATE user_roles SET active=true WHERE user_id=1;
+```
+
+### 7.5 DELETE 虚拟列处理
+
+```
+输入: DELETE FROM user_roles WHERE username='alice'
+
+1. Druid SQL Parser 解析
+   ↓
+2. 识别 WHERE 子句中的虚拟列
+   ↓
+3. 预处理：
+   - 在 users 表中查找 username='alice' 的行
+   - 获取 id = 1
+   ↓
+4. 重写 SQL：
+   DELETE FROM user_roles WHERE user_id = 1
+   ↓
+5. 执行重写后的 SQL
+```
+
+### 7.6 VirtualColumnResolver 实现
+
+```java
+/**
+ * Runtime resolver for virtual columns.
+ * 虚拟列运行时解析器：在查询时动态解析虚拟列值
+ */
+public class VirtualColumnResolver {
+
+    private final JustdbDataSource dataSource;
+
+    public VirtualColumnResolver(JustdbDataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    /**
+     * Resolve virtual column value for a given row.
+     * 解析虚拟列值（用于 SELECT）
+     */
+    public Object resolveVirtualColumn(Table table, Column column, Map<String, Object> row) {
+        if (!column.isVirtual()) {
+            return null;
+        }
+
+        Column.VirtualColumnRef ref = column.getVirtualColumnRef();
+        if (ref == null) {
+            return null;
+        }
+
+        // Get foreign key value from row
+        String fkColumn = column.getOn();  // e.g., "user_id"
+        Object fkValue = row.get(fkColumn);
+        if (fkValue == null) {
+            return null;
+        }
+
+        // Lookup in referenced table
+        String refTableName = ref.getTable();  // e.g., "users"
+        String refFieldName = ref.getField();  // e.g., "username"
+
+        Table refTable = dataSource.getTable(refTableName);
+        if (refTable == null) {
+            throw new RuntimeException("Referenced table not found: " + refTableName);
+        }
+
+        // Find the row with matching id and return the field value
+        return lookupFieldValue(refTable, "id", fkValue, refFieldName);
+    }
+
+    /**
+     * Reverse lookup: find ID by readable value.
+     * 反向查找：通过可读值查找 ID（用于 INSERT/UPDATE）
+     */
+    public Object reverseLookup(Table table, String keyField, Object keyValue, String returnField) {
+        // Implementation for reverse lookup
+    }
+}
+```
+
+### 7.7 推荐配置（最佳体验）
+
+```xml
+<!-- 推荐配置：两者兼得 -->
+<Column name="username"
+         type="VARCHAR(255)"
+         virtual="true"
+         preferColumn="true"
+         from="users.username"
+         on="user_id"/>
+```
+
+**效果**：
+- ✅ DDL 包含生成列（MySQL 8.0+）
+- ✅ 预制数据时自动解析
+- ✅ 运行时双向查询支持（物理列 ↔ 虚拟列互相解析）
+
+---------------------------
+
 ## 附录
 
 ### A. 设计优势

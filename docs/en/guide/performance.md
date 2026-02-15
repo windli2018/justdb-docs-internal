@@ -101,7 +101,7 @@ executor.precompileTemplates();
 ```java
 // Good practice: Batch processing
 List<Table&gt;> tables = schema.getTables();
-DBGenerator generator = new DBGenerator(pluginManager, dialect);
+DBGenerator generator = new DBGenerator(justdbManager, dialect);
 
 // Batch generate
 List&lt;String&gt; sqlStatements = generator.generateAll(tables);

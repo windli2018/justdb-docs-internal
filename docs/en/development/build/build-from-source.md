@@ -193,7 +193,7 @@ mvn clean install -Dmaven.repo.local=/path/to/local/repo
 **解决方案**:
 ```bash
 # 清理并重新下载依赖
-rm -rf ~/.m2/repository/org/justdb
+rm -rf ~/.m2/repository/ai/justdb
 mvn clean install -U
 ```
 

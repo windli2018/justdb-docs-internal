@@ -73,7 +73,7 @@ drop-table-db.hbs                # 通用表删除
 
 ```handlebars
 <!-- create-table-db-mysql.hbs -->
-CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
 {{#each columns}}
   {{name}} {{type}}
   {{#if (eq nullable false)}}NOT NULL{{/if}}
@@ -104,7 +104,7 @@ CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
                  dialect="mydb">
   <content>
     -- Custom table creation logic
-    CREATE TABLE {{> table-name}} (
+    CREATE TABLE {{> table-name-spec}} (
       {{#each columns}}
       {{name}} {{type}}
       {{#unless @last}},{{/unless}}
@@ -176,12 +176,12 @@ public class MyHelper {
 
 ```handlebars
 <!-- 好的实践：简洁 -->
-CREATE TABLE {{> table-name}} (
+CREATE TABLE {{> table-name-spec}} (
   {{> columns}}
 );
 
 <!-- 避免：复杂逻辑 -->
-CREATE TABLE {{> table-name}} (
+CREATE TABLE {{> table-name-spec}} (
   {{#each columns}}
   {{name}} {{#if (eq type 'VARCHAR')}}VARCHAR({{length}}){{else}}{{type}}{{/if}}
   {{#each this}}{{#unless @last}}, {{/unless}}{{/each}}
@@ -193,11 +193,11 @@ CREATE TABLE {{> table-name}} (
 
 ```handlebars
 <!-- 定义可重用的 partial -->
-{{#* table-name.hbs *}}
+{{#* table-name-spec.hbs *}}
 {{#if (eq @root.dbType "mysql")}}`{{name}}`{{/if}}
 {{#if (eq @root.dbType "postgresql")}}"{{name}}"{{/if}}
 {{#if (eq @root.dbType "sqlserver")}}[{{name}}]{{/if}}
-{{/table-name*}}
+{{/table-name-spec*}}
 ```
 
 ### 3. 条件渲染
@@ -250,7 +250,7 @@ justdb info templates
 
 ```handlebars
 <!-- create-table-db-custom.hbs -->
-CREATE TABLE {{> table-name}} (
+CREATE TABLE {{> table-name-spec}} (
 {{#each columns}}
   {{name}} {{formatType type size}}{{#if (eq nullable false)}} NOT NULL{{/if}}
   {{#if defaultValue}}DEFAULT {{defaultValue}}{{/if}}
@@ -273,7 +273,7 @@ CREATE TABLE {{> table-name}} (
 ```handlebars
 <!-- create-index-db-custom.hbs -->
 CREATE {{#if unique}}UNIQUE {{/if}}INDEX {{name}}
-ON {{> table-name}} ({{#each columns}}{{name}}{{#unless @last}}, {{/unless}}{{/each}})
+ON {{> table-name-spec}} ({{#each columns}}{{name}}{{#unless @last}}, {{/unless}}{{/each}})
 {{#if comment}}COMMENT '{{comment}}'{{/if}}
 {{#if (eq type "BTREE")}}USING BTREE{{/if}}
 {{#if (eq type "HASH")}}USING HASH{{/if}};

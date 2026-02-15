@@ -74,7 +74,7 @@ graph TD
         <!-- MySQL Lineage: CREATE TABLE -->
         <template id="create-table-mysql-lineage" type="SQL" category="db">
             <content>
-                CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+                CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
                     {{> columns}}
                 ){{#if this.engine}} ENGINE={{this.engine}}{{/if}};
             </content>
@@ -83,7 +83,7 @@ graph TD
         <!-- PostgreSQL Lineage: CREATE TABLE -->
         <template id="create-table-postgres-lineage" type="SQL" category="db">
             <content>
-                CREATE TABLE{{#if @root.idempotent}} IF NOT EXISTS{{/if}} {{> table-name}} (
+                CREATE TABLE{{#if @root.idempotent}} IF NOT EXISTS{{/if}} {{> table-name-spec}} (
                     {{> columns}}
                 );
             </content>
@@ -92,7 +92,7 @@ graph TD
         <!-- ANSI Lineage: CREATE TABLE -->
         <template id="create-table-ansi-lineage" type="SQL" category="db">
             <content>
-                CREATE TABLE {{> table-name}} (
+                CREATE TABLE {{> table-name-spec}} (
                     {{> columns}}
                 );
             </content>
@@ -177,13 +177,13 @@ graph TD
 
 ```handlebars
 <!-- MySQL Lineage -->
-CREATE INDEX {{> index-name}} ON {{> table-name}}({{> columns}});
+CREATE INDEX {{> index-name}} ON {{> table-name-spec}}({{> columns}});
 
 <!-- PostgreSQL Lineage -->
-CREATE INDEX{{#if @root.concurrent}} CONCURRENTLY{{/if}} {{> index-name}} ON {{> table-name}}({{> columns}});
+CREATE INDEX{{#if @root.concurrent}} CONCURRENTLY{{/if}} {{> index-name}} ON {{> table-name-spec}}({{> columns}});
 
 <!-- ANSI Lineage -->
-CREATE INDEX {{> index-name}} ON {{> table-name}}({{> columns}});
+CREATE INDEX {{> index-name}} ON {{> table-name-spec}}({{> columns}});
 ```
 
 ## Lineage Template Extensions
@@ -195,7 +195,7 @@ CREATE INDEX {{> index-name}} ON {{> table-name}}({{> columns}});
 <template id="create-table-newdb-lineage" type="SQL" category="db">
     <content>
         -- New database's CREATE TABLE syntax
-        CREATE TABLE {{> table-name}} (
+        CREATE TABLE {{> table-name-spec}} (
             {{> columns}}
         );
     </content>
@@ -217,7 +217,7 @@ CREATE INDEX {{> index-name}} ON {{> table-name}}({{> columns}});
 <!-- MySQL Lineage Variant -->
 <template id="create-table-mysql-8.0-lineage" type="SQL" category="db">
     <content>
-        CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+        CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
             {{> columns}}
         ) ENGINE=InnoDB;
     </content>

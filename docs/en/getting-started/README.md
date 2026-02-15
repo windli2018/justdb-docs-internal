@@ -43,6 +43,25 @@ JustDB is a **WYSIWYG database development suite**. All you need to do is:
 
 ### Step 1: Create Your First Schema
 
+#### Quick Start with init Command (Recommended)
+
+The fastest way to get started is using the `init` command:
+
+```bash
+# Initialize a new project with default settings
+justdb init
+
+# Or specify project name and format
+justdb init --project myapp --format yaml
+
+# Include sample data for testing
+justdb init --project myapp --with-data
+```
+
+This creates a complete schema with sample tables (users, orders, products) that you can use as a starting point.
+
+#### Manual Schema Creation
+
 Create a Schema file:
 
 ::: code-tabs

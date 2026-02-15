@@ -69,6 +69,13 @@ In-depth design documents covering JustDB's architecture, subsystems, and techni
 - Change Log *(Coming soon)* - Change logging mechanism
 - Rollback *(Coming soon)* - Schema rollback support
 
+### TypeScript Implementation
+
+**[TypeScript Implementation](./typescript-implementation.md)** - TypeScript port design and analysis
+
+- [TypeScript Implementation Design](./typescript-implementation.md) - Design analysis and comparison
+- [TypeScript Refactoring Progress](./typescript-refactor-progress.md) - Refactoring status and improvements
+
 ## Key Design Principles
 
 ### 1. Database Agnostic

@@ -83,7 +83,7 @@ Template root context providing global variables and configuration.
 default-plugins.xml
 ├── <plugin id="sql-standard-root">
 │   └── <templates>
-│       ├── Common base templates (e.g., name-spec, table-name)
+│       ├── Common base templates (e.g., name-spec, table-name-spec)
 │       └── Lineage shared templates (e.g., create-table-mysql-lineage)
 │
 ├── <plugin id="mysql" dialect="mysql" ref-id="sql-standard-root">
@@ -108,7 +108,7 @@ Each template (`GenericTemplate`) contains the following properties:
 | `type` | Template type (optional) | `MYBATIS_BEAN`, `JPA_ENTITY` |
 | `category` | Template category | `db`, `java` |
 | `description` | Template description | `DROP TABLE statement` |
-| `content` | Template content (Handlebars) | `DROP TABLE {{> table-name}}` |
+| `content` | Template content (Handlebars) | `DROP TABLE {{> table-name-spec}}` |
 | `pluginId` | Owner plugin ID | `mysql`, `postgresql` |
 | `ref-id` | Parent plugin reference | `sql-standard-root` |
 | `dialect` | Database dialect | `mysql`, `postgresql` |
@@ -158,29 +158,29 @@ Templates can reference other templates via `{{> template-name}}` syntax.
 ```handlebars
 <!-- Reference base template -->
 <template id="drop-table" name="drop-table" type="SQL" category="db">
-  <content>DROP TABLE {{> table-name}}</content>
+  <content>DROP TABLE {{> table-name-spec}}</content>
 </template>
 
 <!-- Reference template with parent context -->
 <template id="drop-column" name="drop-column" type="SQL" category="db">
-  <content>ALTER TABLE {{> table-name ..}} {{> drop-column-clause}};</content>
+  <content>ALTER TABLE {{> table-name-spec ..}} {{> drop-column-clause}};</content>
 </template>
 ```
 
-- `{{> table-name}}` - Use current context
-- `{{> table-name ..}}` - Use parent context (`..` means up one level)
+- `{{> table-name-spec}}` - Use current context
+- `{{> table-name-spec ..}}` - Use parent context (`..` means up one level)
 
 ### Context Passing
 
 ```handlebars
 {{!-- Current context: table --}}
-{{> table-name}}        {{!-- Use table context --}}
+{{> table-name-spec}}        {{!-- Use table context --}}
 
 {{!-- Pass specified object --}}
-{{> table-name @root.newtable}}
+{{> table-name-spec @root.newtable}}
 
 {{!-- Use parent context --}}
-{{> table-name ..}}
+{{> table-name-spec ..}}
 ```
 
 ## TemplateRootContext
@@ -227,7 +227,7 @@ Lineage templates define shared SQL syntax for a group of databases:
 ```xml
 <!-- Defined in sql-standard-root -->
 <template id="create-table-mysql-lineage" name="create-table-mysql-lineage" type="SQL" category="db">
-  <content>CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} ({{> columns}});</content>
+  <content>CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} ({{> columns}});</content>
 </template>
 
 <!-- Referenced in mysql plugin -->
@@ -243,12 +243,12 @@ Plugins can override templates at any level:
 ```xml
 <!-- Base template defined in sql-standard-root -->
 <template id="modify-column" name="modify-column" type="SQL" category="db">
-  <content>ALTER TABLE {{> table-name ..}} ALTER COLUMN ...;</content>
+  <content>ALTER TABLE {{> table-name-spec ..}} ALTER COLUMN ...;</content>
 </template>
 
 <!-- Overridden in mysql plugin -->
 <template id="modify-column" name="modify-column" type="SQL" category="db">
-  <content>ALTER TABLE {{> table-name ..}} MODIFY COLUMN ...;</content>
+  <content>ALTER TABLE {{> table-name-spec ..}} MODIFY COLUMN ...;</content>
 </template>
 ```
 

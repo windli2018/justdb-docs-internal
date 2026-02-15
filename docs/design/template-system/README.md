@@ -26,7 +26,7 @@ JustDB 的模板系统基于 Handlebars，提供了强大的 SQL 生成能力。
 生成数据库 SQL 语句：
 
 ```handlebars
-CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
   {{#each columns}}
   {{> column-spec}}{{#unless @last}},{{/unless}}
   {{/each}}

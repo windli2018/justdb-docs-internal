@@ -156,7 +156,7 @@ Plugin（插件）是 JustDB 的核心扩展机制，支持自定义数据库适
 <plugin id="sql-standard-root">
     <templates>
         <template id="create-table-mysql-lineage" name="create-table-mysql-lineage">
-            <content>CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (...)</content>
+            <content>CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (...)</content>
         </template>
     </templates>
 </plugin>

@@ -172,7 +172,7 @@ public class MySqlPlugin implements JustdbPlugin {
             .type(TemplateType.SQL)
             .category("db")
             .dialect("mysql")
-            .content("CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (\n{{> columns}}\n);")
+            .content("CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (\n{{> columns}}\n);")
             .build();
     }
 }
@@ -220,7 +220,7 @@ org.example.AnotherPlugin
 ```java
 ServiceLoader<JustdbPlugin> loader = ServiceLoader.load(JustdbPlugin.class);
 for (JustdbPlugin plugin : loader) {
-    pluginManager.registerPlugin(plugin);
+    justdbManager.getPluginManager().registerPlugin(plugin);
 }
 ```
 
@@ -241,7 +241,7 @@ plugins:
 List&lt;String&gt; pluginPaths = config.getPluginPaths();
 for (String path : pluginPaths) {
     JustdbPlugin plugin = loadPluginFromPath(path);
-    pluginManager.registerPlugin(plugin);
+    justdbManager.getPluginManager().registerPlugin(plugin);
 }
 ```
 
@@ -250,10 +250,10 @@ for (String path : pluginPaths) {
 ```java
 // 直接注册插件实例
 MyCustomPlugin plugin = new MyCustomPlugin();
-pluginManager.registerPlugin(plugin);
+justdbManager.getPluginManager().registerPlugin(plugin);
 
 // 或通过配置
-pluginManager.registerPlugin("com.example.MyCustomPlugin");
+justdbManager.getPluginManager().registerPlugin("com.example.MyCustomPlugin");
 ```
 
 ## 插件生命周期

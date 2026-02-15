@@ -391,7 +391,7 @@ public String generateDropView(View view)
 
 ```java
 JustdbManager manager = JustdbManager.getInstance();
-DBGenerator generator = new DBGenerator(manager.getPluginManager(), "mysql");
+DBGenerator generator = new DBGenerator(manager, "mysql");
 
 // Generate CREATE TABLE SQL
 Table table = ...; // Table definition
@@ -430,7 +430,7 @@ public class SchemaExample {
 
         // Generate SQL
         JustdbManager manager = JustdbManager.getInstance();
-        DBGenerator generator = new DBGenerator(manager.getPluginManager(), "mysql");
+        DBGenerator generator = new DBGenerator(manager, "mysql");
 
         for (Table table : justdb.getTables()) {
             String sql = generator.generateCreateTable(table);
@@ -591,7 +591,7 @@ public class DynamicSchemaBuilder {
 
         // Generate SQL
         JustdbManager manager = JustdbManager.getInstance();
-        DBGenerator generator = new DBGenerator(manager.getPluginManager(), "mysql");
+        DBGenerator generator = new DBGenerator(manager, "mysql");
         System.out.println(generator.generateCreateTable(table));
     }
 }

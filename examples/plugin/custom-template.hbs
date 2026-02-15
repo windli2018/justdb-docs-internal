@@ -16,7 +16,7 @@
 -- Create table only if it doesn't exist
 {{/if}}
 
-CREATE {{#if @root.idempotent}}TABLE IF NOT EXISTS{{else}}TABLE{{/if}} {{> table-name}} (
+CREATE {{#if @root.idempotent}}TABLE IF NOT EXISTS{{else}}TABLE{{/if}} {{> table-name-spec}} (
 {{#each table.columns}}
   {{#unless @first}}  {{/unless}}{{this.name}} {{this.type}}{{#if this.nullable}} NULL{{else}} NOT NULL{{/if}}{{#if @root.autoIncrement}} AUTO_INCREMENT{{/if}}{{#if this.defaultValue}} DEFAULT {{this.defaultValue}}{{/if}}{{#if this.remark}} -- {{this.remark}}{{/if}}{{#unless @last}},
 {{/unless}}{{/each}}

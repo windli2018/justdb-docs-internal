@@ -452,7 +452,7 @@ import (
 
 func main() {
     providerserver.Serve{
-        Address: "registry.opentofu.org/justdb/justdb",
+        Address: "registry.opentofu.ai/justdb/justdb",
     }
 }
 ```
@@ -555,7 +555,7 @@ func resourceJustDbSchemaSchema() schema.Schema {
 terraform {
   required_providers {
     justdb = {
-      source  = "registry.opentofu.org/justdb/justdb"
+      source  = "registry.opentofu.ai/justdb/justdb"
       version = "1.0.0"
     }
   }

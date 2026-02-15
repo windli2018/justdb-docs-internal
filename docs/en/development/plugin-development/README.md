@@ -211,7 +211,7 @@ public class MyTemplates implements JustdbPlugin {
             .dialect("mydb")
             .content("""
 
-CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
 {{#each columns}}
   {{name}} {{type}}{{#unless @last}},{{/unless}}
 {{/each}}

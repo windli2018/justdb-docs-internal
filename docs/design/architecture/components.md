@@ -701,7 +701,7 @@ SchemaFormat format = FormatFactory.getFormat(Format.YAML);
 
 ```java
 // DBGenerator 根据方言选择不同的生成策略
-DBGenerator generator = new DBGenerator(pluginManager, dialect);
+DBGenerator generator = new DBGenerator(justdbManager, dialect);
 ```
 
 ### 4. 模板方法模式

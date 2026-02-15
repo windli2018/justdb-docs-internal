@@ -49,7 +49,7 @@ Lineage templates are shared SQL syntax for related database groups:
     <template id="create-table-mysql-lineage" name="create-table-mysql-lineage"
              type="SQL" category="db">
       <content><![CDATA[
-CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
   {{> columns}}
 );
       ]]></content>
@@ -121,12 +121,12 @@ CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
 
 ## Built-in Partials
 
-### table-name
+### table-name-spec
 
 Generate quoted table name:
 
 ```handlebars
-{{> table-name}}  -- `users`, "users", [users]
+{{> table-name-spec}}  -- `users`, "users", [users]
 ```
 
 ### column-spec
@@ -155,7 +155,7 @@ Content can be injected before or after existing templates:
 <GenericTemplate id="custom-drop" name="custom-drop" type="SQL" category="db"
                  injectAfter="drop-table">
   <content><![CDATA[
-DROP TABLE IF EXISTS {{> table-name}} CASCADE;
+DROP TABLE IF EXISTS {{> table-name-spec}} CASCADE;
   ]]></content>
 </GenericTemplate>
 ```

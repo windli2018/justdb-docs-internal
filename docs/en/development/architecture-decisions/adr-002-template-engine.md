@@ -63,7 +63,7 @@ Shared SQL syntax across related databases:
     <template id="create-table-mysql-lineage" name="create-table-mysql-lineage"
              type="SQL" category="db">
       <content>
-        CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+        CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
           {{> columns}}
         );
       </content>
@@ -96,7 +96,7 @@ Shared SQL syntax across related databases:
 ### Built-in Partials
 
 ```handlebars
-{{> table-name}}         <!-- Quoted table name -->
+{{> table-name-spec}}         <!-- Quoted table name -->
 {{> column-spec}}        <!-- Column definition -->
 {{> columns}}            <!-- All columns loop -->
 {{> index-columns}}      <!-- Index column list -->
@@ -107,7 +107,7 @@ Shared SQL syntax across related databases:
 ### Simple Template
 
 ```handlebars
-CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
 {{#each columns}}
   {{name}} {{type}}{{#if nullable}} NULL{{else}} NOT NULL{{/if}}{{#unless @last}},{{/unless}}
 {{/each}}
@@ -118,7 +118,7 @@ CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
 
 ```handlebars
 {{#if primaryKey}}
-ALTER TABLE {{> table-name}}
+ALTER TABLE {{> table-name-spec}}
   ADD PRIMARY KEY ({{primaryKey}});
 {{/if}}
 ```
@@ -128,7 +128,7 @@ ALTER TABLE {{> table-name}}
 ```handlebars
 {{#each indexes}}
 CREATE {{#if unique}}UNIQUE {{/if}}INDEX {{name}}
-  ON {{> table-name}} ({{#each columns}}{{name}}{{#unless @last}}, {{/unless}}{{/each}});
+  ON {{> table-name-spec}} ({{#each columns}}{{name}}{{#unless @last}}, {{/unless}}{{/each}});
 {{/each}}
 ```
 

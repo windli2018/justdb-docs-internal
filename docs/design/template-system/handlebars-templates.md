@@ -70,7 +70,7 @@ JustDB 模板系统基于 Handlebars 模板引擎，提供丰富的语法支持�
 
 ```handlebars
 <!-- 幂等模式 -->
-CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
     {{> columns}}
 );
 
@@ -174,7 +174,7 @@ email VARCHAR(100) NOT NULL
 ### 父上下文
 
 ```handlebars
-{{> table-name ..}}  <!-- 使用父上下文 -->
+{{> table-name-spec ..}}  <!-- 使用父上下文 -->
 ```
 
 ### 路径访问
@@ -236,7 +236,7 @@ pluginManager.registerHelper(helper);
 ### 传递参数
 
 ```handlebars
-{{> table-name table=@root.newtable}}
+{{> table-name-spec table=@root.newtable}}
 ```
 
 ## 实际应用示例
@@ -244,7 +244,7 @@ pluginManager.registerHelper(helper);
 ### CREATE TABLE 模板
 
 ```handlebars
-CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
 {{#each columns}}
     {{> column-spec}}{{#unless @last}},{{/unless}}
 {{/each}}
@@ -260,9 +260,9 @@ CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
 ### ALTER TABLE 模板
 
 ```handlebars
-ALTER TABLE {{> table-name ..}}
+ALTER TABLE {{> table-name-spec ..}}
 {{#if this.newName}}
-    RENAME TO {{> table-name this}}
+    RENAME TO {{> table-name-spec this}}
 {{else}}
     {{#each columns}}
         {{#if this.added}}
@@ -284,7 +284,7 @@ ALTER TABLE {{> table-name ..}}
 {{#if @root.safeDrop}}
     {{> rename-table}}
 {{else}}
-    DROP TABLE {{#if @root.idempotent}}IF EXISTS {{/if}}{{> table-name}};
+    DROP TABLE {{#if @root.idempotent}}IF EXISTS {{/if}}{{> table-name-spec}};
 {{/if}}
 ```
 
@@ -294,7 +294,7 @@ ALTER TABLE {{> table-name ..}}
 
 ```handlebars
 <!-- 好的做法：使用模板引用 -->
-{{> table-name}}
+{{> table-name-spec}}
 
 <!-- 避免：重复代码 -->
 `{{this.schema}}`.`{{this.name}}`

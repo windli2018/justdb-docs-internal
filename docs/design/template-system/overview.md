@@ -83,7 +83,7 @@ graph TD
 default-plugins.xml
 ├── <plugin id="sql-standard-root">
 │   └── <templates>
-│       ├── 通用基础模板（如 name-spec, table-name）
+│       ├── 通用基础模板（如 name-spec, table-name-spec）
 │       └── 血统共享模板（如 create-table-mysql-lineage）
 │
 ├── <plugin id="mysql" dialect="mysql" ref-id="sql-standard-root">
@@ -108,7 +108,7 @@ default-plugins.xml
 | `type` | 模板类型（可选） | `MYBATIS_BEAN`, `JPA_ENTITY` |
 | `category` | 模板分类 | `db`, `java` |
 | `description` | 模板描述 | `DROP TABLE statement` |
-| `content` | 模板内容（Handlebars） | `DROP TABLE {{> table-name}}` |
+| `content` | 模板内容（Handlebars） | `DROP TABLE {{> table-name-spec}}` |
 | `pluginId` | 所属插件 ID | `mysql`, `postgresql` |
 | `ref-id` | 父插件引用 | `sql-standard-root` |
 | `dialect` | 数据库方言 | `mysql`, `postgresql` |
@@ -158,29 +158,29 @@ String sql = templateExecutor.execute(
 ```handlebars
 <!-- 引用基础模板 -->
 <template id="drop-table" name="drop-table" type="SQL" category="db">
-  <content>DROP TABLE {{> table-name}}</content>
+  <content>DROP TABLE {{> table-name-spec}}</content>
 </template>
 
 <!-- 引用带父上下文的模板 -->
 <template id="drop-column" name="drop-column" type="SQL" category="db">
-  <content>ALTER TABLE {{> table-name ..}} {{> drop-column-clause}};</content>
+  <content>ALTER TABLE {{> table-name-spec ..}} {{> drop-column-clause}};</content>
 </template>
 ```
 
-- `{{> table-name}}` - 使用当前上下文
-- `{{> table-name ..}}` - 使用父上下文（`..` 表示向上一级）
+- `{{> table-name-spec}}` - 使用当前上下文
+- `{{> table-name-spec ..}}` - 使用父上下文（`..` 表示向上一级）
 
 ### 上下文传递
 
 ```handlebars
 {{!-- 当前上下文：table --}}
-{{> table-name}}        {{!-- 使用 table 上下文 --}}
+{{> table-name-spec}}        {{!-- 使用 table 上下文 --}}
 
 {{!-- 传递指定对象 --}}
-{{> table-name @root.newtable}}
+{{> table-name-spec @root.newtable}}
 
 {{!-- 使用父上下文 --}}
-{{> table-name ..}}
+{{> table-name-spec ..}}
 ```
 
 ## TemplateRootContext
@@ -227,7 +227,7 @@ TemplateRootContext context = TemplateRootContext.builder()
 ```xml
 <!-- sql-standard-root 中定义 -->
 <template id="create-table-mysql-lineage" name="create-table-mysql-lineage" type="SQL" category="db">
-  <content>CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} ({{> columns}});</content>
+  <content>CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} ({{> columns}});</content>
 </template>
 
 <!-- mysql plugin 中引用 -->
@@ -243,12 +243,12 @@ Plugin 可以在任意层级覆盖模板：
 ```xml
 <!-- sql-standard-root 定义基础模板 -->
 <template id="modify-column" name="modify-column" type="SQL" category="db">
-  <content>ALTER TABLE {{> table-name ..}} ALTER COLUMN ...;</content>
+  <content>ALTER TABLE {{> table-name-spec ..}} ALTER COLUMN ...;</content>
 </template>
 
 <!-- mysql plugin 覆盖 -->
 <template id="modify-column" name="modify-column" type="SQL" category="db">
-  <content>ALTER TABLE {{> table-name ..}} MODIFY COLUMN ...;</content>
+  <content>ALTER TABLE {{> table-name-spec ..}} MODIFY COLUMN ...;</content>
 </template>
 ```
 

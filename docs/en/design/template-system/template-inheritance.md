@@ -39,7 +39,7 @@ custom-plugin (Extension Layer)
     <templates>
         <template id="create-table-mysql-lineage" type="SQL" category="db">
             <content>
-                CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+                CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
                     {{> columns}}
                 );
             </content>
@@ -62,7 +62,7 @@ custom-plugin (Extension Layer)
         <template id="create-table" type="SQL" category="db">
             <content>
                 -- Custom CREATE TABLE logic
-                CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+                CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
                     {{> columns}}
                 ) ENGINE=InnoDB;
             </content>
@@ -103,7 +103,7 @@ custom-plugin (Extension Layer)
 <template id="rename-table">
   <content>
     -- MySQL-specific optimized RENAME
-    RENAME TABLE {{> table-name ..}} TO {{> table-name-safe}};
+    RENAME TABLE {{> table-name-spec ..}} TO {{> table-name-spec-safe}};
   </content>
 </template>
 
@@ -179,7 +179,7 @@ Replace a specified template:
 <template id="custom-drop" injectReplace="drop-table">
     <content>
         -- Custom DROP TABLE logic
-        DROP TABLE IF EXISTS {{> table-name}} CASCADE;
+        DROP TABLE IF EXISTS {{> table-name-spec}} CASCADE;
     </content>
 </template>
 ```
@@ -229,7 +229,7 @@ public String execute(String name, TemplateRootContext context) {
 <!-- PostgreSQL needs AFTER COLUMN syntax -->
 <template id="add-column" dialect="postgresql">
     <content>
-        ALTER TABLE {{> table-name ..}}
+        ALTER TABLE {{> table-name-spec ..}}
         ADD COLUMN {{> column-spec this}};
     </content>
 </template>
@@ -267,7 +267,7 @@ public String execute(String name, TemplateRootContext context) {
         {{else}}
             -- Old version uses DROP + CREATE
             DROP INDEX {{this.oldName}};
-            CREATE INDEX {{this.newName}} ON {{> table-name ..}}({{this.columns}});
+            CREATE INDEX {{this.newName}} ON {{> table-name-spec ..}}({{this.columns}});
         {{/if}}
     </content>
 </template>
@@ -315,7 +315,7 @@ sql-standard-root (lineage templates)
 
 ```xml
 <!-- Good practice: Reference shared templates -->
-{{> table-name}}
+{{> table-name-spec}}
 {{> column-spec}}
 {{> index-spec}}
 

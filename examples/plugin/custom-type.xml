@@ -134,7 +134,7 @@
              category="db"
              dialect="clickhouse">
       <content><![CDATA[
-CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
 {{#each table.columns}}
   {{this.name}} {{this.type}}{{#unless this.nullable}} NOT NULL{{/unless}}{{#if this.defaultValue}} DEFAULT {{this.defaultValue}}{{/if}}{{#unless @last}},
 {{/unless}}{{/each}}
@@ -158,7 +158,7 @@ SETTINGS
              category="db"
              dialect="duckdb">
       <content><![CDATA[
-CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
 {{#each table.columns}}
   {{this.name}} {{this.type}}{{#unless this.nullable}} NOT NULL{{/unless}}{{#if this.defaultValue}} DEFAULT {{this.defaultValue}}{{/if}}{{#unless @last}},
 {{/unless}}{{/each}}

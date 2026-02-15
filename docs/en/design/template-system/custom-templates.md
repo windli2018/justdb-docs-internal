@@ -73,7 +73,7 @@ drop-table-db.hbs                # General table drop
 
 ```handlebars
 <!-- create-table-db-mysql.hbs -->
-CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
 {{#each columns}}
   {{name}} {{type}}
   {{#if (eq nullable false)}}NOT NULL{{/if}}
@@ -103,7 +103,7 @@ CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
                  dialect="mydb">
   <content>
     -- Custom table creation logic
-    CREATE TABLE {{> table-name}} (
+    CREATE TABLE {{> table-name-spec}} (
       {{#each columns}}
       {{name}} {{type}}
       {{#unless @last}},{{/unless}}

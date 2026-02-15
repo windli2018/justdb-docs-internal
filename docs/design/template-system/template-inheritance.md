@@ -39,7 +39,7 @@ custom-plugin (扩展层)
     <templates>
         <template id="create-table-mysql-lineage" type="SQL" category="db">
             <content>
-                CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+                CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
                     {{> columns}}
                 );
             </content>
@@ -62,7 +62,7 @@ custom-plugin (扩展层)
         <template id="create-table" type="SQL" category="db">
             <content>
                 -- 自定义 CREATE TABLE 逻辑
-                CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+                CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
                     {{> columns}}
                 ) ENGINE=InnoDB;
             </content>
@@ -103,7 +103,7 @@ custom-plugin (扩展层)
 <template id="rename-table">
   <content>
     -- MySQL 特定优化版 RENAME
-    RENAME TABLE {{> table-name ..}} TO {{> table-name-safe}};
+    RENAME TABLE {{> table-name-spec ..}} TO {{> table-name-spec-safe}};
   </content>
 </template>
 
@@ -179,7 +179,7 @@ custom-plugin (扩展层)
 <template id="custom-drop" injectReplace="drop-table">
     <content>
         -- 自定义 DROP TABLE 逻辑
-        DROP TABLE IF EXISTS {{> table-name}} CASCADE;
+        DROP TABLE IF EXISTS {{> table-name-spec}} CASCADE;
     </content>
 </template>
 ```
@@ -229,7 +229,7 @@ public String execute(String name, TemplateRootContext context) {
 <!-- PostgreSQL 需要 AFTER COLUMN 语法 -->
 <template id="add-column" dialect="postgresql">
     <content>
-        ALTER TABLE {{> table-name ..}}
+        ALTER TABLE {{> table-name-spec ..}}
         ADD COLUMN {{> column-spec this}};
     </content>
 </template>
@@ -267,7 +267,7 @@ public String execute(String name, TemplateRootContext context) {
         {{else}}
             -- 旧版本使用 DROP + CREATE
             DROP INDEX {{this.oldName}};
-            CREATE INDEX {{this.newName}} ON {{> table-name ..}}({{this.columns}});
+            CREATE INDEX {{this.newName}} ON {{> table-name-spec ..}}({{this.columns}});
         {{/if}}
     </content>
 </template>
@@ -315,7 +315,7 @@ sql-standard-root (血统模板)
 
 ```xml
 <!-- 好的做法：引用共享模板 -->
-{{> table-name}}
+{{> table-name-spec}}
 {{> column-spec}}
 {{> index-spec}}
 

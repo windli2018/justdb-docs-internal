@@ -70,7 +70,7 @@ The JustDB template system is based on the Handlebars template engine, providing
 
 ```handlebars
 <!-- Idempotent mode -->
-CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
     {{> columns}}
 );
 
@@ -174,7 +174,7 @@ email VARCHAR(100) NOT NULL
 ### Parent Context
 
 ```handlebars
-{{> table-name ..}}  <!-- Use parent context -->
+{{> table-name-spec ..}}  <!-- Use parent context -->
 ```
 
 ### Path Access
@@ -236,7 +236,7 @@ pluginManager.registerHelper(helper);
 ### Passing Parameters
 
 ```handlebars
-{{> table-name table=@root.newtable}}
+{{> table-name-spec table=@root.newtable}}
 ```
 
 ## Practical Application Examples
@@ -244,7 +244,7 @@ pluginManager.registerHelper(helper);
 ### CREATE TABLE Template
 
 ```handlebars
-CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
 {{#each columns}}
     {{> column-spec}}{{#unless @last}},{{/unless}}
 {{/each}}
@@ -260,9 +260,9 @@ CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
 ### ALTER TABLE Template
 
 ```handlebars
-ALTER TABLE {{> table-name ..}}
+ALTER TABLE {{> table-name-spec ..}}
 {{#if this.newName}}
-    RENAME TO {{> table-name this}}
+    RENAME TO {{> table-name-spec this}}
 {{else}}
     {{#each columns}}
         {{#if this.added}}
@@ -284,7 +284,7 @@ ALTER TABLE {{> table-name ..}}
 {{#if @root.safeDrop}}
     {{> rename-table}}
 {{else}}
-    DROP TABLE {{#if @root.idempotent}}IF EXISTS {{/if}}{{> table-name}};
+    DROP TABLE {{#if @root.idempotent}}IF EXISTS {{/if}}{{> table-name-spec}};
 {{/if}}
 ```
 
@@ -294,7 +294,7 @@ ALTER TABLE {{> table-name ..}}
 
 ```handlebars
 <!-- Good practice: Use template references -->
-{{> table-name}}
+{{> table-name-spec}}
 
 <!-- Avoid: Duplicate code -->
 `{{this.schema}}`.`{{this.name}}`

@@ -302,7 +302,7 @@ try {
 <!-- MySQL table creation template -->
 <template id="create-table" type="SQL" category="db">
     <content>
-CREATE TABLE {{> table-name}} (
+CREATE TABLE {{> table-name-spec}} (
     {{> columns}}
 ){{#if this.engine}} ENGINE={{this.engine}}{{/if}}
 {{#if this.charset}} CHARSET={{this.charset}}{{/if}}

@@ -97,7 +97,7 @@ Priority 4: (name, type='' + category='')
 ```xml
 <template id="create-table" name="create-table" type="SQL" category="db">
   <content>
-    CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+    CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
       {{> columns}}
     );
   </content>
@@ -111,7 +111,7 @@ Priority 4: (name, type='' + category='')
 <template id="create-table-mysql-lineage" name="create-table-mysql-lineage"
          type="SQL" category="db">
   <content>
-    CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+    CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
       {{> columns}}
     );
   </content>
@@ -233,7 +233,7 @@ Programmatically registered:
 
 ```java
 JustdbPlugin customPlugin = new MyCustomPlugin();
-pluginManager.registerPlugin(customPlugin);
+justdbManager.getPluginManager().registerPlugin(customPlugin);
 ```
 
 ## Plugin Configuration
@@ -288,7 +288,7 @@ public class MyPlugin implements JustdbPlugin {
 ### Built-in Partials
 
 ```handlebars
-{{> table-name}}         <!-- Full table name -->
+{{> table-name-spec}}         <!-- Full table name -->
 {{> column-spec}}        <!-- Column specification -->
 {{> columns}}            <!-- All columns -->
 {{> index-spec}}         <!-- Index specification -->

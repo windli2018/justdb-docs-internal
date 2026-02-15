@@ -22,6 +22,7 @@ Complete reference documentation for JustDB Command Line Interface (CLI).
 
 | Command | Description |
 |:---|:---|
+| `init` | Initialize a new JustDB project |
 | `migrate` | Execute database migration |
 | `validate` | Validate Schema definition |
 | `diff` | View Schema differences |
@@ -72,6 +73,82 @@ justdb -v migrate
 
 # Silent mode
 justdb -q migrate
+```
+
+## init Command
+
+Initialize a new JustDB project with sample schema.
+
+### Syntax
+
+```bash
+justdb init [options]
+```
+
+### Options
+
+| Option | Short | Description | Default |
+|:---|:---|:---|:---|
+| `--project` | `-p` | Project name | myproject |
+| `--format` | `-f` | Output format (yaml, xml, json) | yaml |
+| `--output` | `-o` | Output file path | {project}/justdb.{ext} |
+| `--with-data` | `-d` | Include sample data | false |
+| `--force` | `-F` | Force overwrite existing file | false |
+
+### Examples
+
+```bash
+# Initialize with default settings
+justdb init
+
+# Specify project name
+justdb init --project myapp
+
+# Specify format
+justdb init --format yaml
+justdb init --format xml
+justdb init --format json
+
+# Include sample data
+justdb init --with-data
+
+# Full options
+justdb init --project myapp --format yaml --with-data --output ./myapp/schema.yml
+```
+
+### Output
+
+The `init` command creates:
+- A sample schema with 3 tables (users, orders, products)
+- Global column definitions (id, created_at, updated_at)
+- Sample data (when --with-data is specified)
+- Indexes and foreign keys
+
+### Example Schema
+
+```yaml
+justdb:
+  version: 1.0.0
+  name: myproject
+
+  tables:
+    - name: users
+      comment: "User table"
+      columns:
+        - name: id
+          type: BIGINT
+          primaryKey: true
+          autoIncrement: true
+        - name: username
+          type: VARCHAR(50)
+          nullable: false
+        - name: email
+          type: VARCHAR(100)
+          nullable: false
+        - name: created_at
+          type: TIMESTAMP
+          nullable: false
+          defaultValueComputed: CURRENT_TIMESTAMP
 ```
 
 ## migrate Command

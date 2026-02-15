@@ -426,7 +426,7 @@ public class MigrateCommand extends BaseCommand {
             ?? ComputedColumnStrategy.AUTO;
 
         // 传递给 DBGenerator
-        DBGenerator dbGenerator = new DBGenerator(pluginManager, dialect, strategy);
+        DBGenerator dbGenerator = new DBGenerator(justdbManager, dialect, strategy);
         // ...
     }
 }

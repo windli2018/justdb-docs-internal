@@ -690,7 +690,7 @@ public class SqlGenerator {
     public List&lt;String&gt; generateMigrationSql(CanonicalSchemaDiff diff,
                                             String dialect,
                                             SqlGenerationOptions options) {
-        DBGenerator dbGenerator = new DBGenerator(pluginManager, dialect);
+        DBGenerator dbGenerator = new DBGenerator(justdbManager, dialect);
         List&lt;String&gt; sqlStatements = new ArrayList<>();
 
         // 1. 处理 sequences

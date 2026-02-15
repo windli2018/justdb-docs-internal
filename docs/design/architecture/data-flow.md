@@ -420,7 +420,7 @@ public List&lt;String&gt; generateCreateTable(Table table) {
 
 ```handlebars
 {{! create-table-mysql-lineage }}
-CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name}} (
+CREATE TABLE {{#if @root.idempotent}}IF NOT EXISTS {{/if}}{{> table-name-spec}} (
 {{#each table.columns}}
   {{> column-spec}}{{#unless @last}},{{/unless}}
 {{/each}}

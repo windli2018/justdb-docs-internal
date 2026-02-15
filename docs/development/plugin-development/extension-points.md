@@ -703,7 +703,7 @@ public class IncludeRuleToSchemaMapper {
                 // No condition needed
                 break;
             case CONDITION:
-                // Render template to replace {{table-name}} placeholder
+                // Render template to replace {{table-name-spec}} placeholder
                 data.setCondition(renderTemplate(rule.getDataFilter(), table));
                 break;
         }
@@ -714,8 +714,8 @@ public class IncludeRuleToSchemaMapper {
     /**
      * Render dataFilter as SQL
      * - If dataFilter is complete SELECT statement, render directly
-     * - Otherwise, wrap as: SELECT * FROM {{table-name}} WHERE {dataFilter}
-     * Then replace {{table-name}} placeholder with actual table name
+     * - Otherwise, wrap as: SELECT * FROM {{table-name-spec}} WHERE {dataFilter}
+     * Then replace {{table-name-spec}} placeholder with actual table name
      */
     private String renderTemplate(String dataFilter, Table table) {
         try {
@@ -726,8 +726,8 @@ public class IncludeRuleToSchemaMapper {
             if (trimmed.toUpperCase().startsWith("SELECT")) {
                 template = trimmed;
             } else {
-                // Wrap as: SELECT * FROM {{table-name}} WHERE {dataFilter}
-                template = "SELECT * FROM {{table-name}} WHERE " + trimmed;
+                // Wrap as: SELECT * FROM {{table-name-spec}} WHERE {dataFilter}
+                template = "SELECT * FROM {{table-name-spec}} WHERE " + trimmed;
             }
 
             return dbGenerator.renderInline(template, table);
@@ -859,16 +859,16 @@ public class IncludeRuleDataExtractor {
      * Build SELECT SQL based on dataFilter
      */
     private String buildSql(Table table, String dataFilter) {
-        // Use template rendering to replace {{table-name}}
-        String template = "SELECT * FROM {{table-name}}";
+        // Use template rendering to replace {{table-name-spec}}
+        String template = "SELECT * FROM {{table-name-spec}}";
 
         if (!"*".equals(dataFilter) && !"all".equalsIgnoreCase(dataFilter)) {
             template = template + " WHERE " + dataFilter;
         }
 
-        // TODO: Render template to replace {{table-name}}
+        // TODO: Render template to replace {{table-name-spec}}
         // For now, simple replacement
-        return template.replace("{{table-name}}", quote(table.getName()));
+        return template.replace("{{table-name-spec}}", quote(table.getName()));
     }
 
     /**
@@ -1350,12 +1350,12 @@ includeRules:
     module: lca-module
     dataFilter: "deleted = 0"
 
-  # Exact match (overrides wildcard) + custom SQL with table-name placeholder
+  # Exact match (overrides wildcard) + custom SQL with table-name-spec placeholder
   - pattern: lca_impactfactor
     author: yuwenhang
     remark: 影响因子表（单独覆盖）
     module: lca-impact
-    dataFilter: "SELECT * FROM {{table-name}} WHERE status=1 ORDER BY id DESC LIMIT 100"
+    dataFilter: "SELECT * FROM {{table-name-spec}} WHERE status=1 ORDER BY id DESC LIMIT 100"
 ```
 
 ### 4.2 命令行使用示例
@@ -1378,7 +1378,7 @@ justdb db2schema -C production \
 # Mixed use (config file + inline)
 justdb db2schema -C production \
   -c config.yaml \
-  -I "lca_impactfactor&author=yw&remark=影响因子&dataFilter=SELECT * FROM {{table-name}} LIMIT 100" \
+  -I "lca_impactfactor&author=yw&remark=影响因子&dataFilter=SELECT * FROM {{table-name-spec}} LIMIT 100" \
   -o schema.yaml
 ```
 
@@ -1388,13 +1388,13 @@ justdb db2schema -C production \
 |--------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
 | `null`、`""`、`"none"` | NONE | 不导出数据 |
 | `"*"`、`"all"` | ALL | 导出全部数据 |
-| `"deleted=0"` | CONDITION | 拼接成 `SELECT * FROM {{table-name}} WHERE deleted=0` |
-| `"id IN (1,2,3)"` | CONDITION | 拼接成 `SELECT * FROM {{table-name}} WHERE id IN (1,2,3)` |
+| `"deleted=0"` | CONDITION | 拼接成 `SELECT * FROM {{table-name-spec}} WHERE deleted=0` |
+| `"id IN (1,2,3)"` | CONDITION | 拼接成 `SELECT * FROM {{table-name-spec}} WHERE id IN (1,2,3)` |
 
 **说明**：
-- CONDITION 类型统一拼接：`SELECT * FROM {{table-name}} WHERE {dataFilter}`
+- CONDITION 类型统一拼接：`SELECT * FROM {{table-name-spec}} WHERE {dataFilter}`
 - 如 dataFilter 已是完整 SELECT 语句，直接渲染（不拼接）
-- 所有类型统一通过 template 渲染处理 `{{table-name}}` 占位符
+- 所有类型统一通过 template 渲染处理 `{{table-name-spec}}` 占位符
 
 ---------------------------
 

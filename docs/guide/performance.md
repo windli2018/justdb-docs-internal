@@ -101,7 +101,7 @@ executor.precompileTemplates();
 ```java
 // 好的做法：批量处理
 List<Table&gt;> tables = schema.getTables();
-DBGenerator generator = new DBGenerator(pluginManager, dialect);
+DBGenerator generator = new DBGenerator(justdbManager, dialect);
 
 // 批量生成
 List&lt;String&gt; sqlStatements = generator.generateAll(tables);
